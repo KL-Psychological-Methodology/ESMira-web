@@ -30,3 +30,8 @@ jobs:
 
       - name: Build for production
         run: npm run prod
+        
+      - uses: actions/upload-artifact@main
+        with:
+          name: Save package
+          path: dist/
