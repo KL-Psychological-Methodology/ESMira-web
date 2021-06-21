@@ -1,0 +1,15 @@
+<dash-row>
+	<dash-el params="title: Lang.get('colon_joined_study'), msg: $root.joined_time()"></dash-el>
+	<dash-el params="title: Lang.get('colon_quit_study'), msg: $root.quit_time()"></dash-el>
+	
+	<dash-el params="title: Lang.get('colon_app_type'), msg: $root.appType()"></dash-el>
+	<dash-el params="title: Lang.get('colon_timezone'), msg: $root.timezones()"></dash-el>
+	
+	<dash-el class="stretched" params="title: Lang.get('colon_model'), msg: $root.model()"></dash-el>
+	
+	<div class="stretched" id="day_questionnaire_el"></div>
+</dash-row>
+
+
+<title-row params="title: Lang.get('colon_charts_personal')"></title-row>
+<div id="user_personalStatistics"></div>

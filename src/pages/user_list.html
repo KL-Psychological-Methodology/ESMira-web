@@ -1,0 +1,44 @@
+<div class="list_parent">
+	<table id="userList" class="list_child">
+		<thead>
+			<tr>
+				<th class="username"></th>
+				<th data-bind="text: Lang.get('permission_admin')"></th>
+				<th data-bind="text: Lang.get('permission_write')"></th>
+				<th data-bind="text: Lang.get('permission_msg')"></th>
+				<th data-bind="text: Lang.get('permission_read')"></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody data-bind="foreach:$root.userList">
+			<tr>
+				<td class="username">
+					<widget-delete data-bind="click:$root.delete"></widget-delete>
+					<span data-bind="text: username"></span>
+				</td>
+				<td>
+					<span data-bind="visible: admin()">&#10004;</span>
+				</td>
+				<td>
+					<span data-bind="text: admin() ? '&#10004;' : write().length">&#10004;</span>
+				</td>
+				<td>
+					<span data-bind="text: admin() ? '&#10004;' : msg().length">&#10004;</span>
+				</td>
+				<td>
+					<span data-bind="text: admin() ? '&#10004;' : read().length">&#10004;</span>
+				</td>
+				<td>
+					<a data-bind="navi: 'userView,user:'+$index()">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<change-user params="finish: $root.add">
+		<widget-add params="title: Lang.get('add')"></widget-add>
+	</change-user>
+	
+</div>

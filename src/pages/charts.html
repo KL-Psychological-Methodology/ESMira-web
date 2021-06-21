@@ -1,0 +1,27 @@
+<title-row params="title: Lang.get('colon_charts_public')"></title-row>
+<div data-bind="with: publicStatistics" class="list_parent">
+	<div class="list_child" data-bind="foreach: charts">
+		<div class="verticalPadding">
+			<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
+			<a data-bind="navi: 'chartEdit,public:'+$index()">
+				<span data-bind="text: title"></span>
+			</a>
+		</div>
+	</div>
+	<widget-add data-bind="click: $root.ko__add_default('charts', 'chartEdit,public:%')" params="title: Lang.get('add')"></widget-add>
+</div>
+
+
+
+<title-row params="title: Lang.get('colon_charts_personal')"></title-row>
+<div data-bind="with: personalStatistics" class="list_parent">
+	<div class="list_child" data-bind="foreach: charts">
+		<div class="verticalPadding">
+			<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
+			<a data-bind="navi: 'chartEdit,personal:'+$index()">
+				<span data-bind="text: title"></span>
+			</a>
+		</div>
+	</div>
+	<widget-add data-bind="click: $root.ko__add_default('charts', 'chartEdit,personal:%')" params="title: Lang.get('add')"></widget-add>
+</div>

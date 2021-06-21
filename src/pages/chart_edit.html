@@ -1,0 +1,198 @@
+<script type="text/html" id="conditions_template">
+	<div class="horizontal top relative">
+		<label class="horizontal" style="margin-right:10px;">
+			<small data-bind="text: title"></small>
+			<select class="small horizontal" data-bind="options: axisValues, value: axis.variableName, event: {change: function() {
+						conditionOptions = $root.get_conditionValues(axis.variableName());
+					}}"></select>
+			<span class="middle">=</span>
+		</label>
+		
+		<div style="position:absolute; right: 0; width: 260px; margin-top:20px;" data-bind="if: axis.conditions().length >= 2">
+			<input id="conditionType_and" type="radio" data-bind="checked: axis.conditionType, checkedValue: $root.CONDITION_TYPE_AND, attr: {name: 'conditionType'+$index(), id: 'conditionTypeAnd'+$index()}"/>
+			<label for="conditionType_and" class="small_text" data-bind="text: Lang.get('conditionTypeAnd'), attr: {for:'conditionTypeAnd'+$index()}"></label>
+			<br/>
+			<input id="conditionType_or" type="radio" data-bind="checked: axis.conditionType, checkedValue: $root.CONDITION_TYPE_OR, attr: {name: 'conditionType'+$index(), id: 'conditionTypeOr'+$index()}"/>
+			<label for="conditionType_or" class="small_text" data-bind="text: Lang.get('conditionTypeOr'), attr: {for:'conditionTypeOr'+$index()}"></label>
+		</div>
+	</div>
+	<div class="horizontal">
+		<div data-bind="foreach: axis.conditions">
+			<div class="vertical" data-bind="if: $data.key && key()">
+				<label class="horizontal middle">
+					<small data-bind="text: Lang.get('variable')"></small>
+					<select class="small" data-bind="options: $parent.conditionOptions, value: key"></select>
+				</label>
+				<label class="horizontal middle">
+					<small data-bind="text: Lang.get('operator')"></small>
+					<select class="small" data-bind="options: $root.condition_types, indexValue: operator"></select>
+				</label>
+				<label class="horizontal">
+					<small data-bind="text: Lang.get('value')"></small>
+					<input class="small" type="text" data-bind="value: value"/>
+				</label>
+				<a class="horizontal" data-bind="click: $root.removeCondition($parent.axis, $index())">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>
+				</a>
+			</div>
+		</div>
+		
+		<label class="vertical" data-bind="attr: {class: axis.conditions().length ? 'vertical spacing_top' : 'vertical'}">
+			<small data-bind="text: Lang.get('condition')"></small>
+			<select class="small_text" data-bind="options: conditionOptions, optionsCaption: Lang.get('select_to_add'), event: {change: $root.addCondition}"></select>
+		</label>
+	</div>
+</script>
+
+
+<script type="text/html" id="axis_template">
+	<div data-bind="foreach: list">
+		<div class="line verticalPadding" style="clear: both; overflow: hidden;">
+			<div class="horizontal">
+				<div class="horizontal top">
+					<widget-delete data-bind="click: $root.ko__remove_from_list($parent.list, $index())"></widget-delete>
+					<label class="middle">
+						<small data-bind="text: Lang.get('label')"></small>
+						<input class="small" type="text" data-bind="value: label"/>
+					</label>
+					<label class="horizontal">
+						<small data-bind="text: Lang.get('color')"></small>
+						<input type="color" data-bind="value: color"/>
+					</label>
+				</div>
+			</div>
+			<div class="right" data-bind="let: {axisValues: $root.create_axisValues()}">
+				
+				<div data-bind="if: $parent.chart.dataType() === $root.STATISTICS_DATATYPES_XY">
+					<div data-bind="template: {name: 'conditions_template', data: {
+							title: Lang.get('axis_x'),
+							axis: $data.xAxis,
+							axisValues: axisValues,
+							conditionOptions: $root.get_conditionValues(xAxis.variableName())
+						}}" class="vertical"></div>
+				
+					<hr class="dark spacer"/>
+				</div>
+				
+				<div data-bind="template: {name: 'conditions_template', data: {
+						title: Lang.get('axis_y'),
+						axis: $data.yAxis,
+						axisValues: axisValues,
+						conditionOptions: $root.get_conditionValues(yAxis.variableName()),
+					}}" class="vertical"></div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<div>
+	<div data-bind="if: $root.pageType !== 'calc'">
+		<title-row params="title: Lang.get('colon_description')"></title-row>
+		<label class="vertical no_title">
+			<input class="horizontal" type="checkbox" data-bind="checked: hideUntilCompletion"/>
+			<span class="horizontal small_text " data-bind="text: Lang.get('hideUntilCompletion')"></span>
+		</label>
+		
+		<label class="vertical">
+			<small data-bind="text: Lang.get('colon_title')"></small>
+			<input class="big" type="text" data-bind="value: title"/>
+		</label>
+		
+		<div class="fakeLabel line">
+			<small data-bind="text: Lang.get('colon_description')"></small>
+			<rich-text params="value: chartDescription"></rich-text>
+		</div>
+		
+		<div class="vertical">
+			<label class="horizontal">
+				<small data-bind="text: Lang.get('colon_xAxis_label')"></small>
+				<input type="text" data-bind="value: xAxisLabel"/>
+			</label>
+			
+			<label class="horizontal">
+				<small data-bind="text: Lang.get('colon_yAxis_label')"></small>
+				<input type="text" data-bind="value: yAxisLabel"/>
+			</label>
+		</div>
+	</div>
+	
+	
+	<title-row params="title: Lang.get('colon_settings')"></title-row>
+	
+	<div class="vertical">
+		<label class="horizontal">
+			<small data-bind="text: Lang.get('statisticsChartType')"></small>
+			<select data-bind="options: $root.statistics_chartTypes, indexValue: chartType"></select>
+		</label>
+		
+		<label class="horizontal">
+			<small data-bind="text: Lang.get('statisticsDataType')"></small>
+			<select data-bind="options: $root.statistics_dataTypes, indexValue: dataType"></select>
+		</label>
+	</div>
+	
+	<div data-bind="if: dataType() !== $root.STATISTICS_DATATYPES_FREQ_DISTR">
+		<label class="vertical no_desc">
+			<small data-bind="text: Lang.get('statisticsValueType')"></small>
+			<select data-bind="options: $root.statistics_valueTypes, indexValue: valueType"></select>
+		</label>
+	</div>
+	
+	<div data-bind="if: dataType() === $root.STATISTICS_DATATYPES_FREQ_DISTR">
+		<label class="vertical no_title no_desc">
+			<input data-bind="checked: inPercent" type="checkbox" />
+			<span data-bind="text: Lang.get('values_in_percent')"></span>
+		</label>
+		<label class="vertical no_title no_desc">
+			<input data-bind="checked: xAxisIsNumberRange" type="checkbox" />
+			<span data-bind="text: Lang.get('xAxisIsNumberRange_label')"></span>
+		</label>
+	</div>
+	<div data-bind="if: chartType() === $root.STATISTICS_CHARTTYPES_SCATTER">
+		<label class="vertical no_desc">
+			<span data-bind="text: Lang.get('colon_fitToShowLinearProgression_label')"></span>
+			<input data-bind="numericValue: fitToShowLinearProgression" type="number"/>%
+		</label>
+	</div>
+	
+	<div class="vertical">
+		<label>
+			<span data-bind="text: Lang.get('chart_max_yValue')"></span>
+			<input type="number" data-bind="numericValue: maxYValue"/>
+			<small data-bind="text: Lang.get('chart_max_yValue_explainZero')" class="footer"></small>
+		</label>
+	</div>
+	
+		<div data-bind="if: $root.pageType === 'personal' && chartType() !== $root.STATISTICS_CHARTTYPES_PIE">
+			<label>
+				<input class="horizontal" type="checkbox" data-bind="checked: displayPublicVariable"/>
+				<span class="horizontal small_text" data-bind="text: Lang.get('display_additional_publicVariable')"></span>
+			</label>
+			<div data-bind="if: displayPublicVariable()">
+				<div data-bind="template: {name: 'axis_template', data: {chart: $data, list: publicVariables}}" class="colored_lines"></div>
+				
+				<br/>
+				<widget-add style="clear:both;" params="title: Lang.get('add')" data-bind="click: $root.addPublicVariable"></widget-add>
+			</div>
+		</div>
+	
+	
+	<title-row params="title: Lang.get('colon_variables')"></title-row>
+	<div data-bind="template: {name: 'axis_template', data: {chart: $data, list: axisContainer}}" class="colored_lines"></div>
+	
+	
+	
+	<br/>
+	<widget-add style="clear:both;" params="title: Lang.get('add')" data-bind="click: $root.addVariable"></widget-add>
+	
+	<title-row params="title: Lang.get('save_current_chart_settings_in_browser')"></title-row>
+	<div class="list_parent">
+		<div class="list_child" data-bind="foreach: $root.chartCache">
+			<div>
+				<widget-delete data-bind="click: function() {$root.delete_chartCache($index());}"></widget-delete>
+				<a data-bind="text: $data.title, navi: ['chartEdit,chart:'+$data.content, true]"></a>
+			</div>
+		</div>
+		<widget-add params="title: Lang.get('save')" data-bind="click: $root.save_chartCache"></widget-add>
+	</div>
+</div>

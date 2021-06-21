@@ -1,0 +1,11 @@
+<dash-row>
+	<div class="stretched">
+		<label>
+			<small data-bind="text: Lang.get('search')"></small>
+			<input type="text" data-bind="event: {keyup: function() {filter_box($element.value, document.getElementById('userList'));}}"/>
+		</label>
+		<div id="userList" data-bind="foreach: $root.userList">
+			<a class="vertical verticalPadding searchTarget" data-bind="navi: 'sumUser,user:'+name, text: Lang.get('text_with_questionnaireCount', name, count)"></a>
+		</div>
+	</div>
+</dash-row>

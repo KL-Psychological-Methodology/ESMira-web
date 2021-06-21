@@ -1,0 +1,442 @@
+/**********
+Dragging
+**********/
+
+.is_dragging .drag_start {
+	display: none;
+}
+
+.is_dragging .drag_spacer  {
+	opacity: 0.5;
+}
+.drag_hidden {
+	transition: opacity 0.3s;
+}
+.is_dragging .drag_hidden {
+	opacity: 0;
+	/*height: 0;*/
+}
+.drag_hiddenPlacer {
+	display: none;
+}
+
+.drag_target {
+	transition: background-color 0.5s;
+}
+.is_dragging .drag_target {
+	background-color: #2DBFF333 !important;
+}
+.drag_placer {
+	height: 50px;
+}
+.drag_placer.hidden {
+	display: none;
+}
+
+
+/**********
+Label
+**********/
+
+
+label:not([for]), .fakeLabel {
+	display: inline-block;
+	padding: 12px 1px;
+	vertical-align: top;
+	min-height: 31px; /* make them all the same size so titles for checkboxes are positioned the same as others*/
+	/*margin-bottom: 10px;*/
+}
+label.narrow {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-bottom: 0;
+	
+}
+label span {
+	/*vertical-align: middle;*/
+	display: inline-block;
+	line-height: 31px;
+}
+label small, .fakeLabel small {
+	position: relative;
+	display: block;
+	height: 15px;
+	color: #2b98ca;
+	background-color: white;
+}
+label small:first-child, .fakeLabel small:first-child {
+	z-index: 1;
+	margin-top: -10px;
+	margin-bottom: -5px;
+	text-align: left;
+	font-size: 10pt;
+}
+label small:last-child, .fakeLabel small:last-child {
+	font-size: 9pt;
+	text-align: end;
+	margin-bottom: 0;
+}
+label.no_title {
+	/*padding: 1px 2px;*/
+	padding-top: 1px;
+}
+label.no_desc {
+	padding-bottom: 1px;
+}
+
+
+/**********
+jsoneditor
+**********/
+
+
+#jsoneditor {
+	background-color: white;
+	width: 100%;
+	height: 100%;
+}
+#jsonSaveBtn {
+	display: none;
+	position: absolute;
+	right: 30px;
+	bottom: 5px;
+	opacity: 0.8;
+}
+
+
+/**********
+userList
+**********/
+
+
+#userList th {
+	text-align: center;
+	padding-right: 10px;
+}
+#userList td {
+	vertical-align: top;
+	text-align: center;
+}
+#userList .username {
+	text-align: left;
+}
+
+
+/**********
+data table
+**********/
+
+
+#contentSize_el {
+	position: absolute;
+	width: 1px;
+}
+#data_table {
+	position: sticky;
+	/*margin-top: 10px;*/
+	border-collapse: collapse;
+}
+#data_table td, #data_table th {
+	border: 1px solid #9FE0F7;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-align: center;
+	white-space: nowrap;
+}
+#data_table tr:hover {
+	background-color: #e6f9ff;
+}
+#data_table > tbody > tr.marked {
+	background-color: #2DBFF3;
+	color: white;
+}
+
+#data_table > tbody > tr .pretty_value {
+	display: inline-block;
+}
+#data_table > tbody > tr .real_value {
+	display: none;
+}
+#data_table > tbody > tr:hover .pretty_value {
+	display: none;
+}
+#data_table > tbody > tr:hover .real_value {
+	display: inline-block;
+}
+
+#data_table > thead {
+	background-color: #e6f9ff;
+}
+#data_table > thead > tr > th {
+	position: relative;
+	font-weight: bold;
+	color: #2b98ca;
+}
+#data_table > tbody > tr > td.index_column {
+	cursor: pointer;
+	background-color: #e6f9ff;
+	color: #2b98ca;
+	transition: color 0.3s;
+}
+#data_table > thead > tr > th > span {
+	cursor: pointer;
+	transition: color 0.3s;
+}
+#data_table > tbody > tr > td.index_column:hover, #data_table > thead > tr > th > span:hover {
+	color: #2DBFF3;
+}
+
+#selectedRowCount {
+	position: fixed;
+}
+
+
+/**********
+error_box
+**********/
+
+
+.error_list widget-ok {
+	display: inline-block;
+}
+
+#error_box .line {
+	position: relative;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: white;
+}
+#error_box .line pre {
+	margin: 0;
+}
+#error_box .line.removed {
+	display: none;
+}
+#error_box .divider {
+	border: 2px solid #dc4e9d;
+}
+#error_box .line.sticky {
+	position: sticky;
+	z-index: 1;
+	top: 10px;
+	bottom: 0;
+	background-color: #9FE0F7;
+}
+#error_box .line_menu {
+	display: none;
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	right: 0;
+}
+#error_box .line .line_menu {
+	display: block;
+}
+#error_box .line .line_menu widget-delete {
+	margin-right: 0;
+}
+
+#error_box .line:hover pre{
+	background-color: #00000011;
+}
+
+
+/**********
+signalTimes
+**********/
+
+
+#signalTimes input[type="time"] {
+	width: 70px;
+	min-width: 70px;
+}
+#signalTimes input[type="number"] {
+	width: 40px;
+	min-width: 40px;
+}
+#signalTimes select {
+	width: 50px;
+	min-width: 50px;
+}
+#signalTimes input, #signalTimes select, #signalTimes label small {
+	font-size: 9pt;
+}
+#signalTimes widget-delete {
+	margin-left: 0;
+	margin-right: 5px;
+	line-height: 400%;
+}
+
+
+/**********
+Messages
+**********/
+
+
+#recipientBox {
+	z-index: 2;
+	position: relative;
+}
+#recipientBox #recipientChooser {
+	display: inline;
+	position: relative;
+}
+#recipientBox #recipientList {
+	width: 100%;
+	margin-top: -10px;
+	max-height: 300px;
+	overflow-y: auto;
+}
+#recipientBox #recipientList > a {
+	display: block;
+	margin-bottom:5px;
+	font-size: 9pt;
+}
+
+.chat_bubble {
+	margin: 10px 0;
+}
+
+.chat_bubble widget-delete {
+	vertical-align: top;
+}
+
+.chat_bubble.fromClient.unread .msg {
+	background-color: #dc4e9d;
+}
+.chat_bubble.pending .msg {
+	opacity: 0.5;
+}
+.chat_bubble .msg {
+	display: inline-block;
+	position: relative;
+	max-width: 80%;
+	min-width: 150px;
+	height: auto;
+	border-radius: 10px;
+	color: white;
+	text-align: left;
+}
+.chat_bubble .msg::after {
+	position: absolute;
+	top: 0;
+	width: 0;
+	height: 0;
+	border: 12px solid;
+	content: ' ';
+}
+.chat_bubble .headline {
+	font-size: 9pt;
+	margin-bottom: 2px;
+}
+.chat_bubble .header {
+	float: left;
+}
+.chat_bubble .footer {
+	float: right;
+}
+.chat_bubble .header, .chat_bubble .footer {
+	font-size: 9pt;
+	margin: 3px 5px;
+}
+.chat_bubble .content {
+	margin: 25px 20px 10px 20px;
+}
+
+.chat_bubble.fromServer {
+	text-align: right;
+}
+.chat_bubble.fromServer .msg {
+	background-color: #2b98ca;
+	margin-right: 20px;
+}
+.chat_bubble.fromServer .msg::after {
+	right: -10px;
+	left: auto;
+	border-color: #2b98ca transparent transparent transparent;
+}
+
+.chat_bubble.fromClient {
+	text-align: left;
+}
+.chat_bubble.fromClient .msg {
+	background-color: #2DBFF3;
+	margin-left: 20px;
+}
+.chat_bubble.fromClient div::after {
+	left: -10px;
+	right: auto;
+	border-color: #2DBFF3 transparent transparent transparent;
+}
+.chat_bubble.fromClient.unread div::after {
+	border-color: #dc4e9d transparent transparent transparent;
+}
+
+
+/**********
+rich Text
+**********/
+
+label .richText {
+	margin-top: 5px;
+}
+.richText {
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-top: 5px;
+}
+.richText .toolbar {
+	display: flex;
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	justify-content: space-between;
+	background: white;
+
+	border-top: 1px solid #f9f9f9;
+	box-shadow: 0 2px 5px #0002;
+	margin: 0 2px;
+}
+.richText .toolbar .group {
+	display: flex;
+	justify-content: center;
+}
+.richText .toolbar .btn {
+	width: 24px;
+	height: 24px;
+	transition: background 0.3s;
+	padding: 2px 3px;
+}
+.richText .toolbar .btn svg {
+	fill: #777;
+	transition: fill 0.3s;
+}
+.richText .toolbar .btn.active {
+	background: #e6f9ff;
+	/*background: #9FE0F7;*/
+}
+.richText .toolbar .btn.active svg {
+	/*fill: #2b98ca;*/
+	fill: #2b98ca;
+}
+.richText .toolbar .btn:hover {
+	background: #e6f9ff;
+	cursor: pointer;
+}
+.richText .editor {
+	/*border: 1px solid #f9f9f9;*/
+	/*border-bottom: 1px solid #dc4e9d;*/
+}
+.richText .editor .ProseMirror {
+	padding: 0 3px;
+	border-bottom: 1px solid #dc4e9d;
+}
+.richText .editor .ProseMirror-focused {
+	background-color: #2b98ca06;
+}
+.richText .editor img.ProseMirror-selectednode {
+	outline: 3px solid #9FE0F7;
+}
+.richText .editor img {
+	max-width: 100%;
+}

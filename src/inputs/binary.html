@@ -1,0 +1,14 @@
+<div data-bind="component: {name: 'input_text', params: $component}"></div>
+<div class="list_child">
+	<div>&nbsp;
+		<label class="left no_desc no_title">
+			<span data-bind="html: $component.input.leftSideLabel"></span>
+			<input type="radio" data-bind="checked: $component.value, value: '0'"/>
+		</label>
+		<label class="right no_desc no_title">
+			<input type="radio" data-bind="checked: $component.value, value: '1'"/>
+			<span data-bind="html: $component.input.rightSideLabel"></span>
+		</label>
+	
+	</div>
+</div>

@@ -1,0 +1,4 @@
+<div data-bind="component: {name: 'input_text', params: $component}"></div>
+<div>
+	<div data-bind="component: {name: 'input_' + ($component.subModel.input.responseType ? $component.subModel.input.responseType() : $component.defaults.inputs.responseType), params: $component.subModel}"></div>
+</div>

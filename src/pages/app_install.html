@@ -1,0 +1,144 @@
+<script type="text/html" id="screenshot">
+	<div>
+		<div class="screenshot_box">
+			<!--//TODO: add ios-option-->
+			<img alt="screenshot" src="" data-bind="attr: {src: Lang.get(name + '_android')}"/>
+		</div>
+	</div>
+</script>
+<script type="text/html" id="install_instructions">
+	<div data-bind="let: {showInstructions: ko.observable(false)}">
+		<span data-bind="text: Lang.get('studyTut_participate_install_app')"></span>
+		(<span data-bind="text: Lang.get('studyTut_show_installInstructions'), click: function() {
+			if(showInstructions()) {
+				showInstructions(false);
+				$element.innerText = Lang.get('studyTut_show_installInstructions');
+			}
+			else {
+				showInstructions(true);
+				$element.innerText = Lang.get('studyTut_hide_installInstructions');
+			}
+		}" class="clickable"></span>).
+		<div data-bind="if: showInstructions">
+			<ul>
+				<li>
+					<div data-bind="text: Lang.get('studyTut_install_app')"></div>
+					<p><a class="highlight" href="https://play.google.com/store/apps/details?id=at.jodlidev.esmira" target="_blank" data-bind="visible: publishedAndroid(), text: Lang.get('for_AndroidSmartphones')"></a></p>
+					<p><a class="highlight" href="https://apps.apple.com/gb/app/esmira/id1538774594" target="_blank" data-bind="visible: publishedIOS(), text: Lang.get('for_iOSSmartphones')"></a></p>
+				</li>
+				<li>
+					<span data-bind="text: Lang.get('studyTut_install_press_install')"></span>
+					<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_appInstall'}}"></div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</script>
+
+
+
+<div style="max-width: 100%; overflow: auto" data-bind="html: webInstallInstructions"></div>
+
+
+<title-row params="title: Lang.get('about_study')"></title-row>
+<p class="justify" data-bind="html:studyDescription"></p>
+<br/>
+
+<div data-bind="if: $data.contactEmail">
+	<a class="left" data-bind="attr: {href: 'mailto:'+contactEmail()}, text: Lang.get('contactEmail')"></a>
+</div>
+
+<a class="right" data-bind="text: Lang.get('informed_consent'), click: function() {$root.showConsent(!$root.showConsent());}"></a>
+<br/>
+<div data-bind="if: $root.showConsent">
+	<p class="justify spacing_top" data-bind="html: informedConsentForm"></p>
+</div>
+
+<br/>
+
+<title-row params="title: Lang.get('how_to_participate')"></title-row>
+<div class="center">
+	<a data-bind="if: publishedAndroid()" href="https://play.google.com/store/apps/details?id=at.jodlidev.esmira" target="_blank"><img alt="Android" src="../imgs/google-play-badge-en.png"/></a>
+	<a data-bind="if: publishedIOS()" href="https://apps.apple.com/gb/app/esmira/id1538774594" target="_blank"><img alt="iOS" src="../imgs/apple-store-badge-en.png"/></a>
+</div>
+
+
+
+<br/>
+<p class="justify" data-bind="html: Lang.get('studyTut_participate_description')"></p>
+
+<h1 data-bind="text: Lang.get('studyTut_participate_method_x_header', 1)"></h1>
+<h2 data-bind="text: Lang.get('studyTut_participate_method_onPhone')"></h2>
+<ol>
+	<li>
+		<div data-bind="template: {name: 'install_instructions'}"></div>
+	</li>
+	<li data-bind="text: Lang.get('studyTut_participate_open_this_website')"></li>
+	<li>
+		<a data-bind="
+					attr: {href: $root.appUrl},
+					text: Lang.get('studyTut_participate_click_link')
+			"></a>
+	</li>
+	<li data-bind="text: Lang.get('studyTut_participate_opens_automatically')"></li>
+</ol>
+
+
+<br/>
+<br/>
+<h1 class="center" data-bind="text: Lang.get('or')"></h1>
+
+
+<h1 data-bind="text: Lang.get('studyTut_participate_method_x_header', 2)"></h1>
+<h2 data-bind="text: Lang.get('studyTut_participate_method_notOnPhone')"></h2>
+<ol>
+	<li>
+		<div data-bind="template: {name: 'install_instructions'}"></div>
+	</li>
+	<li data-bind="text: Lang.get('studyTut_participate_startApp')"></li>
+	<li>
+		<div data-bind="html: Lang.get('studyTut_participate_chooseYesForQR')"></div>
+		<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_qrCode_askYes'}}"></div>
+	</li>
+	<li data-bind="text: Lang.get('studyTut_participate_scanQr')"></li>
+</ol>
+<div class="center">
+	<img alt="qr code" src="" data-bind="attr: {src: $root.qrUrl}"/>
+</div>
+
+
+<br/>
+<br/>
+<h1 class="center" data-bind="text: Lang.get('or')"></h1>
+
+
+<h1 data-bind="text: Lang.get('studyTut_participate_method_x_header', 3)"></h1>
+<h2 data-bind="text: Lang.get('studyTut_participate_method_manual')"></h2>
+<ol>
+	<li>
+		<div data-bind="template: {name: 'install_instructions'}"></div>
+	</li>
+	
+	<li data-bind="text: Lang.get('studyTut_participate_startApp')"></li>
+	
+	<li>
+		<div data-bind="html: Lang.get('studyTut_participate_chooseNoForQR')"></div>
+		<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_qrCode_askNo'}}"></div>
+	</li>
+	
+	<li>
+		<div data-bind="html: Lang.get('studyTut_participate_selectServer', Site.serverName)"></div>
+		<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_server_ask'}}"></div>
+	</li>
+	
+	<li data-bind="visible: $root.accessKey.length">
+		<div data-bind="html: Lang.get('studyTut_participate_selectAccessKeyYes', $root.accessKey)"></div>
+		<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_accessKey_askYes'}}"></div>
+	</li>
+	
+	<li data-bind="visible: !$root.accessKey.length">
+		<div data-bind="html: Lang.get('studyTut_participate_selectAccessKeyNo')"></div>
+		<div data-bind="template: {name: 'screenshot', data: {name: 'screenshot_accessKey_askNo'}}"></div>
+	</li>
+
+</ol>

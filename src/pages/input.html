@@ -1,0 +1,101 @@
+<div class="vertical">
+	<label class="horizontal">
+		<small data-bind="text: Lang.get('type')"></small>
+		<select data-bind="options: $root.for_subItem ? $root.optionsSubInput : $root.optionsInput, optionsText: 'value', keyValue: responseType"></select>
+	</label>
+	
+	<label class="horizontal" data-bind="if: !$root.for_subItem">
+		<small data-bind="text: Lang.get('variable_name')"></small>
+		<input type="text" data-bind="value: name,
+			event:{focusout: function(data, e) {
+				$data.name($root.get_uniqueName($data.name()));
+			}}"/>
+	</label>
+</div>
+<div class="vertical verticalPadding small_text" data-bind="text: Lang.get('help_'+responseType())"></div>
+
+<div class="fakeLabel line spacing_top">
+	<small data-bind="text: Lang.get('text_shown_to_participant')"></small>
+	<rich-text params="value: text"></rich-text>
+</div>
+
+
+<div data-bind="if: responseType() !== 'text'">
+	<title-row params="title: Lang.get('colon_settings')"></title-row>
+	<label class="vertical no_title no_desc" data-bind="visible: responseType() !== 'dynamic_input'">
+		<input type="checkbox" data-bind="checked: required"/>
+		<span data-bind="text: Lang.get('required_desc')"></span>
+	</label>
+	<label class="vertical no_title no_desc" data-bind="visible: responseType() === 'dynamic_input'">
+		<input type="checkbox" data-bind="checked: random"/>
+		<span data-bind="text: Lang.get('random')"></span>
+	</label>
+	<label class="vertical no_title no_desc" data-bind="visible: responseType() === 'number'">
+		<input type="checkbox" data-bind="checked: numberHasDecimal"/>
+		<span data-bind="text: Lang.get('allow_decimal_input')"></span>
+	</label>
+	<label class="vertical no_title no_desc" data-bind="visible: responseType() === 'list_single'">
+		<input type="checkbox" data-bind="checked: asDropDown"/>
+		<span data-bind="text: Lang.get('show_as_dropdown')"></span>
+	</label>
+	<label class="vertical no_title no_desc" data-bind="visible: responseType() === 'time'">
+		<input type="checkbox" data-bind="checked: forceInt"/>
+		<span data-bind="text: Lang.get('save_as_minutes')"></span>
+	</label>
+	
+	
+	<label class="vertical spacing_top" data-bind="visible: responseType() === 'video' || responseType() === 'image'">
+		<small data-bind="text: Lang.get('url')"></small>
+		<input class="big" type="url" data-bind="value: url"/>
+	</label>
+	
+	<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video'">
+		<small data-bind="text: Lang.get('colon_prefilledValue')"></small>
+		<input type="text" data-bind="value: defaultValue, disable: required"/>
+	</label>
+
+
+	<label class="vertical spacing_bottom" data-bind="visible: responseType() === 'likert'">
+		<small data-bind="text: Lang.get('likert_number_of_points')"></small>
+		<input type="number" data-bind="numericValue: likertSteps" min="2"/>
+	</label>
+	
+	<div data-bind="if: responseType() === 'likert' || responseType() === 'va_scale' || responseType() === 'binary'">
+		<div class="fakeLabel spacing_bottom">
+			<small data-bind="text: Lang.get('label_leftChoice')"></small>
+			<rich-text params="value: leftSideLabel"></rich-text>
+		</div>
+		<div class="fakeLabel spacing_bottom">
+			<small data-bind="text: Lang.get('label_rightChoice')"></small>
+			<rich-text params="value: rightSideLabel"></rich-text>
+		</div>
+	</div>
+</div>
+
+
+<div data-bind="if: responseType() === 'list_single' || responseType() === 'list_multiple'">
+	<title-row params="title: Lang.get('colon_choices')"></title-row>
+	<div class="list_parent">
+		<div class="list_child relative" data-bind="foreach: listChoices">
+			<label class="vertical">
+				<small data-bind="text: Lang.get('text')"></small>
+				<input type="text" data-bind="value: $rawData"/>
+				<img src="../imgs/warn.svg" alt="warn" class="horizontal" data-bind="visible: !$data.length"/>
+				<widget-delete data-bind="click: $root.ko__remove_from_list($parent.listChoices, $index())"></widget-delete>
+			</label>
+		</div>
+		<widget-add data-bind="click: $root.add_listChoice" params="title: Lang.get('add')"></widget-add>
+	</div>
+</div>
+<div data-bind="if: responseType() === 'dynamic_input'">
+	<title-row params="title: Lang.get('colon_choices')"></title-row>
+	<div class="list_parent" >
+		<div class="list_child relative" data-bind="foreach: subInputs">
+			<div class="vertical">
+				<widget-delete data-bind="click: $root.ko__remove_from_list($parent.subInputs, $index())"></widget-delete>
+				<a data-bind="navi: 'input,sub:'+$index(), text: $index()+': '+Lang.get('input_' + responseType()) + (required() ? '*' : '')"></a>
+			</div>
+		</div>
+		<widget-add data-bind="click: $root.add_subInput" params="title: Lang.get('add')"></widget-add>
+	</div>
+</div>

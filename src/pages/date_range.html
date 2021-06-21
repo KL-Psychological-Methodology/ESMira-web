@@ -1,0 +1,143 @@
+<div data-bind="if: !questionnaires().length">
+	<div class="center" data-bind="text: Lang.get('info_no_questionnaires_created')"></div>
+</div>
+
+<h1 data-bind="text: Lang.get('colon_study_availability')"></h1>
+<div class="center">
+	<label class="no_desc">
+		<small data-bind="text: Lang.get('Android')"></small>
+		<input type="checkbox" data-bind="checked: publishedAndroid">
+	</label>
+	&nbsp;
+	<label class="no_desc">
+		<small data-bind="text: Lang.get('iOS')"></small>
+		<input type="checkbox" data-bind="checked: publishedIOS">
+	</label>
+	&nbsp;
+	<label class="no_desc">
+		<small data-bind="text: Lang.get('Web')"></small>
+		<input type="checkbox" data-bind="checked: publishedWeb">
+	</label>
+</div>
+
+<title-row params="title: Lang.get('colon_questionnaires')"></title-row>
+<tab-bar params="tabs: $data.questionnaires(), tabName: function(q) {return q.title()}">
+	
+	<table class="spaced_rows spaced_columns">
+		<tr>
+			<td style="width: 150px"><span data-bind="text: Lang.get('colon_questionnaire_availability')"></span></td>
+			<td>
+				<label class="horizontal no_desc center">
+					<small data-bind="text: Lang.get('Android')"></small>
+					<span data-bind="if: $root.dataObj.publishedAndroid()">
+						<input type="checkbox" data-bind="checked: publishedAndroid"/>
+					</span><span data-bind="ifnot: $root.dataObj.publishedAndroid()">
+						<input type="checkbox" disabled/>
+					</span>
+				</label>
+				&nbsp;
+				<label class="horizontal no_desc center">
+					<small data-bind="text: Lang.get('iOS')"></small>
+					<span data-bind="if: $root.dataObj.publishedIOS()">
+						<input type="checkbox" data-bind="checked: publishedIOS"/>
+					</span><span data-bind="ifnot: $root.dataObj.publishedIOS()">
+						<input type="checkbox" disabled/>
+					</span>
+				</label>
+				&nbsp;
+				<label class="horizontal no_desc center">
+					<small data-bind="text: Lang.get('Web')"></small>
+					<span data-bind="if: $root.dataObj.publishedWeb()">
+						<input type="checkbox" data-bind="checked: publishedWeb"/>
+					</span><span data-bind="ifnot: $root.dataObj.publishedWeb()">
+						<input type="checkbox" disabled/>
+					</span>
+				</label>
+			</td>
+		</tr>
+		<tr>
+			<td><span data-bind="text: Lang.get('colon_date')"></span></td>
+			<td>
+				<label class="no_desc">
+					<small data-bind="text: Lang.get('colon_start_date')"></small>
+					<input type="date" data-bind="dateValue: durationStart, placeholder: Lang.get('startDate')"/>
+				</label>
+				&nbsp;&nbsp;
+				<label class="no_desc">
+					<small data-bind="text: Lang.colon_end_date"></small>
+					<input type="date" data-bind="dateValue: durationEnd, placeholder: Lang.endDate"/>
+				</label>
+			</td>
+		</tr>
+		<tr>
+			<td><span data-bind="text: Lang.get('colon_runtime')"></span></td>
+			<td>
+				<label>
+					<small data-bind="text: Lang.get('activation')"></small>
+					<input type="number" data-bind="numericValue: durationStartingAfterDays"/>
+					<span data-bind="text: Lang.get('days')"></span>
+					<small data-bind="text: Lang.get('after_joining_study')"></small>
+				</label>
+				&nbsp;&nbsp;
+				<label>
+					<small data-bind="text: Lang.get('expiration')"></small>
+					<input type="number" data-bind="numericValue: durationPeriodDays"/>
+					<span data-bind="text: Lang.get('days')"></span>
+					<small data-bind="text: Lang.get('after_joining_study')"></small>
+				</label>
+			</td>
+		</tr>
+	</table>
+	
+	
+	
+	<label class="vertical no_title no_desc">
+		<input type="checkbox" data-bind="checked: completableOnce"/>
+		<span data-bind="text: Lang.get('questionnaires_can_only_be_completed_once')"></span>
+		
+		<widget-only params="android, ios"></widget-only>
+	</label>
+	
+	<label class="vertical no_title no_desc">
+		<input type="checkbox" data-bind="checked: completableOncePerNotification"/>
+		<span data-bind="text: Lang.get('questionnaires_can_only_be_completed_per_notification')"></span>
+		
+		<widget-only params="android, ios"></widget-only>
+	</label>
+	<div class="center" data-bind="if: completableOncePerNotification">
+		<label>
+			<span data-bind="text: Lang.get('part_visibleFor')"></span>
+			<input type="number" data-bind="numericValue: completableMinutesAfterNotification"/>
+			<span data-bind="text: Lang.get('minutes')"></span>
+			<small data-bind="text: Lang.get('info_zero_disables_timeout')"></small>
+		</label>
+	</div>
+	
+	<label class="vertical no_title no_desc">
+		<input type="checkbox" data-bind="checked: limitCompletionFrequency"/>
+		<span data-bind="text: Lang.get('timeDistance_between_completion_of_questionnaire')"></span>
+		
+		<widget-only params="android, ios"></widget-only>
+	</label>
+	<div class="center" data-bind="if: limitCompletionFrequency">
+		<label>
+			<input type="number" data-bind="numericValue: completionFrequencyMinutes"/>
+			<span data-bind="text: Lang.get('minutes')"></span>
+		</label>
+	</div>
+	
+	<label class="vertical no_title no_desc">
+		<input type="checkbox" data-bind="checked: completableAtSpecificTime"/>
+		<span data-bind="text: Lang.get('questionnaires_can_only_be_completed_at_specific_time')"></span>
+	</label>
+	<div class="center" data-bind="if: completableAtSpecificTime">
+		<label>
+			<small data-bind="text: Lang.get('colon_from')"></small>
+			<input type="time" data-bind="timeValue: completableAtSpecificTimeStart"/>
+		</label>
+		<label>
+			<small data-bind="text: Lang.get('colon_until')"></small>
+			<input type="time" data-bind="timeValue: completableAtSpecificTimeEnd"/>
+		</label>
+	</div>
+</tab-bar>

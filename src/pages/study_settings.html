@@ -1,0 +1,89 @@
+<label class="vertical no_title no_desc">
+	<input type="checkbox" data-bind="checked: sendMessagesAllowed">
+	<span data-bind="text: Lang.get('allow_incoming_messages')"></span>
+</label>
+
+
+<label class="vertical no_title">
+	<input type="checkbox"  data-bind="checked: $root.locked_enabled">
+	<span data-bind="text: Lang.get('freeze_study')"></span>
+	<small data-bind="text: Lang.get('desc_freeze_study')"></small>
+</label>
+
+
+<title-row params="title: Lang.get('inform_server_about_events')"></title-row>
+<div data-bind="with: eventUploadSettings">
+	
+	<label class="no_title vertical">
+		<input type="checkbox" checked="checked" disabled="disabled">
+		<span data-bind="text: 'joined'"></span>
+		<small data-bind="text: Lang.get('desc_joined')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" checked="checked" disabled="disabled">
+		<span data-bind="text: 'questionnaire'"></span>
+		<small data-bind="text: Lang.get('desc_questionnaire')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" checked="checked" disabled="disabled">
+		<span data-bind="text: 'quit'"></span>
+		<small data-bind="text: Lang.get('desc_quit')"></small>
+	</label>
+	
+	
+	<label class="no_title vertical">
+		<input type="checkbox" checked="checked">
+		<span data-bind="text: 'actions_executed'"></span>
+		<small data-bind="text: Lang.get('desc_actions_executed')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: invitation">
+		<span data-bind="text: 'invitation'"></span>
+		<small data-bind="text: Lang.get('desc_invitation')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: invitation_missed">
+		<span data-bind="text: 'invitation_missed'"></span>
+		<small data-bind="text: Lang.get('desc_invitation_missed')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: message">
+		<span data-bind="text: 'message'"></span>
+		<small data-bind="text: Lang.get('desc_message')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: notification">
+		<span data-bind="text: 'notification'"></span>
+		<small data-bind="text: Lang.get('desc_notification')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: rejoined">
+		<span data-bind="text: 'rejoined'"></span>
+		<small data-bind="text: Lang.get('desc_rejoined')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: reminder">
+		<span data-bind="text: 'reminder'"></span>
+		<small data-bind="text: Lang.get('desc_reminder')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: schedule_changed">
+		<span data-bind="text: 'schedule_changed'"></span>
+		<small data-bind="text: Lang.get('desc_schedule_changed')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: statistic_viewed">
+		<span data-bind="text: 'statistic_viewed'"></span>
+		<small data-bind="text: Lang.get('desc_statistic_viewed')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: study_message">
+		<span data-bind="text: 'study_message'"></span>
+		<small data-bind="text: Lang.get('desc_study_message')"></small>
+	</label>
+	<label class="no_title vertical">
+		<input type="checkbox" data-bind="checked: study_updated">
+		<span data-bind="text: 'study_updated'"></span>
+		<small data-bind="text: Lang.get('desc_study_updated')"></small>
+	</label>
+</div>

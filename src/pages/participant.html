@@ -1,0 +1,13 @@
+<p data-bind="html: chooseUsernameInstructions"></p>
+
+<form method="post" action="" class="center" data-bind="event: {submit: $root.create_participant}">
+	<p>
+		<label>
+			<small data-bind="text: Lang.get('user_id')"></small>
+			<input name="participant" id="participant_input" type="text" value=""/>
+			<input type="submit" value="save" data-bind="value: Lang.get('save')"/>
+		</label>
+		<input type="hidden" name="accept_informedConsent" value="1"/>
+		
+	</p>
+</form>

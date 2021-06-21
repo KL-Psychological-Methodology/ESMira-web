@@ -1,0 +1,37 @@
+<script type="text/html" id="data_line">
+	<div data-bind="foreach: $root.lists[key]">
+		<div data-bind="let: {title: $data[0], filename: $data[1], id: $parent.id}">
+			<a class="spacing_right" data-bind="attr: {href:$root.fileResponsesUrl.replace('%1', id).replace('%2', filename), download: title+'.csv'}">
+				<svg class="middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+					<path d="M0 0h24v24H0z" fill="none"/>
+					<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+				</svg></a>
+			<a data-bind="navi: 'dataView,fName:' + btoa($data[1]), text: title"></a>
+		</div>
+	</div>
+</script>
+
+
+<div data-bind="visible: $data.version() !== 0">
+	<div data-bind="template: {name: 'data_line', data: {key: 'defaults', id: $data.id()}}"></div>
+	
+	<title-row params="title: Lang.get('colon_questionnaires')"></title-row>
+	<div data-bind="template: {name: 'data_line', data: {key: 'current', id: $data.id()}}"></div>
+	
+	<title-row params="title: Lang.get('colon_backups')"></title-row>
+	<div class="verticalPadding">
+		<a class="horizontal spacing_right" data-bind="click: Studies.tools.backup_study.bind(Studies.tools, $root.page, $data)">
+			<svg class="middle" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm-1 4l6 6v10c0 1.1-.9 2-2 2H7.99C6.89 23 6 22.1 6 21l.01-14c0-1.1.89-2 1.99-2h7zm-1 7h5.5L14 6.5V12z"/></svg>
+			<span data-bind="text: Lang.get('create_backup')"></span>
+		</a>
+	</div>
+	<br/>
+	<div data-bind="template: {name: 'data_line', data: {key: 'backups', id: $data.id()}}"></div>
+	
+	<br/>
+	
+	
+	<div class="verticalPadding highlight" data-bind="click: $root.empty_data, if: Admin.tools.has_writePermission($data.id())">
+		<widget-delete params="title: Lang.get('empty_data')"></widget-delete>
+	</div>
+</div>

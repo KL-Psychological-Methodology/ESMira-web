@@ -1,0 +1,23 @@
+<table style="width: 100%; cursor: pointer;">
+	<tr>
+		<td>
+			<span>Logs:</span>
+			<span id="log_count_el"></span>
+		</td>
+		<td>
+			<span>Warnings:</span>
+			<span id="warning_count_el" style="color: orange"></span>
+		</td>
+		<td>
+			<span>Errors:</span>
+			<span id="error_count_el" style="color: red"></span>
+		</td>
+	</tr>
+</table>
+
+<hr/>
+<div id="error_box" data-bind="call_fu: $root.error_list.load_error($data)"></div>
+
+<div class="line_menu" id="line_menu">
+	<widget-delete data-bind="click: function() {$element.parentNode.parentNode.classList.add('removed');}"></widget-delete>
+</div>

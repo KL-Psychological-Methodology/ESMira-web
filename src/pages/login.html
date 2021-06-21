@@ -1,0 +1,16 @@
+<div class="centerVertical list_parent" style="height: 80%">
+	<form method="post" action="" class="list_child" data-bind="event: {submit: $root.login}">
+		<label class="horizontal">
+			<small data-bind="text: Lang.get('username')"></small>
+			<input type="text" data-bind="value: $root.username" autocomplete="username"/>
+		</label>
+		<label class="horizontal">
+			<small data-bind="text: Lang.get('password')"></small>
+			<input type="password" data-bind="value: $root.password" autocomplete="current-password"/>
+		</label>
+		
+		<br/>
+		
+		<input class="vertical right" type="submit" data-bind="value: Lang.get('login')"/>
+	</form>
+</div>

@@ -1,0 +1,41 @@
+
+<label>
+	<small data-bind="text: Lang.get('colon_title')">Title</small>
+	<input type="text" data-bind="value: title"/>
+</label>
+
+<label>
+	<small data-bind="text: Lang.get('colon_contactEmail')">Contact-Email</small>
+	<input type="text" data-bind="value: contactEmail"/>
+</label>
+
+
+<div class="fakeLabel spacing_top line">
+	<small data-bind="text: Lang.get('colon_description')">Description:</small>
+	<rich-text params="value: studyDescription"></rich-text>
+</div>
+
+<label class="spacing_top line">
+	<small data-bind="text: Lang.get('colon_informedConsent')">Informed Consent:</small>
+	<textarea data-bind="value: informedConsentForm"></textarea>
+</label>
+
+<div class="fakeLabel spacing_top line">
+	<small data-bind="text: Lang.get('colon_postInstallInstructions')"></small>
+	<rich-text params="value: postInstallInstructions"></rich-text>
+</div>
+
+<div class="fakeLabel spacing_top line">
+	<small data-bind="text: Lang.get('colon_webInstallInstructions')"></small>
+	<rich-text params="value: webInstallInstructions"></rich-text>
+</div>
+
+<div class="fakeLabel spacing_top line">
+	<small data-bind="text: Lang.get('colon_chooseUsernameInstructions')"></small>
+	<rich-text params="value: chooseUsernameInstructions"></rich-text>
+</div>
+
+<div class="fakeLabel spacing_top line">
+	<small data-bind="text: Lang.get('colon_webQuestionnaireCompletedInstructions')"></small>
+	<rich-text params="value: webQuestionnaireCompletedInstructions"></rich-text>
+</div>

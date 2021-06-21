@@ -1,0 +1,11 @@
+<div data-bind="foreach: $root.page_screenshots">
+	<title-row params="title: title" data-bind="attr: {id: 'screenshots_'+id}"></title-row>
+	
+	<dash-row data-bind="foreach: images">
+		<div class="dashEl">
+			<img alt="screenshot" src="" data-bind="click: $root.clickScreenshot,
+				attr: {src: $root.URL_ABOUT_ESMIRA_SOURCE + $data}
+			"/>
+		</div>
+	</dash-row>
+</div>

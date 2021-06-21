@@ -1,0 +1,46 @@
+<label>
+	<small data-bind="text: Lang.get('type')"></small>
+	<select data-bind="options: $root.actions, indexValue: type"></select>
+</label>
+
+<br/>
+<br/>
+
+<label data-bind="visible: type() === $root.ACTION_INVITATION || type() === $root.ACTION_MESSAGE || type() === $root.ACTION_NOTIFICATION">
+	<small data-bind="text: Lang.get('message')"></small>
+	<textarea data-bind="value: msgText"></textarea>
+	<widget-warn data-bind="visible: !msgText().length"></widget-warn>
+	<small data-bind="text: Lang.get('info_notification_title')"></small>
+</label>
+
+<br/>
+<br/>
+
+<div data-bind="visible: type() === $root.ACTION_INVITATION">
+	<title-row params="title: Lang.get('colon_reminder')"></title-row>
+	
+	<div class="center">
+		<label>
+			<small data-bind="text: Lang.get('colon_count')"></small>
+			<input type="number" data-bind="numericValue: reminder_count"/>
+		</label>
+		<label data-bind="visible: reminder_count() != 0">
+			<small data-bind="text: Lang.get('colon_time_delay')"></small>
+			<input type="number" data-bind="numericValue: reminder_delay_minu"/>
+			<small class="footer" data-bind="text: Lang.get('in_minutes')"></small>
+		</label>
+	</div>
+</div>
+
+
+<div data-bind="visible: type() === $root.ACTION_INVITATION">
+	<title-row params="title: Lang.get('colon_timeout_after_last_reminder')"></title-row>
+	<p class="small_text" data-bind="text: Lang.get('info_timeout_notifications')"></p>
+	<div class="center">
+		<widget-only params="android"></widget-only>
+		<label class="horizontal">
+			<input type="number" data-bind="numericValue: timeout"/>
+			<small class="footer" data-bind="text: Lang.get('in_minutes')"></small>
+		</label>
+	</div>
+</div>

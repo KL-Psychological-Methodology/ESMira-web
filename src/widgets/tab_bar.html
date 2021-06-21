@@ -1,0 +1,14 @@
+<div class="tabBar" data-bind="foreach: $component.listTabs">
+	<div class="tab" data-bind="click: clickFu,
+		html: content,
+		css: {selected: $component.is_selected(index), highlight: $data.is_allTab, addBtn: $data.is_addBtn}
+	"></div>
+</div>
+
+<div data-bind="if: $componentTemplateNodes.length">
+	<div class="tabContent" data-bind="foreach: $component.listTabs">
+		<div data-bind="if: $component.is_selected($index())">
+			<div class="template" data-bind="style:{borderWidth: ($index()*2)+'px'}, template: { nodes: $componentTemplateNodes, data: $data.tabData}"></div>
+		</div>
+	</div>
+</div>

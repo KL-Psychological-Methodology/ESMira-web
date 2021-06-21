@@ -1,0 +1,40 @@
+<div data-bind="class: $component.stayOpen ? 'nowrap' : ($component.isOpen() ? 'dropdown nowrap' : 'dropdown nowrap hidden')">
+	<div class="element">
+		<label data-bind="if: $component.needsUsername">
+			<small data-bind="text: Lang.get('username')"></small>
+			<input type="text" data-bind="value: $component.username"/>
+		</label>
+	</div>
+	<div class="element">
+		<label class="no_desc">
+			<small data-bind="text: Lang.get('password')"></small>
+			<input autocomplete="new-password" type="password" data-bind="
+				event:{keyup: function(data, e) {
+						$component.visualize_password($element);
+						$component.password($element.value)
+					}}, value: $component.password"
+				/>
+		</label>
+		<br/>
+		<label>
+			<small data-bind="text: Lang.get('repeat_password')"></small>
+			<input autocomplete="new-password" type="password" data-bind="
+					event:{keyup: function(data, e) {
+						$component.passwordRepeat($element.value);
+					}}, value: $component.passwordRepeat"
+				/>
+		</label>
+	</div>
+	<div class="element">
+		<input type="button" data-bind="
+				click: $component.save,
+				value: Lang.get('save'),
+				enable: $component.password().length >= 12 && $component.password() === $component.passwordRepeat()"
+		/>
+	</div>
+</div>
+<div data-bind="ifnot: $component.stayOpen">
+	<a data-bind="click: $component.open">
+		<div data-bind="template: { nodes: $componentTemplateNodes, data: $data}"></div>
+	</a>
+</div>

@@ -1,0 +1,50 @@
+<form class="small_text" method="post" id="participant_box" data-bind="if: $root.pageType !== 'demo'">
+	<span class="highlight"></span>
+	<span data-bind="text: $root.participant_id"></span>
+	<input type="submit" name="delete_participant" data-bind="click: $root.edit_participant, value: Lang.get('change')"/>
+</form>
+<hr/>
+
+<p class="center" data-bind="if: !$root.active()">
+	<span data-bind="if:$root.wasFinished()">
+		<span data-bind="html: $root.study.webQuestionnaireCompletedInstructions"></span>
+	</span>
+	
+	<span data-bind="ifnot:$root.wasFinished()">
+		<span data-bind="text: Lang.get('error_questionnaire_not_active')"></span>
+	</span>
+</p>
+
+<div id="questionnaire_box" data-bind="if: $root.active() && $root.qPage()">
+	<div data-bind="$root.qPage().header">
+		<div data-bind="html: $root.qPage().header()"></div>
+	</div>
+	
+	<div class="colored_lines" data-bind="foreach: $root.viewModel_page().inputs">
+		<div class="line horizontalPadding verticalPadding" data-bind="
+			component: {name: 'input_'+$data.input.responseType(), params: $data},
+			attr: {class: $root.viewModel_page().showMissings() && $data.required && $data.exportValue() === '' ? 'line horizontalPadding verticalPadding missing' : 'line horizontalPadding verticalPadding'}
+		"></div>
+	</div>
+	
+	<div data-bind="$root.qPage().footer">
+		<div data-bind="html: $root.qPage().footer()"></div>
+	</div>
+	
+	<div data-bind="text: Lang.get('info_required'), visible: $root.viewModel_page().has_requiredFields" class="small_text spacing_top">* input required</div>
+	
+	<input class="left" id="questionnaire_back" type="submit" name="back" data-bind="click: $root.prev_page,
+		value: Lang.get('back'),
+		visible: $root.current_page() >= 1"/>
+	
+	<input class="right" id="questionnaire_continue" type="submit" name="continue" data-bind="click: $root.next_page,
+		value: Lang.get('continue'),
+		visible: $root.current_page() < pages().length-1
+	"/>
+	
+	<input class="right" id="questionnaire_save" type="submit" name="html" value="Save" data-bind="click: $root.save_responses,
+		attr: {disabled: $root.pageType === 'demo'},
+		value: Lang.get('save'),
+		visible: $root.current_page() >= pages().length-1
+	"/>
+</div>
