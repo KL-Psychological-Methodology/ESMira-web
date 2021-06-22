@@ -28,7 +28,9 @@ jobs:
         run: npm run prod
         
       - name: Zip dist folder
-        run: zip -r ESMira-web.zip dist/*
+        run: |
+          cd dist
+          zip -r ../ESMira-web.zip ./*
       
       - name: Upload Release
         uses: "marvinpinto/action-automatic-releases@latest"
