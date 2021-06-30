@@ -95,6 +95,15 @@ module.exports = {
 				{
 					from: path.resolve(SRC, 'imgs', 'screenshots'),
 					to: path.resolve(DIST, 'parts', 'screenshots')
+				},
+				{
+					from: path.resolve(__dirname, '..', 'LICENSE'),
+					to: path.resolve(DIST, 'LICENSE'),
+					toType: 'file'
+				},
+				{
+					from: path.resolve(__dirname, '..', 'README.md'),
+					to: path.resolve(DIST)
 				}
 			]}),
 		
