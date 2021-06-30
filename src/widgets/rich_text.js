@@ -1,11 +1,26 @@
-import {Editor} from "@tiptap/core";
-import StarterKit from "@tiptap/starter-kit";
+import {Editor, mergeAttributes} from "@tiptap/core";
+
+import Document from '@tiptap/extension-document'
+import Text from '@tiptap/extension-text'
+import Bold from '@tiptap/extension-bold';
+import Bullet from '@tiptap/extension-bullet-list';
+import Dropcursor from '@tiptap/extension-dropcursor';
+import Heading from '@tiptap/extension-heading';
+import History from '@tiptap/extension-history';
+import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import Italic from '@tiptap/extension-italic';
+import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
+import Paragraph from '@tiptap/extension-paragraph';
+import Strike from '@tiptap/extension-strike';
+
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
+import HardBreak from '@tiptap/extension-hard-break'
 import Highlight from '@tiptap/extension-highlight'
 import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
-import {bindEvent, createElement} from "../js/helpers/basics";
+import {bindEvent, close_on_clickOutside, createElement} from "../js/helpers/basics";
 import {Lang} from "../js/main_classes/lang";
 import bold from '../imgs/rich_text_toolbar/bold.svg?raw';
 import italic from '../imgs/rich_text_toolbar/italic.svg?raw';
@@ -60,17 +75,40 @@ export function RichText(rootEl, params) {
 	let editor = new Editor({
 		element: editorEl,
 		extensions: [
-			StarterKit,
+			Paragraph.extend({
+				parseHTML() {
+					return [{ tag: 'div' }]
+				},
+				renderHTML({node, HTMLAttributes }) {
+					return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
+				},
+			}), //normal paragraph except we use <div> instead of <p>.
+			// Thanks to: https://github.com/ueberdosis/tiptap/issues/291 and https://github.com/ueberdosis/tiptap/issues/426
+			Text, //required
+			Document, //required
+			HardBreak, //Shift enter for break that doesnt close current tag
+			Bold,
+			Italic,
+			Underline,
+			Strike,
+			Highlight,
+			Heading,
+			History, //have a undo / redo history
+			Dropcursor, //show a cursor when dragging something into editor
+			HorizontalRule, //replace --- with <hr>
+			ListItem,
+			Bullet,
+			OrderedList,
 			Image,
 			Link,
-			Highlight,
-			Underline,
 			TextAlign
 		],
 		content: value(),
 		onUpdate({editor}) {
 			justChanged = true;
-			value(editor.getHTML());
+			let s = editor.getHTML();
+			value(s === "<div></div>" ? "" : s);
+			// console.log(s);
 		},
 		onSelectionUpdate: onSelectionUpdate,
 		beforeDestroy() {
@@ -88,7 +126,7 @@ export function RichText(rootEl, params) {
 	this.editor = editor;
 	
 	let chain = function() {
-		return editor.chain().focus();
+		return editor.chain().focus().scrollIntoView();
 	}
 	
 	let toolbar = [
@@ -109,11 +147,48 @@ export function RichText(rootEl, params) {
 		{fu: function() {chain().toggleBulletList().run();}, html: list_unordered, key: "bulletList", lang: "unorderedList"},
 		{fu: function() {chain().toggleOrderedList().run();}, html: list_ordered, key: "orderedList", lang: "orderedList"},
 		false,
-		{fu: function() {
-			const url = window.prompt(Lang.get("prompt_url"), "https://");
+		{fu: function(e, btn) {
+			let box = createElement("dash-row", "width: 175px", {className: "dropdown"});
+			let dashEl1 = createElement("a", false, {innerText: Lang.get("embedded"), className: "center"});
+			let dashEl2 = createElement("a", false,  {innerText: Lang.get("external"), className: "center"});
 			
-			if(url)
-				chain().setImage({src: url}).run();
+			box.appendChild(dashEl1);
+			box.appendChild(dashEl2);
+			btn.parentNode.appendChild(box);
+			let closeFu = close_on_clickOutside(box);
+			
+			bindEvent(dashEl1, "click", function() {
+				let input = createElement("input", false, {type: "file", multiple: true});
+				input.onchange = function() {
+					let files = input.files;
+					let i=1;
+					let reader = new FileReader();
+					
+					let load = function(file) {
+						if(file && (file.size < 150000 || confirm(Lang.get("prompt_image_fileSize", file.name))))
+							reader.readAsDataURL(file);
+						else if(i < files.length)
+							load(files[i++]);
+						else
+							closeFu();
+					};
+					reader.onloadend = function() {
+						chain().selectNodeForward().setImage({src: reader.result}).run();
+						load(files[i++]);
+					}
+					load(files[0]);
+				};
+				input.click();
+			});
+			
+			bindEvent(dashEl2, "click", function() {
+				const url = window.prompt(Lang.get("prompt_url"), "https://");
+
+				if(url)
+					chain().setImage({src: url}).run();
+				closeFu();
+			});
+			
 		}, html: image, key: "image", lang: "add_image"},
 		{fu: function() {
 			if(editor.isActive("link"))
@@ -137,8 +212,7 @@ export function RichText(rootEl, params) {
 
 		if(entry) {
 			let el = createElement("div", false, {innerHTML: entry.html, className: "btn", title: Lang.get(entry.lang)});
-			bindEvent(el, "click", function() {entry.fu(); onSelectionUpdate();});
-			// bindEvent(el, "click", function() {editor.chain().focus().toggleBold().run()});
+			bindEvent(el, "click", function(e) {entry.fu(e, el); onSelectionUpdate();});
 			currentGroup.appendChild(el);
 			entry.el = el;
 		}

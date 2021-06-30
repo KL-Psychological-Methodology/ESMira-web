@@ -428,7 +428,7 @@ label .richText {
 	/*border-bottom: 1px solid #dc4e9d;*/
 }
 .richText .editor .ProseMirror {
-	padding: 0 3px;
+	padding: 10px 3px;
 	border-bottom: 1px solid #dc4e9d;
 }
 .richText .editor .ProseMirror-focused {
