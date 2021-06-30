@@ -11,8 +11,6 @@ $LANG = json_decode(file_get_contents("parts/locales/$lang_name.json"));
 $server_name = file_get_contents(FILE_SERVER_NAME);
 $page_key = 'home';
 
-if(!isset($_GET['key']))
-	$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 
 //
 //Choose starting page:
@@ -34,13 +32,15 @@ if(file_exists(FOLDER_DATA)) {
 		$page_key = 'questionnaire_attend'; //we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
 }
 
+if(!isset($_GET['key']))
+	$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
+
 $error = null;
 function show_error($s) {
 	global $error;
 	$error = $s;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="<?php echo $lang_name; ?>">
@@ -86,7 +86,7 @@ function show_error($s) {
 					'about' => 'php/no_js/pages/about.php',
 					'app_install' => 'php/no_js/pages/app_install.php',
 					'change_lang' => 'php/no_js/pages/change_lang.php',
-					'impressum' => 'php/no_js/pages/legal.php',
+					'impressum' => 'php/no_js/pages/impressum.php',
 					'privacyPolicy' => 'php/no_js/pages/privacy_policy.php',
 					'questionnaire_attend' => 'php/no_js/pages/questionnaire_attend.php',
 					'studies' => 'php/no_js/pages/studies_list.php',

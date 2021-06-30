@@ -9,7 +9,7 @@ export const Admin = {
 	
 	tools: null,
 	is_loggedIn: ko.observable(false),
-	is_init: true,
+	esmira_isInit: true,
 	enable_adminFeatures: false, //is set to true in page.js when pageName === "admin" is detected. Mainly used to check if init() is in progress
 	
 	init: function(page) {
@@ -26,8 +26,7 @@ export const Admin = {
 			// self.is_loggedIn.subscribe(Site.reload_allPages, Site);
 			
 			if(data["init_esmira"])
-				self.is_init = false;
-				// page.replace("init_esmira");
+				self.esmira_isInit = false;
 			else
 				AdminTools.set_loginStatus(data);
 			

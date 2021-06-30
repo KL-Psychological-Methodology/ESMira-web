@@ -44,10 +44,12 @@ if(file_exists(FOLDER_DATA)) {
 		$js_key = "home";
 	
 	require_once FILE_SERVER_SETTINGS;
+	$serverSettings = SERVER_SETTINGS;
 }
 else {
 	$js_key = 'init_esmira';
 	require_once 'php/default_server_settings.php';
+	$serverSettings = DEFAULT_SERVER_SETTINGS;
 }
 $access_key = get_accessKey();
 
@@ -74,7 +76,7 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = 'grayscaleDark';
 		else
 			$type = '';
-		$servername = SERVER_SETTINGS['serverName'];
+		$servername = $serverSettings['serverName'];
 		$serverVersion = SERVER_VERSION;
 		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("parts/locales/$lang.json"); ?></script>
 	

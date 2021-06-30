@@ -13,7 +13,7 @@ export function ChangeUser_viewModel(page, rootEl, params) {
 	this.passwordRepeat = ko.observable('');
 	//knockout wraps the username in an observable not matter what - I dont really understand why...
 	this.username = ko.observable(typeof params.username === "function" ? params.username() : params.username);
-	this.needsUsername = !this.username;
+	this.needsUsername = !this.username();
 	
 	this.open = function() {
 		self.isOpen(true);
