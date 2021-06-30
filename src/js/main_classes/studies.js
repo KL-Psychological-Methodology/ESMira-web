@@ -11,7 +11,6 @@ import {Admin} from "./admin";
 
 export const Studies = {
 	list: ko.observable([]),
-	timeOfLoad: 0,
 	accessKey: ko.observable(""),
 	all_accessKeys: ko.observableArray([]),
 	
@@ -19,8 +18,6 @@ export const Studies = {
 	
 	init: function(page) {
 		return PromiseCache.loadJson(this.getUrl(), function(studies) {
-			self.timeOfLoad = Date.now();
-
 			studies.sort( function(a, b) {
 				if(a.title > b.title)
 					return 1;

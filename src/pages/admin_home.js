@@ -21,7 +21,7 @@ export function ViewModel(page) {
 	this.logout = function() {
 		delete_cookie("user");
 		delete_cookie("pass");
-		Admin.tools.set_loginStatus(false);
+		Admin.tools.set_loginStatus({});
 	};
 	
 	this.change_password = function(username, password) {
