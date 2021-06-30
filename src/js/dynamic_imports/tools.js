@@ -29,7 +29,6 @@ function DetectChange(obj) {
 	result.isDirty = ko.pureComputed(function() {
 		return _isInitiallyDirty() || _initialState() !== OwnMapping.toJSON(obj);
 	});
-	
 	result.setDirty = function(state) {
 		_initialState(OwnMapping.toJSON(obj));
 		_isInitiallyDirty(state);
@@ -107,6 +106,7 @@ export const AdminTools = {
 	msg: ko.observableArray(),
 	read: ko.observableArray(),
 	has_newErrors: ko.observable(),
+	loginTime: 0,
 	
 	
 	init: function() {
@@ -328,34 +328,33 @@ export const AdminTools = {
 		return this.is_rootAdmin() || this.msg.indexOf(studyId) !== -1
 	},
 	
-	set_loginStatus: function(data) {
-		if(!data || !data["isLoggedIn"]) {
+	set_loginStatus: function({isLoggedIn, loginTime, lastActivities, permissions, new_messages, needsBackup_list, is_admin, has_errors}) {
+		if(!isLoggedIn) {
 			this.is_rootAdmin(false);
 			Admin.is_loggedIn(false);
 		}
 		else {
-			this.has_newErrors(!!data.errors);
-			Studies.tools.newMessages(OwnMapping.fromJS(data["new_messages"] || {}));
+			this.has_newErrors(has_errors);
+			Studies.tools.newMessages(OwnMapping.fromJS(new_messages || {}));
 			
 			Admin.is_loggedIn(true);
-			Studies.tools.needsBackup(data["needsBackup"] || []);
+			Studies.tools.needsBackup(needsBackup_list || []);
 			
-			data.lastActivities = data.lastActivities.sort(function(a, b) {
+			lastActivities = lastActivities.sort(function(a, b) {
 				return b[1] - a[1];
 			});
-			Studies.tools.lastActivities(data.lastActivities);
+			Studies.tools.lastActivities(lastActivities);
 			
-			// if(data.needsBackup.length && Page.get_pagesCount() === 1)
-			// 	Page.goto("#studies,backups");
+			this.loginTime = loginTime;
 			
-			if(data.admin)
+			if(is_admin)
 				this.is_rootAdmin(true);
 			else {
 				this.is_rootAdmin(false);
-				this.publish(data.publish ? data.publish : []);
-				this.msg(data.msg ? data.msg : []);
-				this.write(data.write ? data.write : []);
-				this.read(data.read ? data.read : []);
+				this.publish(permissions.publish ? permissions.publish : []);
+				this.msg(permissions.msg ? permissions.msg : []);
+				this.write(permissions.write ? permissions.write : []);
+				this.read(permissions.read ? permissions.read : []);
 			}
 		}
 		
@@ -388,6 +387,7 @@ export const Studies_tools = {
 	newMessages: ko.observable(),
 	needsBackup: ko.observableArray([]),
 	lastActivities: ko.observableArray([]),
+	lastChanged: {},
 	_observedSave: null,
 	_observedPublish: null,
 	
@@ -413,14 +413,34 @@ export const Studies_tools = {
 		}
 	},
 	initStudy: function(study) {
-		this.changed_state[study.id()] = new DetectChange(study);
+		let self = this;
+		let studyId = study.id();
+		let detector = new DetectChange(study);
+		this.changed_state[study.id()] = detector;
+		
+		detector.isDirty.subscribe(function(newValue) {
+			let localLastChanged = self.lastChanged[studyId] || Admin.tools.loginTime;
+			
+			if(newValue) {
+				Requests.load(
+					FILE_ADMIN+"?type=check_changed&study_id="+studyId+"&lastChanged="+localLastChanged
+				).then(function({lastChanged, json}) {
+					if(lastChanged > localLastChanged) {
+						self.lastChanged[studyId] = lastChanged;
+						OwnMapping.update(Studies.list()[studyId], json, Defaults.studies);
+						detector.setDirty(false);
+						alert(Lang.get("error_study_was_changed", study.title()));
+					}
+				});
+			}
+		})
 	},
 	
 	add_study: function(page, study) {
 		let self = this;
 		page.loader.showLoader(Lang.get("state_loading"),
 			Promise.all([
-				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study"),
+				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id="+study.id()),
 				Studies.init(page)
 			])
 			.then(function([id]) {
@@ -463,7 +483,7 @@ export const Studies_tools = {
 		}
 		
 		return page.loader.showLoader(Lang.get("state_loading"),
-			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire", false, "post", JSON.stringify(filtered)).then(function(internalId) {
+			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
 				let newQuestionnaire = add_default(study.questionnaires, "questionnaires", pageCode);
 				newQuestionnaire.internalId(internalId);
 				return newQuestionnaire;
@@ -475,16 +495,18 @@ export const Studies_tools = {
 			return;
 		
 		let study = Studies.get_current();
+		let studyId = study.id();
 		let page = Site.get_lastPage();
+		
 		page.loader.loadRequest(
-			FILE_ADMIN+"?type=save_study&study_id="+study.id()+"&timeOfLoad="+Studies.timeOfLoad,
+			FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
 			false,
 			"post",
 			OwnMapping.toJSON(study)
-		).then(function(json) {
+		).then(function({lastChanged, json}) {
 			OwnMapping.update(study, json, Defaults.studies);
 			self.set_study_unchanged(study);
-			Studies.timeOfLoad = Date.now();
+			self.lastChanged[studyId] = lastChanged;
 			
 			if(study.published()) {
 				let studyAccessKeys = study.accessKeys();

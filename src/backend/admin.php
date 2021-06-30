@@ -198,6 +198,7 @@ if(!isset($_GET['type']))
 	error('No data');
 $type = $_GET['type'];
 
+//is not logged in
 switch($type) {
 	case 'init_esmira':
 		if(file_exists(FOLDER_DATA))
@@ -258,12 +259,15 @@ switch($type) {
 				$lastActivities = [];
 				$count = 0;
 				$h_folder = opendir(FOLDER_STUDIES);
-				$msgPermissions = !$is_admin && isset($userPermissions['write']) ? $userPermissions['write'] : [];
+				$writePermissions = !$is_admin && isset($userPermissions['write']) ? $userPermissions['write'] : [];
+				$msgPermissions = !$is_admin && isset($userPermissions['msg']) ? $userPermissions['write'] : [];
 				
 				while($study_id = readdir($h_folder)) {
-					if($study_id[0] != '.' && $study_id != FILENAME_STUDY_INDEX && ($is_admin || in_array($study_id, $msgPermissions))) {
-						
-						//new messages:
+					if($study_id[0] == '.' || $study_id !== FILENAME_STUDY_INDEX)
+						continue;
+					
+					//new messages:
+					if($is_admin || in_array($study_id, $msgPermissions)) {
 						$studyDir = get_folder_messages_unread($study_id);
 						if(!file_exists($studyDir))
 							continue;
@@ -275,8 +279,10 @@ switch($type) {
 								break;
 							}
 						}
-						
-						//need backup:
+					}
+					
+					//need backup:
+					if($is_admin || in_array($study_id, $writePermissions)) {
 						$metadata_path = get_file_studyMetadata($study_id);
 						if(file_exists($metadata_path)) {
 							$metadata = unserialize(file_get_contents($metadata_path));
@@ -284,24 +290,24 @@ switch($type) {
 								array_push($needsBackup, (int) $study_id);
 							}
 						}
-						
-						//last activity:
-						$events_path = get_file_responses($study_id, FILENAME_EVENTS);
-						if(file_exists($events_path))
-							array_push($lastActivities, [(int) $study_id, filemtime($events_path)]);
 					}
+					
+					//last activity:
+					$events_path = get_file_responses($study_id, FILENAME_EVENTS);
+					if(file_exists($events_path))
+						array_push($lastActivities, [(int) $study_id, filemtime($events_path)]);
 				}
 				closedir($h_folder);
 				$new_messages['count'] = $count;
 				
 				
 				$userPermissions['new_messages'] = $new_messages;
-				$userPermissions['needsBackup'] = $needsBackup;
+				$userPermissions['needsBackup_list'] = $needsBackup;
 				$userPermissions['lastActivities'] = $lastActivities;
 			}
 			
 			if(is_admin()) {
-				$obj = ['admin' => true];
+				$obj = ['is_admin' => true];
 				$has_errors = false;
 				$msg = [];
 				$h_folder = opendir(FOLDER_ERRORS);
@@ -311,15 +317,16 @@ switch($type) {
 					}
 				}
 				closedir($h_folder);
-				$obj['errors'] = $has_errors;
+				$obj['has_errors'] = $has_errors;
 				
 				list_additionalPermissions(true, $obj);
 			}
 			else {
-				$obj = get_permissions();
+				$obj['permissions'] = get_permissions();
 				list_additionalPermissions(false, $obj);
 			}
 			$obj['isLoggedIn'] = true;
+			$obj['loginTime'] = time();
 			success(json_encode($obj));
 		}
 		break;
@@ -333,23 +340,8 @@ $study_id = isset($_POST['study_id']) ? (int) $_POST['study_id'] : (isset($_GET[
 
 $is_admin = is_admin();
 
-//has no permission or read permission:
+//is logged in or read permission:
 switch($type) {
-	case 'get_new_id':
-		$forQuestionnaire = $_GET['for'] === 'questionnaire';
-		$filtered = $forQuestionnaire ? json_decode(file_get_contents('php://input')) : [];
-		
-		$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
-		
-		$i = 0;
-		do {
-			$study_id = $forQuestionnaire ? getQuestionnaireId() : getStudyId();
-			
-			if(++$i > 1000)
-				error('Could not find an unused id...');
-		} while(file_exists(get_folder_study($study_id)) || isset($study_index["~$study_id"]) || isset($filtered[$study_id]));
-		success($study_id);
-		break;
 	case 'change_password':
 		if(!isset($_POST['pass']))
 			error('Unexpected data');
@@ -663,6 +655,21 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'msg'))) {
 //has write permission:
 if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 	switch($type) {
+		case 'get_new_id':
+			$forQuestionnaire = $_GET['for'] === 'questionnaire';
+			$filtered = $forQuestionnaire ? json_decode(file_get_contents('php://input')) : [];
+			
+			$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
+			
+			$i = 0;
+			do {
+				$study_id = $forQuestionnaire ? getQuestionnaireId() : getStudyId();
+				
+				if(++$i > 1000)
+					error('Could not find an unused id...');
+			} while(file_exists(get_folder_study($study_id)) || isset($study_index["~$study_id"]) || isset($filtered[$study_id]));
+			success($study_id);
+			break;
 		case 'empty_data':
 			$responses_folder = get_folder_responses($study_id);
 			if(file_exists($responses_folder))
@@ -688,6 +695,18 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			goto save_study;
 			
 			break;
+		case 'check_changed':
+			$sentChanged = (int) $_GET['lastChanged'];
+			$file_config = get_file_studyConfig($study_id);
+			$realChanged = filemtime($file_config);
+			if(file_exists($file_config) && $realChanged > $sentChanged) {
+				$study = file_get_contents($file_config);
+				success("{\"lastChanged\": $realChanged, \"json\": $study}");
+			}
+			else
+				success("{\"lastChanged\": $realChanged}");
+			
+			break;
 		case 'save_study':
 			save_study:
 			if(!isset($study_json)) //it will already be defined when we use goto from delete_data
@@ -701,7 +720,7 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			
 			$file_config = get_file_studyConfig($study_id);
 			
-			if(isset($_GET['timeOfLoad']) && file_exists($file_config) && filemtime($file_config) * 1000 > $_GET['timeOfLoad'])
+			if(isset($_GET['lastChanged']) && file_exists($file_config) && filemtime($file_config) > $_GET['lastChanged'])
 				error('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
 			
 			
@@ -1060,7 +1079,7 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			}
 			
 			$study_json = json_encode($study);
-			write_file(get_file_studyConfig($study_id), $study_json);
+			write_file($file_config, $study_json);
 			
 			
 			//
@@ -1084,7 +1103,8 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			
 			$metadata = get_newMetadata($study);
 			write_file(get_file_studyMetadata($study_id), serialize($metadata));
-			success($study_json);
+			$sentChanged = time();
+			success("{\"lastChanged\":$sentChanged,\"json\":$study_json}");
 			break;
 		case 'mark_study_as_updated'://this will mark the study as updated for already existing participants
 			$file = get_file_studyConfig($study_id);
