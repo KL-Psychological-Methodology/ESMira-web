@@ -188,6 +188,7 @@
 	"edit_sumScores": "Create sumscores",
 	"edit_users": "Change accounts",
 	"empty_data": "Empty data",
+	"embedded": "Embedded",
 	"empty_dataSymbol": "-",
 	"endDate": "End date",
 	"endTime": "End time",
@@ -210,6 +211,7 @@
 	"error_short_message": "The message needs to consist of at least 2 characters.",
 	"error_short_username": "The username needs to consist of at least 3 characters.",
 	"error_study_not_compatible": "This study does not seem to be compatible with the server. Please update the server.",
+	"error_study_was_changed": "The study \"%s\" was changed since it was last loaded. All local changes were overwritten with the newest version from the server.",
 	"error_unknown": "Unexpected error!",
 	"error_unknown_data": "Unexpected data.",
 	"error_wrong_accessKey": "Wrong access-key",
@@ -219,6 +221,7 @@
 	
 	"events_csv_title": "Events",
 	"expiration": "Expiration",
+	"external": "External",
 	
 	"footer": "Footer",
 	"for_AndroidSmartphones": "For Android Smartphones",
@@ -245,6 +248,7 @@
 	"help_va_scale": "Creates a Visual Analogue Scale. The scale will initially be empty and when clicked, a thumb will appear at the clicked position. In the Web interface when the user has JavaScript disabled (\"Web NOJS\"), the thumb will instead initially be positioned at position 50. Then it will also not be possible to determine if that Item has been filled out not.",
 	"help_video": "Shows an embedded video. The return value will be 1 if the video was loaded successfully. Otherwise, it will be 0. Example for a Youtube video: \"https://www.youtube.com/embed/XXXX\".",
 	
+	"hidden_studies": "Hidden studies",
 	"hideUntilCompletion": "Only visible for participants who have finished the study.",
 	"highlighted": "Highlighted",
 	"home": "Home",
@@ -269,6 +273,7 @@
 	
 	"inform_server_about_events": "Save event in events.csv",
 	"informed_consent": "Informed consent",
+	"init_esmira": "Set up ESMira",
 	"input_binary": "Binary item",
 	"input_date": "Date input",
 	"input_image": "Image",
@@ -329,6 +334,7 @@
 	"privacyPolicy": "Privacy Policy",
 	
 	"prompt_comment": "Please select a comment:",
+	"prompt_image_fileSize": "\"%s\" is a very big file. Are you sure that you want it embed into the studyfile? It could increase the download and processing time of the study.",
 	"prompt_input_name": "Please select a variable name (it has to be unique over all questionnaires):",
 	"prompt_studyName": "Please select a study name:",
 	"prompt_title": "Please choose a title:",
@@ -338,6 +344,7 @@
 	"published": "Study is published",
 	"published_not": "Study is not published",
 	"public_statistics": "Public statistics",
+	"public_studies": "Public studies",
 	"questionnaires": "Questionnaires",
 	"questionnaires_can_only_be_completed_at_specific_time": "Questionnaire can only be filled out at a specific time of day",
 	"questionnaires_can_only_be_completed_once": "Questionnaire can only be filled out once.",
@@ -415,6 +422,7 @@
 	"startTime": "Start time",
 	"startDate": "Start date",
 	"strikethrough": "Strikethrough",
+	"studies": "Studies",
 	"study": "Study",
 	"study_description": "Study description",
 	"study_settings": "Study settings",

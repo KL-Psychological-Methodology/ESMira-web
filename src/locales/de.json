@@ -187,6 +187,7 @@
 	"edit_studies": "Studien bearbeiten",
 	"edit_sumScores": "Summenscores erstellen",
 	"edit_users": "Benutzer bearbeiten",
+	"embedded": "Eingebettet",
 	"empty_data": "Daten leeren",
 	"empty_dataSymbol": "-",
 	"endDate": "End-Datum",
@@ -209,7 +210,8 @@
 	"error_short_serverName": "Der Servername muss zwischen 3 und 30 Zeichen lang sein.",
 	"error_short_message": "Die Nachricht muss aus mindestens 2 Zeichen bestehen.",
 	"error_short_username": "Der Username muss aus mindestens 3 Zeichen bestehen.",
-	"error_study_not_compatible": "Studie \"%s\" scheint nicht mit diesem Server kompatibel zu sein. Bitte den Server updaten.",
+	"error_study_not_compatible": "Die Studie \"%s\" scheint nicht mit diesem Server kompatibel zu sein. Bitte den Server updaten.",
+	"error_study_was_changed": "Die Studie \"%s\" wurde seit dem letzten Laden verändert. Alle lokalen Änderungen wurden mit der neuesten Version der Studie überschrieben.",
 	"error_unknown": "Unerwarteter Fehler!",
 	"error_unknown_data": "Unbekannte Daten.",
 	"error_wrong_accessKey": "Falscher Zugangsschlüssel.",
@@ -219,6 +221,7 @@
 	
 	"events_csv_title": "Events",
 	"expiration": "Ende",
+	"external": "Extern",
 	
 	"footer": "Footer",
 	"for_AndroidSmartphones": "Für Android Smartphones",
@@ -245,6 +248,7 @@
 	"help_va_scale": "Erzeugt eine Visual Analogue Skala. Der Schieber erscheint erst, wenn von Teilnehmenden eine Position auf der Skala ausgewählt wurde. In der Web-Version, wenn der Benutzer JavaScript deaktiviert hat (\"Web NOJS\"), wird der Schieber zum Beginn auf stattdessen Position 50 platziert. Dadurch kann auch nicht erhoben werden ob eine Eingabe getätigt wurde oder nicht.",
 	"help_video": "Zeigt ein eingebettes Video. Der Ausgabewert ist 1 wenn das Video erfolgreich geladen wurde. Ansonsten 0. Beispiel für eine Youtube-url: \"https://www.youtube.com/embed/XXXX\".",
 	
+	"hidden_studies": "Versteckte Studien",
 	"hideUntilCompletion": "Zeige nur Teilnehmenden welche die Studie bereits abgeschlossen haben.",
 	"highlighted": "Hervorgehoben",
 	"home": "Home",
@@ -269,6 +273,7 @@
 	
 	"inform_server_about_events": "Speichere event in event.csv",
 	"informed_consent": "Einverständniserklärung",
+	"init_esmira": "ESMira einrichten",
 	"input_binary": "Binäres Item",
 	"input_date": "Datums-Eingabe",
 	"input_image": "Bild",
@@ -329,6 +334,7 @@
 	"privacyPolicy": "Datenschutzerklärung",
 	
 	"prompt_comment": "Bitte wählen Sie ein Kommentar:",
+	"prompt_image_fileSize": "\"%s\" ist sehr groß. Sind Sie sicher, dass Sie es in das Studienfile einbetten wollen? Dies kann die Download- und Verarbeitungszeit der Studie erhöhen.",
 	"prompt_input_name": "Bitte wählen Sie einen Variablen-Namen (Dieser darf über alle Fragebögen nur einmal vorkommen):",
 	"prompt_studyName": "Bitte wählen Sie ein Studien-Namen:",
 	"prompt_title": "Bitte wählen Sie einen Titel:",
@@ -338,6 +344,7 @@
 	"published": "Studie ist veröffentlicht",
 	"published_not": "Studie ist nicht veröffentlicht",
 	"public_statistics": "Öffentliche Statistiken",
+	"public_studies": "Öffentliche Studien",
 	"questionnaires": "Fragebögen",
 	"questionnaires_can_only_be_completed_at_specific_time": "Fragebögen kann nur zu bestimmter Zeit ausgefüllt werden",
 	"questionnaires_can_only_be_completed_once": "Fragebögen kann nur einmal ausgefüllt werden",
@@ -415,6 +422,7 @@
 	"startTime": "Start-Zeit",
 	"startDate": "Start-Datum",
 	"strikethrough": "Durchgestrichen",
+	"studies": "Studien",
 	"study": "Studie",
 	"study_description": "Studien-Beschreibung",
 	"study_settings": "Studien-Einstellungen",
