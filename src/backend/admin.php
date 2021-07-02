@@ -261,9 +261,8 @@ switch($type) {
 				$h_folder = opendir(FOLDER_STUDIES);
 				$writePermissions = !$is_admin && isset($userPermissions['write']) ? $userPermissions['write'] : [];
 				$msgPermissions = !$is_admin && isset($userPermissions['msg']) ? $userPermissions['write'] : [];
-				
 				while($study_id = readdir($h_folder)) {
-					if($study_id[0] == '.' || $study_id !== FILENAME_STUDY_INDEX)
+					if($study_id[0] === '.' || $study_id === FILENAME_STUDY_INDEX)
 						continue;
 					
 					//new messages:
