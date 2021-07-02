@@ -16,6 +16,7 @@ import {Defaults} from "../js/variables/defaults";
 import {Requests} from "../js/main_classes/requests";
 import {Admin} from "../js/main_classes/admin";
 import {Studies} from "../js/main_classes/studies";
+import {colors} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
 	this.html = html;
@@ -39,7 +40,6 @@ export function ViewModel(page) {
 	this.created = ko.observable(0);
 	
 	this.postInit = function(index, {ChartBox}, serverStatistics) {
-		
 		let is_loggedIn = Admin.is_loggedIn();
 		this.total_studies(serverStatistics.total.studies);
 		this.total_questionnaires(serverStatistics.total.questionnaire);
@@ -120,22 +120,10 @@ export function ViewModel(page) {
 					}
 				}
 			}
-			
-			let colors = [
-				"#55ff00",
-				"#ffff00",
-				"#ff9955",
-				"#ff0000",
-				"#ff55ff",
-				"#0000ff",
-				"#00ccff",
-				"#55ffff"
-			];
-			for(let key in appVersion_labels) {
-				if(!appVersion_labels.hasOwnProperty(key))
-					continue;
-				let i = appVersion_statistics.length;
-				
+			let keys = Object.keys(appVersion_labels).sort();
+			let maxColors = colors.length;
+			for(let i=0, max=keys.length; i<max; ++i) {
+				let key = keys[i];
 				appVersion_statistics.push(data_to_dailyData("appVersion", key));
 				
 				appVersion_axisContainer.push({
@@ -148,7 +136,7 @@ export function ViewModel(page) {
 						observedVariableIndex: i
 					},
 					label: key,
-					color: colors[i]
+					color: colors[i%maxColors]
 				});
 			}
 		}

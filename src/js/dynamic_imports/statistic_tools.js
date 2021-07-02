@@ -306,7 +306,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 					}
 				},
 				addVars = function(container, statistics) {
-					for(let axisContainer_i=container.length-1; axisContainer_i>=0; --axisContainer_i) {
+					for(let axisContainer_i=0, max=container.length; axisContainer_i<max; ++axisContainer_i) {
 						let axisContainer = container[axisContainer_i],
 							yAxis = axisContainer.yAxis,
 							variable_name = yAxis.variableName(),
