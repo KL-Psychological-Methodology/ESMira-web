@@ -5,6 +5,7 @@ import {check_string, save_cookie} from "../js/helpers/basics";
 import {FILE_ADMIN} from "../js/variables/urls";
 import * as ko from "knockout";
 import {Admin} from "../js/main_classes/admin";
+import {Site} from "../js/main_classes/site";
 
 export function ViewModel(page) {
 	let self = this;
@@ -13,9 +14,13 @@ export function ViewModel(page) {
 	
 	this.promiseBundle = [Admin.init(page)];
 	
+	this.preInit = function(index, admin) {
+		if(admin.esmira_isInit)
+			Site.goto("admin");
+	}
 	this.server_name = ko.observable("");
 	
-	this.create = function(_, username, password) {
+	this.create = function(username, password) {
 		let server_name = self.server_name();
 		
 		if(server_name.length < 3 || server_name.length > 30)
@@ -31,7 +36,7 @@ export function ViewModel(page) {
 			).then(function(hashed_pass) {
 				save_cookie("user", username);
 				save_cookie("pass", hashed_pass);
-				page.replace("admin");
+				Site.goto("admin");
 			});
 		}
 	}

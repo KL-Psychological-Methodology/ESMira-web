@@ -407,8 +407,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 									data.push({x: axisContainer_i, y: rawData[xMin]});
 								else
 									data.push(rawData[xMin]);
-								// labels.push(xMin);
-								labels[xMax - xMin] = xMin;
+								labels.push(xMin);
 							}
 						}
 						
@@ -696,7 +695,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	if(chart.title().length)
 		parent.appendChild(createElement("h2", false, {innerText: chart.title(), className: "center"}));
 	if(chart.chartDescription().length)
-		parent.appendChild(createElement("p", false, {innerText: chart.chartDescription()}));
+		parent.appendChild(createElement("p", false, {innerHTML: chart.chartDescription()}));
 	
 	let window_div = createElement("div", false, {className: "chartWindow"}),
 		legendBox = createElement("div", false, {className: "legend"}),
@@ -717,6 +716,9 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	if(scrollable)
 		chart_div.classList.add("scrollable");
 	
+	console.log(statistics);
+	console.log(labels);
+	console.log(datasets);
 	let chart_js = new Chart(el.getContext('2d'), {
 		type: drawnChartType,
 		data: {

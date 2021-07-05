@@ -49,7 +49,7 @@ export function ViewModel(page) {
 				study = Studies.get_current();
 			
 			let promise;
-			if(isFor_calc === "calc") {
+			if(isFor_calc) {
 				promise = load_statisticsFromFiles(
 					study,
 					charts
