@@ -28,7 +28,7 @@ $questionnaire = $studyData['questionnaire'];
 
 if(isset($_POST['delete_participant'])) {
 	save_dataset(DATASET_TYPE_QUIT, $_POST['participant'], $study);
-	create_cookie('participant'.$study_id, '', time() - 3600);
+	delete_cookie('participant'.$study_id);
 	remove_postHeader();
 	return;
 }

@@ -107,7 +107,7 @@ class Inputs {
 				if(!sizeof($choices_left)) {
 					for($i = sizeof($choices) - 1; $i >= 0; --$i) {
 						array_push($choices_left, $i);
-						create_cookie($cookie_completed .$i, '0', time() - 3600);
+						delete_cookie($cookie_completed .$i);
 					}
 				}
 				$dynamicIndex = $choices_left[rand(0, sizeof($choices_left) - 1)];

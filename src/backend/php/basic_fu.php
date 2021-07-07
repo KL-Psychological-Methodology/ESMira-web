@@ -73,6 +73,9 @@ function create_cookie($name, $value, $expires) {
 	else
 		setcookie($name, $value, ['expires' => $expires, 'sameSite' => 'Strict']);
 }
+function delete_cookie($name) {
+	create_cookie($name, '0', time() - 3600);
+}
 
 function freeze_study($study_id, $lock=true) {
 	$file = get_file_lock($study_id);
