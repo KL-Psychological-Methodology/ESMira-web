@@ -114,7 +114,8 @@ dash-row > a .msg {
 
 
 
-title-row > div, .title-row {
+title-row, .title-row {
+	display: block;
 	margin: 5px -1% 10px -1%;
 	padding-left: 20px;
 	padding-top: 5px;

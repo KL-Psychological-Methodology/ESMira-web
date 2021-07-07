@@ -226,9 +226,7 @@ svg.highlight {
 	display: inline-block;
 	vertical-align: middle; /*make sure it wont be overwritten by label:not([for])*/
 }
-.horizontal {
-	vertical-align: middle;
-}
+
 
 .line, label:not([for]).line, .fakeLabel.line { /*label:not([for]).line is needed because we need to override label:not([for])*/
 	display: block;
