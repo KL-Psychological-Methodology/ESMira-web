@@ -1,5 +1,8 @@
 <?php
-header('Content-Type: application/json;charset=UTF-8');
+if(isset($_GET['csv']))
+	header('Content-Type: text/csv;charset=UTF-8');
+else
+	header('Content-Type: application/json;charset=UTF-8');
 header('Cache-Control: no-cache, must-revalidate');
 require_once 'php/configs.php';
 require_once 'php/permission_fu.php';
@@ -148,6 +151,24 @@ function write_serverSettings($serverName) {
 	
 	return write_file(FILE_SERVER_SETTINGS, '<?php const SERVER_SETTINGS='.var_export($serverSettings, true).';?>');
 }
+function check_userExists($user) {
+	$h = fopen(FILE_LOGINS, 'r');
+	while(!feof($h)) {
+		$line = fgets($h);
+		$data = explode(':', $line);
+		
+		if(!$data || sizeof($data) < 1)
+			continue;
+		
+		if($data[0] == $user) {
+			fclose($h);
+			return true;
+		}
+	}
+	fclose($h);
+	return false;
+}
+
 function update_loginsFile($user, $new_user=null, $new_pass=null) {
 	$export = '';
 	$h = fopen(FILE_LOGINS, 'r');
@@ -164,9 +185,10 @@ function update_loginsFile($user, $new_user=null, $new_pass=null) {
 		else {
 			$userExists = true;
 			if($new_user || $new_pass)
-				$export .= ($new_user ? $new_user : $user).':'.($new_pass ? $new_pass : $data[1])."\n";
+				$export .= ($new_user ?: $user).':'.($new_pass ?: $data[1])."\n";
 		}
 	}
+	fclose($h);
 	if($userExists) {
 		write_file(FILE_LOGINS, $export);
 		return true;
@@ -221,11 +243,13 @@ switch($type) {
 			
 			
 			create_folder(FOLDER_ERRORS);
+			create_folder(FOLDER_TOKEN);
 			
 			create_folder(FOLDER_STUDIES);
 			write_file(FILE_STUDY_INDEX, serialize([]));
 			
-			success('"' .load_hashLite_from_login($user, $pass) .'"');
+			set_loggedIn($user);
+			success();
 		}
 		
 		error('Unknown error');
@@ -233,18 +257,21 @@ switch($type) {
 	case 'login':
 		if(!isset($_POST['user']) || !isset($_POST['pass']))
 			error('Missing data');
-		
-		
 		$user = $_POST['user'];
-		$pass = load_hashLite_from_login($user, $_POST['pass']);
-		if($pass) {
-			create_cookie('user', $_COOKIE['user'] = $user, 32532447600);
-			create_cookie('pass', $_COOKIE['pass'] = $pass, 32532447600);
-			goto get_permissions;
-		}
-		else
-			error('Wrong password');
 		
+		if(!check_login($user, $_POST['pass']))
+			return error('Wrong password');
+		
+		if(isset($_POST['rememberMe']))
+			create_token($user);
+		
+		set_loggedIn($user);
+		goto get_permissions;
+		
+		break;
+	case 'logout':
+		set_loggedOut();
+		success();
 		break;
 	case 'get_permissions':
 		get_permissions:
@@ -324,6 +351,7 @@ switch($type) {
 				$obj['permissions'] = get_permissions();
 				list_additionalPermissions(false, $obj);
 			}
+			$obj['username'] = get_user();
 			$obj['isLoggedIn'] = true;
 			$obj['loginTime'] = time();
 			success(json_encode($obj));
@@ -350,17 +378,118 @@ switch($type) {
 		if($is_admin && isset($_POST['user']))
 			$user = $_POST['user'];
 		else
-			$user = $_COOKIE['user'];
+			$user = get_user();
 		
 		if(strlen($pass) < 12)
 			error('The password needs to have at least 12 characters.');
 		
-		$hash = get_hashed_pass($pass);
-		
-		if(update_loginsFile($user, null, $hash))
-			success('"' .load_hashLite_from_login($user, $pass) .'"');
+		if(update_loginsFile($user, null, get_hashed_pass($pass)))
+			success();
 		else
 			error('User does not exist.');
+		break;
+	case 'change_username':
+		if(!isset($_POST['new_user']))
+			error('Unexpected data');
+		
+		if($is_admin && isset($_POST['user']))
+			$user = $_POST['user'];
+		else
+			$user = get_user();
+		
+		$new_user = $_POST['new_user'];
+		
+		if(check_userExists($new_user))
+			error("Username '$new_user' already exists");
+		
+		$permissions = unserialize(file_get_contents(FILE_PERMISSIONS));
+		if($permissions) {
+			if(isset($permissions[$user])) {
+				$p = $permissions[$new_user] = $permissions[$user];
+				unset($permissions[$user]);
+				
+				if(isset($p['admin'])) {
+					$h_folder = opendir(FOLDER_STUDIES);
+					while($file = readdir($h_folder)) {
+						if($file[0] != '.') {
+							create_readPermission_htaccessFile($file, $permissions);
+						}
+					}
+					closedir($h_folder);
+				}
+				else if(isset($p['read'])) {
+					foreach($p['read'] as $study_id) {
+						create_readPermission_htaccessFile($study_id, $permissions);
+					}
+				}
+			}
+			
+			write_file(FILE_PERMISSIONS, serialize($permissions));
+		}
+		update_loginsFile($user, $new_user);
+		
+		$folder_token = get_folder_token($user);
+		if(file_exists($folder_token))
+			rename($folder_token, get_folder_token($new_user));
+		
+		if(get_user() == $user) {
+			$_SESSION['user'] = $new_user;
+			if(isset($_COOKIE['user']))
+				create_cookie('user', $_COOKIE['user'] = $new_user, time()+31536000);
+		}
+		
+		success();
+		break;
+	case 'get_tokenList':
+		get_tokenList:
+		$user = get_user();
+		$folder_token = get_folder_token($user);
+		$currentToken = get_currentToken();
+		
+		$obj = [];
+		if(file_exists($folder_token)) {
+			$h_folder = opendir($folder_token);
+			while($file = readdir($h_folder)) {
+				if($file[0] != '.')
+					array_push($obj, ['hash' => $file, 'last_used' => filemtime($folder_token.$file), 'current' => ($file === $currentToken)]);
+			}
+			closedir($h_folder);
+		}
+		
+		success(json_encode($obj));
+		break;
+	case 'get_loginHistory':
+		$user = get_user();
+		
+		$file_history1 = get_file_tokenHistory($user, 1);
+		$file_history2 = get_file_tokenHistory($user, 2);
+		$exists1 = file_exists($file_history1);
+		$exists2 = file_exists($file_history2);
+		
+		header('Content-Length: ' .(($exists1 ? filesize($file_history1) : 0) + ($exists2 ? filesize($file_history2) : 0)));
+		echo 'date'.CSV_DELIMITER.'login'.CSV_DELIMITER.'ip'.CSV_DELIMITER.'userAgent';
+		if($exists1 && $exists2) {
+			if(filemtime($file_history1) < filemtime($file_history2)) {
+				readfile($file_history1);
+				readfile($file_history2);
+			}
+			else {
+				readfile($file_history2);
+				readfile($file_history1);
+			}
+		}
+		else if($exists1)
+			readfile($file_history1);
+		else if($exists2)
+			readfile($file_history2);
+		exit();
+		break;
+	case 'remove_token':
+		$user = get_user();
+		$token_id = $_POST['token_id'];
+		remove_token($user, $token_id);
+		
+		goto get_tokenList;
 		break;
 	case 'list_data':
 		if(!$is_admin && !has_permission($study_id, 'read'))
@@ -1314,8 +1443,7 @@ switch($type) {
 		}
 		$userList = [];
 		$h = fopen(FILE_LOGINS, 'r');
-//		print_r($write_permissions);
-//		print_r($write_permissions['ttt']);
+		
 		while(!feof($h)) {
 			$line = substr(fgets($h), 0, -1);
 			if($line == '')
@@ -1339,13 +1467,16 @@ switch($type) {
 			error('Unexpected data');
 		
 		$user = $_POST['new_user'];
+		if(check_userExists($user))
+			error("Username '$user' already exists");
+		
 		$pass = get_hashed_pass($_POST['pass']);
 		
 		
 		if(!file_put_contents(FILE_LOGINS, $user .':' .$pass ."\n", FILE_APPEND))
 			error('Login data could not be saved');
 		else
-			success('{"username":"'.$user .'","admin":false,"read":[],"write":[],"publish":[],"msg":[]}');
+			success("{\"username\":\"$user\"}");
 		break;
 	case 'delete_user':
 		if(!isset($_POST['user']))
@@ -1384,67 +1515,6 @@ switch($type) {
 		update_loginsFile($user);
 		
 		success('"Success"');
-		break;
-	case 'change_username':
-		if(!isset($_POST['new_user']))
-			error('Unexpected data');
-		
-		$user = $_POST['user'];
-		$new_user = $_POST['new_user'];
-		
-		$permissions = unserialize(file_get_contents(FILE_PERMISSIONS));
-		if($permissions) {
-			if(isset($permissions['admins']) && ($value = array_search($user, $permissions['admins'])) !== false) {
-				$permissions['admins'][$value] = $new_user;
-				$h_folder = opendir(FOLDER_STUDIES);
-				while($file = readdir($h_folder)) {
-					if($file[0] != '.') {
-						create_readPermission_htaccessFile($file, $permissions);
-					}
-				}
-				closedir($h_folder);
-			}
-			if(isset($permissions['write']) && isset($permissions['write'][$user])) {
-				$permissions['write'][$new_user] = $permissions['write'][$user];
-				unset($permissions['write'][$user]);
-			}
-			if(isset($permissions['publish']) && isset($permissions['publish'][$user])) {
-				$permissions['publish'][$new_user] = $permissions['publish'][$user];
-				unset($permissions['publish'][$user]);
-			}
-			if(isset($permissions['msg']) && isset($permissions['msg'][$user])) {
-				$permissions['msg'][$new_user] = $permissions['msg'][$user];
-				unset($permissions['msg'][$user]);
-			}
-			if(isset($permissions['read']) && isset($permissions['read'][$user])) {
-				$permissions['read'][$new_user] = $permissions['read'][$user];
-				$a = $permissions['read'][$user];
-				unset($permissions['read'][$user]);
-				foreach($a as $value => $study_id) {
-					create_readPermission_htaccessFile($study_id, $permissions);
-				}
-			}
-			
-			write_file(FILE_PERMISSIONS, serialize($permissions));
-		}
-		update_loginsFile($user, $new_user);
-		
-		success(1);
-		break;
-	case 'change_password':
-		if(!isset($_POST['user']) || !isset($_POST['pass']) || strlen($_POST['pass']) <= 3)
-			error('Unexpected data');
-		
-		$user = $_POST['user'];
-		$pass = $_POST['pass'];
-		if(strlen($pass) < 12)
-			error('The password needs to have at least 12 characters.');
-		
-		$hash = get_hashed_pass($pass);
-		
-		update_loginsFile($user, null, $hash);
-		
-		success('"' .load_hashLite_from_login($user, $pass) .'"');
 		break;
 	case 'toggle_admin':
 		if(!isset($_POST['user']))

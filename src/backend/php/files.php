@@ -2,6 +2,7 @@
 const FOLDER_DATA = 'data/',
 	FOLDER_ERRORS = FOLDER_DATA.'errors/',
 	FOLDER_STUDIES = FOLDER_DATA.'studies/',
+	FOLDER_TOKEN = FOLDER_DATA.'.token/',
 	FILENAME_STATISTICS_METADATA = '.metadata',
 	FILENAME_STATISTICS_NEWLINES = '.new_data',
 	FILENAME_STATISTICS_JSONFILE = 'json',
@@ -51,6 +52,9 @@ function get_folder_statistics($study_id) {
 function get_folder_userData($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES ."$study_id/.userdata/";
+}
+function get_folder_token($user) {
+	return FOLDER_TOKEN .make_urlFriendly($user).'/';
 }
 
 
@@ -109,6 +113,16 @@ function get_file_lock($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES."$study_id/.locked";
 }
+function get_file_token($user, $hash) {
+	return get_folder_token($user) .$hash;
+}
+function get_file_tokenHistory($user, $num) {
+	return get_folder_token($user) .'.history' .((int) $num);
+}
+function get_file_blockLogin($user) {
+	return get_folder_token($user) .".blocking";
+}
+
 
 //For make_urlFriendly() and get_urlFriendly(), thanks to https://www.php.net/manual/en/function.base64-encode.php#123098
 function make_urlFriendly($s) {

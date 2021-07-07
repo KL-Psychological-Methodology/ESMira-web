@@ -1,12 +1,17 @@
 <div class="centerVertical list_parent" style="height: 80%">
 	<form method="post" action="" class="list_child" data-bind="event: {submit: $root.login}">
-		<label class="horizontal">
+		<label class="horizontal no_desc">
 			<small data-bind="text: Lang.get('username')"></small>
 			<input type="text" data-bind="value: $root.username" autocomplete="username"/>
 		</label>
-		<label class="horizontal">
+		<label class="horizontal no_desc">
 			<small data-bind="text: Lang.get('password')"></small>
 			<input type="password" data-bind="value: $root.password" autocomplete="current-password"/>
+		</label>
+		<br/>
+		<label class="horizontal no_title no_desc">
+			<input type="checkbox" data-bind="checked: $root.rememberMe"/>
+			<span data-bind="text: Lang.get('remember_me')"></span>
 		</label>
 		
 		<br/>

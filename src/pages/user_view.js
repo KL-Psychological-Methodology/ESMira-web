@@ -23,27 +23,6 @@ export function ViewModel(page) {
 			throw new Error(Lang.get("error_unknown"));
 	};
 	
-	this.change_username = function(userData) {
-		console.log(userData)
-		let newUsername = prompt(Lang.get("prompt_choice"), self.userData.username());
-		if(!newUsername)
-			return;
-		
-		return page.loader.loadRequest(
-			FILE_ADMIN + "?type=change_username",
-			false,
-			"post",
-			"user="+self.userData.username() + "&new_user="+newUsername
-		).then(function() {
-			if(self.userData.username() === Admin.tools.username()) {
-				save_cookie("user", newUsername);
-				Admin.tools.username(newUsername);
-			}
-			self.userData.username(newUsername);
-			page.loader.info(Lang.get("info_successful"));
-		});
-	};
-	
 	
 	this.user_toggle_admin = function() {
 		let admin = self.userData.admin();
@@ -113,6 +92,9 @@ export function ViewModel(page) {
 		});
 	};
 	
+	this.change_username = function() {
+		return Admin.tools.change_username(page, self.userData.username());
+	};
 	this.change_password = function(username, password) {
 		return Admin.tools.change_password(page, username, password);
 	};

@@ -1,6 +1,7 @@
 export const PageIndex = {
 	//key				filename					permissions
 	about:				["about",					false],
+	account:			["account",					["*"]],
 	action:				["action",					["write"]],
 	admin:				["admin_home",				["*"]],
 	alarms:				["alarms",					["write"]],
@@ -13,7 +14,7 @@ export const PageIndex = {
 	consent:			["consent",					false],
 	dataList:			["data_list",				["read"]],
 	dateRange:			["date_range",				["write"]],
-	dataView:			["data_view",				["read"]],
+	dataView:			["data_view",				["*"]], //
 	dataStatistics:		["data_statistics",			["read"]],
 	errorList:			["error_list",				[]],
 	errorView:			["error_view",				[]],

@@ -10,7 +10,7 @@ export function get_fromData(csvData) {
 }
 export function get_fromUrl(url) {
 	let promise = new Promise(function(complete, error) {
-		Papa.parse(url + "?" + Date.now(), {
+		Papa.parse(url + (url.indexOf("?") === -1 ? "?" : "&") + Date.now(), {
 			// worker: true,
 			download: true,
 			delimiter: CSV_DELIMITER,

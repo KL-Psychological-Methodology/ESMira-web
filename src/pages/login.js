@@ -11,10 +11,14 @@ export function ViewModel(page) {
 	
 	this.username = ko.observable("");
 	this.password = ko.observable("");
+	this.rememberMe = ko.observable(false);
+	
 	this.login = function() {
 		let username = self.username();
 		let password = self.password();
-		page.loader.loadRequest(FILE_ADMIN+"?type=login", false, "post", "user="+username+"&pass="+password).then(function(data) {
+		let rememberMe = self.rememberMe() ? "&rememberMe" : "";
+		
+		page.loader.loadRequest(FILE_ADMIN+"?type=login", false, "post", "user="+username+"&pass="+password+rememberMe).then(function(data) {
 			Admin.tools.username(username);
 			Admin.tools.set_loginStatus(data);
 			// page.reload();

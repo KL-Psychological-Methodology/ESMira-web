@@ -99,7 +99,7 @@ function clone(obj) {
 }
 
 export const AdminTools = {
-	username: ko.observable(get_cookie("user")),
+	username: ko.observable(),
 	is_rootAdmin: ko.observable(false),
 	publish: ko.observableArray(),
 	write: ko.observableArray(),
@@ -328,7 +328,7 @@ export const AdminTools = {
 		return this.is_rootAdmin() || this.msg.indexOf(studyId) !== -1
 	},
 	
-	set_loginStatus: function({isLoggedIn, loginTime, lastActivities, permissions, new_messages, needsBackup_list, is_admin, has_errors}) {
+	set_loginStatus: function({username, isLoggedIn, loginTime, lastActivities, permissions, new_messages, needsBackup_list, is_admin, has_errors}) {
 		if(!isLoggedIn) {
 			this.is_rootAdmin(false);
 			Admin.is_loggedIn(false);
@@ -346,6 +346,7 @@ export const AdminTools = {
 			Studies.tools.lastActivities(lastActivities);
 			
 			this.loginTime = loginTime;
+			this.username(username);
 			
 			if(is_admin)
 				this.is_rootAdmin(true);
@@ -369,9 +370,25 @@ export const AdminTools = {
 			false,
 			"post",
 			"user="+username + "&pass="+password
-		).then(function(hashed_pass) {
-			if(username === self.username())
-				save_cookie("pass", hashed_pass);
+		).then(function() {
+			page.loader.info(Lang.get("info_successful"));
+		});
+	},
+	change_username : function(page, username) {
+		let newUsername = prompt(Lang.get("prompt_choice"), username);
+		if(!newUsername)
+			return;
+		
+		return page.loader.loadRequest(
+			FILE_ADMIN + "?type=change_username",
+			false,
+			"post",
+			"user="+username + "&new_user="+newUsername
+		).then(function() {
+			if(username === Admin.tools.username())
+				Admin.tools.username(newUsername);
+			
+			page.loader.info(Lang.get("info_successful"));
 		});
 	},
 	

@@ -1,7 +1,6 @@
 import html from "./data_view.html"
 import {Lang} from "../js/main_classes/lang";
-import {Site} from "../js/main_classes/site";
-import {FILE_RESPONSES} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_RESPONSES} from "../js/variables/urls";
 import reload_svg from '../imgs/reload.svg?raw';
 import {bindEvent, close_on_clickOutside, createElement, filter_box} from "../js/helpers/basics";
 import {PromiseCache} from "../js/main_classes/promise_cache";
@@ -291,15 +290,22 @@ export function ViewModel(page) {
 	this.promiseBundle = [Studies.init(page), Admin.init(page)];
 	this.extraContent = "<div data-bind=\"click: $root.reload, attr: {title: Lang.get('reload')}\" class=\"clickable\">"+reload_svg+"</div>";
 	
-	let fileName = atob(Site.valueIndex.fName);
-	let title, fileUrl;
+	let title, fileName, fileUrl;
 	
 	
-	this.preInit = function({id}, studies) {
-		this.dataObj = studies[id];
-		
-		fileUrl = FILE_RESPONSES.replace('%1', id).replace('%2', fileName);
-		title = get_backupTitle(fileName);
+	this.preInit = function({id, fName, fMode}, studies) {
+		switch(fMode) {
+			case '2':
+				title = fileName = Lang.get("login_history");
+				fileUrl = FILE_ADMIN + "?csv&type=get_loginHistory";
+				break;
+			case '1':
+			default:
+				fileName = atob(fName);
+				fileUrl = FILE_RESPONSES.replace('%1', id).replace('%2', fileName);
+				title = get_backupTitle(fileName);
+				break;
+		}
 	};
 	this.postInit = function() {
 		page.loader.showLoader(Lang.get("state_loading_file", fileName), load_data());

@@ -1,8 +1,8 @@
 import html from "./admin_home.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
-import {delete_cookie} from "../js/helpers/basics";
 import {Admin} from "../js/main_classes/admin";
+import {FILE_ADMIN} from "../js/variables/urls";
 
 export function ViewModel(page) {
 	this.html = html;
@@ -19,9 +19,9 @@ export function ViewModel(page) {
 	};
 	
 	this.logout = function() {
-		delete_cookie("user");
-		delete_cookie("pass");
-		Admin.tools.set_loginStatus({});
+		page.loader.loadRequest(FILE_ADMIN+"?type=logout").then(function() {
+			Admin.tools.set_loginStatus({});
+		});
 	};
 	
 	this.change_password = function(username, password) {

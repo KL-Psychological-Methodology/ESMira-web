@@ -45,10 +45,8 @@
 <br/>
 
 <dash-row>
-	<a>
-		<change-user params="username: Admin.tools.username(), finish: $root.change_password">
-			<dash-el params="title: Lang.get('change_password')"></dash-el>
-		</change-user>
+	<a data-bind="navi: 'account'">
+		<dash-el params="title: Lang.get('edit_user_account')"></dash-el>
 	</a>
 	<a data-bind="click: $root.logout">
 		<dash-el params="title: Lang.get('logout') + ' ' + Admin.tools.username()"></dash-el>
