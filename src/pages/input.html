@@ -61,14 +61,14 @@
 	</label>
 	
 	<div data-bind="if: responseType() === 'likert' || responseType() === 'va_scale' || responseType() === 'binary'">
-		<div class="fakeLabel spacing_bottom">
+		<label class="spacing_bottom">
 			<small data-bind="text: Lang.get('label_leftChoice')"></small>
-			<rich-text params="value: leftSideLabel"></rich-text>
-		</div>
-		<div class="fakeLabel spacing_bottom">
+			<input class="big" type="url" data-bind="value: leftSideLabel"/>
+		</label>
+		<label class="spacing_bottom">
 			<small data-bind="text: Lang.get('label_rightChoice')"></small>
-			<rich-text params="value: rightSideLabel"></rich-text>
-		</div>
+			<input class="big" type="url" data-bind="value: rightSideLabel"/>
+		</label>
 	</div>
 </div>
 
