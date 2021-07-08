@@ -51,7 +51,7 @@
 <a class="right" data-bind="text: Lang.get('informed_consent'), click: function() {$root.showConsent(!$root.showConsent());}"></a>
 <br/>
 <div data-bind="if: $root.showConsent">
-	<p class="justify spacing_top" data-bind="html: informedConsentForm"></p>
+	<p class="justify spacing_top wrap" data-bind="text: informedConsentForm"></p>
 </div>
 
 <br/>

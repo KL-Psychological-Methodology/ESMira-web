@@ -217,6 +217,9 @@ svg.highlight {
 .nowrap {
 	white-space: nowrap;
 }
+.wrap {
+	white-space: pre-wrap
+}
 
 .vertical, label:not([for]).vertical {
 	display: table; /* we dont want it to fill the whole line - so "display: block" is not desirable*/
