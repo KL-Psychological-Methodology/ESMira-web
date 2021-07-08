@@ -21,13 +21,16 @@ import "../../css/style_admin.css";
 
 function DetectChange(obj) {
 	//Thanks to http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
-	
 	let result = function() {},
 		_initialState = ko.observable(OwnMapping.toJSON(obj)),
-		_isInitiallyDirty = ko.observable(false);
+		_isInitiallyDirty = ko.observable(false),
+		_enabled = ko.observable(true);
 	
 	result.isDirty = ko.pureComputed(function() {
-		return _isInitiallyDirty() || _initialState() !== OwnMapping.toJSON(obj);
+		//OwnMapping.toJSON(obj) "touches" all values and subscribes to their value.
+		// Note: subscriptions will be redone everytime this function is called.
+		// Everything that is not "touched" wont have subscriptions until this function is called again (and they are "touched")
+		return _isInitiallyDirty() || (_enabled() && _initialState() !== OwnMapping.toJSON(obj));
 	});
 	result.setDirty = function(state) {
 		_initialState(OwnMapping.toJSON(obj));
@@ -36,7 +39,7 @@ function DetectChange(obj) {
 	
 	result.set_onChangeListener = function(fu) {
 		result.onChange = ko.pureComputed(function() {
-			OwnMapping.toJSON(obj);
+			OwnMapping.toJSON(obj); //"touch" all values of obj
 			return Date.now();
 		});
 		result.onChange.subscribe(fu);
@@ -45,6 +48,9 @@ function DetectChange(obj) {
 		if(result.onChange)
 			result.onChange.dispose();
 	}
+	result.set_enabled = function(enabled) {
+		_enabled(enabled);
+	};
 	
 	return result;
 }
@@ -436,9 +442,8 @@ export const Studies_tools = {
 		this.changed_state[study.id()] = detector;
 		
 		detector.isDirty.subscribe(function(newValue) {
-			let localLastChanged = self.lastChanged[studyId] || Admin.tools.loginTime;
-			
 			if(newValue) {
+				let localLastChanged = self.lastChanged[studyId] || Admin.tools.loginTime;
 				Requests.load(
 					FILE_ADMIN+"?type=check_changed&study_id="+studyId+"&lastChanged="+localLastChanged
 				).then(function({lastChanged, json}) {
@@ -521,9 +526,9 @@ export const Studies_tools = {
 			"post",
 			OwnMapping.toJSON(study)
 		).then(function({lastChanged, json}) {
+			self.lastChanged[studyId] = lastChanged;
 			OwnMapping.update(study, json, Defaults.studies);
 			self.set_study_unchanged(study);
-			self.lastChanged[studyId] = lastChanged;
 			
 			if(study.published()) {
 				let studyAccessKeys = study.accessKeys();
@@ -538,8 +543,6 @@ export const Studies_tools = {
 				Studies.all_accessKeys(all_accessKeys);
 				Studies.all_accessKeys.valueHasMutated()
 			}
-		}).catch(function() {
-			Studies.timeOfLoad = Date.now();
 		});
 	},
 	backup_study: function(page, study) {
@@ -579,13 +582,23 @@ export const Studies_tools = {
 			return;
 		
 		let study = Studies.get_current();
+		let studyId = study.id();
 		let page = Site.get_lastPage();
-		page.loader.loadRequest(FILE_ADMIN+"?type=mark_study_as_updated", false, "post", "study_id="+study.id()).then(function() {
+		
+		
+		// this.changed_state[study.id()].set_enabled(false);
+		// study.new_changes(false);
+		// this.changed_state[study.id()].setDirty(false);
+		// this.changed_state[study.id()].set_enabled(true);
+		
+		page.loader.loadRequest(FILE_ADMIN+"?type=mark_study_as_updated", false, "post", "study_id="+studyId).then(function({lastChanged}) {
+			self.lastChanged[studyId] = lastChanged;
+			self.set_studyDetector_enabled(study, false);
 			study.version(study.version() + 1);
 			study.subVersion(0);
 			study.new_changes(false);
 			self.set_study_unchanged(study);
-			Studies.timeOfLoad = Date.now();
+			self.set_studyDetector_enabled(study, true);
 		});
 	},
 	
@@ -600,6 +613,9 @@ export const Studies_tools = {
 	},
 	set_study_unchanged: function(study) {
 		this.changed_state[study.id()].setDirty(false);
+	},
+	set_studyDetector_enabled: function(study, enabled) {
+		this.changed_state[study.id()].set_enabled(enabled);
 	},
 	
 	lock: function(page, study, el) {

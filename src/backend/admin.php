@@ -1248,7 +1248,8 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			$metadata = get_newMetadata($study);
 			write_file(get_file_studyMetadata($study_id), serialize($metadata));
 			
-			success($study_id);
+			$sentChanged = time();
+			success("{\"lastChanged\":$sentChanged}");
 			break;
 		case 'backup_study':
 			$study = json_decode(file_get_contents(get_file_studyConfig($study_id)));
