@@ -395,6 +395,7 @@ export const AdminTools = {
 				Admin.tools.username(newUsername);
 			
 			page.loader.info(Lang.get("info_successful"));
+			return newUsername;
 		});
 	},
 	

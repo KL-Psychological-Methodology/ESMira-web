@@ -185,7 +185,7 @@ function update_loginsFile($user, $new_user=null, $new_pass=null) {
 		else {
 			$userExists = true;
 			if($new_user || $new_pass)
-				$export .= ($new_user ?: $user).':'.($new_pass ?: $data[1])."\n";
+				$export .= ($new_user ?: $user).':'.($new_pass ?: $data[1]);
 		}
 	}
 	fclose($h);
@@ -1520,7 +1520,7 @@ switch($type) {
 	case 'toggle_admin':
 		if(!isset($_POST['user']))
 			error('Missing data');
-		else if($_COOKIE['user'] === $_POST['user'])
+		else if(get_user() === $_POST['user'])
 			error('You can not remove your own admin permissions');
 		
 		$user = $_POST['user'];

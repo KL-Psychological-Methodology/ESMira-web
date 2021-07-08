@@ -93,7 +93,9 @@ export function ViewModel(page) {
 	};
 	
 	this.change_username = function() {
-		return Admin.tools.change_username(page, self.userData.username());
+		return Admin.tools.change_username(page, self.userData.username()).then(function(newUsername) {
+			self.userData.username(newUsername);
+		});
 	};
 	this.change_password = function(username, password) {
 		return Admin.tools.change_password(page, username, password);

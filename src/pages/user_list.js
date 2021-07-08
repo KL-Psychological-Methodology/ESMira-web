@@ -9,6 +9,7 @@ import {OwnMapping} from "../js/helpers/knockout_own_mapping";
 import {Studies} from "../js/main_classes/studies";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import {listUrl, load_userData} from "../js/shared/user_functions";
+import {Defaults} from "../js/variables/defaults";
 
 export function ViewModel(page) {
 	let self = this;
@@ -45,9 +46,9 @@ export function ViewModel(page) {
 	};
 	
 	this.add = function(username, password) {
-		return page.loader.loadRequest(FILE_ADMIN + "?type=create_user", false, "post", "new_user="+username + "&pass="+password).then(function(data) {
-			self.userList.push(OwnMapping.fromJS(data));
-			Site.add_page("user_view,user:"+btoa(data.username));
+		return page.loader.loadRequest(FILE_ADMIN + "?type=create_user", false, "post", "new_user="+username + "&pass="+password).then(function(user) {
+			self.userList.push(OwnMapping.fromJS(user, Defaults.user));
+			Site.add_page("user_view,user:"+btoa(user.username));
 		});
 	};
 }
