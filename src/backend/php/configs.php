@@ -123,9 +123,7 @@ const SERVER_VERSION = 10,
 	//templates:
 	HTACCESS_RESPONSES_TEMPLATE = 'Options +Indexes
 AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile %1$s
-%2$s',
+%1$s',
 HTACCESS_MAIN_TEMPLATE = '<Files ~ "^\..+">
   Order Allow,Deny
   Deny from all
