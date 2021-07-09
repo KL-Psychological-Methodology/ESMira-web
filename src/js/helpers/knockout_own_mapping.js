@@ -87,40 +87,6 @@ export const OwnMapping = {
 			return obj;
 		}
 	},
-	// shallowUpdate: function(old_obj, new_jsObj, defaultObj) {
-	//
-	// 	for(let key in new_jsObj) {
-	// 		if(!new_jsObj.hasOwnProperty(key))
-	// 			continue;
-	// 		let value = new_jsObj[key];
-	//
-	// 		if(old_obj.hasOwnProperty(key) && typeof old_obj[key] === "function") {
-	// 			if(defaultObj["$"+key]) {
-	// 				old_obj[key](OwnMapping.fromJS(value, {$: defaultObj["$"+key]})());
-	// 			}
-	// 			else if(defaultObj["-"+key])
-	// 				old_obj[key](OwnMapping.fromJS(value));
-	// 			else
-	// 				old_obj[key](OwnMapping.fromJS(value, defaultObj[key])());
-	// 		}
-	// 		else {
-	// 			old_obj[key] = OwnMapping.fromJS(value, defaultObj[key]);
-	// 		}
-	// 	}
-	//
-	// 	if(Object.keys(old_obj).length > Object.keys(new_jsObj).length) {
-	// 		for(let key in old_obj) {
-	// 			if(old_obj.hasOwnProperty(key) && !new_jsObj.hasOwnProperty(key)) {
-	// 				if(defaultObj.hasOwnProperty(key))
-	// 					old_obj[key](defaultObj[key]);
-	// 				else
-	// 					delete old_obj[key];
-	// 			}
-	//
-	// 		}
-	// 	}
-	// },
-	
 	
 	update: function(old_obj, new_obj, defaultObj, isDefaultArray) {
 		for(let key in new_obj) {
@@ -132,18 +98,23 @@ export const OwnMapping = {
 			if(typeof value === "object") {
 				if(old_obj.hasOwnProperty(key)) {
 					let nextValue = old_obj[key];
+					let realValue = (typeof nextValue === "function") ? nextValue() : nextValue;
 					
-					if(isDefaultArray) //we are in an array where all entries need to be checked against parent defaultObj
-						this.update((typeof nextValue === "function") ? nextValue() : nextValue, value, defaultObj);
+					if(realValue === undefined) { //nextValue exists, so it has to be a function
+						nextValue(this.fromJS(value, defaultObj[key]));
+						continue;
+					}
+					else if(isDefaultArray) //we are in an array where all entries need to be checked against parent defaultObj
+						this.update(realValue, value, defaultObj);
 					else if(!defaultObj)
-						this.update((typeof nextValue === "function") ? nextValue() : nextValue, value, defaultObj);
+						this.update(realValue, value, defaultObj);
 					else if(defaultObj.hasOwnProperty("$"+key)) //all array entries need to be checked against this defaultObj
-						this.update((typeof nextValue === "function") ? nextValue() : nextValue, value, defaultObj["$"+key], true);
+						this.update(realValue, value, defaultObj["$"+key], true);
 					else
-						this.update((typeof nextValue === "function") ? nextValue() : nextValue, value, defaultObj[key]);
+						this.update(realValue, value, defaultObj[key]);
 					
 					if(Array.isArray(value)) {
-						if(nextValue().length > value.length)
+						if(realValue.length > value.length)
 							nextValue.splice(value.length)
 						nextValue.valueHasMutated();
 					}
@@ -178,7 +149,6 @@ export const OwnMapping = {
 					let newValue = this.filterObj(value[i]);
 					if(newValue !== undefined)
 						a.push(newValue);
-					// a.push(this.filterObj(value[i]));
 				}
 				return a;
 			}
@@ -189,7 +159,6 @@ export const OwnMapping = {
 						let newValue = this.filterObj(value[key]);
 						if(newValue !== undefined)
 							r[key] = newValue;
-						// r[key] = this.filterObj(value[key]);
 					}
 				}
 				return r;
@@ -199,11 +168,9 @@ export const OwnMapping = {
 			return (value !== obj.___defaultValue) ? value : undefined;
 		}
 	},
-	// toJS: ko.mapping.toJS,
 	toJS: function(obj) {
 		return this.filterObj(obj);
 	},
-	// toJSON: ko.toJSON
 	toJSON: function(obj) {
 		let a = this.filterObj(obj);
 		return JSON.stringify(a);

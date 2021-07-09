@@ -163,7 +163,7 @@
 	"desc_notification": "When a notification was created by a Trigger Action (only fired on Android).",
 	"desc_questionnaire": "When a questionnaire was filled out.",
 	"desc_quit": "When the study was left.",
-	"desc_qrCode": "When this QR code is scanned by the ESMira smartphone app, this study will be opened. Other QR scanner apps will be lead to the web version of this study.",
+	"desc_qrCode": "When this QR code is scanned by the ESMira smartphone app (it does not matter which QR code), this study will be opened. Other QR scanner apps will be lead to the selected url.",
 	"desc_rejoined": "When the study was joined and there are still old statistics for this study saved in the app.",
 	"desc_reminder": "When a reminder for an invitation was issued.",
 	"desc_schedule_changed": "When the participant changed the schedule of the study.",

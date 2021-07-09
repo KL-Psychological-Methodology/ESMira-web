@@ -146,7 +146,7 @@ try {
 		}
 		else
 			$metadata = $metadata_index[$study_id];
-		if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($dataSet->accessKey) || !in_array($dataSet->accessKey, $metadata['accessKeys']))) {
+		if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($dataSet->accessKey) || !in_array(strtolower($dataSet->accessKey), $metadata['accessKeys']))) {
 			error_lineOutput($output, $dataset_id, 'Wrong accessKey', $output_index);
 			continue;
 		}

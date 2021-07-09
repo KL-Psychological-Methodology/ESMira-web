@@ -6,9 +6,11 @@
 </div>
 
 <div data-bind="if: $componentTemplateNodes.length">
-	<div class="tabContent" data-bind="foreach: $component.listTabs">
-		<div data-bind="if: $component.is_selected($index())">
-			<div class="template" data-bind="style:{borderWidth: ($index()*2)+'px'}, template: { nodes: $componentTemplateNodes, data: $data.tabData}"></div>
+	<div class="tabContent" data-bind="let: {tabIndex: $component.selectedIndex()}">
+		<div data-bind="with: $component.listTabs()[tabIndex]">
+			<div data-bind="if: !$data.is_allTab && !$data.is_addBtn">
+				<div data-bind="style:{borderWidth: (tabIndex*2)+'px'}, template: { nodes: $componentTemplateNodes, data: $data.tabData}"></div>
+			</div>
 		</div>
 	</div>
 </div>

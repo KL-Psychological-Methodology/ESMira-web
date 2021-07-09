@@ -185,7 +185,7 @@ function update_loginsFile($user, $new_user=null, $new_pass=null) {
 		else {
 			$userExists = true;
 			if($new_user || $new_pass)
-				$export .= ($new_user ?: $user).':'.($new_pass ?: $data[1]);
+				$export .= ($new_user ?: $user).':'.($new_pass ? "$new_pass\n" : $data[1]);
 		}
 	}
 	fclose($h);
@@ -491,6 +491,21 @@ switch($type) {
 		
 		goto get_tokenList;
 		break;
+	case 'get_new_id':
+		$forQuestionnaire = $_GET['for'] === 'questionnaire';
+		$filtered = $forQuestionnaire ? json_decode(file_get_contents('php://input')) : [];
+		
+		$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
+		
+		$i = 0;
+		do {
+			$id = $forQuestionnaire ? getQuestionnaireId() : getStudyId();
+			
+			if(++$i > 1000)
+				error('Could not find an unused id...');
+		} while(file_exists(get_folder_study($id)) || isset($study_index["~$id"]) || isset($filtered[$id]));
+		success($id);
+		break;
 	case 'list_data':
 		if(!$is_admin && !has_permission($study_id, 'read'))
 			error('No permission');
@@ -783,21 +798,6 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'msg'))) {
 //has write permission:
 if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 	switch($type) {
-		case 'get_new_id':
-			$forQuestionnaire = $_GET['for'] === 'questionnaire';
-			$filtered = $forQuestionnaire ? json_decode(file_get_contents('php://input')) : [];
-			
-			$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
-			
-			$i = 0;
-			do {
-				$study_id = $forQuestionnaire ? getQuestionnaireId() : getStudyId();
-				
-				if(++$i > 1000)
-					error('Could not find an unused id...');
-			} while(file_exists(get_folder_study($study_id)) || isset($study_index["~$study_id"]) || isset($filtered[$study_id]));
-			success($study_id);
-			break;
 		case 'empty_data':
 			$responses_folder = get_folder_responses($study_id);
 			if(file_exists($responses_folder))
@@ -826,8 +826,13 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 		case 'check_changed':
 			$sentChanged = (int) $_GET['lastChanged'];
 			$file_config = get_file_studyConfig($study_id);
+			
+			if(!file_exists($file_config))
+				error('Study does not exist');
+			
+			
 			$realChanged = filemtime($file_config);
-			if(file_exists($file_config) && $realChanged > $sentChanged) {
+			if($realChanged > $sentChanged) {
 				$study = file_get_contents($file_config);
 				success("{\"lastChanged\": $realChanged, \"json\": $study}");
 			}

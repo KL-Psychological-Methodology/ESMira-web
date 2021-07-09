@@ -443,7 +443,7 @@ export const Studies_tools = {
 		this.changed_state[study.id()] = detector;
 		
 		detector.isDirty.subscribe(function(newValue) {
-			if(newValue) {
+			if(newValue && study.version()) {
 				let localLastChanged = self.lastChanged[studyId] || Admin.tools.loginTime;
 				Requests.load(
 					FILE_ADMIN+"?type=check_changed&study_id="+studyId+"&lastChanged="+localLastChanged
@@ -461,9 +461,11 @@ export const Studies_tools = {
 	
 	add_study: function(page, study) {
 		let self = this;
+		let study_id = study ? study.id() : 0;
+		
 		page.loader.showLoader(Lang.get("state_loading"),
 			Promise.all([
-				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id="+study.id()),
+				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id="+study_id),
 				Studies.init(page)
 			])
 			.then(function([id]) {
@@ -585,12 +587,6 @@ export const Studies_tools = {
 		let study = Studies.get_current();
 		let studyId = study.id();
 		let page = Site.get_lastPage();
-		
-		
-		// this.changed_state[study.id()].set_enabled(false);
-		// study.new_changes(false);
-		// this.changed_state[study.id()].setDirty(false);
-		// this.changed_state[study.id()].set_enabled(true);
 		
 		page.loader.loadRequest(FILE_ADMIN+"?type=mark_study_as_updated", false, "post", "study_id="+studyId).then(function({lastChanged}) {
 			self.lastChanged[studyId] = lastChanged;

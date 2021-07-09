@@ -163,7 +163,7 @@
 	"desc_notification": "Wenn eine Benachrichtigung durch eine Trigger Aktion erzeugt wurde (Wird nur unter Android ausgelöst).",
 	"desc_questionnaire": "Beim Abschicken eines Fragebogens.",
 	"desc_quit": "Wenn die Studie verlassen wird.",
-	"desc_qrCode": "Wird der QR-Code mit der ESMira smartphone app gescannt, wird die aktuelle Studie aufgerufen. Andere QR-Scanner apps werden zur Web-version der Studie geführt.",
+	"desc_qrCode": "Wird der QR-Code mit der ESMira smartphone app gescannt (egal welcher QR-Code), wird die aktuelle Studie aufgerufen. Andere QR-Scanner apps werden zur entsprechenden Url geführt.",
 	"desc_rejoined": "Wenn der Studie beigetreten wird und bereits Statistiken zu der Studie in der App gespeichert sind.",
 	"desc_reminder": "Wenn einer Erinnerungs-Benachrichtigung erzeugt wurde.",
 	"desc_schedule_changed": "Wenn der Zeitplan der Studie verändert wurde.",

@@ -716,9 +716,6 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	if(scrollable)
 		chart_div.classList.add("scrollable");
 	
-	console.log(statistics);
-	console.log(labels);
-	console.log(datasets);
 	let chart_js = new Chart(el.getContext('2d'), {
 		type: drawnChartType,
 		data: {

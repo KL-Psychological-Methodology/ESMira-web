@@ -80,7 +80,7 @@ foreach($data as $study_id => $line) {
 	$last_message = $line->msgTimestamp;
 	
 	
-	if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($line->accessKey) || !in_array($line->accessKey, $metadata['accessKeys'])))
+	if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($line->accessKey) || !in_array(strtolower($line->accessKey), $metadata['accessKeys'])))
 		error('Wrong accessKey');
 	
 	

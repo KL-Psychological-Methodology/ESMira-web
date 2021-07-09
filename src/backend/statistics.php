@@ -15,7 +15,7 @@ if(!file_exists($metadata_path))
 	exit('Study does not exist');
 $metadata = unserialize(file_get_contents($metadata_path));
 
-if(sizeof($metadata['accessKeys']) && (!isset($_GET['access_key']) || !in_array($_GET['access_key'], $metadata['accessKeys'])))
+if(sizeof($metadata['accessKeys']) && (!isset($_GET['access_key']) || !in_array(strtolower($_GET['access_key']), $metadata['accessKeys'])))
 	error('Wrong accessKey');
 
 
