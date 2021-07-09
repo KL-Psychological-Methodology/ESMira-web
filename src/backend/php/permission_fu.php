@@ -28,14 +28,16 @@ function interpret_userLine($h) {
 	return explode(':', $line);
 }
 
-function check_login($user, $plain) {
+function check_login($user, $plain, &$blockTIme) {
 	//check if login is blocked:
 	$file_blocking = get_file_blockLogin($user);
 	$has_blockingFile = file_exists($file_blocking);
 	if($has_blockingFile) {
-		$num = (int)file_get_contents($file_blocking);
-		if(time() < filemtime($file_blocking) + $num)
+		$diff = (filemtime($file_blocking) + (int)file_get_contents($file_blocking)) - time();
+		if($diff > 0) {
+			$blockTIme = $diff;
 			return false;
+		}
 	}
 	
 	//search for user:password:
@@ -58,7 +60,7 @@ function check_login($user, $plain) {
 		fclose($h);
 	}
 	
-	//block login because of failed attempt:
+	//block next login for a while because of failed attempt:
 	usleep(rand(0, 1000000)); //to prevent Timing Leaks
 	
 	if($userExists) { //TODO: the timeout only happens when a user exists. This can be used to find out usernames. Whats the best solution for that?
@@ -182,7 +184,7 @@ function create_readPermission_htaccessFile($study_id, $permissions=null) {
 	}
 	
 	$file = get_folder_responses($study_id).FILENAME_HTACCESS;
-	if(!file_put_contents($file, sprintf(HTACCESS_RESPONSES_TEMPLATE, realpath(FILE_LOGINS), $s), LOCK_EX)) {
+	if(!file_put_contents($file, sprintf(HTACCESS_RESPONSES_TEMPLATE, $s), LOCK_EX)) {
 		error('Could not secure ' .get_folder_responses($study_id) .'! All study data may be reachable without password!');
 		return false;
 	}

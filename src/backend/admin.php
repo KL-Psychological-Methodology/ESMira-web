@@ -259,8 +259,13 @@ switch($type) {
 			error('Missing data');
 		$user = $_POST['user'];
 		
-		if(!check_login($user, $_POST['pass']))
-			return error('Wrong password');
+		$blockTIme = 0;
+		if(!check_login($user, $_POST['pass'], $blockTIme)) {
+			if($blockTIme != 0)
+				error("Please wait for $blockTIme seconds.");
+			else
+				return error('Wrong password');
+		}
 		
 		if(isset($_POST['rememberMe']))
 			create_token($user);
