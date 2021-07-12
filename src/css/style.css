@@ -920,7 +920,6 @@ questionnaire
 
 #questionnaire_box .line {
 	margin-top: 10px;
-	text-align: center;
 	outline-color: rgba(255, 0, 0, 0);
 	transition: outline-color 1s;
 }

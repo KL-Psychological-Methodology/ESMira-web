@@ -1,9 +1,10 @@
 <div data-bind="component: {name: 'input_text', params: $component}"></div>
-
-<iframe height="250" data-bind="
-	attr: {src: $component.input.url()},
-	event: {
-		load: function() {
-			$component.value(1);
-		}
-	}"></iframe>
+<div class="center">
+	<iframe height="250" data-bind="
+		attr: {src: $component.input.url()},
+		event: {
+			load: function() {
+				$component.value(1);
+			}
+		}"></iframe>
+</div>
