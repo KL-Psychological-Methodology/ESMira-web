@@ -9,8 +9,8 @@
 </div>
 
 <div data-bind="if: $root.showFilter">
-	<tab-bar params="tabs: $root.tabs, showAllTab: true, selectedIndex: $root.selectedIndex, tabName: Lang.get"></tab-bar>
-	<div data-bind="if: $root.selectedIndex() === 1 || $root.selectedIndex() === -1">
+	<tab-bar params="tabs: $root.tabs, showAllTab: true, selectedIndex: $root.selectedIndex, tabName: $root.get_tabName"></tab-bar>
+	<div data-bind="if: $root.selectedIndex() === -1 || $root.tabs[$root.selectedIndex()] === 'hidden_studies'">
 		<tab-bar class="smallBar" params="tabs: Studies.all_accessKeys, showAllTab: Lang.get('all_accessKeys'), selectedIndex: $root.currentAccessKeyIndex"></tab-bar>
 	</div>
 </div>

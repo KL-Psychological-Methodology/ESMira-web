@@ -20,21 +20,23 @@ export function ViewModel(page) {
 			let questionnaireIndex = {};
 			for(let i = questionnaires.length - 1; i >= 0; --i) {
 				let questionnaire = questionnaires[i];
-				questionnaireIndex[questionnaire.internalId()] = questionnaire.title();
+				questionnaireIndex[questionnaire.internalId()] = {title: questionnaire.title(), index: i};
 			}
 			
 			let currentList = [];
 			let backupsList = [];
 			for(let i = backups.length - 1; i >= 0; --i) {
 				let entry = backups[i];
-				if(questionnaireIndex.hasOwnProperty(entry))
-					currentList.push([questionnaireIndex[entry], entry]);
+				if(questionnaireIndex.hasOwnProperty(entry)) {
+					let qEntry = questionnaireIndex[entry];
+					currentList.push({title: qEntry.title, filename: entry, index: qEntry.index});
+				}
 				else {
 					let [date, internalId] = get_backupTitle(entry);
 					if(internalId === -1 || !questionnaireIndex.hasOwnProperty(internalId))
-						backupsList.push([entry, entry]);
+						backupsList.push({title: entry, filename: entry});
 					else
-						backupsList.push([date + " " + questionnaireIndex[internalId], entry]);
+						backupsList.push({title: date + " " + questionnaireIndex[internalId].title, filename: entry});
 				}
 			}
 			
@@ -71,8 +73,8 @@ export function ViewModel(page) {
 	
 	this.lists = {
 		defaults: [
-			[Lang.get("events_csv_title"), "events"],
-			[Lang.get("web_access_csv_title"), "web_access"]
+			{title: Lang.get("events_csv_title"), filename: "events"},
+			{title: Lang.get("web_access_csv_title"), filename: "web_access"}
 		],
 		current: ko.observableArray(),
 		backups: ko.observableArray(),

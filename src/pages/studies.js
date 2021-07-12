@@ -29,7 +29,7 @@ export function ViewModel(page) {
 		// }
 		if(Admin.is_loggedIn() && Studies.tools.newMessages().count()) {
 			this.has_messages = true;
-			this.tabs.unshift(["messages", message_svg]);
+			this.tabs.unshift("messages");
 			this.selectedIndex(2);
 		}
 		else
@@ -84,6 +84,10 @@ export function ViewModel(page) {
 		}
 	}
 	
+	this.get_tabName = function(tabName) {
+		return (tabName === "messages") ? message_svg : Lang.get(tabName);
+		
+	}
 	
 	this.is_selected = function(study) {
 		let selectedAccessKey = self.currentAccessKeyIndex() !== -1 ? Studies.all_accessKeys()[self.currentAccessKeyIndex()] : null;

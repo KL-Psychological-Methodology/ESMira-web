@@ -21,10 +21,6 @@ export function ViewModel(page) {
 			this.tabs.push("privacyPolicy");
 			this.privacyPolicy = privacyPolicy;
 		}
-		console.log(impressum);
-		console.log(privacyPolicy);
-		// if(!impressum && !privacyPolicy)
-		// 	this.showTabs = false;
 	}
 	
 	this.tabs = ['used_libraries'];
