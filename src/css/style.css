@@ -12,11 +12,6 @@ colorAccent: #dc4e9d
 }
 
 body {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	overflow: hidden;
 	color:#444;
@@ -1002,6 +997,8 @@ screenshots
 	text-align: center;
 }
 .screenshots dash-row .dashEl {
+	display: flex;
+	justify-content: space-around;
 	min-height: 200px;
 }
 .screenshots dash-row img {
@@ -1009,6 +1006,64 @@ screenshots
 	max-width: 100%;
 	vertical-align: middle;
 }
+
+.screenshots .imageBox {
+	display: inline-flex;
+	position: relative;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 0 3px;
+}
+.screenshots .imageBox .desc {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 1px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	background-color: #e6f9ffee;
+	color: #2b98ca;
+}
+
+
+
+/**********
+screenshot_window
+**********/
+
+
+.screenshot_window {
+	z-index: 102;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #00000055;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.screenshot_window img {
+	max-width: 90%;
+	max-height: 90%;
+	/*top: 50%;*/
+	/*transform: translate(-50%, -50%);*/
+}
+.screenshot_window .desc {
+	margin-top: 10px;
+}
+.screenshot_window .desc, .screenshot_window img {
+	background-color: #e6f9ff;
+	border: 1px solid #9FE0F7;
+	padding: 5px;
+	box-shadow: 3px 3px 5px #0002;
+}
+
 
 
 /**********

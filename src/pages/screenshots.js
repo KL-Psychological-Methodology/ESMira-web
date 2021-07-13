@@ -26,8 +26,16 @@ export function ViewModel(page) {
 		}, 500);
 	}
 	
-	this.clickScreenshot = function(filename) {
-		let el = createElement('img', 'max-width: 90%; max-height: 90%', {src: URL_ABOUT_ESMIRA_SOURCE+filename, className: 'dropdown'});
+	this.clickScreenshot = function({src, desc}) {
+		// let el = createElement('img', 'max-width: 90%; max-height: 90%; top: 50%; transform: translate(-50%, -50%);', {src: URL_ABOUT_ESMIRA_SOURCE + src, className: 'dropdown'});
+		
+		let el = createElement('div', false, {className: "screenshot_window"});
+		let imgEl = createElement('img', false, {src: URL_ABOUT_ESMIRA_SOURCE + src});
+		el.appendChild(imgEl);
+		if(desc) {
+			let descEl = createElement('div', false, {innerText: desc, className: "desc"});
+			el.appendChild(descEl);
+		}
 		document.body.appendChild(el);
 		bindEvent(el, 'click', close_on_clickOutside(el));
 	}

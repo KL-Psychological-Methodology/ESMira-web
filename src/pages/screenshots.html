@@ -2,10 +2,13 @@
 	<title-row params="title: title" data-bind="attr: {id: 'screenshots_'+id}"></title-row>
 	
 	<dash-row data-bind="foreach: images">
-		<div class="dashEl">
-			<img alt="screenshot" data-bind="click: $root.clickScreenshot,
-				attr: {src: $root.URL_ABOUT_ESMIRA_SOURCE + $data}
-			"/>
+		<div data-bind="css: {multipleChildren: $data.length > 1}">
+			<div data-bind="foreach: $data" class="dashEl">
+				<div class="imageBox" data-bind="click: $root.clickScreenshot">
+					<img alt="screenshot" data-bind="attr: {src: $root.URL_ABOUT_ESMIRA_SOURCE + src}"/>
+					<span class="desc small_text" data-bind="text: $data.desc, visible: $data.desc"></span>
+				</table>
+			</div>
 		</div>
 	</dash-row>
 </div>
