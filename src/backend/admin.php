@@ -862,27 +862,47 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 				error('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
 			
 			
+			$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
 
 			//*****
 			//check and prepare questionnaires:
 			//*****
+			//Note: When a questionnaire is deleted, its internalId will stay in the index until the study is unpublished or deleted.
+			//The only solution I can think of would be to loop through the complete index every time a study is saved.
+			//But since this case will rarely happen and probably wont ever be a problem and the loop can be an expensive operation, we just ignore this problem.
 			
 			$internalId_index = [];
 			$key_check_array = [];
             $keys_questionnaire_array = [];
 			foreach($study->questionnaires as $i => &$questionnaire) {
-				//make sure internalIds are unique
-				if(!isset($questionnaire->internalId) || $questionnaire->internalId === -1 || isset($internalId_index[$questionnaire->internalId])) {
+				
+				//make sure internalIds are unique:
+				if(
+					!isset($questionnaire->internalId) ||
+					$questionnaire->internalId === -1 ||
+					isset($internalId_index[$questionnaire->internalId]) ||
+					(isset($study_index['~'.$questionnaire->internalId]) && $study_index['~'.$questionnaire->internalId][0] != $study_id)
+				) {
 					do {
 						$internalId = getQuestionnaireId();
-					} while(isset($internalId_index[$internalId]));
+					} while(isset($internalId_index[$internalId]) || isset($study_index['~'.$internalId]));
+					$old_internalId = $questionnaire->internalId;
 					$questionnaire->internalId = $internalId;
 					$internalId_index[$internalId] = true;
+					
+					foreach($study->questionnaires as $q) {
+						foreach($q->actionTriggers as $actionTrigger) {
+							foreach($actionTrigger->eventTriggers as $eventTrigger) {
+								if(isset($eventTrigger->specificQuestionnaireInternalId) && $eventTrigger->specificQuestionnaireInternalId == $old_internalId)
+									$eventTrigger->specificQuestionnaireInternalId = $internalId;
+							}
+						}
+					}
 				}
 				else
 					$internalId_index[$questionnaire->internalId] = true;
 
-
+				//check questionnaire:
 				if(!isset($questionnaire->title) || !strlen($questionnaire->title))
 					error('Questionnaire title is empty!');
 //				else if(!check_input($questionnaire_name))
@@ -893,6 +913,7 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
                 $questionnaire_title = $questionnaire->title;
 				$keys_questionnaire = KEYS_QUESTIONNAIRE_BASE_RESPONSES; //Note: php always creates copies, which is what we need right now
 				
+				//make sure input and sumScore names are unique:
 				if(isset($questionnaire->pages)) {
 					foreach($questionnaire->pages as $page) {
 						foreach($page->inputs as $input) {
@@ -927,8 +948,8 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 						$keys_questionnaire[] = $score->name;
 					}
 				}
-
-                $keys_questionnaire_array[$i] = $keys_questionnaire;
+				
+                $keys_questionnaire_array[$i] = $keys_questionnaire; // used for responses index below
 			}
 
 
@@ -1149,7 +1170,6 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			//publish / unpublish study
 			//
 			if($is_admin || has_permission($study_id, 'publish')) {
-				$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
 				$removeCount = remove_study_from_index($study_index, $study_id);
 				
 				if(isset($study->published) && $study->published) {
