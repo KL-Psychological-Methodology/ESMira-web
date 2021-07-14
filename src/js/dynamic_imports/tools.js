@@ -127,7 +127,8 @@ export const AdminTools = {
 						return ko.unwrap(valueAccessor());
 					},
 					write: function(value) {
-						valueAccessor()(parseInt(value));
+						let num = parseInt(value);
+						valueAccessor()(num || 0);
 					},
 					disposeWhenNodeIsRemoved: el
 				});
