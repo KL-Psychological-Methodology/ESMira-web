@@ -38,7 +38,8 @@ const SERVER_VERSION = 10,
 	SMALLEST_TIMED_DISTANCE = 675, //11min in seconds, needs to multiply into ONE_DAY. Will be doubled when there are more entries than STATISTICS_TIMED_STORAGE_MAX_ENTRIES. All values inside this timeframe will be merged. A higher timeframe decreases the number of data that has to be saved into statistics
 	
 	COOKIE_LAST_COMPLETED = 'last_completed%1$d_%2$d',
-	URL_ABOUT_ESMIRA_JSON = 'https://esmira.kl.ac.at/documents/about/langs/%s.json',
+	URL_ABOUT_ESMIRA_HOST = 'esmira.kl.ac.at',
+	URL_ABOUT_ESMIRA_JSON_LOCATION = '/documents/about/langs/%s.json',
 	
 	CONDITION_TYPE_ALL = 0,
 	CONDITION_TYPE_AND = 1,

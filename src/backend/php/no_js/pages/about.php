@@ -1,10 +1,18 @@
 <?php
+if($_SERVER['HTTP_HOST'] == URL_ABOUT_ESMIRA_HOST)
+	$url = '.' .URL_ABOUT_ESMIRA_JSON_LOCATION;
+else
+	$url = 'https://'.URL_ABOUT_ESMIRA_HOST.URL_ABOUT_ESMIRA_JSON_LOCATION;
+
 $lang_name = get_lang();
+function getContent($url) {
+	$context = stream_context_create(array('http' => array('header'=>'Connection: close\r\n')));
+	return file_get_contents($url, false, $context);
+}
 
-$json_string = @file_get_contents(sprintf(URL_ABOUT_ESMIRA_JSON, $lang_name));
-
+$json_string = getContent(sprintf($url, $lang_name));
 if(!$json_string) {
-	$json_string = @file_get_contents(sprintf(URL_ABOUT_ESMIRA_JSON, 'en'));
+    $json_string = getContent(sprintf($url, 'en'));
 	
 	if(!$json_string) {
 		show_error('Could not load data');
