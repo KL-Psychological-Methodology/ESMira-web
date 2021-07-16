@@ -308,6 +308,7 @@
 	"mark_messages_as_read": "Mark messages as read",
 	"message": "Message",
 	"messages": "Messages",
+	"minimal_length": "Minimal length: %d",
 	"minutes": "minutes",
 	"minutes_between": "Shortest interval",
 	"monthly_pageViews": "Monthly page views",
