@@ -745,6 +745,7 @@ el_pages
 
 
 #el_pages > .page > .page_title > .title {
+	height: 25px;
 	margin-right: 20px;
 	cursor: pointer;
 }
@@ -1108,4 +1109,18 @@ legal
 }
 .legal .open_plugins:after {
 	content: "\25BE";
+}
+
+
+/**********
+login
+**********/
+
+.login {
+	height: 80%;
+}
+
+.login form {
+	position: sticky;
+	top: 0;
 }
