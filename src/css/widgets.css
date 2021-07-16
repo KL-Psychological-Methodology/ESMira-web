@@ -79,6 +79,11 @@ dash-row > a.highlight > dash-el .icon svg {
 dash-row > a.highlight:hover > dash-el .icon svg {
 	fill: #ff8fce;
 }
+
+dash-row dash-el.small > .icon {
+	display: inline-block;
+	vertical-align: middle;
+}
 dash-row dash-el > .icon {
 	text-align: center;
 }
@@ -95,6 +100,10 @@ dash-el > .title, dash-el .msg {
 }
 dash-el > .title {
 	font-weight: bold;
+}
+dash-el.small > .title {
+	display: inline;
+	vertical-align: middle;
 }
 dash-el .msg {
 	font-size: 11pt;

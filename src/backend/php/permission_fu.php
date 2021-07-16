@@ -52,7 +52,7 @@ function check_login($user, $plain, &$blockTIme) {
 				if(check_pass($plain, $data[1])) {
 					if($has_blockingFile)
 						unlink($file_blocking);
-					save_loginHistory($user);
+					save_loginHistory($user, 'Login form');
 					return true;
 				}
 			}
@@ -74,6 +74,7 @@ function check_login($user, $plain, &$blockTIme) {
 			$num = (int)file_get_contents($file_blocking);
 			file_put_contents($file_blocking, min($num * 2, 1800));
 		}
+		save_loginHistory($user, 'Failed login attempt');
 	}
 	return false;
 }
@@ -229,7 +230,7 @@ function get_permissions() {
 		return $permissions[$user];
 }
 
-function save_loginHistory($user, $login='Login form') {
+function save_loginHistory($user, $login) {
 	$folder_token = get_folder_token($user);
 	if(!file_exists($folder_token))
 		create_folder($folder_token);
