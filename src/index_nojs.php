@@ -63,6 +63,8 @@ function show_error($s) {
 			min-height: 35px;
         }
 	</style>
+	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
+	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Mobile; Server; Open Source" />
 </head>
 <body class="is_init">
 	<div id="header">

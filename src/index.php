@@ -81,6 +81,8 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("parts/locales/$lang.json"); ?></script>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
+	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Mobile; Server; Open Source" />
 </head>
 <body onload="ESMira.init(a, b, c, d, e, f, g)">
 

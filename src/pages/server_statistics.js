@@ -122,8 +122,10 @@ export function ViewModel(page) {
 			}
 			let keys = Object.keys(appVersion_labels).sort();
 			let maxColors = colors.length;
-			for(let i=0, max=keys.length; i<max; ++i) {
+			for(let i=0, max=keys.length, realI=0; i<max; ++i) {
 				let key = keys[i];
+				if(key.indexOf("_dev") !== -1 || key.indexOf("wasDev") !== -1)
+					continue;
 				appVersion_statistics.push(data_to_dailyData("appVersion", key));
 				
 				appVersion_axisContainer.push({
@@ -133,11 +135,12 @@ export function ViewModel(page) {
 					yAxis: {
 						conditions: [],
 						variableName: "appVersion",
-						observedVariableIndex: i
+						observedVariableIndex: realI
 					},
 					label: key,
-					color: colors[i%maxColors]
+					color: colors[realI%maxColors]
 				});
+				++realI;
 			}
 		}
 		
