@@ -59,7 +59,7 @@ export const Requests = {
 				
 				if(!obj.success) {
 					console.error(r);
-					throw new Error(Lang.get("error_from_server", obj.error));
+					throw new Error(Lang.get("error_from_server", obj.error || r.responseText));
 				}
 				else
 					return obj.dataset;

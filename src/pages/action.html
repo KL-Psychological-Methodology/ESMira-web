@@ -9,7 +9,8 @@
 <label data-bind="visible: type() === $root.ACTION_INVITATION || type() === $root.ACTION_MESSAGE || type() === $root.ACTION_NOTIFICATION">
 	<small data-bind="text: Lang.get('message')"></small>
 	<textarea data-bind="value: msgText"></textarea>
-	<widget-warn data-bind="visible: !msgText().length"></widget-warn>
+	<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: !msgText().length"/>
+	<lang-options></lang-options>
 	<small data-bind="text: Lang.get('info_notification_title')"></small>
 </label>
 

@@ -18,41 +18,31 @@ import {Studies} from "../main_classes/studies";
 import {Defaults} from "../variables/defaults";
 import {add_default} from "../helpers/list_functions";
 import "../../css/style_admin.css";
+import {LangOptions} from "../../widgets/lang_options";
+import lang_options from "../../widgets/lang_options.html";
 
-function DetectChange(obj) {
-	//Thanks to http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
-	let result = function() {},
-		_initialState = ko.observable(OwnMapping.toJSON(obj)),
-		_isInitiallyDirty = ko.observable(false),
-		_enabled = ko.observable(true);
+function DetectChange(obj, changedFu) {
+	this.isDirty = ko.observable(false);
+	let subscriptions = OwnMapping.subscribe(obj, this.isDirty, changedFu);
 	
-	result.isDirty = ko.pureComputed(function() {
-		//OwnMapping.toJSON(obj) "touches" all values and subscribes to their value.
-		// Note: subscriptions will be redone everytime this function is called.
-		// Everything that is not "touched" wont have subscriptions until this function is called again (and they are "touched")
-		return _isInitiallyDirty() || (_enabled() && _initialState() !== OwnMapping.toJSON(obj));
-	});
-	result.setDirty = function(state) {
-		_initialState(OwnMapping.toJSON(obj));
-		_isInitiallyDirty(state);
+	this.setDirty = function(state) {
+		OwnMapping.unsetDirty(obj);
+		this.isDirty(state);
 	};
-	
-	result.set_onChangeListener = function(fu) {
-		result.onChange = ko.pureComputed(function() {
-			OwnMapping.toJSON(obj); //"touch" all values of obj
-			return Date.now();
-		});
-		result.onChange.subscribe(fu);
+	this.set_enabled = function(enabled) {
+		if(enabled) {
+			if(!subscriptions.length)
+				subscriptions = OwnMapping.subscribe(obj, this.isDirty, changedFu);
+		}
+		else if(subscriptions.length)
+			this.destroy();
 	};
-	result.remove_onChangeListener = function() {
-		if(result.onChange)
-			result.onChange.dispose();
-	}
-	result.set_enabled = function(enabled) {
-		_enabled(enabled);
+	this.destroy = function() {
+		for(let i=subscriptions.length-1; i>=0; --i) {
+			subscriptions[i].dispose();
+		}
+		subscriptions = [];
 	};
-	
-	return result;
 }
 
 function ListTools(page) {
@@ -78,6 +68,7 @@ function ListTools(page) {
 			else
 				break;
 		}
+		console.log(obs);
 		obs.push(ko.observable(s));
 	}
 	this.remove_from_list = function(list, index, confirm_msg, important) {
@@ -292,7 +283,6 @@ export const AdminTools = {
 			},
 			template: btn_ok
 		});
-		
 		ko.components.register('widget-only', {
 			viewModel: function(params) {
 				this.android = params.hasOwnProperty("android");
@@ -301,9 +291,7 @@ export const AdminTools = {
 			},
 			template: only_icon
 		});
-		
 		ko.components.register('change-user', {
-			// viewModel: ChangeUser_viewModel,
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
 					return new ChangeUser_viewModel(ko.contextFor(componentInfo.element).$root.page, componentInfo.element, params);
@@ -311,7 +299,6 @@ export const AdminTools = {
 			},
 			template: changeUser
 		});
-		
 		ko.components.register('rich-text', {
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
@@ -319,6 +306,14 @@ export const AdminTools = {
 				}
 			},
 			template: rich_text
+		});
+		ko.components.register('lang-options', {
+			viewModel: {
+				createViewModel: function(params, componentInfo) {
+					return new LangOptions(ko.contextFor(componentInfo.element).$root.page);
+				}
+			},
+			template: lang_options
 		});
 	},
 	
@@ -400,8 +395,8 @@ export const AdminTools = {
 		});
 	},
 	
-	get_changeDetector: function(obj) {
-		return new DetectChange(obj);
+	get_changeDetector: function(obj, changeFu) {
+		return new DetectChange(obj, changeFu);
 	},
 	get_listTools: function(page) {
 		return new ListTools(page);
@@ -415,8 +410,10 @@ export const Studies_tools = {
 	lastChanged: {},
 	_observedSave: null,
 	_observedPublish: null,
+	currentLang: ko.observable("_"),
 	
 	init: function(page) {
+		ko.options.deferUpdates = true;
 		let studies = Studies.list();
 		for(let i = studies.length - 1; i >= 0; --i) {
 			let study = studies[i];
@@ -457,7 +454,7 @@ export const Studies_tools = {
 					}
 				});
 			}
-		})
+		});
 	},
 	
 	add_study: function(page, study) {
@@ -524,14 +521,27 @@ export const Studies_tools = {
 		let studyId = study.id();
 		let page = Site.get_lastPage();
 		
+		let studies = {
+			_: OwnMapping.toLangJs(study, "_")
+		};
+		
+		let langCodes = study.langCodes();
+		for(let i=langCodes.length-1; i>=0; --i) {
+			let code = langCodes[i]();
+			studies[code] = OwnMapping.toLangJs(study, code);
+		}
+		
 		page.loader.loadRequest(
 			FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
 			false,
 			"post",
-			OwnMapping.toJSON(study)
+			JSON.stringify(studies)
 		).then(function({lastChanged, json}) {
 			self.lastChanged[studyId] = lastChanged;
-			OwnMapping.update(study, json, Defaults.studies);
+			
+			
+			OwnMapping.update(study, json._, Defaults.studies); //language fields were not changed
+			
 			self.set_study_unchanged(study);
 			
 			if(study.published()) {

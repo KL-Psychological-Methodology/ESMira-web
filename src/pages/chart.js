@@ -87,12 +87,11 @@ export function ViewModel(page) {
 		
 		draw_dataGraph();
 		
-		changeDetector = Admin.tools.get_changeDetector(chart);
-		changeDetector.set_onChangeListener(draw_dataGraph)
+		changeDetector = Admin.tools.get_changeDetector(chart, draw_dataGraph);
 	};
 	
 	this.destroy = function() {
-		changeDetector.remove_onChangeListener();
+		changeDetector.destroy();
 	}
 	
 	this.reload = function() {

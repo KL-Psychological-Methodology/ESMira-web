@@ -1,0 +1,14 @@
+<div data-bind="if: $component.langCodes().length">
+	<div class="codes">
+		<span class="element" data-bind="click: $component.changeLang.bind($component, -1),
+				text: Lang.get('default'),
+				css: {selected: Studies.tools.currentLang() === '_' || $component.langCodes.indexOf(Studies.tools.currentLang()) == -1}
+			"></span>
+		<span data-bind="foreach: $component.langCodes">
+			<span class="element" data-bind="click: $component.changeLang.bind($component, $index()),
+					text: $data,
+					css: {selected: Studies.tools.currentLang() === $data}
+				"></span>
+		</span>
+	</div>
+</div>

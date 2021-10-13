@@ -211,7 +211,9 @@ export function ViewModel(page) {
 				self.responses_cache[score.name()] = sum;
 			}
 		}
+		
 		self.responses_cache.form_duration = Date.now() - self.form_duration;
+		self.responses_cache.lang = Lang.code;
 
 		Site.save_dataset(page, "questionnaire", participant_id, questionnaire.title(), questionnaire.internalId(), self.responses_cache).then(function({states}) {
 			let data_answer = states[0];
@@ -332,10 +334,11 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 	this.input = input;
 	this.currentElement = null;
 	this.defaults = Defaults;
-	
+	console.log(input);
+	console.log(input.defaultValue);
 	let defaultValue = responses_cache.hasOwnProperty(input.name())
 		? responses_cache[input.name()]
-		: ((input.required && input.required()) || !input.defaultValue || input.defaultValue().length === 0 ? "" : input.defaultValue());
+		: ((input.required && input.required()) || !input.defaultValue || !input.defaultValue() || input.defaultValue().length === 0 ? "" : input.defaultValue());
 	
 	let responseType = input.hasOwnProperty("responseType") ? input.responseType() : "text_input";
 	

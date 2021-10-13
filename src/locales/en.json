@@ -16,6 +16,7 @@
 	"add_link": "Add link",
 	"add_page": "Add page",
 	"add_schedule": "Add schedule",
+	"additional_languages": "Additional languages",
 	"admin": "Admin",
 	"advanced": "Advanced",
 	"after_x_seconds": "After %d seconds",
@@ -145,6 +146,7 @@
 	"data": "Data",
 	"data_table": "Data table",
 	"days": "days",
+	"default": "Default",
 	
 	"default_chooseUsernameInstructions": "Please choose a user id",
 	"default_study_name": "Study",
@@ -341,6 +343,7 @@
 	"prompt_comment": "Please select a comment:",
 	"prompt_image_fileSize": "\"%s\" is a very big file. Are you sure that you want it embed into the studyfile? It could increase the download and processing time of the study.",
 	"prompt_input_name": "Please select a variable name (it has to be unique over all questionnaires):",
+	"prompt_languageCode": "Please choose a language code (e.g.: en, de, fr, ...):",
 	"prompt_studyName": "Please select a study name:",
 	"prompt_title": "Please choose a title:",
 	"prompt_url": "Please provide an url:",

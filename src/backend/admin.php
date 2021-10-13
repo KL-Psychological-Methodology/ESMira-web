@@ -144,6 +144,147 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 		write_file($file_index, serialize($new_keys) .',');
 	}
 }
+function write_statistics($study) {
+	$study_id = $study->id;
+	if($study->publicStatistics->observedVariables !== new stdClass()) { //check if empty
+		$folder_statistics = get_folder_statistics($study_id);
+		$file_statisticsMetadata = get_file_statisticsMetadata($study_id);
+		$file_statisticsJson = get_file_statisticsJson($study_id);
+		
+		if(!file_exists($folder_statistics))
+			create_folder($folder_statistics);
+		
+		$old_index = [];
+		if(file_exists($file_statisticsJson)) {
+			$old_statisticMetadata = unserialize(file_get_contents($file_statisticsMetadata));
+			$old_statisticJson = json_decode(file_get_contents($file_statisticsJson));
+			if(!empty($old_statisticJson)) {
+				foreach($old_statisticJson as $value => $jsonKeyBox) {
+					foreach($jsonKeyBox as $index => $jsonEntry) {
+						$metadataEntry = $old_statisticMetadata->{$value}[$index];
+						$old_index[get_conditionString($value, $jsonEntry->storageType, $metadataEntry->defaultTimeInterval, $metadataEntry->conditions)] = $jsonEntry;
+					}
+				}
+			}
+		}
+		
+		$statistics_metadata = new stdClass();
+		$statistics_json = new stdClass();
+		
+		foreach($study->publicStatistics->observedVariables as $value => $keyBox) {
+			foreach($keyBox as $i => $observedEntry) {
+				if(!isset($statistics_metadata->{$value})) {
+					$statistics_metadata->{$value} = [];
+					$statistics_json->{$value} = [];
+				}
+				
+				$metaDataObj = (object)['conditions' => $observedEntry->conditions, 'conditionType' => $observedEntry->conditionType, 'storageType' => $observedEntry->storageType, 'defaultTimeInterval' => $observedEntry->timeInterval];
+				
+				array_push($statistics_metadata->{$value}, $metaDataObj);
+				
+				$jsonObj = (object)['storageType' => $observedEntry->storageType, 'data' => new stdClass(), 'entryCount' => 0, 'timeInterval' => $observedEntry->timeInterval];
+				
+				
+				$conditionString = get_conditionString($value, $observedEntry->storageType, $observedEntry->timeInterval, $observedEntry->conditions);
+				if(isset($old_index[$conditionString])) {
+					$old_entry = $old_index[$conditionString];
+					$jsonObj->data = $old_entry->data;
+					$jsonObj->entryCount = $old_entry->entryCount;
+					$jsonObj->timeInterval = $old_entry->timeInterval;
+				}
+				else {
+					//TODO: extract statistics from already existing data
+				}
+				array_push($statistics_json->{$value}, $jsonObj);
+			}
+		}
+		write_file($file_statisticsMetadata, serialize($statistics_metadata));
+		write_file($file_statisticsJson, json_encode($statistics_json));
+	}
+}
+function checkUnique_and_collectKeys($study) {
+	//Note: When a questionnaire is deleted, its internalId will stay in the index until the study is unpublished or deleted.
+	//The only solution I can think of would be to loop through the complete index every time a study is saved.
+	//But since this case will rarely happen and probably wont ever be a problem and the loop can be an expensive operation, we just ignore this problem.
+	
+	$study_id = $study->id;
+	$internalId_index = [];
+	$key_check_array = [];
+	$keys_questionnaire_array = [];
+	foreach($study->questionnaires as $i => &$questionnaire) {
+		//make sure internalIds are unique:
+		if(
+			!isset($questionnaire->internalId) ||
+			$questionnaire->internalId === -1 ||
+			isset($internalId_index[$questionnaire->internalId]) ||
+			(isset($study_index['~'.$questionnaire->internalId]) && $study_index['~'.$questionnaire->internalId][0] != $study_id)
+		) {
+			do {
+				$internalId = getQuestionnaireId();
+			} while(isset($internalId_index[$internalId]) || isset($study_index['~'.$internalId]));
+			$old_internalId = $questionnaire->internalId;
+			$questionnaire->internalId = $internalId;
+			$internalId_index[$internalId] = true;
+			
+			foreach($study->questionnaires as $q) {
+				foreach($q->actionTriggers as $actionTrigger) {
+					foreach($actionTrigger->eventTriggers as $eventTrigger) {
+						if(isset($eventTrigger->specificQuestionnaireInternalId) && $eventTrigger->specificQuestionnaireInternalId == $old_internalId)
+							$eventTrigger->specificQuestionnaireInternalId = $internalId;
+					}
+				}
+			}
+		}
+		else
+			$internalId_index[$questionnaire->internalId] = true;
+		
+		//check questionnaire:
+		if(!isset($questionnaire->title) || !strlen($questionnaire->title))
+			error('Questionnaire title is empty!');
+		
+		$questionnaire_title = $questionnaire->title; //only used for error feedback
+		$keys_questionnaire = KEYS_QUESTIONNAIRE_BASE_RESPONSES; //Note: php always creates copies, which is what we need right now
+		
+		//make sure input and sumScore names are unique:
+		if(isset($questionnaire->pages)) {
+			foreach($questionnaire->pages as $page) {
+				foreach($page->inputs as $input) {
+					$responseType = isset($input->responseType) ? $input->responseType : 'text_input';
+					
+					switch($responseType) {
+						case 'text':
+							continue 2;
+					}
+					
+					$name = $input->name;
+					
+					if(!strlen($name))
+						error('Input name is empty!');
+					else if(!check_input($name))
+						error("No special characters are allowed in Variable-Names. \n'$name' detected in questionnaire: $questionnaire_title");
+					else if(isset($key_check_array[$name]))
+						error("Variable-Name exists more than once: '$name'. First detected in questionnaire: '".$key_check_array[$input->name]."'. Detected again in questionnaire: '$questionnaire_title'");
+					else if(in_array($name, KEYS_EVENT_RESPONSES) || in_array($name, KEYS_QUESTIONNAIRE_BASE_RESPONSES))
+						error("Protected Variable-Name: $name \nPlease choose another Variable-Name.\nDetected in questionnaire: $questionnaire_title");
+					else
+						$key_check_array[$name] = $questionnaire_title;
+					
+					$keys_questionnaire[] = $name;
+				}
+			}
+		}
+		if(isset($questionnaire->sumScores)) {
+			foreach($questionnaire->sumScores as $score) {
+				if(!isset($score->name))
+					continue;
+				$keys_questionnaire[] = $score->name;
+			}
+		}
+		
+		$keys_questionnaire_array[$i] = $keys_questionnaire; // used for responses index below
+	}
+	return $keys_questionnaire_array;
+}
 
 function write_serverSettings($serverName) {
 	$serverSettings = DEFAULT_SERVER_SETTINGS;
@@ -808,24 +949,33 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			if(file_exists($responses_folder))
 				empty_folder($responses_folder);
 			else
-				error("$responses_folder does not exist");
+				return error("$responses_folder does not exist");
 			
-			//recreate study:
+			
+			//delete statistics
+			$statistics_folder = get_folder_statistics($study_id);
+			if(file_exists($statistics_folder))
+				empty_folder($statistics_folder);
+			else
+				return error("$statistics_folder does not exist");
+			
+			//recreate study
 			$study_file = get_file_studyConfig($study_id);
 			if(file_exists($study_file))
 				$study_json = file_get_contents($study_file);
 			else
-				error("$study_file does not exist");
+				return error("$study_file does not exist");
 			
-			//delete statistics
-			$statistics_folder = get_folder_statistics($study_id);
-			if(file_exists($statistics_folder)) {
-				empty_folder($statistics_folder);
-				if(!rmdir($statistics_folder))
-					error("Could not remove $statistics_folder");
+			
+			
+			if(!($study = json_decode($study_json)))
+				return error('Unexpected data');
+			
+			$keys = checkUnique_and_collectKeys($study);
+			foreach($study->questionnaires as $i => $q) {
+				write_indexAndResponses_files($study, $q->internalId, $keys[$i]);
 			}
-			
-			goto save_study;
+			write_statistics($study);
 			
 			break;
 		case 'check_changed':
@@ -845,13 +995,31 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 				success("{\"lastChanged\": $realChanged}");
 			
 			break;
+		case 'load_langs':
+			$folder_langs = get_folder_langs($study_id);
+			$langObj = [];
+			if(file_exists($folder_langs)) {
+				$h_folder = opendir($folder_langs);
+				while($file = readdir($h_folder)) {
+					if($file[0] != '.') {
+						$s = file_get_contents($folder_langs .$file);
+						$langObj[] = '"' .explode('.', $file)[0] ."\": $s";
+					}
+				}
+				closedir($h_folder);
+			}
+			success('{' .implode(',', $langObj) .'}');
+			break;
 		case 'save_study':
-			save_study:
-			if(!isset($study_json)) //it will already be defined when we use goto from delete_data
-				$study_json = file_get_contents('php://input');
+			$studyCollection_json = file_get_contents('php://input');
 			
-			if(!($study = json_decode($study_json)))
+			if(!($studyCollection = json_decode($studyCollection_json)))
 				error('Unexpected data');
+			
+			if(!isset($studyCollection->_))
+				error('No default study');
+			
+			$study = $studyCollection->_;
 			
 			if(!isset($study->id) || $study->id != $study_id)
 				error("Problem with study id! $study_id !=" .$study->id);
@@ -863,101 +1031,20 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			
 			
 			$study_index = file_exists(FILE_STUDY_INDEX) ? unserialize(file_get_contents(FILE_STUDY_INDEX)) : [];
-
+			
 			//*****
 			//check and prepare questionnaires:
 			//*****
-			//Note: When a questionnaire is deleted, its internalId will stay in the index until the study is unpublished or deleted.
-			//The only solution I can think of would be to loop through the complete index every time a study is saved.
-			//But since this case will rarely happen and probably wont ever be a problem and the loop can be an expensive operation, we just ignore this problem.
 			
-			$internalId_index = [];
-			$key_check_array = [];
-            $keys_questionnaire_array = [];
-			foreach($study->questionnaires as $i => &$questionnaire) {
-				
-				//make sure internalIds are unique:
-				if(
-					!isset($questionnaire->internalId) ||
-					$questionnaire->internalId === -1 ||
-					isset($internalId_index[$questionnaire->internalId]) ||
-					(isset($study_index['~'.$questionnaire->internalId]) && $study_index['~'.$questionnaire->internalId][0] != $study_id)
-				) {
-					do {
-						$internalId = getQuestionnaireId();
-					} while(isset($internalId_index[$internalId]) || isset($study_index['~'.$internalId]));
-					$old_internalId = $questionnaire->internalId;
-					$questionnaire->internalId = $internalId;
-					$internalId_index[$internalId] = true;
-					
-					foreach($study->questionnaires as $q) {
-						foreach($q->actionTriggers as $actionTrigger) {
-							foreach($actionTrigger->eventTriggers as $eventTrigger) {
-								if(isset($eventTrigger->specificQuestionnaireInternalId) && $eventTrigger->specificQuestionnaireInternalId == $old_internalId)
-									$eventTrigger->specificQuestionnaireInternalId = $internalId;
-							}
-						}
-					}
-				}
-				else
-					$internalId_index[$questionnaire->internalId] = true;
-
-				//check questionnaire:
-				if(!isset($questionnaire->title) || !strlen($questionnaire->title))
-					error('Questionnaire title is empty!');
-//				else if(!check_input($questionnaire_name))
-//					error("No special characters are allowed in Group-Names.\nPlease choose another Group-Name instead of '$questionnaire_name'");
-//				else if($questionnaire_name == FILENAME_EVENTS || $questionnaire_name == FILENAME_WEB_ACCESS) //not really needed, but the study would be confusing
-//					error("Protected Group-Name.\nPlease choose another Group-Name instead of '$questionnaire_name'");
-
-                $questionnaire_title = $questionnaire->title;
-				$keys_questionnaire = KEYS_QUESTIONNAIRE_BASE_RESPONSES; //Note: php always creates copies, which is what we need right now
-				
-				//make sure input and sumScore names are unique:
-				if(isset($questionnaire->pages)) {
-					foreach($questionnaire->pages as $page) {
-						foreach($page->inputs as $input) {
-							$responseType = isset($input->responseType) ? $input->responseType : 'text_input';
-							
-							switch($responseType) {
-								case 'text':
-									continue 2;
-							}
-							
-							$name = $input->name;
-
-							if(!strlen($name))
-								error('Input name is empty!');
-							else if(!check_input($name))
-								error("No special characters are allowed in Variable-Names. \n'$name' detected in questionnaire: $questionnaire_title");
-							else if(isset($key_check_array[$name]))
-								error("Variable-Name exists more than once: '$name'. First detected in questionnaire: '".$key_check_array[$input->name]."'. Detected again in questionnaire: '$questionnaire_title'");
-							else if(in_array($name, KEYS_EVENT_RESPONSES) || in_array($name, KEYS_QUESTIONNAIRE_BASE_RESPONSES))
-								error("Protected Variable-Name: $name \nPlease choose another Variable-Name.\nDetected in questionnaire: $questionnaire_title");
-							else
-								$key_check_array[$name] = $questionnaire_title;
-							
-							$keys_questionnaire[] = $name;
-						}
-					}
-				}
-				if(isset($questionnaire->sumScores)) {
-					foreach($questionnaire->sumScores as $score) {
-						if(!isset($score->name))
-							continue;
-						$keys_questionnaire[] = $score->name;
-					}
-				}
-				
-                $keys_questionnaire_array[$i] = $keys_questionnaire; // used for responses index below
-			}
-
-
+			$keys_questionnaire_array = checkUnique_and_collectKeys($study);
+			
+			
             //*****
             //create folders
             //*****
-
+			
             $folder_study = get_folder_study($study_id);
+            $folder_langConfigs = get_folder_langs($study_id);
             $folder_study_responses = get_folder_responses($study_id);
             $folder_study_messages = get_folder_messages($study_id);
             $folder_study_messages_user = get_folder_messages_archive($study_id);
@@ -967,42 +1054,45 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
             $folder_study_statistics = get_folder_statistics($study_id);
             $folder_study_token = get_folder_userData($study_id);
             $file_htaccess = $folder_study_responses .FILENAME_HTACCESS;
-
+			
             if(!file_exists($folder_study))
                 create_folder($folder_study);
-
+            
+            if(!file_exists($folder_langConfigs))
+                create_folder($folder_langConfigs);
+			
             if(!file_exists($folder_study_token))
                 create_folder($folder_study_token);
-
+			
             if(!file_exists($folder_study_messages))
                 create_folder($folder_study_messages);
-
+			
             if(!file_exists($folder_study_messages_user))
                 create_folder($folder_study_messages_user);
-
+			
             if(!file_exists($folder_study_messages_outgoing))
                 create_folder($folder_study_messages_outgoing);
-
+			
             if(!file_exists($folder_study_messages_unread))
                 create_folder($folder_study_messages_unread);
-
+			
             if(!file_exists($folder_study_responses))
                 create_folder($folder_study_responses);
-
+			
             if(!file_exists($folder_study_responsesIndex))
                 create_folder($folder_study_responsesIndex);
-
+			
             if(!file_exists($folder_study_statistics))
                 create_folder($folder_study_statistics);
-
+			
             if(!file_exists($file_htaccess))
                 create_readPermission_htaccessFile($study_id);
-
-
+			
+			
             //*****
             //save questionnaire index (has to happen after folders are created)
             //*****
-
+			
             foreach($study->questionnaires as $i => $q) {
                 write_indexAndResponses_files($study, $q->internalId, $keys_questionnaire_array[$i]);
             }
@@ -1044,14 +1134,21 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 					$index[$conditionString] = $axisData->observedVariableIndex = sizeof($keyBox)-1;
 				}
 			}
-			function set_observedVariables_from_axis(&$statistics_configs, &$public_observed_variables=null, &$public_index=null) {
+//			function set_observedVariables_from_axis(&$statistics_configs, &$public_observed_variables=null, &$public_index=null) {
+			function set_observedVariables_from_axis(&$studyCollection, $configName, &$public_observed_variables=null, &$public_index=null) {
+				$langConfigs = [];
+				$defaultConfig = $studyCollection->_->{$configName};
+				foreach($studyCollection as $code => &$study) {
+					if($code !== '_')
+						$langConfigs[$code] = &$study->{$configName};
+				}
+				
 				$observedVariables = new stdClass; //new stdClass translates into an empty object (instead of array) in JSON
-				$charts = &$statistics_configs->charts;
 				$index = [];
 				
 				
-				foreach($charts as &$chart) {
-					$dataType = isset($chart->dataType) ? number_format($chart->dataType) : STATISTICS_DATATYPES_DAILY;
+				foreach($defaultConfig->charts as $chart_i => &$defaultChart) {
+					$dataType = isset($defaultChart->dataType) ? number_format($defaultChart->dataType) : STATISTICS_DATATYPES_DAILY;
 					switch($dataType) {
 						case STATISTICS_DATATYPES_SUM:
 						case STATISTICS_DATATYPES_DAILY:
@@ -1070,96 +1167,51 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 					}
 					
 					
-					foreach($chart->axisContainer as &$axisContainer) {
-						check_axis($axisContainer->yAxis, $index, $observedVariables, $storageType, $timeInterval);
+					foreach($defaultChart->axisContainer as $axis_i => &$defaultAxisContainer) {
+						check_axis($defaultAxisContainer->yAxis, $index, $observedVariables, $storageType, $timeInterval);
 						
 						if($dataType == STATISTICS_DATATYPES_XY)
-							check_axis($axisContainer->xAxis, $index, $observedVariables, $storageType, $timeInterval);
+							check_axis($defaultAxisContainer->xAxis, $index, $observedVariables, $storageType, $timeInterval);
 						else
-							$axisContainer->xAxis->observedVariableIndex = -1;
+							$defaultAxisContainer->xAxis->observedVariableIndex = -1;
+						
+						foreach($langConfigs as &$config) {
+							$langAxis = &$config->charts[$chart_i]->axisContainer[$axis_i];
+							$langAxis->yAxis->observedVariableIndex = $defaultAxisContainer->yAxis->observedVariableIndex;
+							$langAxis->xAxis->observedVariableIndex = $defaultAxisContainer->xAxis->observedVariableIndex;
+						}
 					}
 					
-					if(isset($chart->displayPublicVariable) && $chart->displayPublicVariable && $public_observed_variables) {
-						foreach($chart->publicVariables as $axis) {
+					if(isset($defaultChart->displayPublicVariable) && $defaultChart->displayPublicVariable && $public_observed_variables) {
+						foreach($defaultChart->publicVariables as $axis) {
 							check_axis($axis->yAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
 							if($dataType == STATISTICS_DATATYPES_XY)
 								check_axis($axis->xAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
 						}
 					}
 					
-					$chart->storageType = $storageType;
+					$defaultChart->storageType = $storageType;
 				}
 				
-				$statistics_configs->observedVariables = $observedVariables;
+				$defaultConfig->observedVariables = $observedVariables;
+				foreach($langConfigs as &$config) {
+					$config->observedVariables = $observedVariables;
+				}
 				
 				return $index;
 			}
 			
 			//publicStatistics:
-			$public_index = set_observedVariables_from_axis($study->publicStatistics);
+			$public_index = set_observedVariables_from_axis($studyCollection, 'publicStatistics');
 			
 			//personalStatistics:
 			//Note: $public_index can still change when global variables are used in personal charts
 			// so we need this before we save the public statistics file
-			set_observedVariables_from_axis($study->personalStatistics, $study->publicStatistics->observedVariables, $public_index);
+			set_observedVariables_from_axis($studyCollection, 'personalStatistics', $study->publicStatistics->observedVariables, $public_index);
 			
 			
 			//statistics files:
-			if($study->publicStatistics->observedVariables !== new stdClass()) { //check if empty
-				$folder_statistics = get_folder_statistics($study_id);
-				$file_statisticsMetadata = get_file_statisticsMetadata($study_id);
-				$file_statisticsJson = get_file_statisticsJson($study_id);
-
-				if(!file_exists($folder_statistics))
-					create_folder($folder_statistics);
-
-				$old_index = [];
-				if(file_exists($file_statisticsJson)) {
-					$old_statisticMetadata = unserialize(file_get_contents($file_statisticsMetadata));
-					$old_statisticJson = json_decode(file_get_contents($file_statisticsJson));
-					if(!empty($old_statisticJson)) {
-						foreach($old_statisticJson as $value => $jsonKeyBox) {
-							foreach($jsonKeyBox as $index => $jsonEntry) {
-								$metadataEntry = $old_statisticMetadata->{$value}[$index];
-								$old_index[get_conditionString($value, $jsonEntry->storageType, $metadataEntry->defaultTimeInterval, $metadataEntry->conditions)] = $jsonEntry;
-							}
-						}
-					}
-				}
-
-				$statistics_metadata = new stdClass();
-				$statistics_json = new stdClass();
-
-				foreach($study->publicStatistics->observedVariables as $value => $keyBox) {
-					foreach($keyBox as $i => $observedEntry) {
-						if(!isset($statistics_metadata->{$value})) {
-							$statistics_metadata->{$value} = [];
-							$statistics_json->{$value} = [];
-						}
-
-						$metaDataObj = (object)['conditions' => $observedEntry->conditions, 'conditionType' => $observedEntry->conditionType, 'storageType' => $observedEntry->storageType, 'defaultTimeInterval' => $observedEntry->timeInterval];
-
-						array_push($statistics_metadata->{$value}, $metaDataObj);
-
-						$jsonObj = (object)['storageType' => $observedEntry->storageType, 'data' => new stdClass(), 'entryCount' => 0, 'timeInterval' => $observedEntry->timeInterval];
-
-
-						$conditionString = get_conditionString($value, $observedEntry->storageType, $observedEntry->timeInterval, $observedEntry->conditions);
-						if(isset($old_index[$conditionString])) {
-							$old_entry = $old_index[$conditionString];
-							$jsonObj->data = $old_entry->data;
-							$jsonObj->entryCount = $old_entry->entryCount;
-							$jsonObj->timeInterval = $old_entry->timeInterval;
-						}
-						else {
-							//TODO: extract statistics from already existing data
-						}
-						array_push($statistics_json->{$value}, $jsonObj);
-					}
-				}
-				write_file($file_statisticsMetadata, serialize($statistics_metadata));
-				write_file($file_statisticsJson, json_encode($statistics_json));
-			}
+			write_statistics($study);
 
 
 			//*****
@@ -1177,7 +1229,10 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 					if(isset($study->accessKeys) && count($study->accessKeys)) {
 						foreach($study->accessKeys as $key => $value) {
 							$value = strtolower($value);
-							$study->accessKeys[$key] = $value;
+							foreach($studyCollection as &$langStudy) {
+								$langStudy->accessKeys[$key] = $value;
+							}
+							
 							if(!check_input($value))
 								error("No special characters are allowed in access keys.\n'$value'");
 							else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
@@ -1219,25 +1274,35 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			else {
 				$old_study = json_decode(file_get_contents($file_config));
 				
-				$study->accessKeys = isset($old_study->accessKeys) ? $old_study->accessKeys : [];
-				$study->published = isset($old_study->published) ? $old_study->published : false;
-				
+				foreach($studyCollection as &$langStudy) {
+					$langStudy->accessKeys = isset($old_study->accessKeys) ? $old_study->accessKeys : [];
+					$langStudy->published = isset($old_study->published) ? $old_study->published : false;
+				}
 			}
 			
 			//
 			//save study config
 			//
 			if(!isset($study->version) || $study->version === 0) {
-				$study->version = 1;
-				$study->subVersion = 0;
+				foreach($studyCollection as &$langStudy) {
+					$langStudy->version = 1;
+					$langStudy->subVersion = 0;
+				}
 			}
 			else {
-				$study->new_changes = true;
-				$study->subVersion += 1;
+				foreach($studyCollection as &$langStudy) {
+					$langStudy->new_changes = true;
+					$langStudy->subVersion += 1;
+				}
 			}
 			
-			$study_json = json_encode($study);
-			write_file($file_config, $study_json);
+//			exit(json_encode($studyCollection));
+			$studies_json = [];
+			foreach($studyCollection as $code => $s) {
+				$study_json = json_encode($s);
+				write_file($code === '_' ? $file_config : get_file_langConfig($study_id, $code), $study_json);
+				$studies_json[] = "\"$code\":$study_json";
+			}
 			
 			
 			//
@@ -1250,19 +1315,10 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'write'))) {
 			//
 			//save index-files
 			//
-		
-//			$metadata_path = get_file_studyMetadata($study_id);
-//			if(file_exists($metadata_path)) {
-//				$metadata = unserialize(file_get_contents($metadata_path));
-//				$lastBackup = isset($metadata['lastBackup']) ? $metadata['lastBackup'] : get_milliseconds();
-//			}
-//			else
-//				$lastBackup = get_milliseconds();
-			
 			$metadata = get_newMetadata($study);
 			write_file(get_file_studyMetadata($study_id), serialize($metadata));
 			$sentChanged = time();
-			success("{\"lastChanged\":$sentChanged,\"json\":$study_json}");
+			success("{\"lastChanged\":$sentChanged,\"json\":{" .implode(',', $studies_json) ."}}");
 			break;
 		case 'mark_study_as_updated'://this will mark the study as updated for already existing participants
 			$file = get_file_studyConfig($study_id);

@@ -16,6 +16,7 @@
 	"add_link": "Link hinzufügen",
 	"add_page": "Seite hinzufügen",
 	"add_schedule": "Zeitplan hinzufügen",
+	"additional_languages": "Zusätzlich Sprachen",
 	"admin": "Admin",
 	"advanced": "Erweitert",
 	"after_joining_study": "nach Studienbeitritt",
@@ -145,6 +146,7 @@
 	"data": "Daten",
 	"data_table": "Daten-Tabelle",
 	"days": "Tage",
+	"default": "Standard",
 	
 	"default_chooseUsernameInstructions": "Bitte wählen Sie eine User-Id",
 	"default_study_name": "Studie",
@@ -341,6 +343,7 @@
 	"prompt_comment": "Bitte wählen Sie ein Kommentar:",
 	"prompt_image_fileSize": "\"%s\" ist sehr groß. Sind Sie sicher, dass Sie es in das Studienfile einbetten wollen? Dies kann die Download- und Verarbeitungszeit der Studie erhöhen.",
 	"prompt_input_name": "Bitte wählen Sie einen Variablen-Namen (Dieser darf über alle Fragebögen nur einmal vorkommen):",
+	"prompt_languageCode": "Bitte geben Sie einen Sprach-Code an (z.B.: en, de, fr, ...):",
 	"prompt_studyName": "Bitte wählen Sie ein Studien-Namen:",
 	"prompt_title": "Bitte wählen Sie einen Titel:",
 	"prompt_url": "Bitte geben Sie eine Url ein:",

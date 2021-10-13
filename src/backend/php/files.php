@@ -24,6 +24,10 @@ function get_folder_study($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES ."$study_id/";
 }
+function get_folder_langs($study_id) {
+	$study_id = (int) $study_id;
+	return FOLDER_STUDIES ."$study_id/.langs/";
+}
 function get_folder_messages($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES ."$study_id/.messages/";
@@ -61,6 +65,9 @@ function get_folder_token($user) {
 function get_file_studyConfig($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES."$study_id/.config.json";
+}
+function get_file_langConfig($study_id, $code) {
+	return get_folder_langs($study_id)."/$code.json";
 }
 function get_file_studyMetadata($study_id) {
 	$study_id = (int) $study_id;

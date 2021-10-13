@@ -1,4 +1,5 @@
 <?php
+require_once 'php/basic_fu.php';
 require_once 'php/no_js/nojs_fu.php';
 require_once 'php/no_js/inputs.php';
 

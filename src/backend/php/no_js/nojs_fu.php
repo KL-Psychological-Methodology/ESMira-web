@@ -163,6 +163,7 @@ function save_dataset($type, $participant, $study, $questionnaire=null, $dataset
 		'userId' => $participant,
 		'appType' => 'Web-NOJS',
 		'appVersion' => SERVER_VERSION,
+		'lang' => get_lang(),
 		'serverVersion' => SERVER_VERSION,
 		'dataset' => [(object)[
 			'dataSetId' => 0,

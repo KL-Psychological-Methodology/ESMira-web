@@ -7,13 +7,17 @@ require_once 'php/global_json.php';
 
 
 function list_fromIndex(&$studies_json, $key) {
+	$lang = get_lang();
 	$key_index = unserialize(file_get_contents(FILE_STUDY_INDEX));
 	if(isset($key_index[$key])) {
 		$ids = $key_index[$key];
 		
 		foreach($ids as $id) {
+			$path_lang = get_file_langConfig($id, $lang);
 			$path = get_file_studyConfig($id);
-			if(file_exists($path))
+			if(file_exists($path_lang))
+				$studies_json[] = file_get_contents($path_lang);
+			else if(file_exists($path))
 				$studies_json[] = file_get_contents($path);
 		}
 	}
@@ -27,7 +31,6 @@ function get_specificStudyJson($id) {
 	else
 		return [];
 }
-
 
 $studies_json = [];
 
