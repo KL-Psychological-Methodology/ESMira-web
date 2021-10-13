@@ -7,7 +7,7 @@ import {bindEvent, close_on_clickOutside, createElement} from "../helpers/basics
 import {Studies} from "./studies";
 import {Admin} from "./admin";
 import {FILE_SAVE_ACCESS, FILE_SAVE_DATASET} from "../variables/urls";
-import langIndex from "../../locales";
+import langIndex from "../locales.json";
 import {Lang} from "./lang";
 import {TabBar} from "../../widgets/tab_bar";
 import tab_box from "../../widgets/tab_bar.html";
@@ -124,7 +124,6 @@ export const Site = {
 			},
 			template: dashEl
 		});
-		
 		ko.components.register('title-row', {
 			viewModel: function(params) {
 				this.title = params.title;
@@ -133,8 +132,6 @@ export const Site = {
 			},
 			template: titleRow
 		});
-		
-		
 		ko.components.register('tab-bar', {
 			viewModel: TabBar,
 			template: tab_box
