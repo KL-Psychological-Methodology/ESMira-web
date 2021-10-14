@@ -36,7 +36,7 @@ export function ViewModel(page) {
 	this.current_page = ko.observable(0);
 	this.participant_id = ko.observable();
 	this.responses_cache = {};
-	this.form_duration = 0;
+	this.formStarted = 0;
 	this.pageType = Site.valueIndex.hasOwnProperty("demo") ? "demo" : "questionnaire";
 	this.viewModel_pages = [];
 	this.wasFinished = ko.observable(false);
@@ -130,7 +130,7 @@ export function ViewModel(page) {
 		//define variables:
 		this.dataObj = questionnaire;
 		this.study = study;
-		this.form_duration = Date.now();
+		this.formStarted = Date.now();
 		this.qPage = ko.computed(function() {return questionnaire.pages()[self.current_page()];});
 		this.viewModel_page = ko.computed(function() {return viewModel_pages()[self.current_page()];});
 		this.active = ko.computed(function() {return self.pageType === 'demo' || (Studies.questionnaire_isActive(questionnaire) && !self.wasFinished())});
@@ -212,8 +212,7 @@ export function ViewModel(page) {
 			}
 		}
 		
-		self.responses_cache.form_duration = Date.now() - self.form_duration;
-		self.responses_cache.lang = Lang.code;
+		self.responses_cache.formDuration = Date.now() - self.formStarted;
 
 		Site.save_dataset(page, "questionnaire", participant_id, questionnaire.title(), questionnaire.internalId(), self.responses_cache).then(function({states}) {
 			let data_answer = states[0];

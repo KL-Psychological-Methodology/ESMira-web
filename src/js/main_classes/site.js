@@ -384,6 +384,7 @@ export const Site = {
 				studyId: study.id(),
 				studyVersion: study.version(),
 				studySubVersion: study.subVersion(),
+				studyLang: study.lang(),
 				accessKey: Studies.accessKey(),
 				questionnaireName: questionnaire_name,
 				questionnaireInternalId: questionnaire_id,
