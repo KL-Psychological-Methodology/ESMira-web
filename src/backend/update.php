@@ -77,6 +77,7 @@ foreach($data as $study_id => $line) {
 	
 	
 	$version = $line->version;
+	$forceStudyUpdate = $line->forceStudyUpdate;
 	$last_message = $line->msgTimestamp;
 	
 	
@@ -134,14 +135,13 @@ foreach($data as $study_id => $line) {
 	
 	
 	//studies
-	if($metadata['version'] > $version) {
+	if($forceStudyUpdate || $metadata['version'] > $version) {
 		$filename_lang = get_file_langConfig($study_id, get_lang());
 		$filename = get_file_studyConfig($study_id);
-		
 		if(file_exists($filename_lang))
-			$study_json = file_get_contents($filename_lang);
-		if(file_exists($filename))
-			$study_json = file_get_contents($filename);
+            $study_json = file_get_contents($filename_lang);
+		else if(file_exists($filename))
+            $study_json = file_get_contents($filename);
 		else
 			return error('Internal server error');
 		

@@ -11,23 +11,25 @@ export function ViewModel(page) {
 	this.promiseBundle = [
 		Studies.init(page),
 	];
+	this.extraContent = "<lang-options params='onChange: $root.onChangeLang'></lang-options>";
 	page.title(Lang.get("study_source"));
 	
-	
-	// this.postInit = function({id}, studies, {default: JSONEditor}) {
+	let study, editor, btn;
 	this.postInit = function({id}, studies) {
 		let el = createElement("div", "height: 100%");
 		page.contentEl.appendChild(el);
 		
-		let btn = createElement(
+		btn = createElement(
 			"input",
 			"position: absolute; right: 5px; bottom: 5px; float: right; z-index: 10;",
 			{type: "button", value: Lang.get("apply"), className: "floatingBtn hidden"}
 		);
 		page.contentEl.appendChild(btn);
 		
-		let study = studies[id];
-		let editor = new JSONEditor(
+		
+		
+		study = studies[id];
+		editor = new JSONEditor(
 			el,
 			{
 				mode: "tree",
@@ -60,7 +62,12 @@ export function ViewModel(page) {
 			btn.classList.add("hidden");
 		});
 		editor.set(OwnMapping.toJS(study));
-		
 	};
 	
+	
+	
+	this.onChangeLang = function() {
+		editor.set(OwnMapping.toJS(study));
+		btn.classList.add("hidden");
+	}
 }
