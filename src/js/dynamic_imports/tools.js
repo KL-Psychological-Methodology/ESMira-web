@@ -68,7 +68,6 @@ function ListTools(page) {
 			else
 				break;
 		}
-		console.log(obs);
 		obs.push(ko.observable(s));
 	}
 	this.remove_from_list = function(list, index, confirm_msg, important) {
@@ -310,7 +309,7 @@ export const AdminTools = {
 		ko.components.register('lang-options', {
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
-					return new LangOptions(ko.contextFor(componentInfo.element).$root.page);
+					return new LangOptions(ko.contextFor(componentInfo.element).$root.page, params);
 				}
 			},
 			template: lang_options
@@ -528,7 +527,9 @@ export const Studies_tools = {
 		let langCodes = study.langCodes();
 		for(let i=langCodes.length-1; i>=0; --i) {
 			let code = langCodes[i]();
-			studies[code] = OwnMapping.toLangJs(study, code);
+			let langStudy = OwnMapping.toLangJs(study, code);
+			langStudy.lang = code;
+			studies[code] = langStudy;
 		}
 		
 		page.loader.loadRequest(

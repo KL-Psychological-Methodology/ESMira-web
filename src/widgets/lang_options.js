@@ -8,7 +8,7 @@ import {Site} from "../js/main_classes/site";
 import {Studies} from "../js/main_classes/studies";
 import {load_langConfigs} from "../js/shared/lang_configs";
 
-export function LangOptions(page) {
+export function LangOptions(page, params) {
 	let self = this;
 	let study = Studies.get_current();
 	this.langCodes = study.langCodes;
@@ -21,5 +21,7 @@ export function LangOptions(page) {
 			Studies.tools.currentLang("_");
 		else
 			Studies.tools.currentLang(self.langCodes()[index]());
+		if(params.hasOwnProperty("onChange"))
+			params.onChange();
 	}
 }

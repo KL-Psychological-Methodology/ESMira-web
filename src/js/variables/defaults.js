@@ -239,6 +239,7 @@ export function fillDefaults() {
 		version: -1,
 		subVersion: -1,
 		serverVersion: -1,
+		lang: "",
 		new_changes: false,
 		published: false,
 		publishedWeb: true,

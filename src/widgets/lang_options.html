@@ -1,4 +1,4 @@
-<div data-bind="if: $component.langCodes().length">
+<div data-bind="if: $component.langCodes().length, attr: {title: Lang.get('language')}">
 	<div class="codes">
 		<span class="element" data-bind="click: $component.changeLang.bind($component, -1),
 				text: Lang.get('default'),
