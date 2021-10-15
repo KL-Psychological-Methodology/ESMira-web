@@ -468,10 +468,17 @@ lang-options
 lang-options {
 	text-align: end;
 }
-lang-options .codes .element {
-	padding: 0 2px;
+lang-options .title {
 	font-size: 9pt !important;
 	line-height: 9pt !important;
+}
+lang-options .codes {
+	line-height: 100%; /* to make sure its vertically centered in .extra of title-line */
+}
+lang-options .codes .element {
+	padding: 0 2px;
+	line-height: 9pt !important;
+	font-size: 9pt !important;
 	border: 1px solid #9fe0f7;
 	transition: background-color 0.5s, color 0.5s !important;
 	background-color: white;

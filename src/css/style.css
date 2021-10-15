@@ -758,6 +758,7 @@ el_pages
 	height: 25px;
 	margin-right: 20px;
 	cursor: pointer;
+	flex-shrink: 100;
 }
 #el_pages > .page > .page_title > .extra {
 	max-height: 25px;

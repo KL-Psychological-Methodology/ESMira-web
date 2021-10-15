@@ -4,7 +4,7 @@ import {Lang} from "../js/main_classes/lang";
 import {FILE_ADMIN} from "../js/variables/urls";
 import ko from "knockout";
 import {Site} from "../js/main_classes/site";
-import {load_langConfigs} from "../js/shared/lang_configs";
+import {load_langConfigs, add_lang} from "../js/shared/lang_configs";
 import {OwnMapping} from "../js/helpers/knockout_own_mapping";
 import {Defaults} from "../js/variables/defaults";
 
@@ -24,7 +24,8 @@ export function ViewModel(page) {
 	let study;
 	this.preInit = function({id}, studies) {
 		study = studies[id];
-		this.dataObj = study
+		this.dataObj = study;
+		this.add_lang = add_lang.bind(this, study)
 		load_langConfigs(study, page);
 		
 		this.locked_enabled.subscribe(function() {
@@ -36,14 +37,6 @@ export function ViewModel(page) {
 	};
 	
 	
-	this.add_lang = function() {
-		let code = prompt(Lang.get("prompt_languageCode"));
-		if(!code)
-			return;
-		let langObj = OwnMapping.toLangJs(study, "_");
-		OwnMapping.add_lang(study, Defaults.studies, langObj, code);
-		study.langCodes.push(ko.observable(code));
-	}
 	
 	this.delete_lang = function(code) {
 		let index = study.langCodes.indexOf(code);

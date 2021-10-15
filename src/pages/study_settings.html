@@ -1,3 +1,7 @@
+<div class="spacing_bottom">
+	<span data-bind="text: Lang.get('colon_study_version')"></span>
+	<span data-bind="text: version()+'.'+subVersion()"></span>
+</div>
 <label class="vertical no_title no_desc">
 	<input type="checkbox" data-bind="checked: sendMessagesAllowed">
 	<span data-bind="text: Lang.get('allow_incoming_messages')"></span>
