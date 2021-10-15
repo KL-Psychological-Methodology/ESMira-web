@@ -534,6 +534,8 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'msg'))) {
 	switch($type) {
 		case 'send_message':
 			function send_message($study_id, $from, $user, $content) {
+			    if(!strlen($user))
+			        return false;
 				$msg = [
 					'from' => $from,
 					'content' => $content,
@@ -543,7 +545,7 @@ if($study_id != 0 && ($is_admin || has_permission($study_id, 'msg'))) {
 				];
 				
 				$file = get_file_message_pending($study_id, $user);
-				
+
 				if(file_exists($file)) {
 					$messages = unserialize(file_get_contents($file));
 					array_push($messages, $msg);

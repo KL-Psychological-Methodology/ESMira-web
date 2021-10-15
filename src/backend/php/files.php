@@ -29,13 +29,13 @@ function get_folder_messages($study_id) {
 	return FOLDER_STUDIES ."$study_id/.messages/";
 }
 function get_folder_messages_archive($study_id) {
-	return get_folder_messages($study_id) ."/.archive/";
+	return get_folder_messages($study_id) .".archive/";
 }
 function get_folder_messages_pending($study_id) {
-	return get_folder_messages($study_id) ."/.pending/";
+	return get_folder_messages($study_id) .".pending/";
 }
 function get_folder_messages_unread($study_id) {
-	return get_folder_messages($study_id) ."/.unread/";
+	return get_folder_messages($study_id) .".unread/";
 }
 function get_folder_responsesIndex($study_id) {
 	$study_id = (int) $study_id;

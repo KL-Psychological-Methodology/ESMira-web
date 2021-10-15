@@ -66,14 +66,14 @@ export function ViewModel(page) {
 		let timestamps = [];
 		let list_unread = self.currentUnread();
 		if(!list_unread.length)
-			return {user: recipient, timestamps: []};
+			return {user: self.recipient(), timestamps: []};
 		
 		for(let i = list_unread.length-1; i>=0; --i) {
 			timestamps.push(list_unread[i]["sent"]);
 		}
 		
 		return {
-			user: recipient,
+			user: self.recipient(),
 			timestamps: timestamps
 		};
 	};
