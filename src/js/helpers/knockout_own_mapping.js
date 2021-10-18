@@ -56,6 +56,7 @@ export const OwnMapping = {
 		let thisObj = ko.pureComputed({
 			read: function() {
 				let code = Studies.tools ? Studies.tools.currentLang() : "_";
+				// console.log(Studies.tools.currentLang() + " == " + code);
 				return data.hasOwnProperty(code) ? data[code]() : data._();
 			},
 			write: function(newValue) {
@@ -90,13 +91,17 @@ export const OwnMapping = {
 			}
 			else
 				data[code](newValue);
+			
+			if(Studies.tools && Studies.tools.currentLang() === code) { //the new language needs to be displayed right now
+				//the lang was not there before, you _() was used instead. So we tell knockout that _ has changed to force a reread:
+				data._.valueHasMutated();
+			}
 		};
 		thisObj.___getLang = function(code) {
 			return data.hasOwnProperty(code) ? data[code]() : thisObj.___defaultValue;
 		};
 		
-		//it is not an observableArray. So we "fake" it by adding all necessary methods:
-		if(isArray) {
+		if(isArray) { //it is not an observableArray. So we "fake" it by adding all necessary methods:
 			let getObs = function() {
 				let code = Studies.tools ? Studies.tools.currentLang() : "_";
 				return data.hasOwnProperty(code) ? data[code] : data._;
@@ -339,29 +344,29 @@ export const OwnMapping = {
 		else
 			return valueFu(obj);
 	},
-	subscribe: function(obj, dirtyObs, changedFu) {
+	subscribe: function(obj, dirtyObj, changedFu) {
 		let self = this;
-		let subscriptions = [];
+		let subscriptions = []; //used to keep track how many variables are dirty (and when dirty can be false again)
 		let dirtyTrack = {};
 		let subscribeFu = function(currentObj) {
 			self._toOwnObservableValue(currentObj);
 			let index = subscriptions.length;
 			subscriptions.push(currentObj.subscribe(function() {
-				if(dirtyObs) {
+				if(dirtyObj) {
 					let dirty = currentObj.___isDirty();
 					if(dirty) {
-						if(!dirtyTrack.hasOwnProperty(index)) {
+						if(!dirtyTrack.hasOwnProperty(index))
 							dirtyTrack[index] = true;
-							dirtyObs(true);
-						}
+						dirtyObj(true); //dirtyObj could have been changed from the outside. So we set it to true even if it already exists in dirtyTrack
 					}
-					else if(dirtyTrack.hasOwnProperty(index)) {
-						delete dirtyTrack[index];
-						for(let k in dirtyTrack) {
+					else {
+						if(dirtyTrack.hasOwnProperty(index))
+							delete dirtyTrack[index];
+						for(let k in dirtyTrack) { //check if dirtyTrack is empty now / this was the last variable that was dirty: if not dirtyObj stays true
 							if(dirtyTrack.hasOwnProperty(k))
 								return
 						}
-						dirtyObs(false);
+						dirtyObj(false);
 					}
 				}
 				if(changedFu)
