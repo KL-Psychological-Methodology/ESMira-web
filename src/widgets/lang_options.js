@@ -8,17 +8,23 @@ import {Site} from "../js/main_classes/site";
 import {Studies} from "../js/main_classes/studies";
 import {add_lang, load_langConfigs} from "../js/shared/lang_configs";
 
-export function LangOptions(page, {enableAdd, onChange, alwaysVisible, hasTitle}) {
+export function LangOptions(page, {langObj, enableAdd, onChange, alwaysVisible, hasTitle, langDefaults}) {
 	let self = this;
-	let study = Studies.get_current();
-	this.langCodes = study.langCodes;
+	let obj;
+	
+	if(langObj)
+		obj = langObj;
+	else {
+		obj = Studies.get_current();
+		load_langConfigs(obj, page);
+	}
+	this.langCodes = obj.langCodes;
+	
 	this.enableAdd = !!enableAdd;
 	this.alwaysVisible = !!alwaysVisible;
 	this.hasTitle = !!hasTitle;
 	
-	load_langConfigs(study, page);
-	
-	this.add_lang = add_lang.bind(this, study);
+	this.add_lang = add_lang.bind(this, obj, langDefaults);
 	
 	this.changeLang = function(index) {
 		index = parseInt(index);
