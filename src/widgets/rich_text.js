@@ -40,8 +40,9 @@ import align_left from '../imgs/rich_text_toolbar/align_left.svg?raw';
 import align_center from '../imgs/rich_text_toolbar/align_center.svg?raw';
 import align_right from '../imgs/rich_text_toolbar/align_right.svg?raw';
 
-export function RichText(rootEl, params) {
-	let value = params.value;
+export function RichText(rootEl, {value, langObj, noLang}) {
+	this.langObj = langObj;
+	this.noLang = !!noLang;
 	let justChanged = false;
 	
 	let editorEl = rootEl.querySelector(".editor");
