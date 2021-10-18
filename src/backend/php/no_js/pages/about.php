@@ -23,7 +23,7 @@ if(!$json_string) {
 $content = json_decode($json_string);
 ?>
 
-<div class="page_title">
+<div class="page_top page_title">
 	<?php echo $LANG->about_esmira; ?>
 </div>
 <div class="page_content">

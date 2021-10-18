@@ -12,7 +12,7 @@ $access_key = $studyData['accessKey'];
 $study_id = $study->id;
 ?>
 
-<div class="page_title">
+<div class="page_top page_title">
 	<?php echo $study->title; ?>
 </div>
 <div class="page_content">

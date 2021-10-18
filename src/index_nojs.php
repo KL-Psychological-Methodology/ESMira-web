@@ -8,29 +8,29 @@ require_once 'php/string_fu.php';
 $lang_name = get_lang();
 $LANG = json_decode(file_get_contents("parts/locales/$lang_name.json"));
 
-$server_name = file_get_contents(FILE_SERVER_NAME);
-$page_key = 'home';
-
 
 //
 //Choose starting page:
 //
 if(file_exists(FOLDER_DATA)) {
 	if(isset($_GET['app_install']))
-		$page_key = 'app_install';
+		$page_url = 'php/no_js/pages/app_install.php';
 	else if(isset($_GET['studies']))
-		$page_key = 'studies';
+		$page_url = 'php/no_js/pages/studies_list.php';
 	else if(isset($_GET['about']))
-		$page_key = 'about';
-	else if(isset($_GET['impressum']))
-		$page_key = 'impressum';
-	else if(isset($_GET['privacyPolicy']))
-		$page_key = 'privacyPolicy';
+		$page_url = 'php/no_js/pages/about.php';
+	else if(isset($_GET['legal']))
+		$page_url = 'php/no_js/pages/legal.php';
 	else if(isset($_GET['change_lang']))
-		$page_key = 'change_lang';
+		$page_url = 'php/no_js/pages/change_lang.php';
 	else if(isset($_GET['id']) || isset($_GET['qid']) || isset($_GET['key']))
-		$page_key = 'questionnaire_attend'; //we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
+		//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
+		$page_url = 'php/no_js/pages/questionnaire_attend.php';
+	else
+		$page_url = 'php/no_js/pages/home.php';
 }
+else
+	exit('Enable JavaScript to initialize');
 
 if(!isset($_GET['key']))
 	$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
@@ -71,7 +71,7 @@ function show_error($s) {
 		<a href="?">
 			<img src="imgs/web_header.png" alt="ESMira"/>
 		</a>
-		<div class="title"><?php echo $server_name; ?></div>
+		<div class="title"><?php echo get_serverName(); ?></div>
 	</div>
 	<div id="no_js_info">
 		<img class="middle" src="imgs/warn.svg" alt=""/>
@@ -82,23 +82,7 @@ function show_error($s) {
 	
 	<div id="el_pages">
 		<div class="page has_title" style="opacity: 1">
-			<?php
-			$PAGES = [
-					'home' => 'php/no_js/pages/home.php',
-					'about' => 'php/no_js/pages/about.php',
-					'app_install' => 'php/no_js/pages/app_install.php',
-					'change_lang' => 'php/no_js/pages/change_lang.php',
-					'impressum' => 'php/no_js/pages/impressum.php',
-					'privacyPolicy' => 'php/no_js/pages/privacy_policy.php',
-					'questionnaire_attend' => 'php/no_js/pages/questionnaire_attend.php',
-					'studies' => 'php/no_js/pages/studies_list.php',
-					'study_overview' => 'php/no_js/pages/study_overview.php'
-			];
-			if(isset($PAGES[$page_key]))
-				require $PAGES[$page_key];
-			else
-				require $PAGES['home'];
-			?>
+			<?php require_once $page_url; ?>
 		</div></div><!--Note: We cant have a whitespace here-->
 	
 	
@@ -122,13 +106,7 @@ function show_error($s) {
 		?>
 		</a>
 	</div>
-	
-	<?php
-	if(file_exists(FILE_IMPRESSUM))
-		echo '<a id="legalLink" class="internal_link no_arrow" href="?impressum" class="no_arrow">'.$LANG->impressum.'</a>';
-	else if(file_exists(FILE_PRIVACY_POLICY))
-		echo '<a id="legalLink" class="internal_link no_arrow" href="?privacyPolicy" class="no_arrow">'.$LANG->privacyPolicy.'</a>';
-	?>
+	<a id="legalLink" class="internal_link no_arrow" href="?legal"><?php echo $LANG->impressum; ?></a>
 </body>
 </html>
 <?php

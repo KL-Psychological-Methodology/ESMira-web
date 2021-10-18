@@ -41,6 +41,29 @@ function get_lang() {
 	return $lang;
 }
 
+function get_serverSettings() {
+	if(!defined('SERVER_SETTINGS')) {
+		if(file_exists(FILE_SERVER_SETTINGS)) {
+			require_once FILE_SERVER_SETTINGS;
+			return SERVER_SETTINGS;
+		}
+		else {
+			if(!defined('DEFAULT_SERVER_SETTINGS'))
+				require_once 'php/default_server_settings.php';
+			return DEFAULT_SERVER_SETTINGS;
+		}
+	}
+	else
+		return SERVER_SETTINGS;
+}
+
+function get_serverName() {
+	$serverSettings = get_serverSettings();
+	$lang = get_lang();
+	$serverName_array = $serverSettings['serverName'];
+	return isset($serverName_array[$lang]) ? $serverName_array[$lang] : $serverName_array['_'];
+}
+
 function get_accessKey() {
 	if(isset($_GET['key']) && check_input($_GET['key'])) {
 		$key = strtolower(trim($_GET['key']));

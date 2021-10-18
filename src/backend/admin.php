@@ -286,9 +286,10 @@ function checkUnique_and_collectKeys($study) {
 	return $keys_questionnaire_array;
 }
 
-function write_serverSettings($serverName) {
+function write_serverSettings($serverNames, $langCodes) {
 	$serverSettings = DEFAULT_SERVER_SETTINGS;
-	$serverSettings['serverName'] = $serverName;
+	$serverSettings['serverName'] = $serverNames;
+	$serverSettings['langCodes'] = $langCodes;
 	
 	return write_file(FILE_SERVER_SETTINGS, '<?php const SERVER_SETTINGS='.var_export($serverSettings, true).';?>');
 }
@@ -378,12 +379,13 @@ switch($type) {
 			$permissions = [$user => ['admin' => true]];
 			write_file(FILE_PERMISSIONS, serialize($permissions));
 			
-			write_serverSettings($serverName);
+			write_serverSettings($serverName, []);
 			
 			write_file(FOLDER_DATA .FILENAME_HTACCESS, sprintf(HTACCESS_MAIN_TEMPLATE, realpath(FILE_LOGINS)));
 			
 			
 			create_folder(FOLDER_ERRORS);
+			create_folder(FOLDER_LEGAL);
 			create_folder(FOLDER_TOKEN);
 			
 			create_folder(FOLDER_STUDIES);
@@ -1385,43 +1387,66 @@ switch($type) {
 		require_once FILE_SERVER_SETTINGS;
 		
 		$serverSettings = SERVER_SETTINGS;
-		$serverSettings['impressum'] = file_exists(FILE_IMPRESSUM)
-			? file_get_contents(FILE_IMPRESSUM)
-			: '';
-		$serverSettings['privacyPolicy'] = file_exists(FILE_PRIVACY_POLICY)
-			? file_get_contents(FILE_PRIVACY_POLICY)
-			: '';
+		$serverSettings['impressum'] = [];
+		$serverSettings['privacyPolicy'] = [];
+		
+		$langCodes = SERVER_SETTINGS['langCodes'];
+		array_push($langCodes, '_');
+		foreach($langCodes as $code) {
+			$file_impressum = get_file_langImpressum($code);
+			if(file_exists($file_impressum))
+				$serverSettings['impressum'][$code] = file_get_contents($file_impressum);
+			
+			$file_privacyPolicy = get_file_langPrivacyPolicy($code);
+			if(file_exists($file_privacyPolicy))
+				$serverSettings['privacyPolicy'][$code] = file_get_contents($file_privacyPolicy);
+		}
 		success(json_encode($serverSettings));
 		break;
 	case 'save_serverSettings':
-		$serverName = urldecode($_POST['serverName']);
-		$impressum = urldecode($_POST['impressum']);
-		$privacyPolicy = urldecode($_POST['privacyPolicy']);
+        $settingsCollection_json = file_get_contents('php://input');
+
+        if(!($settingsCollection = json_decode($settingsCollection_json)))
+            error('Unexpected data');
+
+        if(!isset($settingsCollection->_))
+            error('No default settings');
+
+        require_once FILE_SERVER_SETTINGS;
+        
+        $serverNames = [];
+        $langCodes = [];
+        foreach($settingsCollection as $code => $s) {
+        	if($code !== '_')
+        		array_push($langCodes, $code);
+            $serverName = urldecode($s->serverName);
+            $impressum = urldecode($s->impressum);
+            $privacyPolicy = urldecode($s->privacyPolicy);
+            
+            $len = strlen($serverName);
+            if($len < 3 || $len > 30)
+                error('The server name needs to consist of 3 and 30 characters');
+            else if(!check_input($serverName))
+                error('The server name has forbidden characters');
+            else
+				$serverNames[$code] = $serverName;
+            
+            $file_impressum = get_file_langImpressum($code);
+            if(strlen($impressum))
+				write_file($file_impressum, $impressum);
+            else if(file_exists($file_impressum))
+                unlink($file_impressum);
+	
+			$file_privacyPolicy = get_file_langPrivacyPolicy($code);
+            if(strlen($privacyPolicy))
+				write_file($file_privacyPolicy, $privacyPolicy);
+            else if(file_exists($file_privacyPolicy))
+                unlink($file_privacyPolicy);
+        }
 		
-		$len = strlen($serverName);
-		if($len < 3 || $len > 30)
-			error('The server name needs to consist of 3 and 30 characters');
-		if(!check_input($serverName))
-			error('The server name has forbidden characters');
-		
-		require_once FILE_SERVER_SETTINGS;
-		
-		if(strlen($impressum))
-			write_file(FILE_IMPRESSUM, $impressum);
-		else if(file_exists(FILE_IMPRESSUM))
-			unlink(FILE_IMPRESSUM);
-		
-		if(strlen($privacyPolicy))
-			write_file(FILE_PRIVACY_POLICY, $privacyPolicy);
-		else if(file_exists(FILE_PRIVACY_POLICY))
-			unlink(FILE_PRIVACY_POLICY);
-			
-		
-		if(write_serverSettings($serverName))
-			success(1);
-		else
-			error('Could not write to '.FILE_SERVER_NAME);
-		
+		write_serverSettings($serverNames, $langCodes);
+  		
+        success(1);
 		break;
 	case 'error_add_note':
 		if(!isset($_POST['error_id']) || !isset($_POST['note']) || !check_error_filename($_POST['error_id']))

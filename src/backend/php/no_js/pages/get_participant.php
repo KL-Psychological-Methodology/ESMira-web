@@ -8,7 +8,7 @@ if(isset($studyData['notFound'])) {
 $study = $studyData['study'];
 ?>
 
-<div class="page_title">
+<div class="page_top page_title">
 	<?php echo $LANG->user_id; ?>
 </div>
 <div class="page_content">

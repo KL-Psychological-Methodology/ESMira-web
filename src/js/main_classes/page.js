@@ -256,8 +256,8 @@ export function Page(depth, code) {
 			if(Site.valueIndex.hasOwnProperty(key) && Site.valueIndex[key] === (value === undefined ? true : value)) {
 				delete Site.valueIndex[key];
 				
-				if(Studies.tools && key === "id")
-					Studies.tools.remove_observed(value);
+				if(Admin.tools && key === "id")
+					Admin.tools.remove_observed(value);
 			}
 			
 		}

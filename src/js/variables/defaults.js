@@ -267,4 +267,15 @@ export function fillDefaults() {
 		write: [],
 		publish: []
 	};
+	
+	Defaults.serverSettings = {
+		langCodes: [],
+		$: {
+			translated: {
+				impressum: "",
+				serverName: "",
+				privacyPolicy: "",
+			}
+		}
+	}
 }
