@@ -1413,12 +1413,16 @@ switch($type) {
             error('No default settings');
 
         require_once FILE_SERVER_SETTINGS;
+        $old_langCodes = SERVER_SETTINGS['langCodes'];
         
         $serverNames = [];
         $langCodes = [];
         foreach($settingsCollection as $code => $s) {
-        	if($code !== '_')
-        		array_push($langCodes, $code);
+        	if($code !== '_') {
+				array_push($langCodes, $code);
+				if (($k = array_search($code, $old_langCodes)) !== false)
+					unset($old_langCodes[$k]);
+			}
             $serverName = urldecode($s->serverName);
             $impressum = urldecode($s->impressum);
             $privacyPolicy = urldecode($s->privacyPolicy);
@@ -1443,6 +1447,17 @@ switch($type) {
             else if(file_exists($file_privacyPolicy))
                 unlink($file_privacyPolicy);
         }
+        
+        //if a language has been removed, we need to remove its files too:
+        foreach($old_langCodes as $code) {
+			$file_impressum = get_file_langImpressum($code);
+			if(file_exists($file_impressum))
+				unlink($file_impressum);
+			
+			$file_privacyPolicy = get_file_langPrivacyPolicy($code);
+			if(file_exists($file_privacyPolicy))
+				unlink($file_privacyPolicy);
+		}
 		
 		write_serverSettings($serverNames, $langCodes);
   		

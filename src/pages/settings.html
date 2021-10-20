@@ -1,8 +1,19 @@
-<tab-bar params="tabs: ['server_name', 'impressum', 'privacyPolicy'], tabName: Lang.get, selectedIndex: $root.selectedIndex"></tab-bar>
+<tab-bar params="tabs: ['general', 'impressum', 'privacyPolicy'], tabName: Lang.get, selectedIndex: $root.selectedIndex"></tab-bar>
 <div data-bind="if: $root.selectedIndex() == 0">
 	<label class="vertical">
+		<small data-bind="text: Lang.get('server_name')"></small>
 		<input type="text" data-bind="value: serverName"/>
 	</label>
+	<title-row params="title: Lang.get('additional_languages')"></title-row>
+	<div class="list_parent">
+		<div class="list_child" data-bind="foreach: langCodes">
+			<div data-bind="if: $data !== '_'">
+				<widget-delete data-bind="click: $root.remove_lang"></widget-delete>
+				<span data-bind="text: $data"></span>
+			</div>
+		</div>
+		<widget-add data-bind="click: $root.add_lang" params="title: Lang.get('add')"></widget-add>
+	</div>
 </div>
 
 <div data-bind="if: $root.selectedIndex() == 1">

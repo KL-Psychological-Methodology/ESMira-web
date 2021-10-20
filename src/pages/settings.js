@@ -9,6 +9,7 @@ import {OwnMapping} from "../js/helpers/knockout_own_mapping";
 import {Defaults} from "../js/variables/defaults";
 import {Studies} from "../js/main_classes/studies";
 import {PromiseCache} from "../js/main_classes/promise_cache";
+import {add_lang} from "../js/shared/lang_configs";
 
 export function ViewModel(page) {
 	let self = this;
@@ -48,18 +49,24 @@ export function ViewModel(page) {
 	
 	this.preInit = function(index, admin, [serverSettings, detector]) {
 		this.dataObj = serverSettings;
+		this.add_lang = add_lang.bind(this, serverSettings, Defaults.serverSettings);
 		Admin.tools.change_observed(
 			detector,
 			self.change
 		);
 	};
+	this.destroy = function() {
+		Admin.tools.remove_observed();
+	}
 	this.selectedIndex = ko.observable(0);
 	this.serverName = ko.observable();
 	this.impressum = ko.observable();
 	this.privacyPolicy = ko.observable();
 	
-	this.destroy = function() {
-		Admin.tools.remove_observed();
+	
+	this.remove_lang = function(code) {
+		let index = self.dataObj.langCodes.indexOf(code);
+		self.dataObj.langCodes.splice(index, 1);
 	}
 	
 	this.change = function() {
