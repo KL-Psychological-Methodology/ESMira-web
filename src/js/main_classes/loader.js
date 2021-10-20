@@ -120,11 +120,11 @@ export function Loader(page) {
 			if(rootEl.contains(e.target))
 				return;
 			close_loader();
-			document.body.removeEventListener("click", removeFu);
+			document.removeEventListener("click", removeFu);
 		}.bind(this);
 		
 		window.setTimeout(function() {//The click event that called this function, is not done bubbling. So we have to stall this listener or it will be fired immediately
-			bindEvent(document.body, "click", removeFu);
+			bindEvent(document, "click", removeFu);
 		}, 200);
 	};
 	

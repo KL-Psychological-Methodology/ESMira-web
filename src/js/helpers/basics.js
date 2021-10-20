@@ -40,7 +40,7 @@ export function close_on_clickOutside(el, custom_closeFu) {
 	el["close-outside"] = true;
 	let closeFu = function() {
 		delete el["close-outside"];
-		document.body.removeEventListener("click", click_outside);
+		document.removeEventListener("click", click_outside);
 		
 		if(custom_closeFu)
 			custom_closeFu(el);
@@ -59,13 +59,12 @@ export function close_on_clickOutside(el, custom_closeFu) {
 			closeFu();
 		}
 		else
-			document.body.removeEventListener("click", click_outside);
+			document.removeEventListener("click", click_outside);
 		e.stopPropagation();
 	};
 	
-	// bindEvent(document.body, "click", click_outside);
 	window.setTimeout(function() {//if a click event called this function, it is not done bubbling. So we have to stall this listener or it will be fired immediately
-		bindEvent(document.body, "click", click_outside);
+		bindEvent(document, "click", click_outside);
 	}, 200);
 	return closeFu;
 }
