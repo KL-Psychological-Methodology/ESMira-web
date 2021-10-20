@@ -65,16 +65,19 @@ export function Page(depth, code) {
 	let parentEl = createElement("div", false, {className: "page"}, {"data-bind": "let: {Lang: $root.Lang, Site: $root.Site, Admin: $root.Admin, Studies: $root.Studies}"}),
 		back_el = createElement("a", false,{href: Site.get_hash(depth), className: "back", innerHTML: back_svg}),
 		
+		top_el = createElement("div", false, {className: "page_top"}),
 		title_line_el = createElement("div", false, {className: "page_title"}),
 		title_el = createElement("div", false, {className: "title"}, {"data-bind": "text: $root.page.printTitle"}),
 		extra_el = createElement("div", false, {className: "extra"}),
-		
 		content_el = createElement("div", "opacity: 0", {className: "page_content"}, {"data-bind": "with: dataObj"});
+		// lang_el = createElement("lang-options", false, false, {"params": "page: $root.page, data: $data"});
 	
+	top_el.appendChild(back_el);
+	top_el.appendChild(title_line_el);
+	// top_el.appendChild(lang_el);
 	title_line_el.appendChild(title_el);
 	title_line_el.appendChild(extra_el);
-	parentEl.appendChild(back_el);
-	parentEl.appendChild(title_line_el);
+	parentEl.appendChild(top_el);
 	parentEl.appendChild(content_el);
 	
 	bindEvent(title_el, "click", function() {
@@ -253,8 +256,8 @@ export function Page(depth, code) {
 			if(Site.valueIndex.hasOwnProperty(key) && Site.valueIndex[key] === (value === undefined ? true : value)) {
 				delete Site.valueIndex[key];
 				
-				if(Studies.tools && key === "id")
-					Studies.tools.remove_observed(value);
+				if(Admin.tools && key === "id")
+					Admin.tools.remove_observed(value);
 			}
 			
 		}

@@ -169,6 +169,7 @@ function save_dataset($type, $participant, $study, $questionnaire=null, $dataset
 			'studyId' => $study->id,
 			'studyVersion' => $study->version,
 			'studySubVersion' => $study->subVersion,
+			'studyLang' => $study->lang,
 			'accessKey' => ($access_key) ?: '',
 			'questionnaireName' => $questionnaire ? $questionnaire->title : null,
 			'questionnaireInternalId' => $questionnaire ? $questionnaire->internalId : null,

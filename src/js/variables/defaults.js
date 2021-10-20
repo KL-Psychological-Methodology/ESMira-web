@@ -11,7 +11,7 @@ export const Defaults = {};
 
 //
 // Codes for OwnMapping:
-// $XXX : Array with objects
+// $.children.XXX : Array with objects
 // _XXX : Should not be compared with defaults
 //
 export function fillDefaults() {
@@ -21,27 +21,38 @@ export function fillDefaults() {
 		operator: 0
 	};
 	Defaults.axisData = {
-		$conditions: Defaults.conditions,
-		
+		$: {
+			children: {
+				conditions: Defaults.conditions
+			}
+		},
 		variableName: "",
 		observedVariableIndex: -1,
 		conditionType: CONDITION_TYPE_ALL
 	};
 	Defaults.axisContainer = {
+		$: {
+			translated: {
+				label: ""
+			}
+		},
 		xAxis: Defaults.axisData,
 		yAxis: Defaults.axisData,
-		
-		label: '',
 		color: '#00bbff',
 	};
 	Defaults.charts = {
-		$publicVariables: Defaults.axisContainer,
-		$axisContainer: Defaults.axisContainer,
-		
-		title: "",
-		chartDescription: "",
-		xAxisLabel: "",
-		yAxisLabel: "",
+		$: {
+			children: {
+				publicVariables: Defaults.axisContainer,
+				axisContainer: Defaults.axisContainer
+			},
+			translated: {
+				title: "",
+				chartDescription: "",
+				xAxisLabel: "",
+				yAxisLabel: "",
+			}
+		},
 		valueType: STATISTICS_VALUETYPES_MEAN,
 		dataType: STATISTICS_DATATYPES_DAILY,
 		chartType: STATISTICS_CHARTTYPES_LINE,
@@ -54,59 +65,71 @@ export function fillDefaults() {
 		fitToShowLinearProgression: 0
 	};
 	Defaults.statistics = {
-		$charts: Defaults.charts,
+		$: {
+			children: {
+				charts: Defaults.charts
+			},
+			noDefault: {
+				observedVariables: {}
+			}
+		},
 		
 		_observedVariables: {}
 	};
 	Defaults.inputs = {
-		$subInputs: {
-			responseType: "text_input",
-			name: "input",
-			required: false,
-			random: false,
-			defaultValue: "",
-			text: "",
-			url: "",
-			leftSideLabel: "",
-			rightSideLabel: "",
-			likertSteps: 5,
-			numberHasDecimal: false,
-			listChoices: [],
-			asDropDown: true,
-			forceInt: false
+		$: {
+			translated: {
+				defaultValue: "",
+				text: "",
+				url: "",
+				leftSideLabel: "",
+				rightSideLabel: "",
+				listChoices: [],
+			}
 		},
 		responseType: "text_input",
 		name: "input",
 		required: false,
 		random: false,
-		defaultValue: "",
-		text: "",
-		url: "",
-		leftSideLabel: "",
-		rightSideLabel: "",
 		likertSteps: 5,
 		numberHasDecimal: false,
-		listChoices: [],
+		// listChoices: [],
 		asDropDown: true,
 		forceInt: false
 	};
+	Defaults.inputs.$.children = {
+		subInputs: JSON.parse(JSON.stringify(Defaults.inputs))
+	};
 	
 	Defaults.pages = {
-		$inputs: Defaults.inputs,
-		
+		$: {
+			children: {
+				inputs: Defaults.inputs
+			},
+			translated: {
+				header: "",
+				footer: ""
+			}
+		},
 		randomized: false,
-		header: "",
-		footer: ""
 	};
 	Defaults.actions = {
+		$: {
+			translated: {
+				msgText: ""
+			}
+		},
 		type: 1, //is Invitation
-		msgText: "",
 		timeout: 0,
 		reminder_count: 0,
 		reminder_delay_minu: 5
 	};
 	Defaults.signalTimes = {
-		label: "",
+		$: {
+			translated: {
+				label: ""
+			}
+		},
 		startTimeOfDay: 0,
 		endTimeOfDay: 0,
 		random: false,
@@ -115,8 +138,11 @@ export function fillDefaults() {
 		minutesBetween: 60
 	};
 	Defaults.schedules = {
-		$signalTimes: Defaults.signalTimes,
-		
+		$: {
+			children: {
+				signalTimes: Defaults.signalTimes
+			}
+		},
 		userEditable: true,
 		dailyRepeatRate: 1,
 		skipFirstInLoop: false,
@@ -134,9 +160,13 @@ export function fillDefaults() {
 		delayMinimumSec: 0,
 	};
 	Defaults.actionTriggers = {
-		$actions: Defaults.actions,
-		$schedules: Defaults.schedules,
-		$eventTriggers: Defaults.eventTriggers
+		$: {
+			children: {
+				actions: Defaults.actions,
+				schedules: Defaults.schedules,
+				eventTriggers: Defaults.eventTriggers
+			}
+		},
 	};
 	Defaults.sumScores = {
 		name: "unknown",
@@ -144,11 +174,16 @@ export function fillDefaults() {
 		subtractList: []
 	};
 	Defaults.questionnaires = {
-		$actionTriggers: Defaults.actionTriggers,
-		$pages: Defaults.pages,
-		$sumScores: Defaults.sumScores,
-		
-		title: "Questionnaire",
+		$: {
+			children: {
+				actionTriggers: Defaults.actionTriggers,
+				pages: Defaults.pages,
+				sumScores: Defaults.sumScores,
+			},
+			translated: {
+				title: "Questionnaire"
+			}
+		},
 		internalId: -1,
 		publishedAndroid: true,
 		publishedIOS: true,
@@ -181,7 +216,21 @@ export function fillDefaults() {
 		study_updated: false
 	}
 	Defaults.studies = {
-		$questionnaires: Defaults.questionnaires,
+		$: {
+			children: {
+				questionnaires: Defaults.questionnaires
+			},
+			translated: {
+				title: "Error",
+				studyDescription: "",
+				informedConsentForm: "",
+				postInstallInstructions: "",
+				chooseUsernameInstructions: Lang.get("default_chooseUsernameInstructions"),
+				webQuestionnaireCompletedInstructions: Lang.get("default_webQuestionnaireCompletedInstructions"),
+				webInstallInstructions: '',
+				contactEmail: ''
+			}
+		},
 		groups: [], //TODO: can be removed when all have lib-Version 16 (Android: 2.4.2.1, iOS: 1.1.3)
 		publicStatistics: Defaults.statistics,
 		personalStatistics: Defaults.statistics,
@@ -190,23 +239,19 @@ export function fillDefaults() {
 		version: -1,
 		subVersion: -1,
 		serverVersion: -1,
+		lang: "",
 		new_changes: false,
 		published: false,
 		publishedWeb: true,
 		publishedAndroid: true,
 		publishedIOS: true,
-		title: "Error",
 		sendMessagesAllowed: true,
-		studyDescription: '',
-		informedConsentForm: '',
-		postInstallInstructions: '',
-		chooseUsernameInstructions: Lang.get("default_chooseUsernameInstructions"),
-		webQuestionnaireCompletedInstructions: Lang.get("default_webQuestionnaireCompletedInstructions"),
-		webInstallInstructions: '',
-		contactEmail: '',
 		accessKeys: [],
+		langCodes: [],
 		eventUploadSettings: Defaults.eventUploadSettings
 	};
+	
+	
 	Defaults.messages = {
 		content: "",
 		userId: "",
@@ -222,4 +267,15 @@ export function fillDefaults() {
 		write: [],
 		publish: []
 	};
+	
+	Defaults.serverSettings = {
+		langCodes: [],
+		$: {
+			translated: {
+				impressum: "",
+				serverName: "",
+				privacyPolicy: "",
+			}
+		}
+	}
 }

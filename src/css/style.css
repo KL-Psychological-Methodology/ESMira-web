@@ -19,9 +19,9 @@ body {
 	background-color: #f9f9f9;
 	opacity: 0;
 }
-/*body.localhost {*/
-/*	outline: 5px solid red;*/
-/*}*/
+body.localhost {
+	background-color: #c0efff;
+}
 body.small_screen #pageBox_width, body.small_screen #lang_chooser .current .desc {
 	display: none;
 }
@@ -220,9 +220,12 @@ svg.highlight {
 	display: table; /* we dont want it to fill the whole line - so "display: block" is not desirable*/
 	text-align: left;
 }
-.horizontal, label:not([for]).horizontal {
+.horizontal, label:not([for]).horizontal:not(.top) {
 	display: inline-block;
 	vertical-align: middle; /*make sure it wont be overwritten by label:not([for])*/
+}
+.horizontal.top {
+	vertical-align: top;
 }
 
 
@@ -720,8 +723,21 @@ el_pages
 	fill: #ff8fce;
 }
 
+#el_pages > .page .page_top {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: end;
+	background-color: #e6f9ff;
+	color: #dc4e9d;
+	border-top: 1px solid #9FE0F7;
+	border-bottom: 1px solid #9FE0F7;
+	box-shadow: 0 3px 3px #0002;
+	transition: background-color 0.3s;
+}
 #el_pages > .page .page_title {
 	z-index: 1;
+	flex-grow: 1;
 	display: flex;
 	justify-content: space-between;
 	position: relative;
@@ -729,25 +745,20 @@ el_pages
 	padding: 10px 10px 10px 30px;
 	font-size: 16pt;
 	font-weight: bold;
-	background-color: #e6f9ff;
-	color: #dc4e9d;
-	border-top: 1px solid #9FE0F7;
-	border-bottom: 1px solid #9FE0F7;
 	white-space: nowrap;
 	overflow: hidden;
-	box-shadow: 0 3px 3px #0002;
-	transition: background-color 0.3s;
 }
 
-#el_pages > .page.point_out .page_title {
+#el_pages > .page.point_out .page_top {
 	background-color: #cdf0fc;
 }
 
 
-#el_pages > .page > .page_title > .title {
+#el_pages > .page .page_title > .title {
 	height: 25px;
 	margin-right: 20px;
 	cursor: pointer;
+	flex-shrink: 100;
 }
 #el_pages > .page > .page_title > .extra {
 	max-height: 25px;

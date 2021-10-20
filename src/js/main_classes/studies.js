@@ -26,9 +26,9 @@ export const Studies = {
 				else
 					return 0;
 			});
-
+			
 			//we create a fake array so it still works with our framework and we can also use ids in the url
-			// (so updating study.title will not lead to a different url because of its changed position in the list):
+			// (if we would use index instead, updating study.title would lead to a different url because of its changed position in the list when sorted):
 			let list = {};
 			let accessKey_index = {};
 			let accessKeyList = [];

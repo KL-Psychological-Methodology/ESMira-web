@@ -14,7 +14,7 @@ export const PageIndex = {
 	consent:			["consent",					false],
 	dataList:			["data_list",				["read"]],
 	dateRange:			["date_range",				["write"]],
-	dataView:			["data_view",				["*"]], //
+	dataView:			["data_view",				["*"]],
 	dataStatistics:		["data_statistics",			["read"]],
 	errorList:			["error_list",				[]],
 	errorView:			["error_view",				[]],

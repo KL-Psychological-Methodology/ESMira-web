@@ -109,7 +109,6 @@ try {
 	foreach($dataSets as $dataSet) {
 		$responses = $dataSet->responses;
 		
-		//format times: //TODO: do locally!
 		if(isset($responses->actionScheduledTo))
 			$responses->actionScheduledTo_formatted = format_date($responses->actionScheduledTo);
 		if(isset($responses->lastInvitation) && $responses->lastInvitation != 0)

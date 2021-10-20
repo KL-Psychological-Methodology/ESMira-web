@@ -1,4 +1,4 @@
-<div class="page_title">
+<div class="page_top page_title">
 
 </div>
 <div class="page_content">

@@ -52,26 +52,26 @@ label.narrow {
 	margin-bottom: 0;
 	
 }
-label span {
+label > span {
 	/*vertical-align: middle;*/
 	display: inline-block;
 	line-height: 31px;
 }
-label small, .fakeLabel small {
+label > small, .fakeLabel > small {
 	position: relative;
 	display: block;
-	height: 15px;
+	min-height: 15px;
 	color: #2b98ca;
 	background-color: white;
 }
-label small:first-child, .fakeLabel small:first-child {
+label > small:first-child, .fakeLabel > small:first-child {
 	z-index: 1;
 	margin-top: -10px;
 	margin-bottom: -5px;
 	text-align: left;
 	font-size: 10pt;
 }
-label small:last-child, .fakeLabel small:last-child {
+label > small:last-child, .fakeLabel > small:last-child {
 	font-size: 9pt;
 	text-align: end;
 	margin-bottom: 0;
@@ -269,9 +269,23 @@ signalTimes
 
 
 /**********
-Messages
+Warn
 **********/
 
+.warn {
+	display: block;
+	position: relative;
+	top: -5px;
+	width: 15px;
+	margin-left: auto;
+	margin-right: 10px;
+	margin-top: -15px;
+	line-height: 0;
+}
+
+/**********
+Messages
+**********/
 
 #recipientBox {
 	z-index: 2;
@@ -385,6 +399,11 @@ label .richText {
 	padding-right: 3px;
 	margin-top: 5px;
 }
+.richText lang-options {
+	z-index: 1;
+	position: sticky;
+	top: 29px;
+}
 .richText .toolbar {
 	display: flex;
 	position: sticky;
@@ -439,4 +458,34 @@ label .richText {
 }
 .richText .editor img {
 	max-width: 100%;
+}
+
+
+/**********
+lang-options
+**********/
+
+lang-options {
+	text-align: end;
+}
+lang-options .title {
+	font-size: 9pt !important;
+	line-height: 9pt !important;
+}
+lang-options .codes {
+	line-height: 100%; /* to make sure its vertically centered in .extra of title-line */
+}
+lang-options .codes .element {
+	padding: 0 2px;
+	line-height: 9pt !important;
+	font-size: 9pt !important;
+	border: 1px solid #9fe0f7;
+	transition: background-color 0.5s, color 0.5s !important;
+	background-color: white;
+}
+lang-options .codes .element:hover {
+	background-color: #cdf0fc;
+}
+lang-options .codes .element.selected {
+	background-color: #9fe0f7;
 }

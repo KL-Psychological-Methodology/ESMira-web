@@ -47,11 +47,13 @@
 	<label class="vertical spacing_top" data-bind="visible: responseType() === 'video' || responseType() === 'image'">
 		<small data-bind="text: Lang.get('url')"></small>
 		<input class="big" type="url" data-bind="value: url"/>
+		<lang-options></lang-options>
 	</label>
 	
 	<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video'">
 		<small data-bind="text: Lang.get('colon_prefilledValue')"></small>
 		<input type="text" data-bind="value: defaultValue, disable: required"/>
+		<lang-options></lang-options>
 	</label>
 
 
@@ -64,10 +66,12 @@
 		<label class="spacing_bottom">
 			<small data-bind="text: Lang.get('label_leftChoice')"></small>
 			<input class="big" type="url" data-bind="value: leftSideLabel"/>
+			<lang-options></lang-options>
 		</label>
 		<label class="spacing_bottom">
 			<small data-bind="text: Lang.get('label_rightChoice')"></small>
 			<input class="big" type="url" data-bind="value: rightSideLabel"/>
+			<lang-options></lang-options>
 		</label>
 	</div>
 </div>
@@ -76,13 +80,16 @@
 <div data-bind="if: responseType() === 'list_single' || responseType() === 'list_multiple'">
 	<title-row params="title: Lang.get('colon_choices')"></title-row>
 	<div class="list_parent">
-		<div class="list_child relative" data-bind="foreach: listChoices">
-			<label class="vertical">
-				<small data-bind="text: Lang.get('text')"></small>
-				<input type="text" data-bind="value: $rawData"/>
-				<img src="../imgs/warn.svg" alt="warn" class="horizontal" data-bind="visible: !$data.length"/>
-				<widget-delete data-bind="click: $root.ko__remove_from_list($parent.listChoices, $index())"></widget-delete>
-			</label>
+		<div class="list_child">
+			<lang-options></lang-options>
+			<div data-bind="foreach: listChoices">
+				<label class="vertical">
+					<small data-bind="text: Lang.get('text')"></small>
+					<input type="text" data-bind="value: $rawData"/>
+					<img src="../imgs/warn.svg" alt="warn" class="horizontal" data-bind="visible: !$data.length"/>
+					<widget-delete data-bind="click: $root.ko__remove_from_list($parent.listChoices, $index())"></widget-delete>
+				</label>
+			</div>
 		</div>
 		<widget-add data-bind="click: $root.add_listChoice" params="title: Lang.get('add')"></widget-add>
 	</div>

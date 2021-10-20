@@ -7,11 +7,12 @@ export function ViewModel(page) {
 	this.html = html;
 	this.promiseBundle = [Studies.init(page)];
 	this.study = null;
+	this.extraContent = "<lang-options params='enableAdd: true, alwaysVisible: true, hasTitle: true'></lang-options>";
 	
 	this.preInit = function({id}, studies) {
 		let study = studies[id];
 		this.study = study;
-		page.title(ko.computed(function() {return study.title() + " ("+study.version()+"."+study.subVersion()+")";}));
+		page.title(ko.computed(function() {return study.title();}));
 	};
 	
 	this.add_questionnaire = function() {

@@ -1,4 +1,5 @@
 <?php
+require_once 'php/basic_fu.php';
 require_once 'php/no_js/nojs_fu.php';
 require_once 'php/no_js/inputs.php';
 
@@ -163,7 +164,7 @@ $inputs = $page->inputs;
 
 
 ?>
-<div class="page_title">
+<div class="page_top page_title">
 	<?php
 	echo isset($questionnaire->title) ? $questionnaire->title : $LANG->questionnaire;
 	if(sizeof($pages) > 1)

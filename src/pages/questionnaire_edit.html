@@ -3,6 +3,7 @@
 		<label>
 			<small data-bind="text: Lang.get('questionnaire_name')"></small>
 			<input type="text" data-bind="value: title"/>
+			<lang-options></lang-options>
 		</label>
 		<widget-delete class="right spacing_top" data-bind="click: $root.delete_questionnaire.bind($root, tabIndex)" params="title: Lang.get('delete_questionnaire')"></widget-delete>
 	

@@ -61,49 +61,43 @@
 		<span data-bind="text: Lang.get('userEditable_desc')"></span>
 	</label>
 	
-	
 	<div class="list_parent">
 		<div class="list_child" id="signalTimes" data-bind="foreach: signalTimes">
 			<div class="nowrap">
 				<widget-delete data-bind="click:$root.ko__remove_from_list($parent.signalTimes, $index())"></widget-delete>
-				<label class="horizontal">
+				<label class="horizontal top">
 					<small data-bind="text: Lang.get('random')"></small>
 					<input type="checkbox" data-bind="checked: random"/>
 				</label>
-				<label class="horizontal" data-bind="visible: random">
+				<label class="horizontal top" data-bind="visible: random">
 					<small data-bind="text: Lang.get('random_fixed')"></small>
 					<select data-bind="options: $root.random_fixed, optionsText: 'value', keyValue: randomFixed"></select>
 				</label>
-				<label class="horizontal">
+				<label class="horizontal top">
 					<small data-bind="text: Lang.get('title')"></small>
 					<input class="small" type="text" data-bind="value: label, attr: {class: random() ? 'small' : ''}"/>
+					<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: !label() || !label().length"/>
+					<lang-options></lang-options>
 				</label>
-				<widget-warn class="horizontal" data-bind="visible: !label().length"></widget-warn>
 				
 				
-				<label class="horizontal">
-					<span data-bind="if: random">
-						<small data-bind="text: Lang.get('startTime')"></small>
-					</span>
-					<span data-bind="ifnot: random">
-						<small data-bind="text: Lang.get('time')"></small>
-					</span>
-					
+				<label class="horizontal top">
+					<small data-bind="text: Lang.get(random() ? 'startTime' : 'time')"></small>
 					<input type="time" data-bind="timeValue: startTimeOfDay"/>
 				</label>
 				
-				<label class="horizontal" data-bind="visible: random">
+				<label class="horizontal top" data-bind="visible: random">
 					<small data-bind="text: Lang.get('endTime')"></small>
 					<input type="time" data-bind="timeValue: endTimeOfDay"/>
 				</label>
 				
 				
-				<label class="horizontal" data-bind="visible: random">
+				<label class="horizontal top" data-bind="visible: random">
 					<small data-bind="text: Lang.get('frequency')"></small>
 					<input type="number" data-bind="numericValue: frequency"/>
 				</label>
 				
-				<label class="horizontal" data-bind="visible: random() && frequency() > 1">
+				<label class="horizontal top" data-bind="visible: random() && frequency() > 1">
 					<small data-bind="text: Lang.get('minutes_between')"></small>
 					<input type="number" data-bind="numericValue: minutesBetween, placeholder: Lang.get('minutes')"/>
 					<span data-bind="text: Lang.get('minutes')"></span>

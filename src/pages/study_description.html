@@ -1,22 +1,23 @@
-
 <label>
-	<small data-bind="text: Lang.get('colon_title')">Title</small>
+	<small data-bind="text: Lang.get('colon_title')"></small>
 	<input type="text" data-bind="value: title"/>
+	<lang-options></lang-options>
 </label>
 
 <label>
-	<small data-bind="text: Lang.get('colon_contactEmail')">Contact-Email</small>
+	<small data-bind="text: Lang.get('colon_contactEmail')"></small>
 	<input type="text" data-bind="value: contactEmail"/>
+	<lang-options></lang-options>
 </label>
 
 
 <div class="fakeLabel spacing_top line">
-	<small data-bind="text: Lang.get('colon_description')">Description:</small>
+	<small data-bind="text: Lang.get('colon_description')"></small>
 	<rich-text params="value: studyDescription"></rich-text>
 </div>
 
 <label class="spacing_top line">
-	<small data-bind="text: Lang.get('colon_informedConsent')">Informed Consent:</small>
+	<small data-bind="text: Lang.get('colon_informedConsent')"></small>
 	<textarea data-bind="value: informedConsentForm"></textarea>
 </label>
 

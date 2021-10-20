@@ -2,6 +2,7 @@
 const FOLDER_DATA = 'data/',
 	FOLDER_ERRORS = FOLDER_DATA.'errors/',
 	FOLDER_STUDIES = FOLDER_DATA.'studies/',
+	FOLDER_LEGAL = FOLDER_DATA.'legal/',
 	FOLDER_TOKEN = FOLDER_DATA.'.loginToken/',
 	FILENAME_STATISTICS_METADATA = '.metadata',
 	FILENAME_STATISTICS_NEWLINES = '.new_data',
@@ -23,6 +24,10 @@ const FOLDER_DATA = 'data/',
 function get_folder_study($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES ."$study_id/";
+}
+function get_folder_langs($study_id) {
+	$study_id = (int) $study_id;
+	return FOLDER_STUDIES ."$study_id/.langs/";
 }
 function get_folder_messages($study_id) {
 	$study_id = (int) $study_id;
@@ -61,6 +66,9 @@ function get_folder_token($user) {
 function get_file_studyConfig($study_id) {
 	$study_id = (int) $study_id;
 	return FOLDER_STUDIES."$study_id/.config.json";
+}
+function get_file_langConfig($study_id, $code) {
+	return get_folder_langs($study_id)."/$code.json";
 }
 function get_file_studyMetadata($study_id) {
 	$study_id = (int) $study_id;
@@ -121,6 +129,12 @@ function get_file_tokenHistory($user, $num) {
 }
 function get_file_blockLogin($user) {
 	return get_folder_token($user) .".blocking";
+}
+function get_file_langImpressum($code) {
+    return $code === '_' ? FOLDER_LEGAL.'impressum.html' : FOLDER_LEGAL. "impressum.$code.html";
+}
+function get_file_langPrivacyPolicy($code) {
+    return $code === '_' ? FOLDER_LEGAL.'privacy_policy.html' : FOLDER_LEGAL. "privacy_policy.$code.html";
 }
 
 

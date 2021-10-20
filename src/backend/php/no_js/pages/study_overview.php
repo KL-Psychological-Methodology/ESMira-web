@@ -16,7 +16,7 @@ if(!isset($_GET['ref']))
 	save_webAccess($study_id, 'navigatedFromHome_noJs');
 
 ?>
-<div class="page_title">
+<div class="page_top page_title">
 	<div class="title">
 		<?php echo isset($study->title) ? $study->title : 'Study'; ?>
 	</div>

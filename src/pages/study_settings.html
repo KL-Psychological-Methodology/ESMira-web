@@ -1,3 +1,7 @@
+<div class="spacing_bottom">
+	<span data-bind="text: Lang.get('colon_study_version')"></span>
+	<span data-bind="text: version()+'.'+subVersion()"></span>
+</div>
 <label class="vertical no_title no_desc">
 	<input type="checkbox" data-bind="checked: sendMessagesAllowed">
 	<span data-bind="text: Lang.get('allow_incoming_messages')"></span>
@@ -10,6 +14,16 @@
 	<small data-bind="text: Lang.get('desc_freeze_study')"></small>
 </label>
 
+<title-row params="title: Lang.get('additional_languages')"></title-row>
+<div class="list_parent">
+	<div class="list_child" data-bind="foreach: langCodes">
+		<div data-bind="if: $data !== '_'">
+			<widget-delete data-bind="click: $root.delete_lang"></widget-delete>
+			<span data-bind="text: $data"></span>
+		</div>
+	</div>
+	<widget-add data-bind="click: $root.add_lang" params="title: Lang.get('add')"></widget-add>
+</div>
 
 <title-row params="title: Lang.get('inform_server_about_events')"></title-row>
 <div data-bind="with: eventUploadSettings">
@@ -32,7 +46,7 @@
 	
 	
 	<label class="no_title vertical">
-		<input type="checkbox" checked="checked">
+		<input type="checkbox" checked="checked" data-bind="checked: actions_executed">
 		<span data-bind="text: 'actions_executed'"></span>
 		<small data-bind="text: Lang.get('desc_actions_executed')"></small>
 	</label>

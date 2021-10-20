@@ -1,4 +1,7 @@
 <div class="richText">
 	<div class="toolbar"></div>
+	<div data-bind="ifnot: $component.noLang">
+		<lang-options params="langObj: $component.langObj"></lang-options>
+	</div>
 	<div class="editor"></div>
 </div>

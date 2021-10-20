@@ -77,6 +77,7 @@ foreach($data as $study_id => $line) {
 	
 	
 	$version = $line->version;
+	$forceStudyUpdate = $line->forceStudyUpdate;
 	$last_message = $line->msgTimestamp;
 	
 	
@@ -134,17 +135,19 @@ foreach($data as $study_id => $line) {
 	
 	
 	//studies
-	if($metadata['version'] > $version) {
+	if($forceStudyUpdate || $metadata['version'] > $version) {
+		$filename_lang = get_file_langConfig($study_id, get_lang());
 		$filename = get_file_studyConfig($study_id);
-		
-		if(file_exists($filename)) {
-			$study = file_get_contents($filename);
-			//TODO $study is a String, so we need to turn it into an object first.
-			// This is a waste of performance. So a better solution would be to just concat the JSON string manually which is ugly
-			$line['study'] = json_decode($study);
-		}
+		if(file_exists($filename_lang))
+            $study_json = file_get_contents($filename_lang);
+		else if(file_exists($filename))
+            $study_json = file_get_contents($filename);
 		else
-			error('Internal server error');
+			return error('Internal server error');
+		
+		//TODO: $study_json is a String, so we need to turn it into an object first or JSON will format it as a string.
+		// This is a waste of performance. So a better solution would be to just concat the JSON string manually which is ugly
+		$line['study'] = json_decode($study_json);
 	}
 	
 	

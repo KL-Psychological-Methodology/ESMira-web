@@ -18,41 +18,31 @@ import {Studies} from "../main_classes/studies";
 import {Defaults} from "../variables/defaults";
 import {add_default} from "../helpers/list_functions";
 import "../../css/style_admin.css";
+import {LangOptions} from "../../widgets/lang_options";
+import lang_options from "../../widgets/lang_options.html";
 
-function DetectChange(obj) {
-	//Thanks to http://www.knockmeout.net/2011/05/creating-smart-dirty-flag-in-knockoutjs.html
-	let result = function() {},
-		_initialState = ko.observable(OwnMapping.toJSON(obj)),
-		_isInitiallyDirty = ko.observable(false),
-		_enabled = ko.observable(true);
+function DetectChange(obj, changedFu) {
+	this.isDirty = ko.observable(false);
+	let subscriptions = OwnMapping.subscribe(obj, this.isDirty, changedFu);
 	
-	result.isDirty = ko.pureComputed(function() {
-		//OwnMapping.toJSON(obj) "touches" all values and subscribes to their value.
-		// Note: subscriptions will be redone everytime this function is called.
-		// Everything that is not "touched" wont have subscriptions until this function is called again (and they are "touched")
-		return _isInitiallyDirty() || (_enabled() && _initialState() !== OwnMapping.toJSON(obj));
-	});
-	result.setDirty = function(state) {
-		_initialState(OwnMapping.toJSON(obj));
-		_isInitiallyDirty(state);
+	this.setDirty = function(state) {
+		OwnMapping.unsetDirty(obj);
+		this.isDirty(state);
 	};
-	
-	result.set_onChangeListener = function(fu) {
-		result.onChange = ko.pureComputed(function() {
-			OwnMapping.toJSON(obj); //"touch" all values of obj
-			return Date.now();
-		});
-		result.onChange.subscribe(fu);
+	this.set_enabled = function(enabled) {
+		if(enabled) {
+			if(!subscriptions.length)
+				subscriptions = OwnMapping.subscribe(obj, this.isDirty, changedFu);
+		}
+		else if(subscriptions.length)
+			this.destroy();
 	};
-	result.remove_onChangeListener = function() {
-		if(result.onChange)
-			result.onChange.dispose();
-	}
-	result.set_enabled = function(enabled) {
-		_enabled(enabled);
+	this.destroy = function() {
+		for(let i=subscriptions.length-1; i>=0; --i) {
+			subscriptions[i].dispose();
+		}
+		subscriptions = [];
 	};
-	
-	return result;
 }
 
 function ListTools(page) {
@@ -113,11 +103,19 @@ export const AdminTools = {
 	read: ko.observableArray(),
 	has_newErrors: ko.observable(),
 	loginTime: 0,
+	_observedDetector: null,
+	_observedSave: null,
+	_observedPublish: null,
+	_saveFu: null,
+	_publishFu: null,
 	
 	
 	init: function() {
-		window.onbeforeunload = function(){
-			return Studies.tools.any_study_changed() ? Lang.get("confirm_leave_page_unsaved_changes") : undefined;
+		let self = this;
+		window.onbeforeunload = function() {
+			return Studies.tools.any_study_changed() || (self._observedDetector && self._observedDetector.isDirty())
+				? Lang.get("confirm_leave_page_unsaved_changes")
+				: undefined;
 		};
 		
 		ko.bindingHandlers.numericValue = {
@@ -292,7 +290,6 @@ export const AdminTools = {
 			},
 			template: btn_ok
 		});
-		
 		ko.components.register('widget-only', {
 			viewModel: function(params) {
 				this.android = params.hasOwnProperty("android");
@@ -301,9 +298,7 @@ export const AdminTools = {
 			},
 			template: only_icon
 		});
-		
 		ko.components.register('change-user', {
-			// viewModel: ChangeUser_viewModel,
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
 					return new ChangeUser_viewModel(ko.contextFor(componentInfo.element).$root.page, componentInfo.element, params);
@@ -311,7 +306,6 @@ export const AdminTools = {
 			},
 			template: changeUser
 		});
-		
 		ko.components.register('rich-text', {
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
@@ -320,6 +314,34 @@ export const AdminTools = {
 			},
 			template: rich_text
 		});
+		ko.components.register('lang-options', {
+			viewModel: {
+				createViewModel: function(params, componentInfo) {
+					return new LangOptions(ko.contextFor(componentInfo.element).$root.page, params);
+				}
+			},
+			template: lang_options
+		});
+		
+		
+		let el_saveBtn = Site.el_saveBtn;
+		el_saveBtn.innerText = Lang.get("save");
+		bindEvent(el_saveBtn, "click", function() {
+			if(this._saveFu) {
+				let detector = this._observedDetector;
+				this._saveFu().then(function() {
+					detector.setDirty(false);
+				});
+			}
+		}.bind(this));
+		
+		
+		let el_publishBtn = Site.el_publishBtn;
+		el_publishBtn.title = Lang.get("info_publish");
+		bindEvent(el_publishBtn, "click", function() {
+			if(this._publishFu)
+				this._publishFu();
+		}.bind(this));
 	},
 	
 	has_readPermission: function(studyId) {
@@ -400,11 +422,56 @@ export const AdminTools = {
 		});
 	},
 	
-	get_changeDetector: function(obj) {
-		return new DetectChange(obj);
+	get_changeDetector: function(obj, changeFu) {
+		return new DetectChange(obj, changeFu);
 	},
 	get_listTools: function(page) {
 		return new ListTools(page);
+	},
+	
+	change_observed: function(detector, saveFu, newChanges_obj, publishFu) {
+		this.remove_observed();
+		
+		if(detector) {
+			this._observedDetector = detector
+			const showSave_fu = function(b) {
+				if(b)
+					Site.el_saveBtn.classList.add("visible");
+				else
+					Site.el_saveBtn.classList.remove("visible");
+			};
+			
+			this._observedSave = detector.isDirty.subscribe(showSave_fu);
+			showSave_fu(detector.isDirty());
+		}
+		if(saveFu)
+			this._saveFu = saveFu;
+		
+		if(newChanges_obj) {
+			const showPublish_fu = function(b) {
+				if(b)
+					Site.el_publishBtn.classList.add("visible");
+				else
+					Site.el_publishBtn.classList.remove("visible");
+			};
+			
+			this._observedPublish = newChanges_obj.subscribe(showPublish_fu);
+			showPublish_fu(newChanges_obj());
+		}
+		if(publishFu)
+			this._publishFu = publishFu;
+	},
+	remove_observed: function() {
+		if(this._observedSave) {
+			this._observedSave.dispose();
+			Site.el_saveBtn.classList.remove("visible");
+			this._observedSave = null;
+		}
+		if(this._observedPublish) {
+			this._observedPublish.dispose();
+			Site.el_publishBtn.classList.remove("visible");
+			this._observedPublish = null;
+		}
 	}
 }
 export const Studies_tools = {
@@ -415,27 +482,20 @@ export const Studies_tools = {
 	lastChanged: {},
 	_observedSave: null,
 	_observedPublish: null,
+	currentLang: ko.observable("_"),
 	
 	init: function(page) {
+		ko.options.deferUpdates = true;
 		let studies = Studies.list();
 		for(let i = studies.length - 1; i >= 0; --i) {
 			let study = studies[i];
 			this.initStudy(study);
 		}
 		
-		let el_saveBtn = Site.el_saveBtn;
-		el_saveBtn.innerText = Lang.get("save");
-		bindEvent(el_saveBtn, "click", this.save_study.bind(this));
-		
-		let el_publishBtn = Site.el_publishBtn;
-		el_publishBtn.title = Lang.get("info_publish");
-		bindEvent(el_publishBtn, "click", this.mark_study_as_updated.bind(this));
-		
 		let study_id = Site.valueIndex.id;
 		
-		if(study_id !== undefined) {
+		if(study_id !== undefined)
 			Studies.init(page).then(this.change_observed.bind(this, (study_id)));
-		}
 	},
 	initStudy: function(study) {
 		let self = this;
@@ -457,7 +517,7 @@ export const Studies_tools = {
 					}
 				});
 			}
-		})
+		});
 	},
 	
 	add_study: function(page, study) {
@@ -524,15 +584,30 @@ export const Studies_tools = {
 		let studyId = study.id();
 		let page = Site.get_lastPage();
 		
-		page.loader.loadRequest(
+		let studies = {
+			_: OwnMapping.toLangJs(study, "_")
+		};
+		
+		let langCodes = study.langCodes();
+		for(let i=langCodes.length-1; i>=0; --i) {
+			let code = langCodes[i]();
+			let langStudy = OwnMapping.toLangJs(study, code);
+			langStudy.lang = code;
+			studies[code] = langStudy;
+		}
+		
+		return page.loader.loadRequest(
 			FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
 			false,
 			"post",
-			OwnMapping.toJSON(study)
+			JSON.stringify(studies)
 		).then(function({lastChanged, json}) {
 			self.lastChanged[studyId] = lastChanged;
-			OwnMapping.update(study, json, Defaults.studies);
-			self.set_study_unchanged(study);
+			
+			
+			OwnMapping.update(study, json._, Defaults.studies); //language fields were not changed
+			
+			// self.set_study_unchanged(study);
 			
 			if(study.published()) {
 				let studyAccessKeys = study.accessKeys();
@@ -623,46 +698,12 @@ export const Studies_tools = {
 		});
 	},
 	
-	change_observed: function(id) {
-		let study = Studies.list()[id];
-		let changed_state = this.changed_state[id];
-		
-		if(!study || !changed_state)
-			return;
-		
-		this.remove_observed();
-		const save_fu = function(b) {
-			if(b)
-				Site.el_saveBtn.classList.add("visible");
-			else
-				Site.el_saveBtn.classList.remove("visible");
-		};
-		
-		this._observedSave = changed_state.isDirty.subscribe(save_fu);
-		save_fu(changed_state.isDirty());
-		
-		
-		let new_changes = study.new_changes;
-		const publish_fu = function(b) {
-			if(b)
-				Site.el_publishBtn.classList.add("visible");
-			else
-				Site.el_publishBtn.classList.remove("visible");
-		};
-		
-		this._observedPublish = new_changes.subscribe(publish_fu);
-		publish_fu(new_changes());
-	},
-	remove_observed: function() {
-		if(this._observedSave) {
-			this._observedSave.dispose();
-			Site.el_saveBtn.classList.remove("visible");
-			this._observedSave = null;
-		}
-		if(this._observedPublish) {
-			this._observedPublish.dispose();
-			Site.el_publishBtn.classList.remove("visible");
-			this._observedPublish = null;
-		}
+	change_observed: function(study_id) {
+		Admin.tools.change_observed(
+			this.changed_state[study_id],
+			this.save_study.bind(this),
+			Studies.list()[study_id].new_changes,
+			this.mark_study_as_updated
+		);
 	}
 }
