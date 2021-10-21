@@ -31,14 +31,17 @@ export function ChangeUser_viewModel(page, rootEl, params) {
 		else if(self.password() < PASSWORD_MIN_LENGTH)
 			page.loader.error(Lang.get('error_bad_password'));
 		else {
-			params.finish(self.username(), self.password()).then(function() {
-				self.password('');
-				self.passwordRepeat('');
-				self.isOpen(false);
-				page.loader.info(Lang.get("info_successful"));
-			}).catch(function(e) {
-				page.loader.info(e.message || e);
-			});
+			let promise = params.finish(self.username(), self.password());
+			if(promise) {
+				promise.then(function() {
+					self.password('');
+					self.passwordRepeat('');
+					self.isOpen(false);
+					page.loader.info(Lang.get("info_successful"));
+				}).catch(function(e) {
+					page.loader.info(e.message || e);
+				});
+			}
 		}
 	}
 	

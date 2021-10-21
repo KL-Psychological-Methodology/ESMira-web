@@ -392,7 +392,7 @@ switch($type) {
 			write_file(FILE_STUDY_INDEX, serialize([]));
 			
 			set_loggedIn($user);
-			success();
+			goto get_permissions;
 		}
 		
 		error('Unknown error');
@@ -496,7 +496,7 @@ switch($type) {
 				list_additionalPermissions(true, $obj);
 			}
 			else {
-				$obj['permissions'] = get_permissions();
+				$obj = ['permissions' => get_permissions()];
 				list_additionalPermissions(false, $obj);
 			}
 			$obj['username'] = get_user();

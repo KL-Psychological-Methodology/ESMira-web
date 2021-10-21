@@ -24,20 +24,19 @@ export function ViewModel(page) {
 		let server_name = self.server_name();
 		
 		if(server_name.length < 3 || server_name.length > 30)
-			throw Lang.get("error_short_serverName");
+			page.loader.error(Lang.get("error_short_serverName"));
 		else if(!check_string(server_name))
-			throw Lang.get("error_forbidden_characters");
+			page.loader.error(Lang.get("error_forbidden_characters"));
 		else {
 			return Requests.load(
 				FILE_ADMIN + "?type=init_esmira",
 				false,
 				"post",
 				"new_user=" + username + "&pass=" + password + "&server_name=" + server_name
-			).then(function(hashed_pass) {
-				save_cookie("user", username);
-				save_cookie("pass", hashed_pass);
-				Site.reload_allPages();
-				// Site.goto("admin");
+			).then(function(data) {
+				Admin.esmira_isInit = true;
+				Admin.tools.username(username);
+				Admin.tools.set_loginStatus(data);
 			});
 		}
 	}

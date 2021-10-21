@@ -61,7 +61,7 @@ function get_serverName() {
 	$serverSettings = get_serverSettings();
 	$lang = get_lang('_');
 	$serverName_array = $serverSettings['serverName'];
-	return isset($serverName_array[$lang]) ? $serverName_array[$lang] : $serverName_array['_'];
+	return isset($serverName_array[$lang]) ? $serverName_array[$lang] : ( isset($serverName_array['_']) ? $serverName_array['_'] : '');
 }
 
 function get_accessKey() {
