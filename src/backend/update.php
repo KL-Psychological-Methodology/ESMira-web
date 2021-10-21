@@ -136,9 +136,9 @@ foreach($data as $study_id => $line) {
 	
 	//studies
 	if($forceStudyUpdate || $metadata['version'] > $version) {
-		$filename_lang = get_file_langConfig($study_id, get_lang());
+		$filename_lang = get_file_langConfig($study_id, get_lang(false));
 		$filename = get_file_studyConfig($study_id);
-		if(file_exists($filename_lang))
+		if($filename_lang && file_exists($filename_lang))
             $study_json = file_get_contents($filename_lang);
 		else if(file_exists($filename))
             $study_json = file_get_contents($filename);

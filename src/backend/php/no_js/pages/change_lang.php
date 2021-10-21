@@ -1,7 +1,3 @@
-<?php
-$lang_name = get_lang();
-?>
-
 <div class="page_top page_title">
 	<?php echo $LANG->language; ?>
 </div>

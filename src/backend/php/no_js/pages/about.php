@@ -4,7 +4,7 @@ if($_SERVER['HTTP_HOST'] == URL_ABOUT_ESMIRA_HOST)
 else
 	$url = 'https://'.URL_ABOUT_ESMIRA_HOST.URL_ABOUT_ESMIRA_JSON_LOCATION;
 
-$lang_name = get_lang();
+$lang_name = get_lang('en');
 function getContent($url) {
 	$context = stream_context_create(array('http' => array('header'=>'Connection: close\r\n')));
 	return file_get_contents($url, false, $context);

@@ -3,7 +3,7 @@
 </div>
 <div class="page_content">
 	<?php
-	$lang = get_lang();
+	$lang = get_lang('_');
 	
 	$file_default_impressum = get_file_langImpressum('_');
 	$file_lang_impressum = get_file_langImpressum($lang);

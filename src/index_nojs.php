@@ -5,7 +5,7 @@ require_once 'php/basic_fu.php';
 require_once 'php/permission_fu.php';
 require_once 'php/string_fu.php';
 
-$lang_name = get_lang();
+$lang_name = get_lang('en');
 $LANG = json_decode(file_get_contents("parts/locales/$lang_name.json"));
 
 

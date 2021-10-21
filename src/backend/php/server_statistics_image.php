@@ -24,7 +24,7 @@ require_once 'php/basic_fu.php';
 require_once 'php/files.php';
 require_once 'php/libs/phplot/phplot.php';
 
-$lang_name = get_lang();
+$lang_name = get_lang('en');
 $LANG = json_decode(file_get_contents("parts/locales/$lang_name.json"));
 
 

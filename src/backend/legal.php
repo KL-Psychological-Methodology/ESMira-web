@@ -6,7 +6,7 @@ require_once 'php/basic_fu.php';
 
 $legal = [];
 
-$lang = get_lang();
+$lang = get_lang('_');
 
 $file_default_impressum = get_file_langImpressum('_');
 $file_lang_impressum = get_file_langImpressum($lang);

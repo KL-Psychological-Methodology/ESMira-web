@@ -5,7 +5,7 @@ require_once 'php/basic_fu.php';
 require_once 'php/permission_fu.php';
 require_once 'php/string_fu.php';
 
-$lang = get_lang();
+$lang = get_lang('en');
 
 
 //

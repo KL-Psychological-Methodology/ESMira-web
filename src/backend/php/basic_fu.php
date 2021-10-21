@@ -18,7 +18,7 @@ function report($msg) {
 	
 	return file_put_contents($location, $msg) && chmod($location, 0666);
 }
-function get_lang() {
+function get_lang($default) {
 	if(isset($_GET['lang'])) {
 		$lang = $_GET['lang'];
 		create_cookie('lang', $_GET['lang'], 32532447600);
@@ -29,14 +29,14 @@ function get_lang() {
 		$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 	}
 	else
-		$lang = 'en';
+		$lang = $default;
 	
 	switch($lang) {
 		case 'de':
 		case 'en':
 			break;
 		default:
-			$lang = 'en';
+			$lang = $default;
 	}
 	return $lang;
 }
@@ -59,7 +59,7 @@ function get_serverSettings() {
 
 function get_serverName() {
 	$serverSettings = get_serverSettings();
-	$lang = get_lang();
+	$lang = get_lang('_');
 	$serverName_array = $serverSettings['serverName'];
 	return isset($serverName_array[$lang]) ? $serverName_array[$lang] : $serverName_array['_'];
 }
