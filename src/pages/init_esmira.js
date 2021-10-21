@@ -36,7 +36,8 @@ export function ViewModel(page) {
 			).then(function(hashed_pass) {
 				save_cookie("user", username);
 				save_cookie("pass", hashed_pass);
-				Site.goto("admin");
+				Site.reload_allPages();
+				// Site.goto("admin");
 			});
 		}
 	}

@@ -372,7 +372,7 @@ switch($type) {
 			
 			$user = $_POST['new_user'];
 			$pass = $_POST['pass'];
-			$serverName = $_POST['server_name'];
+			$serverName = ['_' => $_POST['server_name']];
 			if(!file_put_contents(FILE_LOGINS, $user .':' .get_hashed_pass($pass) ."\n", FILE_APPEND))
 				error('Login data could not be saved');
 			
