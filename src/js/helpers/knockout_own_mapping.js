@@ -50,13 +50,12 @@ export const OwnMapping = {
 		if(isArray)
 			data = {_: this.fromJS(value.hasOwnProperty(langCode) ? value[langCode] : defaultValue[langCode], defaultValue)};
 		else
-			data = {_: ko.observable(value.hasOwnProperty(langCode) ? value[langCode] : defaultValue[langCode])};
+			data = {_: ko.observable(value.hasOwnProperty(langCode) ? value[langCode] : defaultValue)};
 		
 		let changedValues = {};
 		let thisObj = ko.pureComputed({
 			read: function() {
 				let code = Studies.tools ? Studies.tools.currentLang() : "_";
-				// console.log(Studies.tools.currentLang() + " == " + code);
 				return data.hasOwnProperty(code) ? data[code]() : data._();
 			},
 			write: function(newValue) {
