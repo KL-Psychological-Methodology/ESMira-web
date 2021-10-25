@@ -15,9 +15,10 @@ function list_fromIndex(&$studies_json, $key) {
 		foreach($ids as $id) {
 			if($lang) {
 				$path_lang = get_file_langConfig($id, $lang);
-				if(file_exists($path_lang))
+				if(file_exists($path_lang)) {
 					$studies_json[] = file_get_contents($path_lang);
-				continue;
+					continue;
+				}
 			}
 			$path = get_file_studyConfig($id);
 			if(file_exists($path))
