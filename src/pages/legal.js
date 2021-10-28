@@ -3,11 +3,12 @@ import {Lang} from "../js/main_classes/lang";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import {close_on_clickOutside} from "../js/helpers/basics";
 import * as ko from "knockout";
+import {FILE_LEGAL} from "../js/variables/urls";
 
 export function ViewModel(page) {
 	this.html = html;
 	page.title(Lang.get("impressum"));
-	this.promiseBundle = [PromiseCache.loadJson("legal.php")];
+	this.promiseBundle = [PromiseCache.loadJson(FILE_LEGAL)];
 	this.preInit = function(index, {impressum, privacyPolicy}) {
 		if(impressum) {
 			if(index.hasOwnProperty("impressum"))

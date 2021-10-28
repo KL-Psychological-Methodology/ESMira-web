@@ -1,49 +1,76 @@
 <?php
-ob_start();
-require_once 'php/configs.php';
-require_once 'php/basic_fu.php';
-require_once 'php/permission_fu.php';
-require_once 'php/string_fu.php';
 
-$lang_name = get_lang('en');
-$LANG = json_decode(file_get_contents("parts/locales/$lang_name.json"));
+require_once 'config/autoload.php';
+require_once 'config/configs.php';
+
+use phpClasses\Base;
+use phpClasses\Files;
+use phpClasses\noJs\ForwardingException;
+use phpClasses\noJs\Lang;
+use phpClasses\noJs\Page;
+use phpClasses\noJs\pages\About;
+use phpClasses\noJs\pages\AppInstall;
+use phpClasses\noJs\pages\ChangeLang;
+use phpClasses\noJs\pages\Home;
+use phpClasses\noJs\pages\Legal;
+use phpClasses\noJs\pages\QuestionnaireAttend;
+use phpClasses\noJs\pages\StudiesList;
+
+ob_start();
 
 
 //
 //Choose starting page:
 //
-if(file_exists(FOLDER_DATA)) {
-	if(isset($_GET['app_install']))
-		$page_url = 'php/no_js/pages/app_install.php';
-	else if(isset($_GET['studies']))
-		$page_url = 'php/no_js/pages/studies_list.php';
-	else if(isset($_GET['about']))
-		$page_url = 'php/no_js/pages/about.php';
-	else if(isset($_GET['legal']))
-		$page_url = 'php/no_js/pages/legal.php';
-	else if(isset($_GET['change_lang']))
-		$page_url = 'php/no_js/pages/change_lang.php';
-	else if(isset($_GET['id']) || isset($_GET['qid']) || isset($_GET['key']))
-		//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
-		$page_url = 'php/no_js/pages/questionnaire_attend.php';
-	else
-		$page_url = 'php/no_js/pages/home.php';
-}
-else
+if(!file_exists(Files::FOLDER_DATA))
 	exit('Enable JavaScript to initialize');
 
 if(!isset($_GET['key']))
 	$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 
-$error = null;
-function show_error($s) {
-	global $error;
-	$error = $s;
+
+function drawPage_safe($page = null) {
+	try {
+		if($page === null) {
+			if(isset($_GET['app_install']))
+				$page = new AppInstall();
+			else if(isset($_GET['studies']))
+				$page = new StudiesList();
+			else if(isset($_GET['about']))
+				$page = new About();
+			else if(isset($_GET['legal']))
+				$page = new Legal();
+			else if(isset($_GET['change_lang']))
+				$page = new ChangeLang();
+			else if(isset($_GET['id']) || isset($_GET['qid']) || (isset($_GET['key']) && $_GET['key']))
+				//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
+				$page = new QuestionnaireAttend();
+			else
+				$page = new Home();
+		}
+		drawPage($page);
+	}
+	catch(ForwardingException $exception) {
+		drawPage_safe($exception->getPage());
+	}
+	catch(Exception $exception) {
+		echo '<div id="errorEl">' .$exception->getMessage() .'</div>';
+	}
+}
+
+/**
+ * @throws Exception
+ * @throws ForwardingException
+ */
+function drawPage(Page $page) {
+	echo '<div class="page_top page_title">'
+		.$page->getTitle()
+		.'</div><div class="page_content">' .$page->getContent() .'</div>';
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="<?php echo $lang_name; ?>">
+<html lang="<?php echo Lang::getCode(); ?>">
 <head>
 	<meta charset="UTF-8">
 	<title>ESMira</title>
@@ -71,31 +98,26 @@ function show_error($s) {
 		<a href="?">
 			<img src="imgs/web_header.png" alt="ESMira"/>
 		</a>
-		<div class="title"><?php echo get_serverName(); ?></div>
+		<div class="title"><?php echo Base::get_serverName(); ?></div>
 	</div>
 	<div id="no_js_info">
 		<img class="middle" src="imgs/warn.svg" alt=""/>
 		&nbsp;
-		<span class="middle"><?php echo $LANG->no_js; ?></span>
+		<span class="middle"><?php echo Lang::get('no_js'); ?></span>
 	</div>
 	
 	
 	<div id="el_pages">
 		<div class="page has_title" style="opacity: 1">
-			<?php require_once $page_url; ?>
+			<?php drawPage_safe(); ?>
 		</div></div><!--Note: We cant have a whitespace here-->
 	
 	
-	<?php
-	if(isset($error)) {
-		echo "<div id='errorEl'>$error</div>";
-	}
-	?>
 	
 	<div id="lang_chooser">
 		<a href="?change_lang">
 		<?php
-		switch($lang_name) {
+		switch(Lang::getCode()) {
 			case 'en':
 				echo '&#127468;&#127463; English';
 				break;
@@ -106,7 +128,7 @@ function show_error($s) {
 		?>
 		</a>
 	</div>
-	<a id="legalLink" class="internal_link no_arrow" href="?legal"><?php echo $LANG->impressum; ?></a>
+	<a id="legalLink" class="internal_link no_arrow" href="?legal"><?php echo Lang::get('impressum'); ?></a>
 </body>
 </html>
 <?php

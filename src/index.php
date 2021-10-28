@@ -1,17 +1,16 @@
 <?php
-require_once 'php/configs.php';
-require_once 'php/files.php';
-require_once 'php/basic_fu.php';
-require_once 'php/permission_fu.php';
-require_once 'php/string_fu.php';
+require_once 'config/autoload.php';
+require_once 'config/configs.php';
 
-$lang = get_lang('en');
+use phpClasses\Files;
+use phpClasses\Base;
 
+$lang = Base::get_lang('en');
 
 //
 //Choose starting page:
 //
-if(file_exists(FOLDER_DATA)) {
+if(file_exists(Files::FOLDER_DATA)) {
 	
 	if(isset($_GET['qid'])) {
 		$questionnaire_index = (int)$_GET['qid'];
@@ -29,9 +28,8 @@ if(file_exists(FOLDER_DATA)) {
 	}
 	else if(isset($_GET['key']))
 		$js_key = isset($_GET['app_install']) ? 'appInstall' : 'sOverview';
-	else if(isset($_GET['impressum'])) {
+	else if(isset($_GET['impressum']))
 		$js_key = 'legal,impressum';
-	}
 	else if(isset($_GET['privacyPolicy']))
 		$js_key = 'legal,privacyPolicy';
 	else if(isset($_GET['about']))
@@ -43,10 +41,10 @@ if(file_exists(FOLDER_DATA)) {
 	else
 		$js_key = "home";
 }
-else {
+else
 	$js_key = 'init_esmira';
-}
-$access_key = get_accessKey();
+
+$access_key = Base::get_accessKey();
 
 
 $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
@@ -71,9 +69,10 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = 'grayscaleDark';
 		else
 			$type = '';
-		$servername = get_serverName();
-		$serverVersion = SERVER_VERSION;
-		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("parts/locales/$lang.json"); ?></script>
+		$servername = Base::get_serverName();
+		$serverVersion = Base::SERVER_VERSION;
+		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("parts/locales/$lang.json"); ?>
+	</script>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />

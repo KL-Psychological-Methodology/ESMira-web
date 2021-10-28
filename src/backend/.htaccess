@@ -31,3 +31,6 @@ RewriteRule ^survey-(\d+)$ index.php?qid=$1 [NC,L]
 
 # to questionnaire		www.example.com/survey-12345-KEY
 RewriteRule ^survey-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?qid=$1&key=$2 [NC,L]
+
+# to questionnaire		www.example.com/survey-12345-KEY
+RewriteRule ^studies.php$ api/studies.php [NC,L]
