@@ -90,6 +90,14 @@ module.exports = {
 				},
 				{
 					from: path.resolve(SRC, 'backend'),
+					to: path.resolve(DIST, 'backend')
+				},
+				{
+					from: path.resolve(SRC, 'api'),
+					to: path.resolve(DIST, 'api')
+				},
+				{
+					from: path.resolve(SRC, '.htaccess'),
 					to: path.resolve(DIST)
 				},
 				{

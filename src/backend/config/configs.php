@@ -1,25 +1,4 @@
 <?php
-/*
- * 3: Change of variable names
- * 4: introduction of group.internalId and removal of completeRepeatType and timeConstraintType (Android: 2.3.3.12, iOS: 1.0.11
- * 5: introduce dataset tokens & replace specificGroupIndex with specificGroupInternalId (android: 2.3.3.16, iOS: 1.0.14)
- * 6: send accessKey to update.php and statistics.php (Android: 2.4.0.0, iOS: 1.0.17)
- * 7: new chat structure (Android: 2.4.0.0, iOS: 1.0.17)
- * 8: server_version to serverVersion (Android: 2.4.1.0, iOS: 1.1.1)
- * 9: change (form_duration, form_duration, last_notification_formatted, new_schedule, notification_scheduled, notification_scheduled_formatted) and server_version to serverVersion
- * 10: (Android: 2.4.2.0, iOS: 1.1.2):
- * 		dataSet.last_notification > dataSet.lastInvitation
- * 		dataSet.last_notification_formatted > dataSet.lastInvitation_formatted
- * 		dataSet.notification_scheduled > dataSet.actionScheduledTo
- * 		dataSet.notification_scheduled_formatted > dataSet.actionScheduledTo_formatted
- * 		dataSet.groupName > dataSet.questionnaireName
- *
- * 		eventTriggers.skipThisGroup > eventTriggers.skipThisQuestionnaire
- * 		eventTriggers.specificGroupEnabled > eventTriggers.specificQuestionnaireEnabled
- * 		eventTriggers.specificGroupInternalId > eventTriggers.specificQuestionnaireInternalId
- * 		study.group > study.questionnaire
- * 		group.name > group.title
- */
 
 
 const BACKUP_INTERVAL_DAYS = 30, //in days; interval for backup warning
@@ -63,9 +42,6 @@ const BACKUP_INTERVAL_DAYS = 30, //in days; interval for backup warning
 	//CSV-Options:
 	CSV_DELIMITER = ';',
 	
-	ERROR_FILE_EXTENSION = '.txt',
-	FILENAME_HTACCESS = '.htaccess',
-	
 	DATASET_TYPE_JOINED = 'joined',
 	DATASET_TYPE_QUIT = 'quit',
 	DATASET_TYPE_QUESTIONNAIRE = 'questionnaire',
@@ -84,7 +60,7 @@ const BACKUP_INTERVAL_DAYS = 30, //in days; interval for backup warning
 		'eventType',
 		'timezone',
 		'responseTime',
-		'responseTime_formatted',
+		'responseTime_formatted', //will be created by the server
 		'formDuration',
 		'lastInvitation',
 		'lastInvitation_formatted' //will be created by the server
@@ -104,7 +80,7 @@ const BACKUP_INTERVAL_DAYS = 30, //in days; interval for backup warning
 		'eventType',
 		'timezone',
 		'responseTime',
-		'responseTime_formatted',
+		'responseTime_formatted', //will be created by the server
 		'newSchedule',
 		'actionScheduledTo',
 		'actionScheduledTo_formatted', //will be created by the server
@@ -120,23 +96,7 @@ const BACKUP_INTERVAL_DAYS = 30, //in days; interval for backup warning
 		'user_agent',
 	],
 	
-	//templates:
-	HTACCESS_RESPONSES_TEMPLATE = 'Options +Indexes
-AuthType Basic
-%1$s',
-HTACCESS_MAIN_TEMPLATE = '<Files ~ "^\..+">
-  Order Allow,Deny
-  Deny from all
-</Files>
-Options -Indexes
-AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile %1$s
-Require valid-user',
-	HTACCESS_REQUIRE_LINE = 'Require user %1$s
-',
-DEFAULT_SERVER_SETTINGS = array(
-	'serverName' => array ('_' => '')
-);;
-
+	DEFAULT_SERVER_SETTINGS = array(
+		'serverName' => array ('_' => '')
+	);
 ?>

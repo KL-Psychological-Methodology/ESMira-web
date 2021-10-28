@@ -297,7 +297,7 @@ export function ViewModel(page) {
 		switch(fMode) {
 			case '2':
 				title = fileName = Lang.get("login_history");
-				fileUrl = FILE_ADMIN + "?csv&type=get_loginHistory";
+				fileUrl = FILE_ADMIN + "?type=get_loginHistory";
 				break;
 			case '1':
 			default:

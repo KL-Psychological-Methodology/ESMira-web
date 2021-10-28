@@ -4,7 +4,7 @@ export const URL_ABOUT_ESMIRA_SOURCE = 'https://esmira.kl.ac.at/documents/about/
 	FOLDER_ERRORS = 'data/errors/',
 	
 	FILE_ADMIN = 'api/admin.php',
-	FILE_RESPONSES = "data/studies/%1/responses/%2.csv",
+	FILE_RESPONSES = FILE_ADMIN+"?type=get_data&study_id=%1&q_id=%2",
 	FILE_SAVE_ACCESS = 'api/access.php',
 	FILE_LEGAL = 'api/legal.php',
 	FILE_SAVE_DATASET = 'api/datasets.php',

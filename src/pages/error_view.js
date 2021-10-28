@@ -1,22 +1,14 @@
 import html from "./error_view.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
-import {FOLDER_ERRORS} from "../js/variables/urls";
+import {FILE_ADMIN} from "../js/variables/urls";
 import {bindEvent, createElement} from "../js/helpers/basics";
-import {ERROR_FILE_EXTENSION} from "../js/variables/constants";
 import {Admin} from "../js/main_classes/admin";
 
 
-function get_name_data(id) {
-	let match = id.match(/_?(\d+)~?(.*)$/);
-	
-	let date = new Date(parseInt(match[1]) * 1000).toLocaleString();
-	
-	return {
-		print_name: match[2].length ? match[2]+" ("+date+")" : date,
-		note: match[2],
-		id: id
-	}
+function get_name(timestamp, note) {
+	let date = new Date(parseInt(timestamp)).toLocaleString();
+	return note ? note + " (" + date + ")" : date;
 }
 
 export function ViewModel(page) {
@@ -26,15 +18,13 @@ export function ViewModel(page) {
 	this.list_known = ko.observableArray();
 	this.list_new = ko.observableArray();
 	
-	this.preInit = function({errorId}, admin) {
+	this.preInit = function({timestamp, note, seen}, admin) {
 		if(!admin.tools.is_rootAdmin())
 			throw new Error(Lang.get("error_no_permission"));
 		
-		let id = atob(errorId);
-		
-		page.title(get_name_data(id).print_name);
-		
-		page.loader.loadRequest(FOLDER_ERRORS+id+ERROR_FILE_EXTENSION, true).then(function(data) {
+		note = atob(note);
+		page.title(get_name(timestamp, note));
+		page.loader.loadRequest(FILE_ADMIN+"?type=get_error&timestamp="+timestamp+"&note="+note+"&seen="+(!!seen ? 1 : 0), true).then(function(data) {
 			let update_sticky_els = function() {
 				sticky_els.sort(function(a,b) {
 					let indexA = a["line-index"];

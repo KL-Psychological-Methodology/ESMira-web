@@ -6,16 +6,9 @@ import {safe_confirm} from "../js/helpers/basics";
 import {Admin} from "../js/main_classes/admin";
 
 
-function get_name_data(id) {
-	let match = id.match(/_?(\d+)~?(.*)$/);
-	
-	let date = new Date(parseInt(match[1]) * 1000).toLocaleString();
-	
-	return {
-		print_name: match[2].length ? match[2]+" ("+date+")" : date,
-		note: match[2],
-		id: id
-	}
+function get_name(timestamp, note) {
+	let date = new Date(parseInt(timestamp)).toLocaleString();
+	return note ? note + " (" + date + ")" : date;
 }
 
 export function ViewModel(page) {
@@ -36,13 +29,14 @@ export function ViewModel(page) {
 			let list_new = [];
 			
 			for(let i=data.length-1; i>=0; --i) {
-				let id = data[i];
+				let errorData = data[i];
+				let {seen, note, timestamp} = errorData;
+				errorData.print_name = get_name(timestamp, note);
 				
-				if(id.substr(0, 1) === "_")
-					list_known.push(get_name_data(id));
-				else {
-					list_new.push(get_name_data(id));
-				}
+				if(seen)
+					list_known.push(errorData);
+				else
+					list_new.push(errorData);
 			}
 			self.list_known(list_known);
 			self.list_new(list_new);
@@ -59,20 +53,35 @@ export function ViewModel(page) {
 	
 	
 	
-	this.delete_error = function(error) {
-		if(!safe_confirm(Lang.get("confirm_delete_error", error.print_name)))
+	this.delete_error = function({timestamp, note, seen}) {
+		if(!confirm(Lang.get("confirm_delete_error", get_name(timestamp, note))))
 			return;
 		
-		page.loader.loadRequest(FILE_ADMIN+"?type=delete_error", false, "post", "error_id="+error.id).then(load);
+		page.loader.loadRequest(
+			FILE_ADMIN+"?type=delete_error",
+			false,
+			"post",
+			"timestamp="+timestamp+"&note="+note+"&seen="+(!!seen ? 1 : 0)
+		).then(load);
 	};
 	this.mark_error_seen = function(error) {
-		page.loader.loadRequest(FILE_ADMIN+"?type=mark_error_seen", false, "post", "error_id="+error.id).then(load);
+		page.loader.loadRequest(
+			FILE_ADMIN+"?type=change_error",
+			false,
+			"post",
+			"timestamp="+error.timestamp+"&note="+error.note+"&seen=0&new_seen=1"
+		).then(load);
 	};
-	this.error_add_note = function(error) {
-		let comment = prompt(Lang.get("prompt_comment"), error.note);
-		if(!comment)
+	this.error_add_note = function({timestamp, note, seen}) {
+		let new_note = prompt(Lang.get("prompt_comment"), note);
+		if(!new_note)
 			return;
 		
-		page.loader.loadRequest(FILE_ADMIN+"?type=error_add_note", false, "post", "error_id="+error.id+"&note="+comment).then(load);
+		page.loader.loadRequest(
+			FILE_ADMIN+"?type=change_error",
+			false,
+			"post",
+			"timestamp="+timestamp+"&note="+note+"&seen="+(!!seen ? 1 : 0)+"&new_note="+new_note
+		).then(load);
 	};
 }

@@ -352,8 +352,20 @@ function CSV_loader(csvData) {
 		return isNaN(column_value) ? timestamp_columns_nameIndex[column_value] : timestamp_columns_numIndex[column_value];
 	};
 	
-	
 	this.rows_count = csvData.data.length - 1;
+	if(!this.rows_count && csvData.data[0].length === 1) {
+		let msg = csvData.data[0][0];
+		let errorMsg;
+		try {
+			let json = JSON.parse(msg);
+			errorMsg =  json.error || msg;
+		}
+		catch(e) {
+			errorMsg = msg;
+		}
+		throw errorMsg;
+	}
+	
 	let header_names = csvData.data.splice(0, 1)[0];
 	
 	this.header_names = [];

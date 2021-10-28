@@ -1,20 +1,20 @@
 <?php
 
-require_once 'config/autoload.php';
-require_once 'config/configs.php';
+require_once 'backend/config/autoload.php';
+require_once 'backend/config/configs.php';
 
-use phpClasses\Base;
-use phpClasses\Files;
-use phpClasses\noJs\ForwardingException;
-use phpClasses\noJs\Lang;
-use phpClasses\noJs\Page;
-use phpClasses\noJs\pages\About;
-use phpClasses\noJs\pages\AppInstall;
-use phpClasses\noJs\pages\ChangeLang;
-use phpClasses\noJs\pages\Home;
-use phpClasses\noJs\pages\Legal;
-use phpClasses\noJs\pages\QuestionnaireAttend;
-use phpClasses\noJs\pages\StudiesList;
+use backend\Base;
+use backend\Files;
+use backend\noJs\ForwardingException;
+use backend\noJs\Lang;
+use backend\noJs\Page;
+use backend\noJs\pages\About;
+use backend\noJs\pages\AppInstall;
+use backend\noJs\pages\ChangeLang;
+use backend\noJs\pages\Home;
+use backend\noJs\pages\Legal;
+use backend\noJs\pages\QuestionnaireAttend;
+use backend\noJs\pages\StudiesList;
 
 ob_start();
 

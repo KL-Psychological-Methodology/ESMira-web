@@ -2,13 +2,14 @@
 	<svg class="middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
 </script>
 
+
 <div class="list_parent">
 	<div data-bind="foreach: $root.list_new" class="list_child error_list">
 		<div>
 			<widget-delete data-bind="click: $root.delete_error"></widget-delete>
 			<widget-ok data-bind="click: $root.mark_error_seen"></widget-ok>
 			<a data-bind="template: {name:'commentBtn'}, click: $root.error_add_note"></a>
-			<a data-bind="navi: 'errorView,errorId:'+btoa(id), text: print_name"></a>
+			<a data-bind="navi: 'errorView,timestamp:'+timestamp+',note:'+btoa(note), text: print_name"></a>
 		</div>
 	</div>
 </div>
@@ -18,7 +19,7 @@
 		<div>
 			<widget-delete data-bind="click: $root.delete_error"></widget-delete>
 			<a data-bind="template: {name:'commentBtn'}, click: $root.error_add_note"></a>
-			<a data-bind="navi: 'errorView,errorId:'+btoa(id), text: print_name"></a>
+			<a data-bind="navi: 'errorView,timestamp:'+timestamp+',note:'+btoa(note)+',seen:1', text: print_name"></a>
 			<span data-bind="text: Lang.get('seen')" class="extra_note"></span>
 		</div>
 	</div>

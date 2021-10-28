@@ -1,9 +1,9 @@
 <?php
-require_once 'config/autoload.php';
-require_once 'config/configs.php';
+require_once 'backend/config/autoload.php';
+require_once 'backend/config/configs.php';
 
-use phpClasses\Files;
-use phpClasses\Base;
+use backend\Files;
+use backend\Base;
 
 $lang = Base::get_lang('en');
 
