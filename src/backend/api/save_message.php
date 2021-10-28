@@ -6,7 +6,6 @@ require_once '../config/autoload.php';
 
 use phpClasses\Base;
 use phpClasses\Files;
-use phpClasses\StringFus;
 use phpClasses\Output;
 
 $rest_json = file_get_contents('php://input');
@@ -28,7 +27,7 @@ if(Base::study_is_locked($study_id))
 
 if(strlen($content) < 2)
 	Output::error("Message is too short");
-else if(!StringFus::check_input($user))
+else if(!Base::check_input($user))
 	Output::error('User is faulty');
 
 $msg = [

@@ -8,7 +8,6 @@ use phpClasses\Files;
 use phpClasses\noJs\ForwardingException;
 use phpClasses\noJs\Lang;
 use phpClasses\noJs\pages\AppInstall;
-use phpClasses\StringFus;
 use phpClasses\CreateDataSet;
 
 class Extra {
@@ -116,7 +115,7 @@ class Extra {
 		];
 		if(isset($dataset_responses)) {
 			foreach($dataset_responses as $k => $v) {
-				$responses->{$k} = StringFus::interpret_inputValue($v);
+				$responses->{$k} = self::interpret_inputValue($v);
 			}
 		}
 		$json = (object)[
@@ -146,5 +145,12 @@ class Extra {
 		catch(Exception $e) {
 			return false;
 		}
+	}
+	
+	public static function interpret_inputValue($v) {
+		if(is_array($v))
+			return implode(',', $v);
+		else
+			return $v;
 	}
 }

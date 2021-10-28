@@ -3,7 +3,6 @@
 namespace phpClasses;
 
 use phpClasses\Files;
-use phpClasses\StringFus;
 use stdClass;
 
 class Base {
@@ -71,13 +70,13 @@ class Base {
 	}
 	
 	static function get_accessKey() {
-		if(isset($_GET['key']) && StringFus::check_input($_GET['key'])) {
+		if(isset($_GET['key']) && self::check_input($_GET['key'])) {
 			$key = strtolower(trim($_GET['key']));
 			self::create_cookie('access_key', $key, 32532447600);
 			if(strlen($key))
 				return $key;
 		}
-		else if(isset($_COOKIE['access_key']) && StringFus::check_input($_COOKIE['access_key'])) {
+		else if(isset($_COOKIE['access_key']) && self::check_input($_COOKIE['access_key'])) {
 			$key = strtolower($_COOKIE['access_key']);
 			if(strlen($key))
 				return $key;
@@ -89,8 +88,8 @@ class Base {
 	static function save_webAccess($study_id, $pageName) {
 
 //	$referer = isset($_SERVER["HTTP_REFERER"]) ? StringFu::strip_input($_SERVER["HTTP_REFERER"]) : '';
-		$referer = isset($_SERVER["HTTP_REFERER"]) ? StringFus::strip_oneLineInput(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) : '';
-		$user_agent = isset($_SERVER["HTTP_USER_AGENT"]) ? StringFus::strip_oneLineInput($_SERVER["HTTP_USER_AGENT"]) : '';
+		$referer = isset($_SERVER["HTTP_REFERER"]) ? self::strip_oneLineInput(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) : '';
+		$user_agent = isset($_SERVER["HTTP_USER_AGENT"]) ? self::strip_oneLineInput($_SERVER["HTTP_USER_AGENT"]) : '';
 		
 		return file_put_contents(Files::get_file_responses($study_id, Files::FILENAME_WEB_ACCESS), "\n\"".self::get_milliseconds()."\";\"$pageName\";\"$referer\";\"$user_agent\"", FILE_APPEND | LOCK_EX);
 	}
@@ -185,5 +184,20 @@ class Base {
 		fflush($handle);
 		flock($handle, LOCK_UN);
 		fclose($handle);
+	}
+	
+	public static function check_input($s) {
+		return empty($s) || (strlen($s) < MAX_USERINPUT_LENGTH && preg_match('/^[a-zA-Z0-9À-ž_\-().\s]+$/', $s));
+	}
+	
+	public static function strip_input($s) {
+		if(strlen($s) > MAX_USERINPUT_LENGTH)
+			$s = substr($s, 0, MAX_USERINPUT_LENGTH);
+		//it should be ok to save userinput mostly "as is" to the filesystem as long as its not used otherwise:
+		return str_replace('"', '\'', $s);
+	}
+	
+	public static function strip_oneLineInput($s) {
+		return str_replace(["\n", "\r"], ' ', self::strip_input($s));
 	}
 }

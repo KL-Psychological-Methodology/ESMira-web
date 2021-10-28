@@ -14,7 +14,6 @@ require_once '../config/configs.php';
 use phpClasses\Base;
 use phpClasses\Files;
 use phpClasses\Permission;
-use phpClasses\StringFus;
 use phpClasses\Output;
 
 function getStudyId() {
@@ -263,7 +262,7 @@ function checkUnique_and_collectKeys($study) {
 					
 					if(!strlen($name))
 						Output::error('Input name is empty!');
-					else if(!StringFus::check_input($name))
+					else if(!Base::check_input($name))
 						Output::error("No special characters are allowed in Variable-Names. \n'$name' detected in questionnaire: $questionnaire_title");
 					else if(isset($key_check_array[$name]))
 						Output::error("Variable-Name exists more than once: '$name'. First detected in questionnaire: '".$key_check_array[$input->name]."'. Detected again in questionnaire: '$questionnaire_title'");
@@ -749,7 +748,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			}
 			else {
 				$user = $json->user;
-				if(!StringFus::check_input($user))
+				if(!Base::check_input($user))
 					Output::error('Recipient is faulty');
 				
 				if(!send_message($study_id, $from, $user, $content))
@@ -827,7 +826,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			break;
 		case 'list_messages':
 			$user = $_GET['user'];
-			if(!StringFus::check_input($user))
+			if(!Base::check_input($user))
 				Output::error('Username is faulty');
 			
 			if(!strlen($user)) {
@@ -1251,7 +1250,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 								$langStudy->accessKeys[$key] = $value;
 							}
 							
-							if(!StringFus::check_input($value))
+							if(!Base::check_input($value))
 								Output::error("No special characters are allowed in access keys.\n'$value'");
 							else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
 								Output::error("Access keys need to start with a character.");
@@ -1444,7 +1443,7 @@ switch($type) {
 			$len = strlen($serverName);
 			if($len < 3 || $len > 30)
 				Output::error('The server name needs to consist of 3 and 30 characters');
-			else if(!StringFus::check_input($serverName))
+			else if(!Base::check_input($serverName))
 				Output::error('The server name has forbidden characters');
 			else
 				$serverNames[$code] = $serverName;

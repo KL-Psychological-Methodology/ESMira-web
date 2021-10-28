@@ -5,7 +5,6 @@ namespace phpClasses;
 use Exception;
 use phpClasses\Files;
 use phpClasses\Base;
-use phpClasses\StringFus;
 
 class Permission {
 	static function create_folder($folder) {
@@ -266,7 +265,7 @@ class Permission {
 			}
 		}
 		
-		$data = "\n\"".time().'"' .CSV_DELIMITER .'"'.$login.'"' .CSV_DELIMITER .'"'.$_SERVER['REMOTE_ADDR'].'"' .CSV_DELIMITER .'"'.StringFus::strip_oneLineInput($_SERVER['HTTP_USER_AGENT']).'"';
+		$data = "\n\"".time().'"' .CSV_DELIMITER .'"'.$login.'"' .CSV_DELIMITER .'"'.$_SERVER['REMOTE_ADDR'].'"' .CSV_DELIMITER .'"'. Base::strip_oneLineInput($_SERVER['HTTP_USER_AGENT']) .'"';
 		file_put_contents($file_tokenHistory, $data, $flag);
 	}
 	

@@ -5,7 +5,6 @@ namespace phpClasses;
 use Exception;
 use phpClasses\Base;
 use phpClasses\Files;
-use phpClasses\StringFus;
 use stdClass;
 
 class CreateDataSet {
@@ -108,7 +107,7 @@ class CreateDataSet {
 		$this->app_type = $json->appType;
 		$this->app_version = $json->appVersion;
 		
-		if(!StringFus::check_input($user_id) || !StringFus::check_input($this->app_type) || !StringFus::check_input($this->app_version))
+		if(!Base::check_input($user_id) || !Base::check_input($this->app_type) || !Base::check_input($this->app_version))
 			throw new Exception('Input data not valid');
 		
 		$metadata_index = [];
@@ -219,7 +218,7 @@ class CreateDataSet {
 			
 			
 			
-			if((!StringFus::check_input($dataSet_questionnaireName)) || !StringFus::check_input($event_type)) {
+			if((!Base::check_input($dataSet_questionnaireName)) || !Base::check_input($event_type)) {
 				$this->error_lineOutput($dataset_id, "Unexpected input! Group: $dataSet_questionnaireName; Event-Type: $event_type");
 				continue;
 			}
@@ -282,9 +281,9 @@ class CreateDataSet {
 				
 				foreach($questionnaire_index as $key) {
 					if(isset($responses->{$key}))
-						$answer = StringFus::strip_oneLineInput($responses->{$key});
+						$answer = Base::strip_oneLineInput($responses->{$key});
 					else if(isset($dataSet->{$key}))
-						$answer = StringFus::strip_oneLineInput($dataSet->{$key});
+						$answer = Base::strip_oneLineInput($dataSet->{$key});
 					else
 						$answer = '';
 					
@@ -369,9 +368,9 @@ class CreateDataSet {
 			$events_write = [];
 			foreach($eventIndex as $key) {
 				if(isset($dataSet->{$key}))
-					$events_write[] = StringFus::strip_oneLineInput($dataSet->{$key});
+					$events_write[] = Base::strip_oneLineInput($dataSet->{$key});
 				else if(isset($responses->{$key}))
-					$events_write[] = StringFus::strip_oneLineInput($responses->{$key});
+					$events_write[] = Base::strip_oneLineInput($responses->{$key});
 				else
 					$events_write[] = '';
 			}
