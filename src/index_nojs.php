@@ -1,6 +1,6 @@
 <?php
 
-require_once 'backend/config/autoload.php';
+require_once 'backend/autoload.php';
 require_once 'backend/config/configs.php';
 
 use backend\Base;
@@ -96,12 +96,12 @@ function drawPage(Page $page) {
 <body class="is_init">
 	<div id="header">
 		<a href="?">
-			<img src="imgs/web_header.png" alt="ESMira"/>
+			<img src="frontend/imgs/web_header.png" alt="ESMira"/>
 		</a>
 		<div class="title"><?php echo Base::get_serverName(); ?></div>
 	</div>
 	<div id="no_js_info">
-		<img class="middle" src="imgs/warn.svg" alt=""/>
+		<img class="middle" src="frontend/imgs/warn.svg" alt=""/>
 		&nbsp;
 		<span class="middle"><?php echo Lang::get('no_js'); ?></span>
 	</div>

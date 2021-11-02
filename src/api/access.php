@@ -1,6 +1,6 @@
 <?php
 
-require_once '../backend/config/autoload.php';
+require_once '../backend/autoload.php';
 
 use backend\Base;
 use backend\Output;

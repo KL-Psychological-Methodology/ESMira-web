@@ -16,7 +16,7 @@ module.exports = merge(require('./config.base.js'), {
 	},
 	plugins: [
 		new FaviconsWebpackPlugin( {
-			logo: path.resolve(SRC, 'imgs', 'favicon.svg'),
+			logo: path.resolve(SRC, 'frontend', 'imgs', 'favicon.svg'),
 			cache: true,
 			favicons: {
 				icons: {
@@ -32,7 +32,7 @@ module.exports = merge(require('./config.base.js'), {
 			}
 		}),
 		new FaviconsWebpackPlugin( {
-			logo: path.resolve(SRC, 'imgs', 'ic_round.svg'),
+			logo: path.resolve(SRC, 'frontend', 'imgs', 'ic_round.svg'),
 			cache: true,
 			favicons: {
 				icons: {

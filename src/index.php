@@ -1,5 +1,5 @@
 <?php
-require_once 'backend/config/autoload.php';
+require_once 'backend/autoload.php';
 require_once 'backend/config/configs.php';
 
 use backend\Files;
@@ -71,7 +71,7 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = '';
 		$servername = Base::get_serverName();
 		$serverVersion = Base::SERVER_VERSION;
-		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("parts/locales/$lang.json"); ?>
+		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("frontend/locales/$lang.json"); ?>
 	</script>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -82,7 +82,7 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 
 <div id="header">
 	<a href="#<?php echo $js_key; ?>">
-		<img src="imgs/web_header.png" alt="ESMira"/>
+		<img src="frontend/imgs/web_header.png" alt="ESMira"/>
 	</a>
 	<div class="title" id="header_serverName"></div>
 </div>

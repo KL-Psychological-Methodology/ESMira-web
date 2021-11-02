@@ -16,20 +16,20 @@ module.exports = {
 		// widgets: path.resolve(SRC, 'css', 'widgets.css'),
 		
 		main: [
-			path.resolve(SRC, 'css', 'style.css'),
-			path.resolve(SRC, 'css', 'input_design.css'),
-			path.resolve(SRC, 'css', 'widgets.css'),
-			path.resolve(SRC, 'js', 'index.js'),
+			path.resolve(SRC, 'frontend', 'css', 'style.css'),
+			path.resolve(SRC, 'frontend', 'css', 'input_design.css'),
+			path.resolve(SRC, 'frontend', 'css', 'widgets.css'),
+			path.resolve(SRC, 'frontend', 'js', 'index.js'),
 		],
 		nojs: [
-			path.resolve(SRC, 'css', 'style.css'),
-			path.resolve(SRC, 'css', 'nojs.css'),
-			path.resolve(SRC, 'css', 'input_design.css'),
-			path.resolve(SRC, 'js', 'index_nojs.js')
+			path.resolve(SRC, 'frontend', 'css', 'style.css'),
+			path.resolve(SRC, 'frontend', 'css', 'nojs.css'),
+			path.resolve(SRC, 'frontend', 'css', 'input_design.css'),
+			path.resolve(SRC, 'frontend', 'js', 'index_nojs.js')
 		]
 	},
 	output: {
-		path: path.resolve(DIST, 'parts'),
+		path: path.resolve(DIST, 'frontend'),
 		
 		filename: '[name].[contenthash].js',
 		assetModuleFilename: 'assets/[name].[contenthash].js',
@@ -86,7 +86,7 @@ module.exports = {
 					transform: function(content) {
 						return JSONMinifyPlugin(content.toString());
 					},
-					to: path.resolve(DIST, 'parts', 'locales')
+					to: path.resolve(DIST, 'frontend', 'locales')
 				},
 				{
 					from: path.resolve(SRC, 'backend'),
@@ -101,8 +101,8 @@ module.exports = {
 					to: path.resolve(DIST)
 				},
 				{
-					from: path.resolve(SRC, 'imgs', 'screenshots'),
-					to: path.resolve(DIST, 'parts', 'screenshots')
+					from: path.resolve(SRC, 'frontend', 'imgs', 'screenshots'),
+					to: path.resolve(DIST, 'frontend', 'screenshots')
 				},
 				{
 					from: path.resolve(__dirname, '..', 'LICENSE'),

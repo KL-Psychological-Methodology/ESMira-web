@@ -29,11 +29,13 @@ RewriteRule ^survey-(\d+)$ index.php?qid=$1 [NC,L]
 RewriteRule ^survey-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?qid=$1&key=$2 [NC,L]
 
 
+# Fallback in case we ever want to replace the php backend:
+RewriteRule ^api/([^.]+)$ api/$1.php [NC,L]
+
 # Remove when all have version 2.4.3
 RewriteRule ^studies.php$ api/studies.php [NC,L]
 RewriteRule ^datasets.php$ api/datasets.php [NC,L]
 RewriteRule ^save_errors.php$ api/save_errors.php [NC,L]
 RewriteRule ^save_messages.php$ api/save_messages.php [NC,L]
 RewriteRule ^statistics.php$ api/statistics.php [NC,L]
-RewriteRule ^studies.php$ api/studies.php [NC,L]
 RewriteRule ^update.php$ api/update.php [NC,L]

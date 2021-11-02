@@ -2,7 +2,7 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once '../backend/config/autoload.php';
+require_once '../backend/autoload.php';
 
 use backend\Output;
 use backend\CreateDataSet;
