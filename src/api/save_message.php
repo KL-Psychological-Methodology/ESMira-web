@@ -5,6 +5,9 @@ use backend\Base;
 use backend\Files;
 use backend\Output;
 
+if(!Base::is_init())
+	Output::error('ESMira is not ready!');
+
 $rest_json = file_get_contents('php://input');
 if(!($json = json_decode($rest_json)))
 	Output::error('Error with data');

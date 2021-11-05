@@ -6,6 +6,8 @@ use backend\Output;
 use backend\Base;
 use backend\Permission;
 
+if(!Base::is_init())
+	Output::error('ESMira is not ready!');
 
 function list_fromIndex(&$studies_json, $key) {
 	$lang = Base::get_lang(false);

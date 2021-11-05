@@ -5,7 +5,9 @@ use backend\Configs;
 use backend\Files;
 use backend\Output;
 use backend\Base;
-require_once Files::FILE_CONFIG;
+
+if(!Base::is_init())
+	Output::error('ESMira is not ready!');
 
 function moveTo_archive($study_id, $user_id, $to_archive) {
 	if(!count($to_archive))

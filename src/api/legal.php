@@ -5,6 +5,9 @@ use backend\Base;
 use backend\Files;
 use backend\Output;
 
+if(!Base::is_init())
+	Output::error('ESMira is not ready!');
+
 $legal = [];
 
 $lang = Base::get_lang('_');

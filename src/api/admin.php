@@ -1,5 +1,19 @@
 <?php
 
+
+
+ignore_user_abort(true);
+set_time_limit(0);
+
+require_once '../backend/autoload.php';
+
+use backend\Base;
+use backend\CreateDataSet;
+use backend\Files;
+use backend\Permission;
+use backend\Output;
+use backend\Configs;
+
 //basic keys which are included in every questionnaire dataset
 const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
 	'userId',
@@ -42,26 +56,12 @@ const KEYS_EVENT_RESPONSES = [
 	'osVersion',
 	'manufacturer'
 ];
-
 const KEYS_WEB_ACCESS = [
 	'responseTime',
 	'page',
 	'referer',
 	'user_agent',
 ];
-
-
-ignore_user_abort(true);
-set_time_limit(0);
-
-require_once '../backend/autoload.php';
-
-use backend\Base;
-use backend\CreateDataSet;
-use backend\Files;
-use backend\Permission;
-use backend\Output;
-use backend\Configs;
 
 
 function getStudyId() {
