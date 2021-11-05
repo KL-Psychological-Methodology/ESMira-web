@@ -2,6 +2,7 @@
 
 namespace backend\noJs\pages;
 
+use backend\Configs;
 use Exception;
 use backend\Base;
 use backend\noJs\Extra;
@@ -98,7 +99,7 @@ class AppInstall implements Page {
 			</li>
 			
 			<li>
-				<div>' .sprintf(Lang::get('studyTut_participate_selectServer'), Base::get_serverName()) .'</div>
+				<div>' .sprintf(Lang::get('studyTut_participate_selectServer'), Configs::get_serverName()) .'</div>
 				<div class="screenshot_box">
 					<img alt="screenshot" src="' .Lang::get('screenshot_server_ask_android') .'"/>
 				</div>

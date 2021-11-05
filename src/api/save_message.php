@@ -39,15 +39,17 @@ $file = Files::get_file_message_unread($study_id, $user);
 
 if(file_exists($file)) {
 	$handle = fopen($file, 'r+');
-	flock($handle, LOCK_EX);
 	if(!$handle)
 		Output::error('Something went wrong');
+	flock($handle, LOCK_EX);
 	$messages = unserialize(fread($handle, filesize($file)));
 	array_push($messages, $msg);
 }
 else {
 	//TODO: if there are no unread messages and several users write at exactly the same time, they will overwrite each other!
 	$handle = fopen($file, 'w');
+	if(!$handle)
+		Output::error('Something went wrong');
 	flock($handle, LOCK_EX);
 	$messages = [$msg];
 }

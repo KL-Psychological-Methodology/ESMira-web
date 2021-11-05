@@ -1,10 +1,11 @@
 <?php
 require_once '../backend/autoload.php';
-require_once '../backend/config/configs.php';
 
+use backend\Configs;
 use backend\Files;
 use backend\Output;
 use backend\Base;
+require_once Files::FILE_CONFIG;
 
 function moveTo_archive($study_id, $user_id, $to_archive) {
 	if(!count($to_archive))
@@ -14,14 +15,14 @@ function moveTo_archive($study_id, $user_id, $to_archive) {
 	
 	if(file_exists($file_archive)) {
 		$handle_archive = fopen($file_archive, 'r+');
-		if(!$handle_archive)
-			return;
 		$msgs_archive = unserialize(fread($handle_archive, filesize($file_archive)));
 	}
 	else {
 		$handle_archive = fopen($file_archive, 'w');
 		$msgs_archive = [];
 	}
+	if(!$handle_archive)
+		return;
 	flock($handle_archive, LOCK_EX);
 	
 	foreach($to_archive as $msg) {
@@ -31,8 +32,9 @@ function moveTo_archive($study_id, $user_id, $to_archive) {
 		$msgs_archive[] = $msg;
 	}
 	
-	if(count($msgs_archive) > MAX_MSGS_PER_USER)
-		$msgs_archive = array_slice($msgs_archive, count($msgs_archive) - MAX_MSGS_PER_USER, MAX_MSGS_PER_USER);
+	$max_msgs_per_user = Configs::get('max_msgs_per_user');
+	if(count($msgs_archive) > $max_msgs_per_user)
+		$msgs_archive = array_slice($msgs_archive, count($msgs_archive) - $max_msgs_per_user, $max_msgs_per_user);
 	
 	fseek($handle_archive, 0);
 	if(!ftruncate($handle_archive, 0))

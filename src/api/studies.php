@@ -9,7 +9,7 @@ use backend\Permission;
 
 function list_fromIndex(&$studies_json, $key) {
 	$lang = Base::get_lang(false);
-	$key_index = unserialize(file_get_contents(Files::FILE_STUDY_INDEX));
+	$key_index = unserialize(file_get_contents(Files::get_file_studyIndex()));
 	if(isset($key_index[$key])) {
 		$ids = $key_index[$key];
 		
@@ -39,13 +39,10 @@ function get_specificStudyJson($id) {
 
 $studies_json = [];
 
-if(!file_exists(Files::FOLDER_DATA))
-	Output::success('[' .implode($studies_json, ',') .']');
-
 if(isset($_GET['is_loggedIn'])) {
 	if(Permission::is_loggedIn()) {
 		if(Permission::is_admin()) {
-			$h_folder = opendir(Files::FOLDER_STUDIES);
+			$h_folder = opendir(Files::get_folder_studies());
 			while($folder = readdir($h_folder)) {
 				if($folder[0] != '.' && $folder != Files::FILENAME_STUDY_INDEX) {
 					$s = file_get_contents(Files::get_file_studyConfig($folder));

@@ -17,6 +17,7 @@
     "add_schedule": "Add schedule",
 	"additional_languages": "Additional languages",
     "admin": "Admin",
+    "admin_account": "Admin account",
     "advanced": "Advanced",
     "after_x_seconds": "After %d seconds",
     "after_joining_study": "after joining the study",
@@ -250,7 +251,7 @@
     "impressum": "Legal Notice",
     "in_minutes": "in minutes",
     "info_charts_loadingTime": "Depending on the size of the study data files and the performance of your computer, some statistics may take some time to load.",
-    "info_init_esmira": "Your ESMira server is almost set up!<br/><br/>Before you can start, you need to choose a server name (can be changed in the server settings) and create an admin account. This account is used to create and manage studies or create other accounts.<br/><br/>Be aware that there is no \"forgot password\" option!",
+    "info_no_password_forget": "Be aware that there is no \"forgot password\" option.",
     "info_no_questionnaires_created": "No questionnaires were created yet.",
     "info_notification_title": "Depending on how this action was evoked, the title for the message will be either the respective point in time (under schedules) or the title of the respective event.",
     "info_publish": "This will increase the version number of this study. This will signal to all participating apps, that a new updated version of this study should be downloaded.",
@@ -488,5 +489,14 @@
     "x_per_weekday": "%s per weekday",
     "x_times_of_day": "%d times of day",
     "xAxisIsNumberRange_label": "Treat values on x-axis as number range",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "path_to_data_directory": "Path to data directory",
+    "info_path_to_data_directory": "A folder named \"esmira_data\", which will contain all data, will be created in this path. PHP must have write permission for this location. Furthermore, you need to make sure that this folder can not be accessed from the internet (an according htaccess file is  placed inside the folder). If you are unsure what to enter, leave the preselected value as it is.",
+    "installation_settings": "Installation settings",
+    "info_init_additional_steps": "Some additional server configuration is necessary to make ESMira work as expected. You can find more information <a href=\"https://github.com/KL-Psychological-Methodology/ESMira/wiki/Setting-up-a-server#additional-steps-for-servers-without-htaccess-or-mod_replace-apache\" target=\"_blank\">[in the wiki]</a>:",
+    "enabled": "Enabled",
+    "additional_server_settings": "Additional server settings",
+    "info_dataFolder_already_exists": "A folder named \"esmira_data\" already exist at this location. Should the existing folder be reused for ESMira (if you choose \"No\" the existing folder will be renamed)?",
+    "yes": "Yes",
+    "no": "No"
 }

@@ -1,10 +1,14 @@
 <?php
 require_once '../backend/autoload.php';
-require_once '../backend/config/configs.php';
 
+use backend\Configs;
+use backend\CreateDataSet;
 use backend\Files;
 use backend\Output;
 use backend\Base;
+require_once Files::FILE_CONFIG;
+
+const ONE_DAY = 86400; //in seconds: 60*60*24
 
 if(!isset($_GET['id']))
 	Output::error('Missing data');
@@ -52,12 +56,14 @@ if(file_exists($file_statistics_newData)) {
 	$statistics_json = json_decode($statistics_jsonString);
 	
 	$newDataCollection_count = count($newDataCollection);
-	if(count($newDataCollection) > STATISTICS_MAX_NEW_ENTRIES_AT_ONCE) {//there is too much data to process at once. We save the rest back again and process it next time
-		Base::report("Warning: The study with id $study_id had too much data for new statistics to process at once ($newDataCollection_count in total).\n\nIf this warning happens continuously, consider increasing STATISTICS_MAX_NEW_ENTRIES_AT_ONCE in backend/config/configs.php");
+	if(count($newDataCollection) > Configs::get('statistics_max_entries_at_once')) {//there is too much data to process at once. We save the rest back again and process it next time
+		Base::report("Warning: The study with id $study_id had too much data for new statistics to process at once ($newDataCollection_count in total).\n\nIf this warning happens continuously, consider increasing statistics_max_entries_at_once in backend/config/configs.php");
 		$handle2 = fopen($file_statistics_newData, 'a'); //this will create a new file because the original has already been renamed
+		if(!$handle2)
+			Output::error('Internal server error');
 		flock($handle2, LOCK_EX);
 		
-		for($i=STATISTICS_MAX_NEW_ENTRIES_AT_ONCE; $i<$newDataCollection_count; ++$i) {
+		for($i=Configs::get('statistics_max_entries_at_once'); $i<$newDataCollection_count; ++$i) {
 			fwrite($handle2, $newDataCollection[$i]);
 		}
 		fflush($handle2);
@@ -82,7 +88,7 @@ if(file_exists($file_statistics_newData)) {
 		$data = $current_json->data;
 		
 		switch($current_json->storageType) {
-			case STATISTICS_STORAGE_TYPE_TIMED:
+			case CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED:
 				$timeInterval = isset($current_json->timeInterval) ? $current_json->timeInterval : ONE_DAY;
 				$answer_timestamp = calcTimestamp($timestamp/1000, $timeInterval);
 				
@@ -100,12 +106,12 @@ if(file_exists($file_statistics_newData)) {
 					];
 					
 					
-					if($current_json->entryCount > STATISTICS_TIMED_STORAGE_MAX_ENTRIES && $current_json->timeInterval != ONE_DAY) {
+					if($current_json->entryCount > Configs::get('statistics_timed_storage_max_entries') && $current_json->timeInterval != ONE_DAY) {
 						$timeInterval *= 2;
 						if($timeInterval > ONE_DAY)
 							$timeInterval = ONE_DAY;
 						
-						Base::report("Warning: The statistics in the study with id $study_id has too much data saved for variable $key [$index]. timeInterval was increased to $timeInterval\n\nIf this warning happens continuously, consider increasing SMALLEST_TIMED_DISTANCE or STATISTICS_TIMED_STORAGE_MAX_ENTRIES in backend/config/configs.php.");
+						Base::report("Warning: The statistics in the study with id $study_id has too much data saved for variable $key [$index]. timeInterval was increased to $timeInterval\n\nIf this warning happens continuously, consider increasing smallest_timed_distance or statistics_timed_storage_max_entries in backend/config/configs.php.");
 						
 						$current_json->timeInterval = $timeInterval;
 						
@@ -130,7 +136,7 @@ if(file_exists($file_statistics_newData)) {
 					}
 				}
 				break;
-			case STATISTICS_STORAGE_TYPE_FREQ_DISTR:
+			case CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR:
 				if($hasAnswer) {
 					if(isset($data->{$answer}))
 						++$data->{$answer};

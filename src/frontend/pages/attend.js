@@ -3,11 +3,7 @@ import {Lang} from "../js/main_classes/lang";
 import {Site} from "../js/main_classes/site";
 import {delete_cookie, get_cookie, save_cookie} from "../js/helpers/basics";
 import ko from "knockout";
-import {
-	COOKIE_CURRENT_PAGE,
-	COOKIE_LAST_COMPLETED, COOKIE_PARTICIPANT,
-	COOKIE_RESPONSES_CACHE
-} from "../js/variables/cookie_names";
+import {COOKIE_PARTICIPANT} from "./participant";
 import {Studies} from "../js/main_classes/studies";
 import {participant_isValid} from "../js/shared/participant";
 import binary from "../inputs/binary.html";
@@ -26,6 +22,10 @@ import video from "../inputs/video.html";
 import error from "../inputs/error.html";
 import {Defaults} from "../js/variables/defaults";
 
+
+const COOKIE_LAST_COMPLETED = "last_completed%1_%2";
+const COOKIE_CURRENT_PAGE = "current_page%1_%2";
+const COOKIE_RESPONSES_CACHE = "responses_cache%1_%2";
 
 
 export function ViewModel(page) {

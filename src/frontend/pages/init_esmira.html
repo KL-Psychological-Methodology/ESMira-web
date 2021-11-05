@@ -1,12 +1,53 @@
-<p class="justify" data-bind="html: Lang.get('info_init_esmira')"></p>
+<div data-bind="if: !$root.htaccess_enabled || !$root.mod_rewrite_enabled">
+	<title-row params="title: Lang.get('additional_server_settings')"></title-row>
+	
+	<div class="spacing_bottom" data-bind="html: Lang.get('info_init_additional_steps')"></div>
+	<table class="spacing_bottom">
+		<tr>
+			<td>.htaccess:</td>
+			<td data-bind="
+				text: $root.htaccess_enabled ? Lang.get('enabled') : Lang.get('disabled'),
+				style: {color: $root.htaccess_enabled ? 'lightgreen' : 'red'}
+			"></td>
+		</tr>
+		<tr>
+			<td>mod_rewrite:</td>
+			<td data-bind="
+				text: $root.mod_rewrite_enabled ? Lang.get('enabled') : Lang.get('disabled'),
+				style: {color: $root.mod_rewrite_enabled ? 'lightgreen' : 'red'}
+			"></td>
+		</tr>
+	</table>
+</div>
+
+
+<title-row params="title: Lang.get('installation_settings')"></title-row>
+<div data-bind="text: Lang.get('info_path_to_data_directory')" class="spacing_bottom"></div>
+<label class="line spacing_bottom">
+	<small data-bind="text: Lang.get('path_to_data_directory')"></small>
+	<input class="big" type="text" data-bind="value: $root.data_location, event: {change: $root.data_location_changed}"/>
+</label>
+
+<div data-bind="if: $root.dataFolder_exists">
+	<div data-bind="text: Lang.get('info_dataFolder_already_exists')" class="spacing_bottom"></div>
+	<div  class="center">
+		<label>
+			<small data-bind="text: Lang.get('no')"></small>
+			<input type="radio" data-bind="checked: $root.reuseFolder, value: 0"/>
+		</label>
+		<label>
+			<small data-bind="text: Lang.get('yes')"></small>
+			<input type="radio" data-bind="checked: $root.reuseFolder, value: 1"/>
+		</label>
+	</div>
+</div>
+
+<title-row class="spacing_top" params="title: Lang.get('admin_account')"></title-row>
+<div data-bind="text: Lang.get('info_no_password_forget')"></div>
 <br/>
+<br/>
+<br/>
+
 <div class="center">
-	<label>
-		<small data-bind="text: Lang.get('server_name')">Contact-Email</small>
-		<input type="text" data-bind="value: $root.server_name"/>
-	</label>
-	<br/>
-	<br/>
-	<br/>
 	<change-user class="spacing_top verticalSorted" params="finish: $root.create, stayOpen: true"></change-user>
 </div>

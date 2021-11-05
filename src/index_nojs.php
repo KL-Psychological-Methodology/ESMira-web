@@ -1,9 +1,10 @@
 <?php
 
 require_once 'backend/autoload.php';
-require_once 'backend/config/configs.php';
+//require_once 'backend/config/configs.php';
 
 use backend\Base;
+use backend\Configs;
 use backend\Files;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
@@ -22,7 +23,7 @@ ob_start();
 //
 //Choose starting page:
 //
-if(!file_exists(Files::FOLDER_DATA))
+if(!Base::is_init())
 	exit('Enable JavaScript to initialize');
 
 if(!isset($_GET['key']))
@@ -98,7 +99,7 @@ function drawPage(Page $page) {
 		<a href="?">
 			<img src="frontend/imgs/web_header.png" alt="ESMira"/>
 		</a>
-		<div class="title"><?php echo Base::get_serverName(); ?></div>
+		<div class="title"><?php echo Configs::get_serverName(); ?></div>
 	</div>
 	<div id="no_js_info">
 		<img class="middle" src="frontend/imgs/warn.svg" alt=""/>

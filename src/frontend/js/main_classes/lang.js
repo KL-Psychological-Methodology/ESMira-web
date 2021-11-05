@@ -7,7 +7,7 @@ export const Lang = {
 	},
 	get: function(key, ... replacers) {
 		if(!Lang._vars.hasOwnProperty(key))
-			return "Not translated";
+			return key;
 		
 		let s = Lang._vars[key];
 		if(replacers.length) {

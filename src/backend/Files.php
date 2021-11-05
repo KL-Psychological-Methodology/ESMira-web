@@ -3,35 +3,57 @@
 namespace backend;
 
 class Files {
-	const FOLDER_DATA = DIR_BASE.'data/',
-		FOLDER_ERROR_REPORTS = self::FOLDER_DATA.'errors/',
-		FOLDER_STUDIES = self::FOLDER_DATA.'studies/',
-		FOLDER_LEGAL = self::FOLDER_DATA.'legal/',
-		FOLDER_TOKEN = self::FOLDER_DATA.'.loginToken/',
+	const FILENAME_DATA = 'esmira_data',
 		FILENAME_STATISTICS_METADATA = '.metadata',
 		FILENAME_STATISTICS_NEWLINES = '.new_data',
 		FILENAME_STATISTICS_JSONFILE = 'json',
 		FILENAME_STUDY_INDEX = '.index',
 		FILENAME_WEB_ACCESS = 'web_access',
 		FILENAME_EVENTS = 'events',
+		FILE_CONFIG = DIR_BASE.'backend/config/configs.php',
+		FILE_DEFAULT_CONFIG = DIR_BASE.'backend/config/configs.default.php';
 		
-		FILE_STUDY_INDEX = self::FOLDER_STUDIES.self::FILENAME_STUDY_INDEX,
-		FILE_LOGINS = self::FOLDER_DATA.'.logins',
-		FILE_SERVER_SETTINGS = self::FOLDER_DATA.'.server_settings.php',
-		FILE_PERMISSIONS = self::FOLDER_DATA.'.permissions',
-		FILE_SERVER_STATISTICS = self::FOLDER_DATA.'server_statistics.json';
+	
+	static function get_folder_data() {
+		return Configs::get('dataFolder_path');
+	}
+	static function get_folder_errorReports() {
+		return self::get_folder_data() .'errors/';
+	}
+	static function get_folder_studies() {
+		return self::get_folder_data() .'studies/';
+	}
+	static function get_folder_legal() {
+		return self::get_folder_data() .'legal/';
+	}
+	static function get_folder_tokenRoot() {
+		return self::get_folder_data() .'.loginToken/';
+	}
+	static function get_file_logins() {
+		return self::get_folder_data() .'.logins';
+	}
+	static function get_file_permissions() {
+		return self::get_folder_data() .'.permissions';
+	}
+	static function get_file_serverStatistics() {
+		return self::get_folder_data() .'server_statistics.json';
+	}
+	static function get_file_studyIndex() {
+		return self::get_folder_studies() .self::FILENAME_STUDY_INDEX;
+	}
+	
 	
 	static function get_folder_study($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/";
+		return self::get_folder_studies() ."$study_id/";
 	}
 	static function get_folder_langs($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/.langs/";
+		return self::get_folder_studies() ."$study_id/.langs/";
 	}
 	static function get_folder_messages($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/.messages/";
+		return self::get_folder_studies() ."$study_id/.messages/";
 	}
 	static function get_folder_messages_archive($study_id) {
 		return self::get_folder_messages($study_id) .".archive/";
@@ -44,22 +66,22 @@ class Files {
 	}
 	static function get_folder_responsesIndex($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/.responses_index/";
+		return self::get_folder_studies() ."$study_id/.responses_index/";
 	}
 	static function get_folder_responses($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/responses/";
+		return self::get_folder_studies() ."$study_id/responses/";
 	}
 	static function get_folder_statistics($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/.statistics/";
+		return self::get_folder_studies() ."$study_id/.statistics/";
 	}
 	static function get_folder_userData($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES ."$study_id/.userdata/";
+		return self::get_folder_studies() ."$study_id/.userdata/";
 	}
 	static function get_folder_token($user) {
-		return self::FOLDER_TOKEN .Files::make_urlFriendly($user).'/';
+		return self::get_folder_tokenRoot() .Files::make_urlFriendly($user).'/';
 	}
 	
 	static function interpret_errorReport_file($filename) {
@@ -78,7 +100,7 @@ class Files {
 		];
 	}
 	static function get_file_errorReport($timestamp, $note=false, $seen=false) {
-		$path = self::FOLDER_ERROR_REPORTS;
+		$path = self::get_folder_errorReports();
 		if($seen)
 			$path .= '_';
 		$path .= ((int)$timestamp);
@@ -88,14 +110,14 @@ class Files {
 	}
 	static function get_file_studyConfig($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES."$study_id/.config.json";
+		return self::get_folder_studies()."$study_id/.config.json";
 	}
 	static function get_file_langConfig($study_id, $code) {
 		return self::get_folder_langs($study_id)."/$code.json";
 	}
 	static function get_file_studyMetadata($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES."$study_id/.metadata";
+		return self::get_folder_studies()."$study_id/.metadata";
 	}
 	static function get_file_responses($study_id, $questionnaire_identifier) {
 		switch($questionnaire_identifier) {
@@ -125,7 +147,7 @@ class Files {
 		$count = 2;
 		while(file_exists($file)) {
 			$file = "$folder{$date}_{$count}_$questionnaire_identifier.csv";
-			if(++$count > MAX_POSSIBLE_BACKUPS_PER_DAY)
+			if(++$count > Configs::get('max_possible_backups_per_day'))
 				Output::error('Could not rename old datafile. There are too many copies. Aborting... Check your datafiles before trying again.');
 		}
 		
@@ -154,7 +176,7 @@ class Files {
 	}
 	static function get_file_lock($study_id) {
 		$study_id = (int) $study_id;
-		return self::FOLDER_STUDIES."$study_id/.locked";
+		return self::get_folder_studies()."$study_id/.locked";
 	}
 	static function get_file_token($user, $hash) {
 		return self::get_folder_token($user) .$hash;
@@ -166,10 +188,10 @@ class Files {
 		return self::get_folder_token($user) .".blocking";
 	}
 	static function get_file_langImpressum($code) {
-		return $code === '_' ? self::FOLDER_LEGAL.'impressum.html' : self::FOLDER_LEGAL. "impressum.$code.html";
+		return $code === '_' ? self::get_folder_legal().'impressum.html' : self::get_folder_legal(). "impressum.$code.html";
 	}
 	static function get_file_langPrivacyPolicy($code) {
-		return $code === '_' ? self::FOLDER_LEGAL.'privacy_policy.html' : self::FOLDER_LEGAL. "privacy_policy.$code.html";
+		return $code === '_' ? self::get_folder_legal().'privacy_policy.html' : self::get_folder_legal(). "privacy_policy.$code.html";
 	}
 	
 	//For make_urlFriendly() and get_urlFriendly(), thanks to https://www.php.net/manual/en/function.base64-encode.php#123098

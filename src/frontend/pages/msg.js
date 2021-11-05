@@ -19,7 +19,7 @@ export function ViewModel(page) {
 	};
 	this.postInit = function({id}) {
 		if(!recipient.length) {
-			Requests.load(FILE_ADMIN + "?type=list_usernames&study_id=" + id).then(function(user) {
+			page.loader.loadRequest(FILE_ADMIN + "?type=list_usernames&study_id=" + id).then(function(user) {
 				user.sort();
 				self.userList(user);
 			});
@@ -114,7 +114,7 @@ export function ViewModel(page) {
 		
 		let study_id = Site.valueIndex.id;
 		
-		Requests.load(
+		page.loader.loadRequest(
 			FILE_ADMIN + "?type=delete_message",
 			false,
 			"post",
@@ -152,7 +152,7 @@ export function ViewModel(page) {
 		box.appType = appType;
 		box.content = content;
 		
-		Requests.load(
+		page.loader.loadRequest(
 			FILE_ADMIN+"?type=send_message&study_id="+study_id,
 			false,
 			"post",

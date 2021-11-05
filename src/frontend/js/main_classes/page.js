@@ -133,8 +133,10 @@ export function Page(depth, code) {
 		let promise;
 		if(pageInfo[1]) {
 			promise = Admin.init(self).then(function(admin) {
-				if(!admin.esmira_isInit)
+				if(!admin.esmira_isInit) {
+					console.log("init_esmira");
 					return "init_esmira";
+				}
 				else if(!admin.is_loggedIn())
 					return "login";
 				else {

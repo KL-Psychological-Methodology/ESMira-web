@@ -41,7 +41,7 @@ class Extra {
 	static function get_studyData() {
 		$qId = isset($_GET['qid']) ? (int)$_GET['qid'] : 0;
 		$access_key = Base::get_accessKey();
-		$key_index = unserialize(file_get_contents(Files::FILE_STUDY_INDEX));
+		$key_index = unserialize(file_get_contents(Files::get_file_studyIndex()));
 		$key = $access_key ?: '~open';
 		
 		if(!isset($key_index[$key]))

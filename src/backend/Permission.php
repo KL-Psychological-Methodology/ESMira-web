@@ -20,9 +20,9 @@ class Permission {
 	}
 	
 	static function load_loginFile() {
-		if(!file_exists(Files::FILE_LOGINS))
+		if(!file_exists(Files::get_file_logins()))
 			return false;
-		return fopen(Files::FILE_LOGINS, 'r');
+		return fopen(Files::get_file_logins(), 'r');
 	}
 	static function interpret_userLine($h) {
 		$line = substr(fgets($h), 0, -1);
@@ -174,26 +174,26 @@ class Permission {
 	}
 	
 	static function is_admin() {
-		if(!file_exists(Files::FILE_PERMISSIONS))
+		if(!file_exists(Files::get_file_permissions()))
 			return false;
 		
 		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		return $permissions && isset($permissions[$user]) && isset($permissions[$user]['admin']) && $permissions[$user]['admin'];
 //	return $permissions && isset($permissions['admins']) && in_array($user, $permissions['admins']);
 	}
 	static function has_permission($study_id, $permCode) {
-		if(!file_exists(Files::FILE_PERMISSIONS))
+		if(!file_exists(Files::get_file_permissions()))
 			return false;
 		
 		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		return $permissions && isset($permissions[$user]) && isset($permissions[$user][$permCode]) && in_array($study_id, $permissions[$user][$permCode]);
 //	return $permissions && isset($permissions[$permCode]) && isset($permissions[$permCode][$user]) && in_array($study_id, $permissions[$permCode][$user]);
 	}
 	static function get_permissions() {
 		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if(!$permissions || !isset($permissions[$user]))
 			return [];
 		else
@@ -232,7 +232,8 @@ class Permission {
 			}
 		}
 		
-		$data = "\n\"".time().'"' .CSV_DELIMITER .'"'.$login.'"' .CSV_DELIMITER .'"'.$_SERVER['REMOTE_ADDR'].'"' .CSV_DELIMITER .'"'. Base::strip_oneLineInput($_SERVER['HTTP_USER_AGENT']) .'"';
+		$csv_delimiter = Configs::get('csv_delimiter');
+		$data = "\n\"".time().'"' .$csv_delimiter .'"'.$login.'"' .$csv_delimiter .'"'.$_SERVER['REMOTE_ADDR'].'"' .$csv_delimiter .'"'. Base::strip_oneLineInput($_SERVER['HTTP_USER_AGENT']) .'"';
 		file_put_contents($file_tokenHistory, $data, $flag);
 	}
 	

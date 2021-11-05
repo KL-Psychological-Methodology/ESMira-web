@@ -2,6 +2,7 @@
 
 namespace backend\noJs\pages;
 
+use backend\Configs;
 use Exception;
 use backend\noJs\Page;
 use backend\noJs\Lang;
@@ -12,10 +13,10 @@ class About implements Page {
 	}
 	
 	function getContent() {
-		if($_SERVER['HTTP_HOST'] == URL_ABOUT_ESMIRA_HOST)
-			$url = '.' .URL_ABOUT_ESMIRA_JSON_LOCATION;
+		if($_SERVER['HTTP_HOST'] == Configs::get('url_about_esmira_host'))
+			$url = '.' .Configs::get('url_about_esmira_json_location');
 		else
-			$url = 'https://'.URL_ABOUT_ESMIRA_HOST.URL_ABOUT_ESMIRA_JSON_LOCATION;
+			$url = 'https://'.Configs::get('url_about_esmira_host').Configs::get('url_about_esmira_json_location');
 		
 		function getContent($url) {
 			$context = stream_context_create(array('http' => array('header'=>'Connection: close\r\n')));

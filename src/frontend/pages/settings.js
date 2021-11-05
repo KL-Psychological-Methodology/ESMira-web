@@ -17,7 +17,7 @@ export function ViewModel(page) {
 	page.title(Lang.get("server_settings"));
 	this.promiseBundle = [
 		Admin.init(page),
-		PromiseCache.loadJson(FILE_ADMIN+"?type=get_serverSettings", function(data) {
+		PromiseCache.loadJson(FILE_ADMIN+"?type=get_serverConfigs", function(data) {
 			let serverSettings = OwnMapping.fromJS(Defaults.serverSettings, Defaults.serverSettings);
 			
 			serverSettings.serverName(data.serverName._);
@@ -101,7 +101,7 @@ export function ViewModel(page) {
 		}
 
 		return page.loader.loadRequest(
-			FILE_ADMIN + "?type=save_serverSettings",
+			FILE_ADMIN + "?type=save_serverConfigs",
 			false,
 			"post",
 			JSON.stringify(settings)

@@ -4,8 +4,9 @@ import {Lang} from "../js/main_classes/lang";
 import {Loader} from "../js/main_classes/loader";
 import {participant_isValid} from "../js/shared/participant";
 import {save_cookie} from "../js/helpers/basics";
-import {COOKIE_PARTICIPANT} from "../js/variables/cookie_names";
 import {Site} from "../js/main_classes/site";
+
+export const COOKIE_PARTICIPANT = "participant%d";
 
 export function ViewModel(page) {
 	this.html = html;

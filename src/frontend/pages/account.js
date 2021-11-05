@@ -27,7 +27,7 @@ export function ViewModel(page) {
 	this.remove_token = function({hash}) {
 		if(!confirm())
 			return;
-		Requests.load(FILE_ADMIN+"?type=remove_token", false, "post", "token_id="+hash).then(function(token) {
+		page.loader.loadRequest(FILE_ADMIN+"?type=remove_token", false, "post", "token_id="+hash).then(function(token) {
 			self.token(token);
 		})
 	}

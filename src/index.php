@@ -1,7 +1,8 @@
 <?php
 require_once 'backend/autoload.php';
-require_once 'backend/config/configs.php';
+//require_once 'backend/config/configs.php';
 
+use backend\Configs;
 use backend\Files;
 use backend\Base;
 
@@ -10,8 +11,7 @@ $lang = Base::get_lang('en');
 //
 //Choose starting page:
 //
-if(file_exists(Files::FOLDER_DATA)) {
-	
+if(Base::is_init()) {
 	if(isset($_GET['qid'])) {
 		$questionnaire_index = (int)$_GET['qid'];
 		$js_key = "attend,qId:$questionnaire_index";
@@ -41,8 +41,10 @@ if(file_exists(Files::FOLDER_DATA)) {
 	else
 		$js_key = "home";
 }
-else
+else {
+	$servername = '';
 	$js_key = 'init_esmira';
+}
 
 $access_key = Base::get_accessKey();
 
@@ -69,8 +71,8 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = 'grayscaleDark';
 		else
 			$type = '';
-		$servername = Base::get_serverName();
 		$serverVersion = Base::SERVER_VERSION;
+		$servername = Configs::get_serverName();
 		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("frontend/locales/$lang.json"); ?>
 	</script>
 	

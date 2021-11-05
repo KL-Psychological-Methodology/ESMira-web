@@ -20,7 +20,7 @@ export function Loader(page) {
 		enableCount = 0;
 	
 	
-	let close_loader = function() {
+	this.close_loader = function() {
 		has_error = false;
 		has_info = false;
 		rootEl.classList.remove("isError");
@@ -43,7 +43,7 @@ export function Loader(page) {
 			state_el.innerText = s;
 	};
 	
-	bindEvent(close_el, "click", close_loader.bind(this));
+	bindEvent(close_el, "click", this.close_loader.bind(this));
 	
 	bindEvent(tryAgain_el, "click", function() {
 		if(tryAgain_fu)
@@ -119,7 +119,7 @@ export function Loader(page) {
 		let removeFu = function(e) {
 			if(rootEl.contains(e.target))
 				return;
-			close_loader();
+			self.close_loader();
 			document.removeEventListener("click", removeFu);
 		}.bind(this);
 		

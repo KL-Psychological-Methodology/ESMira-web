@@ -2,7 +2,7 @@ import html from "./init_esmira.html"
 import {Lang} from "../js/main_classes/lang";
 import {Requests} from "../js/main_classes/requests";
 import {check_string, save_cookie} from "../js/helpers/basics";
-import {FILE_ADMIN} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_CHECK_HTACCESS} from "../js/variables/urls";
 import * as ko from "knockout";
 import {Admin} from "../js/main_classes/admin";
 import {Site} from "../js/main_classes/site";
@@ -12,33 +12,55 @@ export function ViewModel(page) {
 	this.html = html;
 	page.title(Lang.get("init_esmira"));
 	
-	this.promiseBundle = [Admin.init(page)];
+	this.promiseBundle = Admin.esmira_isInit
+		? [Admin.init(page), [], []]
+		: [
+			Admin.init(page),
+			Requests.load(
+				FILE_ADMIN + "?type=init_esmira_prep"
+			),
+			Requests.load(
+				FILE_CHECK_HTACCESS,
+			)
+		];
 	
-	this.preInit = function(index, admin) {
+	this.preInit = function(index, admin, {dir_base, dataFolder_exists}, {htaccess, mod_rewrite}) {
 		if(admin.esmira_isInit)
 			Site.goto("admin");
+		
+		this.htaccess_enabled = htaccess;
+		this.mod_rewrite_enabled = mod_rewrite;
+		this.data_location = ko.observable(dir_base);
+		this.dataFolder_exists = ko.observable(dataFolder_exists);
+		this.reuseFolder = ko.observable(0);
 	}
 	this.server_name = ko.observable("");
 	
 	this.create = function(username, password) {
-		let server_name = self.server_name();
+		let server_name = self.data_location();
 		
-		if(server_name.length < 3 || server_name.length > 30)
-			page.loader.error(Lang.get("error_short_serverName"));
-		else if(!check_string(server_name))
-			page.loader.error(Lang.get("error_forbidden_characters"));
-		else {
-			return Requests.load(
-				FILE_ADMIN + "?type=init_esmira",
-				false,
-				"post",
-				"new_user=" + username + "&pass=" + password + "&server_name=" + server_name
-			).then(function(data) {
-				Admin.esmira_isInit = true;
-				Admin.tools.username(username);
-				Admin.tools.set_loginStatus(data);
-			});
-		}
+		return page.loader.loadRequest(
+			FILE_ADMIN + "?type=init_esmira",
+			false,
+			"post",
+			"new_user=" + username + "&pass=" + password + "&data_location=" + self.data_location() + "&reuseFolder=" + self.reuseFolder()
+		).then(function(data) {
+			Admin.esmira_isInit = true;
+			Admin.tools.username(username);
+			console.log(Admin);
+			Admin.tools.set_loginStatus(data);
+		});
 	}
 	
+	this.data_location_changed = function() {
+		return page.loader.loadRequest(
+			FILE_ADMIN + "?type=data_folder_exists",
+			false,
+			"post",
+			"data_location=" + self.data_location()
+		).then(function({dataFolder_exists}) {
+			self.dataFolder_exists(dataFolder_exists);
+			page.loader.close_loader();
+		});
+	}
 }

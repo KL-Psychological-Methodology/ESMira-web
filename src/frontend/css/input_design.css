@@ -115,7 +115,7 @@ input[type="color"] {
 	padding: 5px;
 	width: 30px;
 }
-label input[type="checkbox"] {
+label input[type="checkbox"], label input[type="radio"] {
 	/*height: 20px;*/
 	vertical-align: middle;
 	margin-top: 5px;
@@ -137,7 +137,9 @@ input[type="text"], input[type="password"], input[type="date"] {
 	min-width: 150px;
 }
 input.big {
-	min-width: 300px;
+	width: 100%;
+	padding-left: 0;
+	padding-right: 0;
 }
 input.small, select.small {
 	width: 75px;

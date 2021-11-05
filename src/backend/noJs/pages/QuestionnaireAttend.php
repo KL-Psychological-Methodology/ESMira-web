@@ -2,6 +2,7 @@
 
 namespace backend\noJs\pages;
 
+use backend\CreateDataSet;
 use Exception;
 use backend\Base;
 use backend\noJs\ForwardingException;
@@ -11,6 +12,8 @@ use backend\noJs\Inputs;
 use backend\noJs\Page;
 
 class QuestionnaireAttend implements Page {
+	const COOKIE_LAST_COMPLETED = 'last_completed%1$d_%2$d';
+	
 	private $study;
 	private $pageInt;
 	private $form_started;
@@ -46,7 +49,7 @@ class QuestionnaireAttend implements Page {
 		
 		
 		if(isset($_POST['delete_participant'])) {
-			Extra::save_dataset(DATASET_TYPE_QUIT, $_POST['participant'], $this->study);
+			Extra::save_dataset(CreateDataSet::DATASET_TYPE_QUIT, $_POST['participant'], $this->study);
 			Base::delete_cookie('participant'.$study_id);
 			Extra::remove_postHeader();
 			return;
@@ -64,7 +67,7 @@ class QuestionnaireAttend implements Page {
 			else {
 				$this->participant = $_POST['participant'];
 				if(isset($_POST['new_participant']))
-					Extra::save_dataset(DATASET_TYPE_JOINED, $this->participant, $this->study);
+					Extra::save_dataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, $this->study);
 				
 				Base::create_cookie("participant$study_id", $this->participant, 32532447600);
 			}
@@ -133,10 +136,10 @@ class QuestionnaireAttend implements Page {
 					//used in CreateDataSet:
 					$this->dataCache['formDuration'] = Base::get_milliseconds() - $this->form_started;
 					
-					$this->success_saving = Extra::save_dataset(DATASET_TYPE_QUESTIONNAIRE, $this->participant, $this->study, $this->questionnaire, $this->dataCache);
+					$this->success_saving = Extra::save_dataset(CreateDataSet::DATASET_TYPE_QUESTIONNAIRE, $this->participant, $this->study, $this->questionnaire, $this->dataCache);
 					
 					if($this->success_saving) {
-						$last_completed_cookie_name = sprintf(COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
+						$last_completed_cookie_name = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
 						Base::create_cookie($last_completed_cookie_name, time(), 32532447600);
 						$this->pageInt = $page_before;
 					}
@@ -174,7 +177,7 @@ class QuestionnaireAttend implements Page {
 		$pages = $this->questionnaire->pages;
 		
 		//used only in dynamicInput:
-		$last_completed_cookie_name = sprintf(COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
+		$last_completed_cookie_name = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
 		$last_completed = (isset($_COOKIE[$last_completed_cookie_name])) ? $_COOKIE[$last_completed_cookie_name] : 0;
 		
 		$is_last_page = $this->pageInt + 1 == sizeof($pages);

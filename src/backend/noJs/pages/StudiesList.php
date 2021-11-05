@@ -23,7 +23,7 @@ class StudiesList implements Page {
 	
 	static function list_fromIndex($key) {
 		$output = '';
-		$key_index = unserialize(file_get_contents(Files::FILE_STUDY_INDEX));
+		$key_index = unserialize(file_get_contents(Files::get_file_studyIndex()));
 		if(isset($key_index[$key])) {
 			$ids = $key_index[$key];
 			

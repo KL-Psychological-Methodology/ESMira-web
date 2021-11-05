@@ -17,6 +17,7 @@
     "add_schedule": "Zeitplan hinzufügen",
 	"additional_languages": "Zusätzlich Sprachen",
     "admin": "Admin",
+    "admin_account": "Admin Account",
     "advanced": "Erweitert",
     "after_joining_study": "nach Studienbeitritt",
     "after_x_seconds": "Nach %d Sekunden",
@@ -250,7 +251,7 @@
     "impressum": "Impressum",
     "in_minutes": "in Minuten",
     "info_charts_loadingTime": "Abhängig von der Größe der Studien-Datenfiles und der Leistung Ihres Computers, können manche Statistiken längere Ladezeiten benötigen.",
-    "info_init_esmira": "Fast fertig!<br/><br/>Bevor ESMira initialisiert werden kann, muss ein Servername gewählt (kann in den Server-Einstellungen verändert werden) und ein Admin-Account angelegt werden. Mit dem Admin-Account können Studien angelegt und verändert sowie weitere Accounts erstellt werden.<br/><br/>Achtung: Es gibt keine \"Passwort-vergessen\"-Funktion!",
+    "info_no_password_forget": "Achtung: Es gibt keine \"Passwort-vergessen\"-Funktion.",
     "info_no_questionnaires_created": "Es wurden noch keine Fragebögen erstellt.",
     "info_notification_title": "Abhängig davon wodurch die Aktion gestartet wurde, wird der Titel der Nachricht entweder aus dem Titel des entsprechenden Zeitpunktes (unter Zeitpläne) oder aus dem Titel des entsprechenden Events bestehen.",
     "info_publish": "Erhöht die Versionsnummer der Studie. Damit wird teilnehmenden Apps signalisiert, dass ein Update herunter geladen werden soll.",
@@ -488,5 +489,14 @@
     "x_per_weekday": "%s pro Wochentag",
     "x_times_of_day": "%d Tages-Zeitpunkte",
     "xAxisIsNumberRange_label": "Werte auf x-Achse als Zahlenbereich behandeln",
-    "yesterday": "Gestern"
+    "yesterday": "Gestern",
+    "path_to_data_directory": "Pfad zu Daten-Ordner",
+    "info_path_to_data_directory": "Unter diesem Pfad wird ein Ordner \"esmira_data\" erstellt, in welchem sämtliche Daten gespeichert werden. PHP muss auf diesen Ort Schreibzugriff haben. Außerdem muss sichergestellt sein, dass vom Internet nicht auf diesen Ordner zugegriffen werden kann (eine entsprechende htaccess-Datei wird automatisch in dem Ordner platziert). Wenn Sie nicht wissen was Sie hier angeben sollen, belassen Sie die Voreinstellung.",
+    "installation_settings": "Installations-Einstellungen",
+    "info_init_additional_steps": "Zusätzliche Server Einstellungen sind notwendig damit ESMira wie erwartet läuft. Sie finden genauere Informationen <a href=\"https://github.com/KL-Psychological-Methodology/ESMira/wiki/Setting-up-a-server#additional-steps-for-servers-without-htaccess-or-mod_replace-apache\" target=\"_blank\">[im Wiki]</a>:",
+    "enabled": "Aktiviert",
+    "additional_server_settings": "Zusätzliche Server-Einstellungen",
+    "info_dataFolder_already_exists": "Ein Ordner namens \"esmira_data\" existiert bereits unter diesem Pfad. Soll der existierende Ordner für ESMira weiterverwendet werden (Wenn Sie \"Nein\" auswählen, wird der existierende Ordner umbenannt)?",
+    "yes": "Ja",
+    "no": "Nein"
 }

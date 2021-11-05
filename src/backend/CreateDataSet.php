@@ -7,7 +7,40 @@ use backend\Base;
 use backend\Files;
 use stdClass;
 
+const ONE_DAY = 86400; //in seconds: 60*60*24
+
 class CreateDataSet {
+
+	const DATASET_TYPE_JOINED = 'joined';
+	const DATASET_TYPE_QUIT = 'quit';
+	const DATASET_TYPE_QUESTIONNAIRE = 'questionnaire';
+	
+	//TODO: change into Strings:
+	const CONDITION_TYPE_ALL = 0,
+		CONDITION_TYPE_AND = 1,
+		CONDITION_TYPE_OR = 2,
+		
+		CONDITION_OPERATOR_EQUAL = 0,
+		CONDITION_OPERATOR_UNEQUAL = 1,
+		CONDITION_OPERATOR_GREATER = 2,
+		CONDITION_OPERATOR_LESS = 3,
+		
+		STATISTICS_STORAGE_TYPE_TIMED = 0,
+		STATISTICS_STORAGE_TYPE_FREQ_DISTR = 1,
+		
+		STATISTICS_CHARTTYPES_LINE = 0,
+		STATISTICS_CHARTTYPES_LINE_FILLED = 1,
+		STATISTICS_CHARTTYPES_BARS = 2,
+		STATISTICS_CHARTTYPES_PIE = 3,
+		
+		STATISTICS_DATATYPES_DAILY = 0,
+		STATISTICS_DATATYPES_FREQ_DISTR = 1,
+		STATISTICS_DATATYPES_SUM = 2,
+		STATISTICS_DATATYPES_XY = 3;
+	
+	
+	
+	
 	public $output = [];
 	public $new_studyTokens;
 	
@@ -113,6 +146,7 @@ class CreateDataSet {
 		$metadata_index = [];
 		$statisticMetadata_index = [];
 		$current_studyTokens = [];
+		$csv_delimiter = Configs::get('csv_delimiter');
 		
 		foreach($json->dataset as $dataSet) {
 			$responses = $dataSet->responses;
@@ -199,7 +233,7 @@ class CreateDataSet {
 			}
 			
 			//check for too many requests:
-			if($currentToken !== -1 && $newToken !== -1 && $newToken - $currentToken < DATASET_SERVER_TIMEOUT) {
+			if($currentToken !== -1 && $newToken !== -1 && $newToken - $currentToken < Configs::get('dataset_server_timeout')) {
 				$this->error_lineOutput($dataset_id, "Too many requests in succession");
 				continue;
 			}
@@ -245,7 +279,7 @@ class CreateDataSet {
 			//create base output:
 			//*****
 			
-			if($event_type === DATASET_TYPE_QUESTIONNAIRE) {
+			if($event_type === self::DATASET_TYPE_QUESTIONNAIRE) {
 				$dataSet_questionnaireId = isset($dataSet->questionnaireInternalId) ? $dataSet->questionnaireInternalId : -1;
 				$file_questionnaire = Files::get_file_responses($study_id, $dataSet_questionnaireId);
 				
@@ -296,22 +330,22 @@ class CreateDataSet {
 						
 						foreach($current_statistic as $i => $conditional_statistics) {
 							$condition_is_met = true;
-							if($conditional_statistics->conditionType != CONDITION_TYPE_ALL) {
-								$conditionType_isOr = $conditional_statistics->conditionType == CONDITION_TYPE_OR;
-								$conditionType_isAnd = $conditional_statistics->conditionType == CONDITION_TYPE_AND;
+							if($conditional_statistics->conditionType != self::CONDITION_TYPE_ALL) {
+								$conditionType_isOr = $conditional_statistics->conditionType == self::CONDITION_TYPE_OR;
+								$conditionType_isAnd = $conditional_statistics->conditionType == self::CONDITION_TYPE_AND;
 								
 								foreach($conditional_statistics->conditions as $condition) {
 									switch($condition->operator) {
-										case CONDITION_OPERATOR_EQUAL:
+										case self::CONDITION_OPERATOR_EQUAL:
 											$is_true = $responses->{$condition->key} == $condition->value;
 											break;
-										case CONDITION_OPERATOR_UNEQUAL:
+										case self::CONDITION_OPERATOR_UNEQUAL:
 											$is_true = $responses->{$condition->key} != $condition->value;
 											break;
-										case CONDITION_OPERATOR_GREATER:
+										case self::CONDITION_OPERATOR_GREATER:
 											$is_true = $responses->{$condition->key} >= $condition->value;
 											break;
-										case CONDITION_OPERATOR_LESS:
+										case self::CONDITION_OPERATOR_LESS:
 											$is_true = $responses->{$condition->key} <= $condition->value;
 											break;
 										default:
@@ -349,9 +383,9 @@ class CreateDataSet {
 					$this->addTo_writeCache($file_statistics_newData, $statistic_write, $dataset_id);
 				
 				//questionnaire:
-				$this->addTo_writeCache($file_questionnaire, "\n\"".implode('"'.CSV_DELIMITER.'"', $questionnaire_write).'"', $dataset_id);
+				$this->addTo_writeCache($file_questionnaire, "\n\"".implode('"'.$csv_delimiter.'"', $questionnaire_write).'"', $dataset_id);
 			}
-			else if($event_type === DATASET_TYPE_JOINED) {
+			else if($event_type === self::DATASET_TYPE_JOINED) {
 				++$this->join_events;
 			}
 			
@@ -381,7 +415,7 @@ class CreateDataSet {
 			//*****
 			$this->addTo_writeCache(
 				Files::get_file_responses($study_id, Files::FILENAME_EVENTS),
-				"\n\"".implode('"'.CSV_DELIMITER.'"', $events_write).'"',
+				"\n\"".implode('"'.$csv_delimiter.'"', $events_write).'"',
 				$dataset_id
 			);
 		}
@@ -429,7 +463,7 @@ class CreateDataSet {
 			
 			if(!$is_dev) {
 				$start_of_day = floor(time() / ONE_DAY) * ONE_DAY;
-				$oldest_entry_time = $start_of_day - ONE_DAY*NUMBER_OF_SAVED_DAYS_IN_SERVER_STATISTICS;
+				$oldest_entry_time = $start_of_day - ONE_DAY * Configs::get('number_of_saved_days_in_server_statistics');
 				$box = $statistics->days;
 				
 				if(!isset($box->{$start_of_day})) {

@@ -5,9 +5,19 @@ namespace backend;
 use backend\Files;
 use stdClass;
 
+
 class Base {
 	const SERVER_VERSION = 10,
-	ACCEPTED_SERVER_VERSION = 7;
+		ACCEPTED_SERVER_VERSION = 7,
+		MAX_USERINPUT_LENGTH = 2000;
+	
+	
+	static function is_init() {
+		return file_exists(Files::FILE_CONFIG) && self::data_exists();
+	}
+	static function data_exists() {
+		return file_exists(Configs::get('dataFolder_path'));
+	}
 	
 	static function get_milliseconds() {
 		return function_exists('microtime') ? round(microtime(true) * 1000) : time() * 1000;
@@ -48,25 +58,6 @@ class Base {
 		return $lang;
 	}
 	
-	static function get_serverSettings() {
-		if(!defined('SERVER_SETTINGS')) {
-			if(file_exists(Files::FILE_SERVER_SETTINGS)) {
-				require_once Files::FILE_SERVER_SETTINGS;
-				return SERVER_SETTINGS;
-			}
-			else
-				return DEFAULT_SERVER_SETTINGS;
-		}
-		else
-			return SERVER_SETTINGS;
-	}
-	
-	static function get_serverName() {
-		$serverSettings = self::get_serverSettings();
-		$lang = self::get_lang('_');
-		$serverName_array = $serverSettings['serverName'];
-		return isset($serverName_array[$lang]) ? $serverName_array[$lang] : ( isset($serverName_array['_']) ? $serverName_array['_'] : '');
-	}
 	
 	static function get_accessKey() {
 		if(isset($_GET['key']) && self::check_input($_GET['key'])) {
@@ -154,7 +145,7 @@ class Base {
 		];
 	}
 	static function update_serverStatistics($fu, $values = null) {
-		$file_serverStatistics = Files::FILE_SERVER_STATISTICS;
+		$file_serverStatistics = Files::get_file_serverStatistics();
 		if(!file_exists($file_serverStatistics)) {
 			file_put_contents($file_serverStatistics, json_encode(self::get_fresh_serverStatistics()), LOCK_EX);
 			chmod($file_serverStatistics, 0666);
@@ -186,12 +177,12 @@ class Base {
 	}
 	
 	public static function check_input($s) {
-		return empty($s) || (strlen($s) < MAX_USERINPUT_LENGTH && preg_match('/^[a-zA-Z0-9À-ž_\-().\s]+$/', $s));
+		return empty($s) || (strlen($s) < self::MAX_USERINPUT_LENGTH && preg_match('/^[a-zA-Z0-9À-ž_\-().\s]+$/', $s));
 	}
 	
 	public static function strip_input($s) {
-		if(strlen($s) > MAX_USERINPUT_LENGTH)
-			$s = substr($s, 0, MAX_USERINPUT_LENGTH);
+		if(strlen($s) > self::MAX_USERINPUT_LENGTH)
+			$s = substr($s, 0, self::MAX_USERINPUT_LENGTH);
 		//it should be ok to save userinput mostly "as is" to the filesystem as long as its not used otherwise:
 		return str_replace('"', '\'', $s);
 	}

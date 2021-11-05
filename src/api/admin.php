@@ -1,15 +1,68 @@
 <?php
 
+//basic keys which are included in every questionnaire dataset
+const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
+	'userId',
+	'uploaded',
+	'appType',
+	'appVersion',
+	'studyId',
+	'accessKey',
+	'studyVersion',
+	'studyLang',
+	'questionnaireName',
+	'eventType',
+	'timezone',
+	'responseTime',
+	'responseTime_formatted', //will be created by the server
+	'formDuration',
+	'lastInvitation',
+	'lastInvitation_formatted' //will be created by the server
+];
+
+//all event-related keys that are included in the event file:
+const KEYS_EVENT_RESPONSES = [
+	'userId',
+	'uploaded',
+	'appType',
+	'appVersion',
+	'studyId',
+	'accessKey',
+	'studyVersion',
+	'studyLang',
+	'questionnaireName',
+	'eventType',
+	'timezone',
+	'responseTime',
+	'responseTime_formatted', //will be created by the server
+	'newSchedule',
+	'actionScheduledTo',
+	'actionScheduledTo_formatted', //will be created by the server
+	'model',
+	'osVersion',
+	'manufacturer'
+];
+
+const KEYS_WEB_ACCESS = [
+	'responseTime',
+	'page',
+	'referer',
+	'user_agent',
+];
+
+
 ignore_user_abort(true);
 set_time_limit(0);
 
 require_once '../backend/autoload.php';
-require_once '../backend/config/configs.php';
 
 use backend\Base;
+use backend\CreateDataSet;
 use backend\Files;
 use backend\Permission;
 use backend\Output;
+use backend\Configs;
+
 
 function getStudyId() {
 	return rand(1000, 9999);
@@ -55,6 +108,8 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 	$file_responses = Files::get_file_responses($study_id, $identifier);
 	$file_index = Files::get_file_responsesIndex($study_id, $identifier);
 	
+	$csv_delimiter = Configs::get('csv_delimiter');
+	
 	if(file_exists($file_responses) && file_exists($file_index)) {
 		$old_keys = unserialize(file_get_contents($file_index));
 		
@@ -82,8 +137,8 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 			}
 			
 			
-			if(filesize($file_responsesBackup) > MAX_FILESIZE_FOR_CHANGES) { //the file is too big to be changed on the fly. So we just create a new file
-				write_file($file_responses, '"'.implode('"'.CSV_DELIMITER.'"', $new_keys).'"');
+			if(filesize($file_responsesBackup) > Configs::get('max_filesize_for_changes')) { //the file is too big to be changed on the fly. So we just create a new file
+				write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
 				write_file($file_index, serialize($new_keys) .',');
 				Base::freeze_study($study_id, false);
 				return;
@@ -93,7 +148,7 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 			//Preparing new header adding new keys to $old_key and preparing and $addedContent
 			$addedContent = '';
 			foreach($index as $value) {
-				$addedContent .= CSV_DELIMITER .'""';
+				$addedContent .= $csv_delimiter .'""';
 				$old_keys[] = $value;
 			}
 			
@@ -114,12 +169,12 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 			
 			
 			if(feof($handle_backup)) { //there is no data. So we can just use the new headers
-				fputs($handle_newResponses, '"'.implode('"'.CSV_DELIMITER.'"', $new_keys).'"');
+				fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
 				write_file($file_index, serialize($new_keys) .',');
 				unlink($file_responsesBackup); //there is no point in keeping this backup
 			}
 			else {
-				fputs($handle_newResponses, '"'.implode('"'.CSV_DELIMITER.'"', $old_keys).'"');
+				fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $old_keys).'"');
 				
 				while(($line = fgets($handle_backup)) !== false) {
 					fputs($handle_newResponses, "\n".rtrim($line, "\n").$addedContent);
@@ -137,7 +192,7 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 		}
 	}
 	else {
-		write_file($file_responses, '"'.implode('"'.CSV_DELIMITER.'"', $new_keys).'"');
+		write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
 		write_file($file_index, serialize($new_keys) .',');
 	}
 }
@@ -283,15 +338,27 @@ function checkUnique_and_collectKeys($study) {
 	return $keys_questionnaire_array;
 }
 
-function write_serverSettings($serverNames, $langCodes) {
-	$serverSettings = DEFAULT_SERVER_SETTINGS;
-	$serverSettings['serverName'] = $serverNames;
-	$serverSettings['langCodes'] = $langCodes;
+function write_serverConfigs($newValues) {
+	$saveValues = array_merge(Configs::getDefaultAll(), Configs::getAll(), $newValues);
 	
-	return write_file(Files::FILE_SERVER_SETTINGS, '<?php const SERVER_SETTINGS='.var_export($serverSettings, true).';?>');
+	return write_file(Files::FILE_CONFIG, '<?php return '.var_export($saveValues, true) .';');
 }
+function assemble_data_folderPath($data_location) {
+	$last_char = substr($data_location, -1);
+	if($last_char !== '/' && $last_char !== '\\')
+		$data_location .= '/';
+	
+	if(!file_exists($data_location))
+		Output::error('The path you provided does not exist on the server');
+	
+	return $data_location .Files::FILENAME_DATA .'/';
+}
+
+
 function check_userExists($user) {
-	$h = fopen(Files::FILE_LOGINS, 'r');
+	
+	if(!($h = fopen(Files::get_file_logins(), 'r')))
+		return false;
 	while(!feof($h)) {
 		$line = fgets($h);
 		$data = explode(':', $line);
@@ -308,9 +375,10 @@ function check_userExists($user) {
 	return false;
 }
 
-function update_loginsFile($user, $new_user=null, $new_pass=null) {
+function removeAdd_in_loginsFile($user, $new_user=null, $new_pass=null) {
 	$export = '';
-	$h = fopen(Files::FILE_LOGINS, 'r');
+	if(!($h = fopen(Files::get_file_logins(), 'r')))
+		return false;
 	$userExists = false;
 	while(!feof($h)) {
 		$line = fgets($h);
@@ -329,7 +397,7 @@ function update_loginsFile($user, $new_user=null, $new_pass=null) {
 	}
 	fclose($h);
 	if($userExists) {
-		write_file(Files::FILE_LOGINS, $export);
+		write_file(Files::get_file_logins(), $export);
 		return true;
 	}
 	return false;
@@ -361,33 +429,109 @@ $type = $_GET['type'];
 
 //is not logged in
 switch($type) {
+	case 'init_esmira_prep':
+		if(Base::is_init())
+			Output::error('Disabled');
+		
+		Output::success(json_encode([
+			'dir_base' => DIR_BASE,
+			'dataFolder_exists' => file_exists(assemble_data_folderPath(DIR_BASE))
+		]));
+		break;
+	case 'data_folder_exists':
+		$dataFolder_path = assemble_data_folderPath($_POST['data_location']);
+		
+		$output = ['dataFolder_exists' => file_exists($dataFolder_path)];
+		Output::success(json_encode($output));
+		
 	case 'init_esmira':
-		if(file_exists(Files::FOLDER_DATA))
+		if(Base::is_init())
 			Output::error('Disabled');
 		else {
-			create_folder(Files::FOLDER_DATA);
-			
 			$user = $_POST['new_user'];
 			$pass = $_POST['pass'];
-			$serverName = ['_' => $_POST['server_name']];
-			if(!file_put_contents(Files::FILE_LOGINS, $user .':' .Permission::get_hashed_pass($pass) ."\n", FILE_APPEND))
+			$reuseFolder = isset($_POST['reuseFolder']) && $_POST['reuseFolder'];
+			
+			$dataFolder_path = assemble_data_folderPath($_POST['data_location']);
+			
+			//
+			//create configs file
+			//
+			write_serverConfigs(['dataFolder_path' => $dataFolder_path]);
+			Configs::reload();
+			
+			//
+			// check if data folder already exists
+			//
+			if(file_exists($dataFolder_path)) {
+				if($reuseFolder) { //needs to happen after configs file has been written
+					if(check_userExists($user))
+						removeAdd_in_loginsFile($user); //below, we add the user with the correct password again
+				}
+				else {
+					$count = 2;
+					
+					do {
+						$newPath = substr($dataFolder_path, 0, -1) .$count;
+						
+						if(++$count > 100)
+							Output::error('Too many copies of ' .Files::FILE_CONFIG .' exist');
+					} while(file_exists($newPath));
+					
+					rename($dataFolder_path, $newPath);
+					
+					create_folder($dataFolder_path);
+				}
+			}
+			else
+				create_folder($dataFolder_path);
+			
+			//
+			//prepare data folder:
+			//
+			write_file($dataFolder_path .'.htaccess', 'Deny from all');
+			
+			if(!file_exists(Files::get_folder_errorReports()))
+				create_folder(Files::get_folder_errorReports());
+			if(!file_exists(Files::get_folder_legal()))
+				create_folder(Files::get_folder_legal());
+			if(!file_exists(Files::get_folder_tokenRoot()))
+				create_folder(Files::get_folder_tokenRoot());
+			
+			if(!file_exists(Files::get_folder_studies()))
+				create_folder(Files::get_folder_studies());
+			if(!file_exists(Files::get_file_studyIndex()))
+				write_file(Files::get_file_studyIndex(), serialize([]));
+			
+			
+			//
+			//create login:
+			//
+			if(!file_put_contents(Files::get_file_logins(), $user .':' .Permission::get_hashed_pass($pass) ."\n", FILE_APPEND))
 				Output::error('Login data could not be saved');
 			
-			$permissions = [$user => ['admin' => true]];
-			write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+			//
+			//create permissions file:
+			//
+			if(file_exists(Files::get_file_permissions())) {
+				$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
+				if(!$permissions)
+					$permissions = [];
+				
+				if(!isset($permissions[$user]))
+					$permissions[$user] = ['admin' => true];
+				else
+					$permissions[$user]['admin'] = true;
+			}
+			else
+				$permissions = [$user => ['admin' => true]];
 			
-			write_serverSettings($serverName, []);
-			
-			write_file(Files::FOLDER_DATA .'.htaccess', 'Deny from all');
+			write_file(Files::get_file_permissions(), serialize($permissions));
 			
 			
-			create_folder(Files::FOLDER_ERROR_REPORTS);
-			create_folder(Files::FOLDER_LEGAL);
-			create_folder(Files::FOLDER_TOKEN);
-			
-			create_folder(Files::FOLDER_STUDIES);
-			write_file(Files::FILE_STUDY_INDEX, serialize([]));
-			
+			//
+			//login:
+			//
 			Permission::set_loggedIn($user);
 			goto get_permissions;
 		}
@@ -418,7 +562,7 @@ switch($type) {
 		break;
 	case 'get_permissions':
 		get_permissions:
-		if(!file_exists(Files::FOLDER_DATA))
+		if(!Base::is_init())
 			Output::success('{"init_esmira":true}');
 		else if(!Permission::is_loggedIn())
 			Output::success('{"isLoggedIn":false}');
@@ -428,7 +572,7 @@ switch($type) {
 				$needsBackup = [];
 				$lastActivities = [];
 				$count = 0;
-				$h_folder = opendir(Files::FOLDER_STUDIES);
+				$h_folder = opendir(Files::get_folder_studies());
 				$writePermissions = !$is_admin && isset($userPermissions['write']) ? $userPermissions['write'] : [];
 				$msgPermissions = !$is_admin && isset($userPermissions['msg']) ? $userPermissions['write'] : [];
 				while($study_id = readdir($h_folder)) {
@@ -455,7 +599,7 @@ switch($type) {
 						$metadata_path = Files::get_file_studyMetadata($study_id);
 						if(file_exists($metadata_path)) {
 							$metadata = unserialize(file_get_contents($metadata_path));
-							if(isset($metadata['published']) && $metadata['published'] && (!isset($metadata['lastBackup']) || Base::get_milliseconds() - $metadata['lastBackup'] > BACKUP_INTERVAL_DAYS * 24*60*60*1000)) {
+							if(isset($metadata['published']) && $metadata['published'] && (!isset($metadata['lastBackup']) || Base::get_milliseconds() - $metadata['lastBackup'] > Configs::get('backup_interval_days') * 24*60*60*1000)) {
 								array_push($needsBackup, (int) $study_id);
 							}
 						}
@@ -479,7 +623,7 @@ switch($type) {
 				$obj = ['is_admin' => true];
 				$has_errors = false;
 				$msg = [];
-				$h_folder = opendir(Files::FOLDER_ERROR_REPORTS);
+				$h_folder = opendir(Files::get_folder_errorReports());
 				while($file = readdir($h_folder)) {
 					if($file[0] != '_' && $file[0] != '.') {
 						$has_errors = true;
@@ -502,7 +646,7 @@ switch($type) {
 		break;
 }
 
-if(!Permission::is_loggedIn())
+if(!Permission::is_loggedIn() || !Base::is_init())
 	Output::error('No permission');
 
 
@@ -526,7 +670,7 @@ switch($type) {
 		if(strlen($pass) < 12)
 			Output::error('The password needs to have at least 12 characters.');
 		
-		if(update_loginsFile($user, null, Permission::get_hashed_pass($pass)))
+		if(removeAdd_in_loginsFile($user, null, Permission::get_hashed_pass($pass)))
 			Output::success();
 		else
 			Output::error('User does not exist.');
@@ -545,16 +689,16 @@ switch($type) {
 		if(check_userExists($new_user))
 			Output::error("Username '$new_user' already exists");
 		
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if($permissions) {
 			if(isset($permissions[$user])) {
 				$p = $permissions[$new_user] = $permissions[$user];
 				unset($permissions[$user]);
 			}
 			
-			write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+			write_file(Files::get_file_permissions(), serialize($permissions));
 		}
-		update_loginsFile($user, $new_user);
+		removeAdd_in_loginsFile($user, $new_user);
 		
 		$folder_token = Files::get_folder_token($user);
 		if(file_exists($folder_token))
@@ -596,7 +740,8 @@ switch($type) {
 		
 //		header('Content-Length: ' .(($exists1 ? filesize($file_history1) : 0) + ($exists2 ? filesize($file_history2) : 0)));
 		header('Content-Type: text/csv');
-		echo 'date'.CSV_DELIMITER.'login'.CSV_DELIMITER.'ip'.CSV_DELIMITER.'userAgent';
+		$csv_delimiter = Configs::get('csv_delimiter');
+		echo 'date'.$csv_delimiter.'login'.$csv_delimiter.'ip'.$csv_delimiter.'userAgent';
 		if($exists1 && $exists2) {
 			if(filemtime($file_history1) < filemtime($file_history2)) {
 				readfile($file_history1);
@@ -622,7 +767,7 @@ switch($type) {
 		$forQuestionnaire = $_GET['for'] === 'questionnaire';
 		$filtered = $forQuestionnaire ? json_decode(file_get_contents('php://input')) : [];
 		
-		$study_index = file_exists(Files::FILE_STUDY_INDEX) ? unserialize(file_get_contents(Files::FILE_STUDY_INDEX)) : [];
+		$study_index = file_exists(Files::get_file_studyIndex()) ? unserialize(file_get_contents(Files::get_file_studyIndex())) : [];
 		
 		$i = 0;
 		do {
@@ -873,7 +1018,11 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 				}
 			}
 			else {
-				$handle_archive = fopen($file_archive, 'w');
+				if(!($handle_archive = fopen($file_archive, 'w'))) {
+					flock($handle_unread, LOCK_UN);
+					fclose($handle_unread);
+					Output::error("Could not open $file_archive");
+				}
 				$messages_archive = [];
 			}
 			flock($handle_archive, LOCK_EX);
@@ -1025,7 +1174,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 				Output::error('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
 			
 			
-			$study_index = file_exists(Files::FILE_STUDY_INDEX) ? unserialize(file_get_contents(Files::FILE_STUDY_INDEX)) : [];
+			$study_index = file_exists(Files::get_file_studyIndex()) ? unserialize(file_get_contents(Files::get_file_studyIndex())) : [];
 			
 			//*****
 			//check and prepare questionnaires:
@@ -1118,7 +1267,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 						$observed_variables->{$key} = [];
 					}
 					$keyBox = &$observed_variables->{$key};
-					$conditionType = isset($axisData->conditionType) ? $axisData->conditionType : CONDITION_TYPE_ALL;
+					$conditionType = isset($axisData->conditionType) ? $axisData->conditionType : CreateDataSet::CONDITION_TYPE_ALL;
 					$obj = (object)['conditions' => $axisData->conditions, 'conditionType' => $conditionType, 'storageType' => $storageType, 'timeInterval' => $timeInterval];
 					
 					array_push($keyBox, $obj);
@@ -1139,21 +1288,21 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 				
 				
 				foreach($defaultConfig->charts as $chart_i => &$defaultChart) {
-					$dataType = isset($defaultChart->dataType) ? number_format($defaultChart->dataType) : STATISTICS_DATATYPES_DAILY;
+					$dataType = isset($defaultChart->dataType) ? number_format($defaultChart->dataType) : CreateDataSet::STATISTICS_DATATYPES_DAILY;
 					switch($dataType) {
-						case STATISTICS_DATATYPES_SUM:
-						case STATISTICS_DATATYPES_DAILY:
+						case CreateDataSet::STATISTICS_DATATYPES_SUM:
+						case CreateDataSet::STATISTICS_DATATYPES_DAILY:
 							$timeInterval = ONE_DAY;
-							$storageType = STATISTICS_STORAGE_TYPE_TIMED;
+							$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
 							break;
-						case STATISTICS_DATATYPES_XY:
+						case CreateDataSet::STATISTICS_DATATYPES_XY:
 						default:
-							$timeInterval = SMALLEST_TIMED_DISTANCE;
-							$storageType = STATISTICS_STORAGE_TYPE_TIMED;
+							$timeInterval = Configs::get('smallest_timed_distance');
+							$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
 							break;
-						case STATISTICS_DATATYPES_FREQ_DISTR:
+						case CreateDataSet::STATISTICS_DATATYPES_FREQ_DISTR:
 							$timeInterval = 0;
-							$storageType = STATISTICS_STORAGE_TYPE_FREQ_DISTR;
+							$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR;
 							break;
 					}
 					
@@ -1161,7 +1310,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 					foreach($defaultChart->axisContainer as $axis_i => &$defaultAxisContainer) {
 						check_axis($defaultAxisContainer->yAxis, $index, $observedVariables, $storageType, $timeInterval);
 						
-						if($dataType == STATISTICS_DATATYPES_XY)
+						if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY)
 							check_axis($defaultAxisContainer->xAxis, $index, $observedVariables, $storageType, $timeInterval);
 						else
 							$defaultAxisContainer->xAxis->observedVariableIndex = -1;
@@ -1176,7 +1325,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 					if(isset($defaultChart->displayPublicVariable) && $defaultChart->displayPublicVariable && $public_observed_variables) {
 						foreach($defaultChart->publicVariables as $axis) {
 							check_axis($axis->yAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
-							if($dataType == STATISTICS_DATATYPES_XY)
+							if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY)
 								check_axis($axis->xAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
 						}
 					}
@@ -1260,7 +1409,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 						$statistics->total->studies -= 1;
 					});
 				}
-				write_file(Files::FILE_STUDY_INDEX, serialize($study_index));
+				write_file(Files::get_file_studyIndex(), serialize($study_index));
 			}
 			else {
 				$old_study = json_decode(file_get_contents($file_config));
@@ -1370,14 +1519,12 @@ if(!$is_admin)
 
 //is admin:
 switch($type) {
-	case 'get_serverSettings':
-		require_once Files::FILE_SERVER_SETTINGS;
-		
-		$serverSettings = SERVER_SETTINGS;
+	case 'get_serverConfigs':
+		$serverSettings = Configs::getAll();
 		$serverSettings['impressum'] = [];
 		$serverSettings['privacyPolicy'] = [];
 		
-		$langCodes = SERVER_SETTINGS['langCodes'];
+		$langCodes = Configs::get('langCodes');
 		array_push($langCodes, '_');
 		foreach($langCodes as $code) {
 			$file_impressum = Files::get_file_langImpressum($code);
@@ -1390,7 +1537,7 @@ switch($type) {
 		}
 		Output::success(json_encode($serverSettings));
 		break;
-	case 'save_serverSettings':
+	case 'save_serverConfigs':
 		$settingsCollection_json = file_get_contents('php://input');
 		
 		if(!($settingsCollection = json_decode($settingsCollection_json)))
@@ -1399,8 +1546,7 @@ switch($type) {
 		if(!isset($settingsCollection->_))
 			Output::error('No default settings');
 		
-		require_once Files::FILE_SERVER_SETTINGS;
-		$old_langCodes = SERVER_SETTINGS['langCodes'];
+		$old_langCodes = Configs::get('langCodes');
 		
 		$serverNames = [];
 		$langCodes = [];
@@ -1446,7 +1592,10 @@ switch($type) {
 				unlink($file_privacyPolicy);
 		}
 		
-		write_serverSettings($serverNames, $langCodes);
+		write_serverConfigs([
+			'serverName' => $serverNames,
+			'langCodes' => $langCodes,
+		]);
 		
 		Output::success();
 		break;
@@ -1493,7 +1642,7 @@ switch($type) {
 		break;
 	case 'list_errors':
 		$msg = [];
-		$h_folder = opendir(Files::FOLDER_ERROR_REPORTS);
+		$h_folder = opendir(Files::get_folder_errorReports());
 		while($file = readdir($h_folder)) {
 			if($file[0] != '.') {
 //				$msg[] = '"' .explode('.', $file)[0] .'"';
@@ -1527,9 +1676,9 @@ switch($type) {
 			Output::error('Missing data');
 		
 		//remove from study-index
-		$study_index = file_exists(Files::FILE_STUDY_INDEX) ? unserialize(file_get_contents(Files::FILE_STUDY_INDEX)) : [];
+		$study_index = file_exists(Files::get_file_studyIndex()) ? unserialize(file_get_contents(Files::get_file_studyIndex())) : [];
 		remove_study_from_index($study_index, $study_id);
-		write_file(Files::FILE_STUDY_INDEX, serialize($study_index));
+		write_file(Files::get_file_studyIndex(), serialize($study_index));
 		
 		
 		//remove study data
@@ -1544,7 +1693,7 @@ switch($type) {
 		
 		
 		//remove from permissions
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if($permissions) {
 			if(isset($permissions['write'])) {
 				foreach($permissions['write'] as $user => $studies) {
@@ -1562,13 +1711,13 @@ switch($type) {
 					}
 				}
 			}
-			write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+			write_file(Files::get_file_permissions(), serialize($permissions));
 		}
 		
 		Output::success($study_id);
 		break;
 	case 'list_users':
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if($permissions) {
 			$admins = (isset($permissions['admins'])) ? $permissions['admins'] : [];
 			$read_permissions = (isset($permissions['read'])) ? $permissions['read'] : [];
@@ -1584,7 +1733,8 @@ switch($type) {
 			$msg_permissions = [];
 		}
 		$userList = [];
-		$h = fopen(Files::FILE_LOGINS, 'r');
+		if(!($h = fopen(Files::get_file_logins(), 'r')))
+			Output::error("Could not open logins file");
 		
 		while(!feof($h)) {
 			$line = substr(fgets($h), 0, -1);
@@ -1615,7 +1765,7 @@ switch($type) {
 		$pass = Permission::get_hashed_pass($_POST['pass']);
 		
 		
-		if(!file_put_contents(Files::FILE_LOGINS, $user .':' .$pass ."\n", FILE_APPEND))
+		if(!file_put_contents(Files::get_file_logins(), $user .':' .$pass ."\n", FILE_APPEND))
 			Output::error('Login data could not be saved');
 		else
 			Output::success("{\"username\":\"$user\"}");
@@ -1627,17 +1777,17 @@ switch($type) {
 		$user = $_POST['user'];
 		
 		//remove permissions:
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if($permissions) {
 			if(isset($permissions[$user])) {
 				$userPerms = $permissions[$user];
 				unset($permissions[$user]);
 			}
 			
-			write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+			write_file(Files::get_file_permissions(), serialize($permissions));
 		}
 		
-		update_loginsFile($user);
+		removeAdd_in_loginsFile($user);
 		
 		Output::success('"Success"');
 		break;
@@ -1650,7 +1800,7 @@ switch($type) {
 		$user = $_POST['user'];
 		$admin = isset($_POST['admin']);
 		
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if(!$permissions)
 			$permissions = [];
 		
@@ -1660,7 +1810,7 @@ switch($type) {
 			$permissions[$user]['admin'] = $admin;
 		
 		
-		write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+		write_file(Files::get_file_permissions(), serialize($permissions));
 		
 		Output::success();
 		break;
@@ -1671,7 +1821,7 @@ switch($type) {
 		$user = $_POST['user'];
 		$permCode = $_POST['permission'];
 		
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if(!$permissions)
 			$permissions = [];
 		
@@ -1698,7 +1848,7 @@ switch($type) {
 				Output::error('Faulty data');
 		}
 		
-		write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+		write_file(Files::get_file_permissions(), serialize($permissions));
 		Output::success();
 		break;
 	case 'delete_userPermission':
@@ -1709,7 +1859,7 @@ switch($type) {
 		$permCode = $_POST['permission'];
 		
 		
-		$permissions = unserialize(file_get_contents(Files::FILE_PERMISSIONS));
+		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
 		if(!$permissions)
 			Output::error('No permissions to remove');
 		else if(!isset($permissions[$user]))
@@ -1735,7 +1885,7 @@ switch($type) {
 		}
 		
 		
-		write_file(Files::FILE_PERMISSIONS, serialize($permissions));
+		write_file(Files::get_file_permissions(), serialize($permissions));
 		
 		Output::success();
 		break;
