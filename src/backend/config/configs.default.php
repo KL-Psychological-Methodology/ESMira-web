@@ -11,12 +11,12 @@ return [
 	'statistics_max_entries_at_once' => 1500,
 	'smallest_timed_distance' => 675, //11min in seconds, needs to multiply into ONE_DAY (86400). Will be doubled when there are more entries than statistics_timed_storage_max_entries. All values inside this timeframe will be merged. A higher timeframe decreases the number of data that has to be saved into statistics
 	
+	// content in the about page is loaded from our server to make sure it is always up to date:
 	'url_about_esmira_host' => 'esmira.kl.ac.at',
 	'url_about_esmira_json_location' => '/documents/about/langs/%s.json',
 	
-	//CSV-Options:
 	'csv_delimiter' => ';',
 	
-	'serverName' => ['_' => ''],
+	'serverName' => ['_' => ''], //_ is the default languages. All alternative languages need to be added via language-code (langCodes needs to be updates as well)
 	'langCodes' => ['en']
 ];
