@@ -419,9 +419,25 @@ function write_file($file, $s) {
 }
 
 
-function check_error_filename($filename) {
-	return preg_match('/^_?\d+~?[^\/.?~]*$/', $filename);
+function checkLoginPost() {
+	if(!isset($_POST['user']) || !isset($_POST['pass']))
+		return false;
+	$user = $_POST['user'];
+	$pass = $_POST['pass'];
+	
+	$blockTime = 0;
+	if(!Permission::check_login($user, $pass, $blockTime)) {
+		if($blockTime != 0)
+			Output::error("Please wait for $blockTime seconds.");
+		else
+			Output::error('Wrong password');
+		return false;
+	}
+	
+	Permission::set_loggedIn($user);
+	return true;
 }
+
 
 if(!isset($_GET['type']))
 	Output::error('No data');
@@ -541,20 +557,11 @@ switch($type) {
 	case 'login':
 		if(!isset($_POST['user']) || !isset($_POST['pass']))
 			Output::error('Missing data');
-		$user = $_POST['user'];
-		
-		$blockTIme = 0;
-		if(!Permission::check_login($user, $_POST['pass'], $blockTIme)) {
-			if($blockTIme != 0)
-				Output::error("Please wait for $blockTIme seconds.");
-			else
-				Output::error('Wrong password');
+		if(checkLoginPost()) {
+			$user = $_POST['user'];
+			if(isset($_POST['rememberMe']))
+				Permission::create_token($user);
 		}
-		
-		if(isset($_POST['rememberMe']))
-			Permission::create_token($user);
-		
-		Permission::set_loggedIn($user);
 		goto get_permissions;
 	case 'logout':
 		Permission::set_loggedOut();
@@ -646,6 +653,7 @@ switch($type) {
 		break;
 }
 
+checkLoginPost();
 if(!Permission::is_loggedIn() || !Base::is_init())
 	Output::error('No permission');
 
