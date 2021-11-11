@@ -377,10 +377,11 @@ export const OwnMapping = {
 	},
 	unsetDirty: function(obj) {
 		let self = this;
-		this.loopAll(obj, function(currentObj) {
+		let unsetFu = function(currentObj) {
 			self._toOwnObservableValue(currentObj);
 			currentObj.___unsetDirty();
-		});
+		};
+		this.loopAll(obj, unsetFu, unsetFu);
 	},
 	
 	// filterObj: function(obj) {
