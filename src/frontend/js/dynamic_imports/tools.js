@@ -329,9 +329,11 @@ export const AdminTools = {
 		bindEvent(el_saveBtn, "click", function() {
 			if(this._saveFu) {
 				let detector = this._observedDetector;
-				this._saveFu().then(function() {
-					detector.setDirty(false);
-				});
+				let r = this._saveFu();
+				if(r)
+					r.then(function() {
+						detector.setDirty(false);
+					});
 			}
 		}.bind(this));
 		
