@@ -18,5 +18,5 @@ return [
 	'csv_delimiter' => ';',
 	
 	'serverName' => ['_' => ''], //_ is the default languages. All alternative languages need to be added via language-code (langCodes needs to be updates as well)
-	'langCodes' => ['en']
+	'langCodes' => []
 ];
