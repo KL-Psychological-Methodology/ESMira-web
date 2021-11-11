@@ -35,7 +35,7 @@ export function ViewModel(page) {
 				OwnMapping.add_lang(serverSettings, Defaults.serverSettings, langObj, code);
 				serverSettings.langCodes.push(ko.observable(code));
 			}
-			OwnMapping.unsetDirty(serverSettings);
+			// OwnMapping.unsetDirty(serverSettings);
 			
 			let detector = Admin.tools.get_changeDetector(serverSettings);
 			detector.setDirty(false);
@@ -72,13 +72,15 @@ export function ViewModel(page) {
 	this.change = function() {
 		let getValues = function(code) {
 			let s = OwnMapping.toLangJs(self.dataObj, code);
-			s.impressum = encodeURIComponent(s.impressum);
-			s.privacyPolicy = encodeURIComponent(s.privacyPolicy);
-			if(s.serverName.length < 3 || s.serverName.length > 30) {
-				page.loader.info(Lang.get("error_short_serverName"));
+			if(s.impressum)
+				s.impressum = encodeURIComponent(s.impressum);
+			if(s.privacyPolicy)
+				s.privacyPolicy = encodeURIComponent(s.privacyPolicy);
+			
+			if(!s.serverName || s.serverName.length < 3 || s.serverName.length > 30) {
+				page.loader.info(Lang.get("error_short_serverName", "en"));
 				return false;
-			}
-			else if(!check_string(s.serverName)) {
+			} else if(!check_string(s.serverName)) {
 				page.loader.info(Lang.get("error_forbidden_characters"));
 				return false;
 			}

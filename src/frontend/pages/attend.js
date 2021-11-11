@@ -333,8 +333,6 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 	this.input = input;
 	this.currentElement = null;
 	this.defaults = Defaults;
-	console.log(input);
-	console.log(input.defaultValue);
 	let defaultValue = responses_cache.hasOwnProperty(input.name())
 		? responses_cache[input.name()]
 		: ((input.required && input.required()) || !input.defaultValue || !input.defaultValue() || input.defaultValue().length === 0 ? "" : input.defaultValue());

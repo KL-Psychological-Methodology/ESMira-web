@@ -204,7 +204,7 @@
     "error_participant_wrong_format": "The user id needs to contain at least 5 characters and must not contain special characters except for: -_().",
     "error_questionnaire_not_active": "This questionnaire is not active.",
     "error_save_responses_failed": "Could not save data…",
-    "error_short_serverName": "The server name needs to consist of 3 to 30 characters.",
+    "error_short_serverName": "The server name for the language \"%s\" needs to consist of 3 to 30 characters.",
     "error_short_message": "The message needs to consist of at least 2 characters.",
     "error_short_username": "The username needs to consist of at least 3 characters.",
     "error_study_not_compatible": "This study does not seem to be compatible with the server. Please update the server.",

@@ -204,7 +204,7 @@
     "error_participant_wrong_format": "Die User-Id muss aus mindestens 5 Zeichen bestehen and darf keine Sonderzeichen enthalten außer: -_().",
     "error_questionnaire_not_active": "Dieser Fragebogen ist nicht aktiv.",
     "error_save_responses_failed": "Die Daten konnten nicht gespeichert werden…",
-    "error_short_serverName": "Der Servername muss zwischen 3 und 30 Zeichen lang sein.",
+    "error_short_serverName": "Der Servername der Sprache \"%s\" muss zwischen 3 und 30 Zeichen lang sein.",
     "error_short_message": "Die Nachricht muss aus mindestens 2 Zeichen bestehen.",
     "error_short_username": "Der Username muss aus mindestens 3 Zeichen bestehen.",
     "error_study_not_compatible": "Die Studie \"%s\" scheint nicht mit diesem Server kompatibel zu sein. Bitte den Server updaten.",
