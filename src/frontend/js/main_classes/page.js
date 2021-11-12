@@ -131,28 +131,26 @@ export function Page(depth, code) {
 		let viewModel;
 		
 		let promise;
-		if(pageInfo[1]) {
+		if(pageInfo.permissions) {
 			promise = Admin.init(self).then(function(admin) {
-				if(!admin.esmira_isInit) {
-					console.log("init_esmira");
-					return "init_esmira";
-				}
+				if(!admin.esmira_isInit)
+					return PageIndex.init_esmira;
 				else if(!admin.is_loggedIn())
-					return "login";
+					return PageIndex.login;
 				else {
-					let neededPermissions = pageInfo[1];
+					let neededPermissions = pageInfo.permissions;
 					if(admin.tools.is_rootAdmin() || neededPermissions[0] === "*")
-						return pageInfo[0];
+						return pageInfo;
 					else {
 						let tools = admin.tools;
 						let studyId = parseInt(Site.valueIndex.id);
 						for(let i=neededPermissions.length-1; i>=0; --i) {
 							if(tools[neededPermissions[i]].indexOf(studyId) !== -1)
-								return pageInfo[0];
+								return pageInfo;
 						}
 						self.contentEl.innerHTML = "";
 						self.loader.error(Lang.get("error_no_permission"));
-						return "login";
+						return PageIndex.login;
 						// throw Lang.get("error_no_permission");
 					}
 				}
@@ -160,13 +158,15 @@ export function Page(depth, code) {
 			});
 		}
 		else {
-			promise = Promise.resolve(pageInfo[0]);
+			promise = Promise.resolve(pageInfo);
 		}
 		
 		
 		return self.loader.showLoader(Lang.get("state_loading"), promise
-			.then(function(page) {
-				return import("../../pages/"+page+".js");
+			.then(function(pageInfo) {
+				if(pageInfo.hasOwnProperty("alternatives"))
+					self.alternatives = pageInfo.alternatives;
+				return import("../../pages/"+pageInfo.filename+".js");
 			})
 			.then(function({ViewModel}) {
 				viewModel = new ViewModel(self);
