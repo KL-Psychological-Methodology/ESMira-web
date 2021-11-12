@@ -355,6 +355,7 @@ Messages
 }
 .chat_bubble .content {
 	margin: 25px 20px 10px 20px;
+	white-space: pre-wrap;
 }
 
 .chat_bubble.fromServer {

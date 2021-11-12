@@ -128,7 +128,10 @@ class Files {
 				$filename = self::FILENAME_WEB_ACCESS;
 				break;
 			default:
-				$filename = (int) $questionnaire_identifier;
+				if(Base::check_input($questionnaire_identifier))
+					$filename = $questionnaire_identifier;
+				else
+					$filename = 'error';
 				break;
 				
 		}

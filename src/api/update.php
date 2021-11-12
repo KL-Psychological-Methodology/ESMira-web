@@ -77,7 +77,7 @@ foreach($data as $study_id => $line) {
 	
 	
 	$version = $line->version;
-	$forceStudyUpdate = $line->forceStudyUpdate;
+	$forceStudyUpdate = isset($line->forceStudyUpdate) && $line->forceStudyUpdate;
 	$last_message = $line->msgTimestamp;
 	
 	
