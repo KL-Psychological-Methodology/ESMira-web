@@ -78,7 +78,7 @@ export function ViewModel(page) {
 			}
 			this.participant_id(participant_id);
 			
-			if(study.informedConsentForm().length && !get_cookie("informed_consent" + study_id)) {
+			if(!get_cookie("informed_consent" + study_id)) {
 				this.dataObj = null;
 				page.replace("consent");
 				return;

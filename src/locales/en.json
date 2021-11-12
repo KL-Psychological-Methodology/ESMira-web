@@ -498,5 +498,8 @@
     "additional_server_settings": "Additional server settings",
     "info_dataFolder_already_exists": "A folder named \"esmira_data\" already exist at this location. Should the existing folder be reused for ESMira (if you choose \"No\" the existing folder will be renamed)?",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    
+    "cookie_consent": "Cookie-Consent",
+    "cookie_consent_desc": "For each study, ESMira uses <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP_cookie\">cookies</a> to store the following information:<ul><li><b>The provided username</b>: To not having to ask for the username every time.</li><li><b>Acceptance of the informed consent</b>: To not having to accept the informed consent every time.</li><li><b>Status information from specific questionnaire items</b>: Some questionnaires need status informationen from the last visit to be able to present itself differently from last time.</li></ul>"
 }

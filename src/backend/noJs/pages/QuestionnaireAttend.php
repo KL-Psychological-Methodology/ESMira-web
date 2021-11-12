@@ -54,7 +54,7 @@ class QuestionnaireAttend implements Page {
 			Extra::remove_postHeader();
 			return;
 		}
-		else if(isset($this->study->informedConsentForm) && strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$study_id"])) {
+		else if(strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$study_id"])) {
 			if(!isset($_POST['informed_consent']))
 				throw new ForwardingException(new InformedConsent());
 			else

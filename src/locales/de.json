@@ -498,5 +498,8 @@
     "additional_server_settings": "Zusätzliche Server-Einstellungen",
     "info_dataFolder_already_exists": "Ein Ordner namens \"esmira_data\" existiert bereits unter diesem Pfad. Soll der existierende Ordner für ESMira weiterverwendet werden (Wenn Sie \"Nein\" auswählen, wird der existierende Ordner umbenannt)?",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    
+    "cookie_consent": "Cookie-Einverständnis-Erklärung",
+    "cookie_consent_desc": "Folgende Informationen werden per Studie in <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP-Cookie\">Cookies</a> gespeichert:<ul><li><b>Der eingegebene Username</b>: Damit der Username nicht wiederholt eingegeben werden muss.</li><li><b>Das Akzeptieren der Einverständniserklärung</b>: Damit die Einverständniserklärung nicht vor jedem Ausfüllen akzeptiert werden muss.</li><li><b>Statusinformationen von bestimmten Fragebogenitems</b>: Manche Fragebögen benötigen Statusinformationen vom letzten Aufruf um sich jedes Mal unterschiedlich präsentieren zu können.</li></ul>"
 }

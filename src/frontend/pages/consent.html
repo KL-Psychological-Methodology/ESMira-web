@@ -1,4 +1,6 @@
 <p class="wrap" data-bind="text: informedConsentForm"></p>
+<title-row params="title: Lang.get('cookie_consent')"></title-row>
+<p class="wrap" data-bind="html: Lang.get('cookie_consent_desc')"></p>
 <form method="post" action="" class="center">
 	<input type="submit" name="accept_informedConsent" value="I agree" data-bind="click: $root.saveConsent, value: Lang.get('i_agree')"/>
 </form>
