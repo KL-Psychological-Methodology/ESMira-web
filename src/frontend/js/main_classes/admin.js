@@ -15,8 +15,9 @@ export const Admin = {
 	init: function(page) {
 		return PromiseCache.getOrNull("admin") || PromiseCache.save("admin", (Promise.all([
 			Requests.load(FILE_ADMIN+"?type=get_permissions"),
-			import("../dynamic_imports/tools")
-		]).then(function([data, {AdminTools, Studies_tools}]) {
+			import("../dynamic_imports/admin_tools.js"),
+			import("../dynamic_imports/studies_tools.js")
+		]).then(function([data, {AdminTools}, {Studies_tools}]) {
 			AdminTools.init(page);
 			Studies_tools.init(page);
 			self.tools = AdminTools;

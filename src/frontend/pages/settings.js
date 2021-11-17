@@ -10,6 +10,7 @@ import {Defaults} from "../js/variables/defaults";
 import {Studies} from "../js/main_classes/studies";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import {add_lang} from "../js/shared/lang_configs";
+import {DetectChange} from "../js/main_classes/detect_change";
 
 export function ViewModel(page) {
 	let self = this;
@@ -37,7 +38,7 @@ export function ViewModel(page) {
 			}
 			// OwnMapping.unsetDirty(serverSettings);
 			
-			let detector = Admin.tools.get_changeDetector(serverSettings);
+			let detector = new DetectChange(serverSettings);
 			detector.setDirty(false);
 			
 			return [serverSettings, detector];

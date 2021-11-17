@@ -4,6 +4,7 @@ import reload_svg from "../imgs/reload.svg?raw";
 import {Studies} from "../js/main_classes/studies";
 import {get_chart, get_pageType} from "../js/shared/charts";
 import {Admin} from "../js/main_classes/admin";
+import {DetectChange} from "../js/main_classes/detect_change";
 
 export function ViewModel(page) {
 	let isFor_calc = get_pageType() === "calc";
@@ -87,7 +88,7 @@ export function ViewModel(page) {
 		
 		draw_dataGraph();
 		
-		changeDetector = Admin.tools.get_changeDetector(chart, draw_dataGraph);
+		changeDetector = new DetectChange(chart, draw_dataGraph);
 	};
 	
 	this.destroy = function() {
