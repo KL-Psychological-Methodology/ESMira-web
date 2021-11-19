@@ -1,6 +1,6 @@
 <?php
 
-
+const ONE_DAY = 86400; //in seconds: 60*60*24
 
 ignore_user_abort(true);
 set_time_limit(0);
