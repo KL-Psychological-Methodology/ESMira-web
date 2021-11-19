@@ -1,0 +1,17 @@
+<div id="stateInfo_positioner">
+	<div id="titleBox_cell">
+		<div id="titleBox_absolute">
+			<div id="titleBox">
+				<div id="nav_menu" data-bind="style: {width: $root.navMenuWidth() + 'px'}">
+					<div id="nav_content" data-bind="foreach: $root.pages()">
+						<span data-bind="event: {pointerenter: $root.eventPointerenter, pointerleave: $root.eventPointerleave}">
+							<span data-bind="css: {dropdownOpener: $data.hasAlternatives}, click: $root.openAlternativesDropdown"></span>
+							<a data-bind="text: printTitle, attr: {href: $root.get_hash(depth)}, event: {click: $root.eventClick}"></a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="titleBox_shadow"></div>
+	</div>
+</div>

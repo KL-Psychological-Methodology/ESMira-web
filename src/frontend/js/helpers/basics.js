@@ -25,6 +25,14 @@ export function createElement(el_type, css, values, attr) {
 	return el;
 }
 
+export function createFloatingDropdown(referenceEl, className) {
+	let rect = referenceEl.getBoundingClientRect();
+	let dropdownEl = createElement("div", "left:" + (rect.left + rect.width/2) + "px; top:" + (rect.top + rect.height + 3) + "px;", {className: "dropdown"});
+	dropdownEl.classList.add(className);
+	document.body.appendChild(dropdownEl);
+	return dropdownEl;
+}
+
 export function filter_box(search_text, box_el) {
 	let children = box_el.children;
 	for(let i = children.length - 1; i >= 0; --i) {
@@ -39,6 +47,8 @@ export function close_on_clickOutside(el, custom_closeFu) {
 		return
 	el["close-outside"] = true;
 	let closeFu = function() {
+		if(!el)
+			return false;
 		delete el["close-outside"];
 		document.removeEventListener("click", click_outside);
 		
@@ -48,6 +58,7 @@ export function close_on_clickOutside(el, custom_closeFu) {
 			el.parentElement.removeChild(el);
 		
 		el = null;
+		return true;
 	};
 	let click_outside = function(e) {
 		let target = e.target;

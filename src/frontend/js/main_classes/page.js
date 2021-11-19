@@ -7,6 +7,7 @@ import {PageIndex} from "../variables/page_index";
 import {Admin} from "./admin";
 import {Studies} from "./studies";
 import {Loader} from "./loader";
+import {NavigationRow} from "./navigation_row";
 
 export function Page(depth, code) {
 	let self = this;
@@ -16,7 +17,6 @@ export function Page(depth, code) {
 	this.depth = depth;
 	this.index = [];
 	this.viewModel = null;
-	this.el_navi = null;
 	this.loader = null;
 	this.title = ko.observable(Lang.get("state_loading"));
 	this.printTitle = ko.computed(function() {
@@ -24,12 +24,13 @@ export function Page(depth, code) {
 		return typeof s === "function" ? s() : s;
 	});
 	this.nextPageCode = ko.observable("");
+	this.hasAlternatives = ko.observable(false);
 	
 	this.printTitle.subscribe(function() {
 		Site.update_siteName();
 		// if(!self.nextPageCode().length)
 		// 	window.document.title = newValue;
-		Site.update_navi_dimensions();
+		NavigationRow.update_navi_dimensions();
 	});
 	
 	
@@ -49,7 +50,7 @@ export function Page(depth, code) {
 			Site.valueIndex[key] = self.index[key] = value === undefined ? true : value;
 			
 			if(Studies.tools && key === "id")
-				Studies.tools.change_observed(value);
+				Studies.tools.change_observedStudy(value);
 		}
 		return pageName;
 	};
@@ -164,8 +165,6 @@ export function Page(depth, code) {
 		
 		return self.loader.showLoader(Lang.get("state_loading"), promise
 			.then(function(pageInfo) {
-				if(pageInfo.hasOwnProperty("alternatives"))
-					self.alternatives = pageInfo.alternatives;
 				return import("../../pages/"+pageInfo.filename+".js");
 			})
 			.then(function({ViewModel}) {
@@ -258,8 +257,8 @@ export function Page(depth, code) {
 			if(Site.valueIndex.hasOwnProperty(key) && Site.valueIndex[key] === (value === undefined ? true : value)) {
 				delete Site.valueIndex[key];
 				
-				if(Admin.tools && key === "id")
-					Admin.tools.remove_observed(value);
+				if(NavigationRow.admin && key === "id")
+					NavigationRow.admin.remove_observed(value);
 			}
 			
 		}
@@ -268,8 +267,5 @@ export function Page(depth, code) {
 		
 		ko.cleanNode(parentEl);
 		parentEl.parentNode.removeChild(parentEl);
-		
-		Site.remove_navigation(this);
-		Site.pages.splice(depth, 1);
 	};
 }

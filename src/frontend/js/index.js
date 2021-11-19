@@ -23,12 +23,5 @@ export function init(startHash, serverName, serverVersion, server_accessKey, lan
 	fillDefaults();
 	
 	Site.init(serverName, startHash, serverVersion, server_accessKey);
-	// ko.applyBindings(root);
-	//
-	// window.onbeforeunload = function(){
-	//     return root.studies.any_study_changed() ? Lang.confirm_leave_page_unsaved_changes : undefined;
-	// };
-	//
-	//
 	document.body.classList.add("is_init");
 }

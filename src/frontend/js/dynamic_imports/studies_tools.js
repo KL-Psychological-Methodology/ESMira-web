@@ -11,6 +11,7 @@ import {Defaults} from "../variables/defaults";
 import {add_default} from "../helpers/list_functions";
 import "../../css/style_admin.css";
 import {DetectChange} from "../main_classes/detect_change";
+import {NavigationRow} from "../main_classes/navigation_row";
 
 
 function clone(obj) {
@@ -23,8 +24,6 @@ export const Studies_tools = {
 	needsBackup: ko.observableArray([]),
 	lastActivities: ko.observableArray([]),
 	lastChanged: {},
-	_observedSave: null,
-	_observedPublish: null,
 	currentLang: ko.observable("_"),
 	
 	init: function(page) {
@@ -38,7 +37,7 @@ export const Studies_tools = {
 		let study_id = Site.valueIndex.id;
 		
 		if(study_id !== undefined)
-			Studies.init(page).then(this.change_observed.bind(this, (study_id)));
+			Studies.init(page).then(this.change_observedStudy.bind(this, (study_id)));
 	},
 	initStudy: function(study) {
 		let self = this;
@@ -241,8 +240,8 @@ export const Studies_tools = {
 		});
 	},
 	
-	change_observed: function(study_id) {
-		Admin.tools.change_observed(
+	change_observedStudy: function(study_id) {
+		NavigationRow.admin.change_observed(
 			this.changed_state[study_id],
 			this.save_study.bind(this),
 			Studies.list()[study_id].new_changes,

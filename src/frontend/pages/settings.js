@@ -11,6 +11,7 @@ import {Studies} from "../js/main_classes/studies";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import {add_lang} from "../js/shared/lang_configs";
 import {DetectChange} from "../js/main_classes/detect_change";
+import {NavigationRow} from "../js/main_classes/navigation_row";
 
 export function ViewModel(page) {
 	let self = this;
@@ -51,13 +52,13 @@ export function ViewModel(page) {
 	this.preInit = function(index, admin, [serverSettings, detector]) {
 		this.dataObj = serverSettings;
 		this.add_lang = add_lang.bind(this, serverSettings, Defaults.serverSettings);
-		Admin.tools.change_observed(
+		NavigationRow.admin.change_observed(
 			detector,
 			self.change
 		);
 	};
 	this.destroy = function() {
-		Admin.tools.remove_observed();
+		NavigationRow.admin.remove_observed();
 	}
 	this.selectedIndex = ko.observable(0);
 	this.serverName = ko.observable();

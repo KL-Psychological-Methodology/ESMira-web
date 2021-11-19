@@ -3,6 +3,7 @@ import ko from "knockout";
 import {PromiseCache} from "./promise_cache";
 import {Requests} from "./requests";
 import {Studies} from "./studies";
+import {NavigationRow} from "./navigation_row";
 
 export const Admin = {
 	_promiseState: null,
@@ -16,12 +17,11 @@ export const Admin = {
 		return PromiseCache.getOrNull("admin") || PromiseCache.save("admin", (Promise.all([
 			Requests.load(FILE_ADMIN+"?type=get_permissions"),
 			import("../dynamic_imports/admin_tools.js"),
-			import("../dynamic_imports/studies_tools.js")
-		]).then(function([data, {AdminTools}, {Studies_tools}]) {
+			Studies.enableAdmin(page),
+			NavigationRow.enableAdmin()
+		]).then(function([data, {AdminTools}]) {
 			AdminTools.init(page);
-			Studies_tools.init(page);
 			self.tools = AdminTools;
-			Studies.tools = Studies_tools;
 			
 			if(!data["init_esmira"]) {
 				self.esmira_isInit = true;

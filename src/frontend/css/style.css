@@ -433,7 +433,7 @@ Site elements
 	padding-right: 0;
 }
 #lang_chooser > a:after {
-	content: "\25BE"
+	content: "\25BC"
 }
 #lang_chooser .dropdown {
 	right: 0;
@@ -632,7 +632,7 @@ nav_content: to calculate the needed width of all elements while nav_menu is res
 #nav_content {
 	display: inline-block;
 }
-#nav_content span {
+#nav_content > span {
 	display: inline-block;
 	max-width: 200px;
 	text-overflow: ellipsis;
@@ -642,19 +642,33 @@ nav_content: to calculate the needed width of all elements while nav_menu is res
 	margin-top: 0;
 	padding: 0 3px
 }
-#nav_content span:first-child:before {
+#nav_content > span:first-child:before {
 	content: "";
 	margin-left: 2px;
 }
 
-#nav_content span:last-child a {
+#nav_content > span:last-child a {
 	text-decoration: none;
 }
 
-#nav_content span:before {
+#nav_content > span:before {
 	content: "➤";
 	margin-right: 3px;
 	line-height: 1;
+}
+
+#nav_content .dropdownOpener {
+	display: inline-block;
+	width: 15px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 8pt;
+}
+#nav_content .dropdownOpener:before {
+	content: "\25BD";
+}
+#nav_content .dropdownOpener:hover:before {
+	content: "\25BC";
 }
 
 

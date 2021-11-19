@@ -2,7 +2,13 @@ import html from "./data_view.html"
 import {Lang} from "../js/main_classes/lang";
 import {FILE_ADMIN, FILE_RESPONSES} from "../js/variables/urls";
 import reload_svg from '../imgs/reload.svg?raw';
-import {bindEvent, close_on_clickOutside, createElement, filter_box} from "../js/helpers/basics";
+import {
+	bindEvent,
+	close_on_clickOutside,
+	createElement,
+	createFloatingDropdown,
+	filter_box
+} from "../js/helpers/basics";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import {Studies} from "../js/main_classes/studies";
 import {Admin} from "../js/main_classes/admin";
@@ -145,6 +151,9 @@ export function ViewModel(page) {
 			let tr = createElement("tr", "height:"+row_height+"px");
 			tr.appendChild(createElement("th"));
 			
+			let currentDropdownCloseFu = null;
+			let currentIndex = null;
+			
 			for(let i=0, max=header_names.length; i<max; ++i) {
 				let column_value = header_names[i];
 				
@@ -156,11 +165,16 @@ export function ViewModel(page) {
 						parent = target.parentNode,
 						index = target["column-index"];
 					
-					if(parent.lastElementChild && parent.lastElementChild.classList.contains("dropdown")) {
-						let old_index = parent.lastElementChild["column-index"];
-						parent.removeChild(parent.lastElementChild);
-						if(index === old_index)
-							return;
+					
+					
+					if(currentDropdownCloseFu) {
+						if(currentDropdownCloseFu()) {
+							currentDropdownCloseFu = null;
+							if(index === currentIndex)
+								return;
+						}
+						else
+							currentDropdownCloseFu = null;
 					}
 					
 					loader.index_data_async().then(function() {
@@ -170,7 +184,9 @@ export function ViewModel(page) {
 						let visible_columnIndex = loader.get_visible_columnIndex(index);
 						
 						
-						let dropdown_el = createElement("div", false, {className: "dropdown valueList", "column-index":index});
+						let dropdown_el = createFloatingDropdown(parent, "valueList");
+						currentIndex = index;
+						
 						
 						let search_label = createElement("label", false, {innerText: Lang.get("colon_search"), className: "small_text vertical"});
 						let search = createElement("input", false, {type: "text", className: "small"});
@@ -266,8 +282,7 @@ export function ViewModel(page) {
 							toggle.checked = !unchecked_sum;
 						}
 						
-						close_on_clickOutside(dropdown_el);
-						parent.appendChild(dropdown_el);
+						currentDropdownCloseFu = close_on_clickOutside(dropdown_el);
 					});
 				});
 				el.appendChild(span);

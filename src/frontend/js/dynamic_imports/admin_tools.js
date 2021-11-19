@@ -73,21 +73,9 @@ export const AdminTools = {
 	read: ko.observableArray(),
 	has_newErrors: ko.observable(),
 	loginTime: 0,
-	_observedDetector: null,
-	_observedSave: null,
-	_observedPublish: null,
-	_saveFu: null,
-	_publishFu: null,
 	
 	
 	init: function() {
-		let self = this;
-		window.onbeforeunload = function() {
-			return Studies.tools.any_study_changed() || (self._observedDetector && self._observedDetector.isDirty())
-				? Lang.get("confirm_leave_page_unsaved_changes")
-				: undefined;
-		};
-		
 		ko.bindingHandlers.numericValue = {
 			init : function(el, valueAccessor, allBindings, viewModel, bindingContext) {
 				let interceptor = ko.computed({
@@ -292,28 +280,6 @@ export const AdminTools = {
 			},
 			template: lang_options
 		});
-		
-		
-		let el_saveBtn = Site.el_saveBtn;
-		el_saveBtn.innerText = Lang.get("save");
-		bindEvent(el_saveBtn, "click", function() {
-			if(this._saveFu) {
-				let detector = this._observedDetector;
-				let r = this._saveFu();
-				if(r)
-					r.then(function() {
-						detector.setDirty(false);
-					});
-			}
-		}.bind(this));
-		
-		
-		let el_publishBtn = Site.el_publishBtn;
-		el_publishBtn.title = Lang.get("info_publish");
-		bindEvent(el_publishBtn, "click", function() {
-			if(this._publishFu)
-				this._publishFu();
-		}.bind(this));
 	},
 	
 	has_readPermission: function(studyId) {
@@ -398,48 +364,4 @@ export const AdminTools = {
 		return new ListTools(page);
 	},
 	
-	change_observed: function(detector, saveFu, newChanges_obj, publishFu) {
-		this.remove_observed();
-		
-		if(detector) {
-			this._observedDetector = detector
-			const showSave_fu = function(b) {
-				if(b)
-					Site.el_saveBtn.classList.add("visible");
-				else
-					Site.el_saveBtn.classList.remove("visible");
-			};
-			
-			this._observedSave = detector.isDirty.subscribe(showSave_fu);
-			showSave_fu(detector.isDirty());
-		}
-		if(saveFu)
-			this._saveFu = saveFu;
-		
-		if(newChanges_obj) {
-			const showPublish_fu = function(b) {
-				if(b)
-					Site.el_publishBtn.classList.add("visible");
-				else
-					Site.el_publishBtn.classList.remove("visible");
-			};
-			
-			this._observedPublish = newChanges_obj.subscribe(showPublish_fu);
-			showPublish_fu(newChanges_obj());
-		}
-		if(publishFu)
-			this._publishFu = publishFu;
-	},
-	remove_observed: function() {
-		if(this._observedSave) {
-			this._observedSave.dispose();
-			Site.el_saveBtn.classList.remove("visible");
-			this._observedSave = null;
-		}
-		if(this._observedPublish) {
-			this._observedPublish.dispose();
-			Site.el_publishBtn.classList.remove("visible");
-			this._observedPublish = null;
-		}
-	}
 }

@@ -97,6 +97,15 @@ export const Studies = {
 			return studies;
 		});
 	},
+	enableAdmin(page) {
+		let self = this;
+		return PromiseCache.getOrNull("studiesAdmin") || PromiseCache.save("studiesAdmin", (
+			import("../dynamic_imports/studies_tools.js").then(function({Studies_tools}) {
+				self.tools = Studies_tools;
+				Studies_tools.init(page);
+			})));
+	},
+	
 	getUrl: function() {
 		return FILE_STUDIES + (Admin.enable_adminFeatures ? "?is_loggedIn" : "?access_key="+this.accessKey())
 	},

@@ -11,6 +11,7 @@ import langIndex from "../locales.json";
 import {Lang} from "./lang";
 import {TabBar} from "../../widgets/tab_bar";
 import tab_box from "../../widgets/tab_bar.html";
+import {NavigationRow} from "./navigation_row";
 
 const PAGE_MIN_WIDTH = 650;
 
@@ -19,12 +20,8 @@ export const Site = {
 	_loader: null,
 	serverName: "",
 	el_pages: null,
-	el_header: null,
-	el_navi: null,
-	el_saveBtn: null,
-	el_publishBtn: null,
 	el_backBtn: null,
-	pages: [],
+	pages: ko.observableArray([]),
 	valueIndex: {},
 	page_width_percent: 100,
 	override_page_width: false,
@@ -40,12 +37,9 @@ export const Site = {
 		this.startHash = startHash;
 		Studies.accessKey(server_accessKey);
 		
+		NavigationRow.init(document.body, this.pages);
+		
 		this.el_pages = document.getElementById("el_pages");
-		this.el_header = document.getElementById("current_stateInfo_el");
-		this.el_navi = document.getElementById("nav_menu");
-		this.el_naviContent = document.getElementById("nav_content");
-		this.el_saveBtn = document.getElementById("saveBox");
-		this.el_publishBtn = document.getElementById("publishBox");
 		this.el_backBtn = document.getElementById("btn_up");
 		
 		this.init_knockout();
@@ -94,7 +88,6 @@ export const Site = {
 		let el = document.getElementById("lang_chooser");
 		let currentEl = createLine(Lang.code);
 		el.appendChild(currentEl);
-		
 		
 		bindEvent(currentEl, "click", function() {
 			let box = createElement("div", false, {className: "dropdown"});
@@ -185,7 +178,7 @@ export const Site = {
 	},
 	
 	reload_allPages: function() {
-		let pages = this.pages;
+		let pages = this.pages();
 		for(let i=pages.length-1; i>=0; --i) {
 			let page = pages[i];
 			if(!page.isLoading)
@@ -194,9 +187,10 @@ export const Site = {
 	},
 	
 	get_hash: function(depth) {
+		let pages = this.pages();
 		let hash = "#";
-		for(let i=0, max=Math.min(this.pages.length, depth+1); i<max; ++i) {
-			hash += this.pages[i].codeString + "/";
+		for(let i=0, max=Math.min(pages.length, depth+1); i<max; ++i) {
+			hash += pages[i].codeString + "/";
 		}
 		return hash;
 	},
@@ -220,25 +214,20 @@ export const Site = {
 		this.el_pages.style.width = this.page_width_percent+"%";
 		this.position_page();
 	},
-	update_navi_dimensions: function() {
-		window.setTimeout(function() {
-			this.el_navi.style.width = this.el_naviContent.clientWidth+"px";
-		}.bind(this), 50);
-	},
 	
 	go_back: function() {
 		window.location.hash = this.get_hash(this.get_pagesCount()-2);
 		return true;
 	},
 	get_pagesCount: function() {
-		return this.pages.length;
+		return this.pages().length;
 	},
 	get_lastPage: function() {
-		return this.pages[this.pages.length-1];
+		return this.pages()[this.pages().length-1];
 	},
 	
 	position_page: function(depth) {
-		let pagesCount = depth === undefined ?  this.pages.length : depth+1;
+		let pagesCount = depth === undefined ?  this.pages().length : depth+1;
 		//if there are too many elements, we only divide by max number that fits on the screen:
 		let max_num = Math.min(pagesCount, Math.floor(100 / this.page_width_percent));
 		//we move it by -50% because page is already centered:
@@ -254,13 +243,11 @@ export const Site = {
 			this.el_backBtn.style.display = "none";
 		}
 		
-		if(pagesCount > 1) {
-			this.el_header.style.right = ((100 - this.page_width_percent * max_num) / 2) + "%";
-			this.el_header.style.width = this.page_width_percent + "%";
-		}
+		if(pagesCount > 1)
+			NavigationRow.positionNavi(this.page_width_percent, max_num);
 	},
 	update_siteName: function(depth) {
-		window.document.title = this.pages[depth === undefined ? this.pages.length-1 : depth].printTitle();
+		window.document.title = this.pages()[depth === undefined ? this.pages().length-1 : depth].printTitle();
 	},
 	
 	replace: function(code, page) { //TODO: remove (use page.remove instead)
@@ -271,60 +258,22 @@ export const Site = {
 		window.location.hash = "#"+code;
 	},
 	add_page: function(code, depth) {
-		window.location.hash = this.get_hash(depth || this.pages.length-1) + code
+		window.location.hash = this.get_hash(depth || this.pages().length-1) + code
 	},
 	add_pageToIndex: function(code) {
-		let pages = this.pages;
+		let pages = this.pages();
 		let index = pages.length;
 		if(index)
 			pages[index-1].nextPageCode(code);
 		
-		let page = new Page(index, code);
-		this.pages[index] = page
-		this.add_navigation(page);
+		pages[index] = new Page(index, code);
+		this.pages.valueHasMutated();
 	},
 	remove_page: function(depth) {
-		let pages = this.pages;
+		let pages = this.pages();
 		pages[depth].destroy();
-	},
-	
-	add_navigation: function(page) {
-		let el = createElement("span");
-		el.appendChild(createElement("a", false, {href: this.get_hash(page.depth)}, {"data-bind": "text: printTitle"}));
-		bindEvent(el, "click", function(e) {
-			e.preventDefault();
-			self.position_page(page.depth);
-			self.update_siteName(page.depth);
-		});
-		bindEvent(el, "pointerenter", function() {
-			page.parentEl.classList.add("point_out");
-		});
-		bindEvent(el, "pointerleave", function() {
-			page.parentEl.classList.remove("point_out");
-		});
-		page.el_navi = el;
-		this.el_naviContent.appendChild(el);
 		
-		this.update_navi_dimensions();
-		// window.document.title = this.siteName+" - "+page.title();
-		ko.applyBindings(page, el);
-		
-		if(page.depth) {
-			this.el_header.style.opacity = "1";
-			this.el_header.style.transform = "translateY(0px)";
-		}
-	},
-	remove_navigation: function(page) {
-		if(page.el_navi === null)
-			return;
-		ko.cleanNode(page.el_navi);
-		this.el_naviContent.removeChild(page.el_navi);
-		this.update_navi_dimensions();
-		
-		if(page.depth <= 1) {
-			this.el_header.style.opacity = "0";
-			this.el_header.style.transform = "translateY(25px)";
-		}
+		this.pages.splice(depth, 1);
 	},
 	
 	_onhashchange: function() {
@@ -341,7 +290,7 @@ export const Site = {
 		
 		
 		//making sure we only interpret new content:
-		let pages = this.pages;
+		let pages = this.pages();
 		let firstI=0;
 		
 		//find unneeded pages:

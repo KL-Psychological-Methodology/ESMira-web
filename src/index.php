@@ -108,25 +108,6 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 
 <div id="btn_up"></div>
 
-<div id="current_stateInfo_el">
-	<div id="stateInfo_positioner">
-		<div id="titleBox_cell">
-			<div id="titleBox_absolute">
-				<div id="titleBox">
-					<div id="nav_menu">
-						<div id="nav_content"></div>
-					</div>
-				</div>
-			</div>
-			<div id="titleBox_shadow"></div>
-		</div>
-		<div id="saveBox" class="highlight clickable"></div>
-		
-		<div id="publishBox" class="clickable">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 4v2h14V4H5zm0 10h4v6h6v-6h4l-7-7-7 7z"/></svg>
-		</div>
-	</div>
-</div>
 
 <input id="pageBox_width" type="range" min="20" max="100" value="45">
 

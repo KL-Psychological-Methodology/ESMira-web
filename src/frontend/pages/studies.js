@@ -10,6 +10,25 @@ export function ViewModel(page) {
 	let self = this;
 	this.html = html;
 	this.promiseBundle = [Studies.init(page), Admin.wait_ifNeeded(page)];
+	page.getAlternatives = function() {
+		let currentStudy = Studies.get_current();
+		if(currentStudy) {
+			let id = currentStudy.id();
+			return [
+				{title: Lang.get('edit_studies'), url: "#admin/studies,edit/studyEdit,id:" + id},
+				{title: Lang.get('messages'), url: "#admin/studies,msgs/messages,id:" + id},
+				{title: Lang.get('show_data_statistics'), url:  "#admin/studies,data/dataStatistics,id:" + id}
+			];
+		}
+		else {
+			return [
+				{title: Lang.get('edit_studies'), url: "#admin/studies,edit"},
+				{title: Lang.get('messages'), url: "#admin/studies,msgs"},
+				{title: Lang.get('show_data_statistics'), url: "#admin/studies,data"}
+			];
+			
+		}
+	};
 	
 	this.check = function() {return true;};
 	this.target = function(id) {return id;};
@@ -28,6 +47,7 @@ export function ViewModel(page) {
 		// 	// throw new Error(Lang.get("error_wrong_accessKey"));
 		// }
 		if(Admin.is_loggedIn() && Studies.tools.newMessages().count()) {
+			page.hasAlternatives(true);
 			this.has_messages = true;
 			this.tabs.unshift("messages");
 			this.selectedIndex(2);
