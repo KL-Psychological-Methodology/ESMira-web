@@ -17,6 +17,7 @@ export const Studies = {
 	tools: null,
 	
 	init: function(page) {
+		let self = this;
 		return PromiseCache.loadJson(this.getUrl(), function(studies) {
 			studies.sort( function(a, b) {
 				if(a.title > b.title)
@@ -44,7 +45,6 @@ export const Studies = {
 				
 				if(self.tools)
 					self.tools.initStudy(o);
-				// self.changed_state[id] = new DetectChange(self, o);
 				
 				let studyAccessKeys = study.accessKeys;
 				if(study.published) {
@@ -76,9 +76,8 @@ export const Studies = {
 
 				for(let i = list.length - 1; i >= 0; --i) {
 					if(list[i].id() === id) {
-						++i;
-						for(; i < list.length; ++i) {
-							list[i - 1] = list[i];
+						for(let j=i+1; j < list.length; ++j) {
+							list[j - 1] = list[j];
 						}
 						break;
 					}
@@ -163,4 +162,3 @@ export const Studies = {
 		}
 	}
 };
-let self = Studies;

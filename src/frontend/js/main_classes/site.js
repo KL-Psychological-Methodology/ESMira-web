@@ -277,7 +277,6 @@ export const Site = {
 	},
 	
 	_onhashchange: function() {
-		// let hash = window.location.hash.substring(1);
 		let hash = window.location.hash;
 		if(hash.length === 0)
 			hash = this.startHash;
@@ -346,6 +345,4 @@ export const Site = {
 		
 		return page.loader.loadRequest(FILE_SAVE_DATASET, false, "post", JSON.stringify(output));
 	},
-	
 };
-let self = Site;

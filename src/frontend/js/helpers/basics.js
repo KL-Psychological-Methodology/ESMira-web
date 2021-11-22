@@ -27,7 +27,7 @@ export function createElement(el_type, css, values, attr) {
 
 export function createFloatingDropdown(referenceEl, className) {
 	let rect = referenceEl.getBoundingClientRect();
-	let dropdownEl = createElement("div", "left:" + (rect.left + rect.width/2) + "px; top:" + (rect.top + rect.height + 3) + "px;", {className: "dropdown"});
+	let dropdownEl = createElement("div", "left:" + (rect.left + rect.width/2) + "px; top:" + (rect.top + rect.height + 1) + "px;", {className: "dropdown"});
 	dropdownEl.classList.add(className);
 	document.body.appendChild(dropdownEl);
 	return dropdownEl;
