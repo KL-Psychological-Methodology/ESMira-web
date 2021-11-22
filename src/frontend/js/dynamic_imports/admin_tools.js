@@ -32,13 +32,12 @@ function ListTools(page) {
 	
 	this.add_prompted = function(obs, checkFu) {
 		let s = prompt();
+		let msg;
 		while(true) {
 			if(s == null || !s.length)
 				return;
-			else if(!check_string(s))
-				s = prompt(Lang.get("error_forbidden_characters"), s);
-			else if(checkFu && !checkFu(s))
-				return;
+			else if(checkFu && (msg = checkFu(s)))
+				s = prompt(msg, s);
 			else
 				break;
 		}

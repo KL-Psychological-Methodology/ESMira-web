@@ -96,11 +96,9 @@ export function ViewModel(page) {
 	this.add_accessKey = function(study) {
 		listTools.add_prompted(study.accessKeys, function(s) {
 			if(check_accessKeyFormat(s))
-				return true;
-			else {
-				page.loader.info(Lang.get("error_accessKey_wrong_format"));
 				return false;
-			}
+			else
+				return Lang.get("error_accessKey_wrong_format");
 		});
 	}
 	this.remove_accessKey = function(study) {
