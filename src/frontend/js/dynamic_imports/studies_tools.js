@@ -205,7 +205,6 @@ export const Studies_tools = {
 		let study = Studies.get_current();
 		let studyId = study.id();
 		let page = Site.get_lastPage();
-		
 		page.loader.loadRequest(FILE_ADMIN+"?type=mark_study_as_updated", false, "post", "study_id="+studyId).then(function({lastChanged}) {
 			self.lastChanged[studyId] = lastChanged;
 			self.set_studyDetector_enabled(study, false);
@@ -245,7 +244,7 @@ export const Studies_tools = {
 			this.changed_state[study_id],
 			this.save_study.bind(this),
 			Studies.list()[study_id].new_changes,
-			this.mark_study_as_updated
+			this.mark_study_as_updated.bind(this)
 		);
 	}
 }
