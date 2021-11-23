@@ -76,8 +76,6 @@ class Base {
 	}
 	
 	static function save_webAccess($study_id, $pageName) {
-
-//	$referer = isset($_SERVER["HTTP_REFERER"]) ? StringFu::strip_input($_SERVER["HTTP_REFERER"]) : '';
 		$referer = isset($_SERVER["HTTP_REFERER"]) ? self::strip_oneLineInput(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) : '';
 		$user_agent = isset($_SERVER["HTTP_USER_AGENT"]) ? self::strip_oneLineInput($_SERVER["HTTP_USER_AGENT"]) : '';
 		
@@ -92,7 +90,7 @@ class Base {
 			setcookie($name, $value, ['expires' => $expires, 'sameSite' => 'Strict']);
 	}
 	static function delete_cookie($name) {
-		self::create_cookie($name, '0', time() - 3600);
+		self::create_cookie($name, '', 1);
 	}
 	
 	static function freeze_study($study_id, $lock=true) {
