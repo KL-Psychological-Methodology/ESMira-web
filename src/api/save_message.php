@@ -68,7 +68,7 @@ if(fwrite($handle, serialize($messages))) {
 	flock($handle, LOCK_UN);
 	fclose($handle);
 	chmod($file, 0666);
-	Output::success(json_encode($msg));
+	Output::successObj($msg);
 }
 else {
 	flock($handle, LOCK_UN);

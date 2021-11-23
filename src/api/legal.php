@@ -26,4 +26,4 @@ if(file_exists($file_lang_privacyPolicy))
 else if(file_exists($file_default_privacyPolicy))
 	$legal['privacyPolicy'] = file_get_contents($file_default_privacyPolicy);
 
-Output::success(json_encode($legal));
+Output::successObj($legal);

@@ -52,7 +52,7 @@ if(file_exists($file_statistics_newData)) {
 		Base::report("Could not rename \"$file_statistics_newData\" into \"$file_statistics_newDataCopy\" for study id $study_id. Processing new statistics is canceled!");
 		flock($handle, LOCK_UN);
 		fclose($handle);
-		Output::success($statistics_jsonString);
+		Output::successString($statistics_jsonString);
 	}
 	$newDataCollection = file($file_statistics_newDataCopy);
 	$statistics_json = json_decode($statistics_jsonString);
@@ -169,7 +169,7 @@ if(file_exists($file_statistics_newData)) {
 	fclose($handle);
 	
 	
-	Output::success($output);
+	Output::successString($output);
 }
 else
-	Output::success($statistics_jsonString);
+	Output::successString($statistics_jsonString);

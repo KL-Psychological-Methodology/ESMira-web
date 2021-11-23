@@ -151,7 +151,7 @@ foreach($data as $study_id => $line) {
 	}
 	
 	
-	if(count($line) > 0)
+	if(!empty($line))
 		$output->{$study_id} = $line;
 }
-Output::success(json_encode($output));
+Output::successObj($output);

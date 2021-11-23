@@ -90,4 +90,4 @@ else {
 	list_fromIndex($studies_json, '~open');
 }
 
-Output::success('[' .implode($studies_json, ',') .']');
+Output::successString('[' .implode($studies_json, ',') .']');

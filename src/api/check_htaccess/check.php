@@ -9,7 +9,7 @@ use backend\Base;
 if(Base::is_init())
 	Output::error('Disabled');
 else
-	Output::success(json_encode([
+	Output::successObj([
 		'htaccess' => $_SERVER['HTACCESS_ENABLED'],
 		'mod_rewrite' => false
-	]));
+	]);

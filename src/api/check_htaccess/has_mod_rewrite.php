@@ -7,4 +7,4 @@ $output = [
 	'mod_rewrite' => true
 ];
 
-Output::success(json_encode($output));
+Output::successObj($output);

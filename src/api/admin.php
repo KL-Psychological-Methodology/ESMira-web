@@ -122,7 +122,7 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 			unset($index[$value]);
 		}
 		
-		if(count($index) != 0) {
+		if(!empty($index)) {
 			$file_responsesBackup = Files::get_file_responsesBackup($study_id, $identifier);
 			
 			Base::freeze_study($study_id);
@@ -449,16 +449,16 @@ switch($type) {
 		if(Base::is_init())
 			Output::error('Disabled');
 		
-		Output::success(json_encode([
+		Output::successObj([
 			'dir_base' => DIR_BASE,
 			'dataFolder_exists' => file_exists(assemble_data_folderPath(DIR_BASE))
-		]));
+		]);
 		break;
 	case 'data_folder_exists':
 		$dataFolder_path = assemble_data_folderPath($_POST['data_location']);
 		
 		$output = ['dataFolder_exists' => file_exists($dataFolder_path)];
-		Output::success(json_encode($output));
+		Output::successObj($output);
 		
 	case 'init_esmira':
 		if(Base::is_init())
@@ -565,14 +565,14 @@ switch($type) {
 		goto get_permissions;
 	case 'logout':
 		Permission::set_loggedOut();
-		Output::success();
+		Output::successObj();
 		break;
 	case 'get_permissions':
 		get_permissions:
 		if(!Base::is_init())
-			Output::success('{"init_esmira":true}');
+			Output::successObj(['init_esmira' => true]);
 		else if(!Permission::is_loggedIn())
-			Output::success('{"isLoggedIn":false}');
+			Output::successObj(['isLoggedIn' => false]);
 		else {
 			function list_additionalPermissions($is_admin, &$userPermissions) {
 				$new_messages = [];
@@ -648,7 +648,7 @@ switch($type) {
 			$obj['username'] = Permission::get_user();
 			$obj['isLoggedIn'] = true;
 			$obj['loginTime'] = time();
-			Output::success(json_encode($obj));
+			Output::successObj($obj);
 		}
 		break;
 }
@@ -679,7 +679,7 @@ switch($type) {
 			Output::error('The password needs to have at least 12 characters.');
 		
 		if(removeAdd_in_loginsFile($user, null, Permission::get_hashed_pass($pass)))
-			Output::success();
+			Output::successObj();
 		else
 			Output::error('User does not exist.');
 		break;
@@ -718,7 +718,7 @@ switch($type) {
 				Base::create_cookie('user', $_COOKIE['user'] = $new_user, time()+31536000);
 		}
 		
-		Output::success();
+		Output::successObj();
 		break;
 	case 'get_tokenList':
 		get_tokenList:
@@ -736,7 +736,7 @@ switch($type) {
 			closedir($h_folder);
 		}
 		
-		Output::success(json_encode($obj));
+		Output::successObj($obj);
 		break;
 	case 'get_loginHistory':
 		$user = Permission::get_user();
@@ -784,7 +784,7 @@ switch($type) {
 			if(++$i > 1000)
 				Output::error('Could not find an unused id...');
 		} while(file_exists(Files::get_folder_study($id)) || isset($study_index["~$id"]) || isset($filtered[$id]));
-		Output::success($id);
+		Output::successObj($id);
 		break;
 	case 'list_data':
 		if(!$is_admin && !Permission::has_permission($study_id, 'read'))
@@ -797,10 +797,10 @@ switch($type) {
 		$webAccess_file = Files::FILENAME_WEB_ACCESS.'.csv';
 		while($file = readdir($l_folder)) {
 			if($file[0] != '.' && $file != $events_file && $file != $webAccess_file) {
-				$msg[] = '"' .substr($file, 0, -4) .'"';
+				$msg[] = substr($file, 0, -4);
 			}
 		}
-		Output::success('[' .implode(',', $msg) .']');
+		Output::successObj($msg);
 		break;
 	case 'get_data':
 		if(!$is_admin && !Permission::has_permission($study_id, 'read'))
@@ -912,12 +912,12 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			
 			if(count($changeMessages) === 0) {
 				if(unlink($file_pending))
-					Output::success("[]");
+					Output::successObj([]);
 				else
 					Output::error("Could not delete $file_pending");
 			}
 			else if(write_file($file_pending, serialize($changeMessages)))
-				Output::success(json_encode($changeMessages));
+				Output::successObj($changeMessages);
 			else
 				Output::error("Could not save message");
 			break;
@@ -959,7 +959,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 				indexFolder($index, $changeMessages, $msgs_archive_folder);
 			
 			
-			Output::success(json_encode($changeMessages));
+			Output::successObj($changeMessages);
 			break;
 		case 'list_messages':
 			$user = $_GET['user'];
@@ -985,7 +985,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 				];
 			}
 			
-			Output::success(json_encode($changeMessages));
+			Output::successObj($changeMessages);
 			break;
 		case 'messages_setRead':
 			messages_setRead:
@@ -997,7 +997,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			
 			$file_unread = Files::get_file_message_unread($study_id, $user);
 			if(!file_exists($file_unread))
-				Output::success();
+				Output::successObj();
 			
 			$handle_unread = fopen($file_unread, 'r+');
 			if(!$handle_unread)
@@ -1074,7 +1074,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			if($error)
 				Output::error($error);
 			else
-				Output::success();
+				Output::successObj();
 			
 			break;
 		case 'list_usernames':
@@ -1089,7 +1089,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 				}
 				closedir($h_folder);
 			}
-			Output::success(json_encode($usernames));
+			Output::successObj($usernames);
 			break;
 	}
 }
@@ -1141,10 +1141,10 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			$realChanged = filemtime($file_config);
 			if($realChanged > $sentChanged) {
 				$study = file_get_contents($file_config);
-				Output::success("{\"lastChanged\": $realChanged, \"json\": $study}");
+				Output::successObj(['lastChanged' => $realChanged, 'json' => $study]);
 			}
 			else
-				Output::success("{\"lastChanged\": $realChanged}");
+				Output::successObj(['lastChanged' => $realChanged]);
 			
 			break;
 		case 'load_langs':
@@ -1155,12 +1155,12 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 				while($file = readdir($h_folder)) {
 					if($file[0] != '.') {
 						$s = file_get_contents($folder_langs .$file);
-						$langObj[] = '"' .explode('.', $file)[0] ."\": $s";
+						$langObj[explode('.', $file)[0]] =  $s;
 					}
 				}
 				closedir($h_folder);
 			}
-			Output::success('{' .implode(',', $langObj) .'}');
+			Output::successObj($langObj);
 			break;
 		case 'save_study':
 			$studyCollection_json = file_get_contents('php://input');
@@ -1444,7 +1444,6 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 				}
 			}
 
-//			exit(json_encode($studyCollection));
 			$studies_json = [];
 			foreach($studyCollection as $code => $s) {
 				$study_json = json_encode($s);
@@ -1466,7 +1465,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			$metadata = Base::get_newMetadata($study);
 			write_file(Files::get_file_studyMetadata($study_id), serialize($metadata));
 			$sentChanged = time();
-			Output::success("{\"lastChanged\":$sentChanged,\"json\":{" .implode(',', $studies_json) ."}}");
+			Output::successString("{\"lastChanged\":$sentChanged,\"json\":{" .implode(',', $studies_json) ."}}");
 			break;
 		case 'mark_study_as_updated'://this will mark the study as updated for already existing participants
 			$file = Files::get_file_studyConfig($study_id);
@@ -1483,7 +1482,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			write_file(Files::get_file_studyMetadata($study_id), serialize($metadata));
 			
 			$sentChanged = time();
-			Output::success("{\"lastChanged\":$sentChanged}");
+			Output::successObj(['lastChanged' => $sentChanged]);
 			break;
 		case 'backup_study':
 			$study = json_decode(file_get_contents(Files::get_file_studyConfig($study_id)));
@@ -1509,15 +1508,15 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			backup($study_id, Files::FILENAME_WEB_ACCESS);
 			$metadata['lastBackup'] = Base::get_milliseconds();
 			write_file($metadata_path, serialize($metadata));
-			Output::success();
+			Output::successObj();
 			
 			break;
 		case 'is_frozen':
-			Output::success(Base::study_is_locked($study_id) ? 'true' : 'false');
+			Output::successObj(Base::study_is_locked($study_id));
 			break;
 		case 'freeze_study':
 			Base::freeze_study($study_id, isset($_GET['frozen']));
-			Output::success(Base::study_is_locked($study_id) ? 'true' : 'false');
+			Output::successObj(Base::study_is_locked($study_id));
 			break;
 	}
 }
@@ -1543,7 +1542,7 @@ switch($type) {
 			if(file_exists($file_privacyPolicy))
 				$serverSettings['privacyPolicy'][$code] = file_get_contents($file_privacyPolicy);
 		}
-		Output::success(json_encode($serverSettings));
+		Output::successObj($serverSettings);
 		break;
 	case 'save_serverConfigs':
 		$settingsCollection_json = file_get_contents('php://input');
@@ -1605,7 +1604,7 @@ switch($type) {
 			'langCodes' => $langCodes,
 		]);
 		
-		Output::success();
+		Output::successObj();
 		break;
 	case 'delete_error':
 		if(!isset($_POST['timestamp']) || !isset($_POST['seen']) || !isset($_POST['note']))
@@ -1618,7 +1617,7 @@ switch($type) {
 		$filename = Files::get_file_errorReport($timestamp, $note, $seen);
 		
 		if(file_exists($filename) && unlink($filename))
-			Output::success();
+			Output::successObj();
 		else
 			Output::error("Could not remove $filename");
 		
@@ -1644,7 +1643,7 @@ switch($type) {
 		$new_filename = Files::get_file_errorReport($timestamp, $note, $seen);
 		
 		if(rename($filename, $new_filename))
-			Output::success();
+			Output::successObj();
 		else
 			Output::error("Could not change $filename");
 		break;
@@ -1659,7 +1658,7 @@ switch($type) {
 		}
 		closedir($h_folder);
 //		Output::success('['.implode(',', $msg).']');
-		Output::success(json_encode($msg));
+		Output::successObj($msg);
 		break;
 	case 'get_error':
 		if(!isset($_GET['timestamp']) || !isset($_GET['seen']) || !isset($_GET['note']))
@@ -1722,7 +1721,7 @@ switch($type) {
 			write_file(Files::get_file_permissions(), serialize($permissions));
 		}
 		
-		Output::success($study_id);
+		Output::successObj($study_id);
 		break;
 	case 'list_users':
 		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
@@ -1760,7 +1759,7 @@ switch($type) {
 				$userList[] = ['username' => $username];
 			}
 		}
-		Output::success(json_encode($userList));
+		Output::successObj($userList);
 		break;
 	case 'create_user':
 		if(!isset($_POST['new_user']) || !isset($_POST['pass']) || strlen($_POST['pass']) <= 3)
@@ -1776,7 +1775,7 @@ switch($type) {
 		if(!file_put_contents(Files::get_file_logins(), $user .':' .$pass ."\n", FILE_APPEND))
 			Output::error('Login data could not be saved');
 		else
-			Output::success("{\"username\":\"$user\"}");
+			Output::successObj(['username' => $user]);
 		break;
 	case 'delete_user':
 		if(!isset($_POST['user']))
@@ -1797,7 +1796,7 @@ switch($type) {
 		
 		removeAdd_in_loginsFile($user);
 		
-		Output::success('"Success"');
+		Output::successObj();
 		break;
 	case 'toggle_admin':
 		if(!isset($_POST['user']))
@@ -1820,7 +1819,7 @@ switch($type) {
 		
 		write_file(Files::get_file_permissions(), serialize($permissions));
 		
-		Output::success();
+		Output::successObj();
 		break;
 	case 'add_userPermission':
 		if(!isset($_POST['user']) || !isset($_POST['permission']) || $study_id == 0)
@@ -1857,7 +1856,7 @@ switch($type) {
 		}
 		
 		write_file(Files::get_file_permissions(), serialize($permissions));
-		Output::success();
+		Output::successObj();
 		break;
 	case 'delete_userPermission':
 		if(!isset($_POST['user']) || !isset($_POST['permission']) || $study_id == 0)
@@ -1895,7 +1894,7 @@ switch($type) {
 		
 		write_file(Files::get_file_permissions(), serialize($permissions));
 		
-		Output::success();
+		Output::successObj();
 		break;
 	default:
 		Output::error('Unexpected request');

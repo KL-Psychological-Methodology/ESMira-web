@@ -20,10 +20,10 @@ if($_SERVER['REQUEST_METHOD'] !== 'POST')
 
 try {
 	$dataSet = new CreateDataSet($json);
-	Output::success(json_encode([
+	Output::successObj([
 		'states' => $dataSet->output,
 		'tokens' => $dataSet->new_studyTokens
-	]));
+	]);
 }
 catch(Exception $e) {
 	Output::error($e->getMessage());

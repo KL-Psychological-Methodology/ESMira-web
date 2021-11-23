@@ -13,4 +13,4 @@ if(!isset($_POST['study_id']) || !isset($_POST['page_name']))
 $study_id = (int) $_POST['study_id'];
 $page_name = $_POST['page_name'];
 
-Output::success(!!Base::save_webAccess($study_id, $page_name));
+Output::successObj((bool) Base::save_webAccess($study_id, $page_name));

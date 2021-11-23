@@ -13,6 +13,6 @@ if(strlen($post_input) == 0)
 	Output::error('Unexpected data');
 
 if(Base::report($post_input))
-	Output::success(1);
+	Output::successObj();
 else
 	Output::error('Internal server error');
