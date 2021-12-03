@@ -1,15 +1,48 @@
 <dash-row>
-	<dash-el params="title: Lang.get('colon_joined_study'), msg: $root.joined_time()"></dash-el>
-	<dash-el params="title: Lang.get('colon_quit_study'), msg: $root.quit_time()"></dash-el>
+	<search-box class="dashEl participantList" params="titleKey: 'participants_with_count', count: $root.participantCount, list: $root.participantList">
+		<span class="verticalPadding searchTarget small_text" data-bind="click: $root.selectUser,
+				css: {'selected': name === $root.currentParticipant()},
+				text: Lang.get('text_with_questionnaireCount', name, count)
+			"></span>
+	</search-box>
+	<div class="multipleChildren vertical" data-bind="if: $root.showData()">
+		<div class="dashEl">
+			<h2 class="center" data-bind="text: Lang.get('colon_joined_study')"></h2>
+			<div class="horizontalPadding small_text" data-bind="foreach: $root.joined_time()">
+				<div class="verticalPadding" data-bind="text: name"></div>
+			</div>
+		</div>
+		<div class="dashEl mini_spacing_top">
+			<h2 class="center" data-bind="text: Lang.get('colon_quit_study')"></h2>
+			<div class="horizontalPadding small_text" data-bind="foreach: $root.quit_time()">
+				<div class="verticalPadding" data-bind="text: name"></div>
+			</div>
+		</div>
+		
+		<div class="dashEl mini_spacing_top">
+			<h2 class="center" data-bind="text: Lang.get('colon_app_type')"></h2>
+			<div class="horizontalPadding small_text" data-bind="foreach: $root.appType()">
+				<div class="verticalPadding" data-bind="text: name"></div>
+			</div>
+		</div>
+		<div class="dashEl mini_spacing_top">
+			<h2 class="center" data-bind="text: Lang.get('colon_timezone')"></h2>
+			<div class="horizontalPadding small_text" data-bind="foreach: $root.timezones()">
+				<div class="verticalPadding" data-bind="text: name"></div>
+			</div>
+		</div>
+	</div>
+	<div class="dashEl stretched" data-bind="visible: $root.showData()">
+		<h2 class="center" data-bind="text: Lang.get('colon_model')"></h2>
+		<div class="horizontalPadding small_text" data-bind="foreach: $root.model()">
+			<div class="verticalPadding" data-bind="text: name"></div>
+		</div>
+	</div>
 	
-	<dash-el params="title: Lang.get('colon_app_type'), msg: $root.appType()"></dash-el>
-	<dash-el params="title: Lang.get('colon_timezone'), msg: $root.timezones()"></dash-el>
-	
-	<dash-el class="stretched" params="title: Lang.get('colon_model'), msg: $root.model()"></dash-el>
-	
-	<div class="stretched" id="day_questionnaire_el"></div>
+	<div class="dashEl stretched" id="day_questionnaire_el" data-bind="if: $root.showData()"></div>
 </dash-row>
 
 
-<title-row params="title: Lang.get('colon_charts_personal')"></title-row>
-<div id="user_personalStatistics"></div>
+
+<title-row params="title: Lang.get('personal_charts_for_x', $root.currentParticipant())" data-bind="visible: $root.showData()"></title-row>
+<div id="user_personalStatistics" data-bind="visible: $root.showData()"></div>

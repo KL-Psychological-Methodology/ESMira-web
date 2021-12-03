@@ -38,23 +38,6 @@ export const PromiseCache = {
 	loadText: function(url, saveThen, type, data) {
 		return this.load(url, saveThen, true, type, data);
 	},
-	loadCSV: function(url) {
-		return import("../dynamic_imports/csv_loader").then(function(loader) {
-			if(promiseCache.hasOwnProperty(url)) {
-				let entry = promiseCache[url];
-				
-				if(entry.finished) {
-					return entry.promise.then(function(loader) {
-						return loader.reset();
-					});
-				}
-				else
-					return entry.promise;
-			}
-			else
-				return self.save(url, loader.get_fromUrl(url));
-		});
-	},
 	
 	getOrNull: function(url) {
 		if(promiseCache.hasOwnProperty(url))

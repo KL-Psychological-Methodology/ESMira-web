@@ -40,7 +40,6 @@ export const PageIndex = {
 	sumScores:			{filename: "sumscores",			permissions: ["write"]},
 	sumScore:			{filename: "sumscore",			permissions: ["write"]},
 	sumUser:			{filename: "summary_user",		permissions: ["read"]},
-	sumUserList:		{filename: "summary_user_list",	permissions: ["read"]},
 	sumWeb:				{filename: "summary_web",		permissions: ["read"]},
 	sOverview:			{filename: "study_overview",	permissions: false},
 	trigger:			{filename: "trigger",			permissions: ["write"]},

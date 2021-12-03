@@ -58,6 +58,7 @@ import Chart from "chart.js";
 // 	Tooltip
 // } from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import {CsvLoader} from "./csv_loader";
 
 
 
@@ -822,276 +823,62 @@ export function drawCharts(el, charts, statistics, publicStatistics, noHiding) {
 	}
 }
 
-function get_storageType(dataType) {
-	switch(dataType) {
-		case STATISTICS_DATATYPES_DAILY:
-		case STATISTICS_DATATYPES_SUM:
-		default:
-			return [ONE_DAY, STATISTICS_STORAGE_TYPE_TIMED];
-		case STATISTICS_DATATYPES_XY:
-			return [SMALLEST_TIMED_DISTANCE, STATISTICS_STORAGE_TYPE_TIMED];
-		case STATISTICS_DATATYPES_FREQ_DISTR:
-			return [0, STATISTICS_STORAGE_TYPE_FREQ_DISTR];
-	}
-}
-
-export function get_statisticsFromData(loader, axisContainerArray, dataType, existingStatistics) {
-	let statistics = existingStatistics || {},
-		visible_rows = loader.get_visible_rows(),
-		responseTime_index = loader.get_columnNum("responseTime"),
-		uploaded_index = loader.get_columnNum("uploaded");
-	
-	let [timeInterval, storageType] = get_storageType(dataType);
-	
-	// let addTo_timeBasedStorage = function(row, container, value, seconds) {
-	// 	value = parseInt(value);
-	// 	let timeKey = Math.floor(Math.round(parseInt(row[responseTime_index].real_value) / 1000) / seconds) * seconds;
-	//
-	// 	if(isNaN(timeKey)) {
-	// 		timeKey = Math.floor(Math.round(parseInt(row[uploaded_index].real_value)) / seconds) * seconds;
-	// 		if(isNaN(timeKey))
-	// 			return;
-	// 	}
-	//
-	// 	if(isNaN(value))
-	// 		value = 0;
-	//
-	// 	if(!isNaN(timeKey)) {
-	// 		if(!container.hasOwnProperty(timeKey)) {
-	// 			container[timeKey] = {sum: value, count: 1};
-	// 		}
-	// 		else {
-	// 			container[timeKey].sum += value;
-	// 			++container[timeKey].count;
-	// 		}
-	// 	}
-	// };
-	
-	let create_dataFromAxis = function(axis) {
-		let variable_name = axis.variableName();
-		if(variable_name.length === 0)
-			return;
-		
-		let column_num = loader.get_columnNum(variable_name),
-			conditions = axis.conditions(),
-			conditionType = axis.conditionType(),
-			conditionType_isAll = conditionType === CONDITION_TYPE_ALL,
-			conditionType_isAnd = conditionType === CONDITION_TYPE_AND,
-			conditionType_isOr = conditionType === CONDITION_TYPE_OR;
-		
-		let a;
-		if(!statistics.hasOwnProperty(variable_name))
-			a = statistics[variable_name] = [];
-		else
-			a = statistics[variable_name];
-		
-		
-		let entry;
-		let index = axis.observedVariableIndex();
-		if(a[index])
-			entry = a[index];
-		else {
-			entry = a[index] = {
-				storageType: storageType,
-				timeInterval: timeInterval,
-				data: {}
-			};
-		}
-		// axis.observedVariableIndex(a.length);
-		// a.push(entry);
-		
-		
-		let entry_data = entry.data;
-		
-		for(let i=visible_rows.length-1; i>=0; --i) {
-			let row = visible_rows[i][0];
-			let column = row[column_num];
-			
-			if(!column) //because of a bug from the past, this can happen in old datasets
-				continue;
-			let value = column.special ? column.real_value : column.value;
-			
-			
-			let condition_is_met = !conditionType_isOr;
-			
-			if(!conditionType_isAll) {
-				for(let i_cond = conditions.length - 1; i_cond >= 0; --i_cond) {
-					let condition = conditions[i_cond];
-					let filter_column = row[loader.get_columnNum(condition.key())];
-					if(filter_column === undefined) //can happen if there was an error in dataset
-						continue;
-					let filter_value = filter_column.special ? filter_column.real_value : filter_column.value;
-					let is_true;
-					switch(condition.operator()) {
-						case CONDITION_OPERATOR_EQUAL:
-							is_true = filter_value === condition.value();
-							break;
-						case CONDITION_OPERATOR_UNEQUAL:
-							is_true = filter_value !== condition.value();
-							break;
-						case CONDITION_OPERATOR_GREATER:
-							is_true = filter_value >= condition.value();
-							break;
-						case CONDITION_OPERATOR_LESS:
-							is_true = filter_value <= condition.value();
-							break;
-						default:
-							is_true = true;
-					}
-					if(is_true) {
-						if(conditionType_isOr) {
-							condition_is_met = true;
-							break;
-						}
-					}
-					else if(conditionType_isAnd) {
-						condition_is_met = false;
-						break;
-					}
-				}
-			}
-			
-			if(!condition_is_met)
-				continue;
-			
-			switch(storageType) {
-				case STATISTICS_STORAGE_TYPE_TIMED:
-					value = parseInt(value);
-					let day = row[responseTime_index] === undefined ?
-						null : //can happen if there is an error in dataset
-						Math.floor(Math.round(parseInt(row[responseTime_index].real_value) / 1000) / timeInterval) * timeInterval;
-					
-					if(isNaN(day)) { //fallback
-						day = row[responseTime_index] === undefined ?
-							null : //can happen if there is an error in dataset
-							Math.floor(Math.round(parseInt(row[uploaded_index].real_value)) / timeInterval) * timeInterval;
-						if(isNaN(day))
-							continue;
-					}
-					if(isNaN(value))
-						value = 0;
-					
-					if(!isNaN(day)) {
-						if(!entry_data.hasOwnProperty(day)) {
-							entry_data[day] = {sum: value, count: 1};
-						}
-						else {
-							entry_data[day].sum += value;
-							++entry_data[day].count;
-						}
-					}
-					break;
-				case STATISTICS_STORAGE_TYPE_FREQ_DISTR:
-					
-					if(entry_data.hasOwnProperty(value))
-						++entry_data[value];
-					else
-						entry_data[value] = 1;
-					break;
-			}
-		}
-	};
-	
-	for(let container_i = axisContainerArray.length - 1; container_i >= 0; --container_i) {
-		let axisContainer = axisContainerArray[container_i];
-		
-		create_dataFromAxis(axisContainer.yAxis);
-		create_dataFromAxis(axisContainer.xAxis);
-		// if(!axisContainer.label().length)
-		// 	axisContainer.label(yAxis.variableName());
-	}
-	
-	
-	for(let key in statistics) {
-		if(!statistics.hasOwnProperty(key))
-			continue;
-		let a = statistics[key];
-		for(let i=a.length-1; i>=0; --i) {
-			let o = a[i];
-			if(o)
-				o["entryCount"] = Object.keys(o.data).length;
-		}
-	}
-	return statistics;
-}
-
-export function listVariable(loader, variableName, contextList) {
-	let num = loader.get_columnNum(variableName);
-	if(num === -1)
-		return -1;
-	let visibleIndex = loader.get_visible_columnIndex(num);
-	let valueList = loader.get_column_valueList(num, function(a, b) {
-		let l1 = visibleIndex.hasOwnProperty(a) ? visibleIndex[a].length : 0;
-		let l2 = visibleIndex.hasOwnProperty(b) ? visibleIndex[b].length : 0;
-		return l2 - l1;
-	});
-	for(let i=0, max=valueList.length; i<max; ++i) {
-		let key = valueList[i];
-		let l = visibleIndex.hasOwnProperty(key) ? visibleIndex[key].length : 0;
-		contextList.push({name: key, count: l});
-	}
-	return valueList.length;
-}
 export function setup_chart(loader, elId, chart, onClick_fu) {
 	let el = document.getElementById(elId);
 	while(el.hasChildNodes()) {
 		el.removeChild(el.firstChild);
 	}
 	
-	new ChartBox(
-		el,
-		get_statisticsFromData(
-			loader,
-			chart.axisContainer(),
-			chart.dataType()
-		),
-		false,
-		chart,
-		onClick_fu
-	);
+	return loader.get_statistics(chart.axisContainer(), chart.dataType())
+		.then(function(statistics) {
+			new ChartBox(
+				el,
+				statistics,
+				false,
+				chart,
+				onClick_fu
+			);
+		});
 }
 export function create_perDayChartCode(loader, title, columnKey) {
 	let axis = [];
 	
-	let num = loader.get_columnNum(columnKey);
-	let index = loader.get_visible_columnIndex(num);
-	
-	let indexKeys = Object.keys(index);
-	indexKeys.sort();
-	
-	for(let i=indexKeys.length-1; i>=0; --i) {
-		let key = indexKeys[i];
-		axis.push({
-			xAxis: {
-				conditions: []
-			},
-			yAxis: {
-				conditions: [
-					{
-						key: columnKey,
-						value: key,
-						operator: CONDITION_OPERATOR_EQUAL
-					}
-				],
-				variableName: "responseTime",
-				conditionType: CONDITION_TYPE_AND,
-				observedVariableIndex: i
-			},
-			label: Lang.get("text_with_count", key, index[key].length),
-			color: colors[i%colors.length]
-		});
-	}
-	return OwnMapping.fromJS({
-		title: title,
-		publicVariables: [],
-		axisContainer: axis,
-		valueType: STATISTICS_VALUETYPES_COUNT,
-		dataType: STATISTICS_DATATYPES_DAILY,
-		chartType: STATISTICS_CHARTTYPES_BARS
-	}, Defaults.charts);
+	return loader.get_valueList(columnKey).then(function(valueList) {
+		for(let i=valueList.length-1; i>=0; --i) {
+			let entry = valueList[i];
+			let key = entry.name;
+			axis.push({
+				xAxis: {
+					conditions: []
+				},
+				yAxis: {
+					conditions: [
+						{
+							key: columnKey,
+							value: key,
+							operator: CONDITION_OPERATOR_EQUAL
+						}
+					],
+					variableName: "responseTime",
+					conditionType: CONDITION_TYPE_AND,
+					observedVariableIndex: i
+				},
+				label: Lang.get("text_with_count", key, entry.count),
+				color: colors[i%colors.length]
+			});
+		}
+		return OwnMapping.fromJS({
+			title: title,
+			publicVariables: [],
+			axisContainer: axis,
+			valueType: STATISTICS_VALUETYPES_COUNT,
+			dataType: STATISTICS_DATATYPES_DAILY,
+			chartType: STATISTICS_CHARTTYPES_BARS
+		}, Defaults.charts);
+	});
 }
 
-export function load_statisticsFromFiles(study, charts, username) {
+export function load_statisticsFromFiles(page, study, charts, username) {
 	let questionnaires = study.questionnaires(),
 		urlStart = FILE_RESPONSES.replace('%1', study.id()),
 		variableGroupIndex = {};
@@ -1132,12 +919,12 @@ export function load_statisticsFromFiles(study, charts, username) {
 		for(let i = charts.length - 1; i >= 0; --i) {
 			let chart = charts[i];
 			
-			statistics = get_statisticsFromData(
-				loader,
+			loader.get_statistics(
 				chart.axisContainer(),
-				chart.dataType(),
-				statistics
-			);
+				chart.dataType()
+			).then(function(newStatistics) {
+				statistics = Object.assign(statistics, newStatistics);
+			});
 			if(chart.displayPublicVariable())
 				needsPublicStatistics = true;
 		}
@@ -1153,22 +940,17 @@ export function load_statisticsFromFiles(study, charts, username) {
 		
 		let url = urlStart.replace('%2', questionnaires[questionnaireI].internalId());
 		
+		let loader = new CsvLoader(url, page);
 		promise = promise.then(function() {
-			return PromiseCache.loadCSV(url);
-		}).then(function(loader) {
-			return loader.index_data_async(false);
-		}).then(function(loader) {
-			if(username) {
-				let userNum = loader.get_columnNum("userId");
-				loader.set_columnVisibility(userNum, false);
-				loader.filter_column(true, userNum, username);
+			return loader.waitUntilReady().then(function() {
+				if(username) {
+					loader.filter_column(false, "userId");
+					loader.filter(true, "userId", username);
+				}
 				
-				return loader.index_data_async(false);
-			}
-			else
-				return Promise.resolve(loader);
-		}).then(function(loader) {
-			get_statistics(loader);
+				get_statistics(loader);
+				return loader.waitUntilReady();
+			});
 		});
 	}
 	
@@ -1185,5 +967,4 @@ export function load_statisticsFromFiles(study, charts, username) {
 				return [statistics, false];
 			});
 	});
-	
 }

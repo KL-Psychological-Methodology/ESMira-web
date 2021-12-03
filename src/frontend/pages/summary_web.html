@@ -4,37 +4,19 @@
 	<div id="months_el"></div>
 	<div id="total_el"></div>
 	
-	<div class="stretched">
-		<h2 data-bind="text: Lang.get('referer_with_count', $root.refererCount())"></h2>
-		<div class="scrollBox">
-			<label>
-				<small data-bind="text: Lang.get('search')"></small>
-				<input type="text" data-bind="event: {keyup: function() {filter_box($element.value, document.getElementById('refererList'));}}"/>
-			</label>
-			<div id="refererList" data-bind="foreach: $root.refererList">
-				<div class="verticalPadding small_text nowrap">
-					<span class="bold" data-bind="text: count"></span>
-					:
-					<a class="searchTarget" target="_blank" data-bind="text: name, attr: {href: name}"></a>
-				</div>
-			</div>
-		</div>
-	</div>
 	
-	<div class="stretched">
-		<h2 data-bind="text: Lang.get('userAgent_with_count', $root.user_agentCount())"></h2>
-		<div class="scrollBox">
-			<label>
-				<small data-bind="text: Lang.get('search')"></small>
-				<input type="text" data-bind="event: {keyup: function() {filter_box($element.value, document.getElementById('user_agentList'));}}"/>
-			</label>
-			<div id="user_agentList" data-bind="foreach: $root.user_agentList">
-				<div class="verticalPadding small_text nowrap">
-					<span class="bold" data-bind="text: count"></span>
-					:
-					<span class="searchTarget" data-bind="text: name"></span>
-				</div>
-			</div>
+	<search-box class="dashEl stretched" params="titleKey: 'referer_with_count', count: $root.refererCount, list: $root.refererList">
+		<div class="verticalPadding small_text nowrap">
+			<span class="bold" data-bind="text: count"></span>
+			:
+			<a class="searchTarget" target="_blank" data-bind="text: name, attr: {href: name}"></a>
 		</div>
-	</div>
+	</search-box>
+	<search-box class="dashEl stretched" params="titleKey: 'userAgent_with_count', count: $root.user_agentCount, list: $root.user_agentList">
+		<div class="verticalPadding small_text nowrap">
+			<span class="bold" data-bind="text: count"></span>
+			:
+			<span class="searchTarget" data-bind="text: name"></span>
+		</div>
+	</search-box>
 </dash-row>

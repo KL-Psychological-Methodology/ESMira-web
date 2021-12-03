@@ -13,9 +13,9 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM,
 	STATISTICS_VALUETYPES_COUNT
 } from "../js/variables/statistics";
-import {PromiseCache} from "../js/main_classes/promise_cache";
-import {filter_box} from "../js/helpers/basics";
 import {Studies} from "../js/main_classes/studies";
+import {CsvLoader} from "../js/dynamic_imports/csv_loader";
+import {colors, setup_chart} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
 	let self = this;
@@ -27,138 +27,108 @@ export function ViewModel(page) {
 	this.modelsList = ko.observableArray();
 	this.modelCount = ko.observable(0);
 	
-	this.filter_box = filter_box;
-	this.reload = null;
 	
-	this.promiseBundle = [
-		Studies.init(page),
-		import("../js/dynamic_imports/statistic_tools")
-	];
-	this.preInit = function({id}, studies, {colors, setup_chart, listVariable}) {
-		this.reload = function() {
-			let study = studies[id];
-			let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
-			let create_dayChartCode = function(title, dataType, variableName, days) {
-				let oneDay_ms = ONE_DAY * 1000;
-				let day = Math.ceil(Date.now() / oneDay_ms) * oneDay_ms + (new Date).getTimezoneOffset();
-				
-				let axis = [];
-				for(let i = 0; i < days; ++i) {
-					axis.push({
-						xAxis: {
-							conditions: []
-						},
-						yAxis: {
-							conditions: [
-								{
-									key: "responseTime",
-									value: day.toString(),
-									operator: CONDITION_OPERATOR_LESS
-								},
-								{
-									key: "responseTime",
-									value: (day -= oneDay_ms).toString(),
-									operator: CONDITION_OPERATOR_GREATER
-								}
-							],
-							variableName: variableName,
-							observedVariableIndex: i,
-							conditionType: CONDITION_TYPE_AND
-						},
-						label: !i ? Lang.get("today") : (i === 1 ? Lang.get("yesterday") : Lang.get("x_days_ago", i)),
-						color: colors[i % colors.length]
-					});
-				}
-				return OwnMapping.fromJS({
-					title: title,
-					publicVariables: [],
-					axisContainer: axis,
-					valueType: STATISTICS_VALUETYPES_COUNT,
-					dataType: dataType,
-					chartType: STATISTICS_CHARTTYPES_BARS
-				}, Defaults.charts);
-			};
-			let create_sumChartCode = function(title, variableName, chartType) {
-				return OwnMapping.fromJS({
-					title: title,
-					publicVariables: [],
-					axisContainer: [{
-						xAxis: {
-							conditions: []
-						},
-						yAxis: {
-							conditions: [],
-							variableName: variableName,
-							observedVariableIndex: 0
-						},
-						label: variableName
-					}],
-					valueType: STATISTICS_VALUETYPES_COUNT,
-					dataType: STATISTICS_DATATYPES_FREQ_DISTR,
-					chartType: chartType
-				}, Defaults.charts);
-			};
+	let url;
+	this.reload = function() {
+		let create_dayChartCode = function(title, dataType, variableName, days) {
+			let oneDay_ms = ONE_DAY * 1000;
+			let day = Math.ceil(Date.now() / oneDay_ms) * oneDay_ms + (new Date).getTimezoneOffset();
 			
-			
-			let eventIndex, eventTypeNum;
-			let setup_filteredChart = function(loader, chartName, filterBy, elId, dataType, days) {
-				loader.filter_column(true, eventTypeNum, filterBy);
-				return loader.index_data_async(false).then(function(loader) {
-					let l = eventIndex.hasOwnProperty(filterBy) ? eventIndex[filterBy][0].length : 0;
-					let chart = create_dayChartCode(chartName.replace("%", l), dataType, "userId", days);
-					setup_chart(loader, elId, chart);
-					loader.filter_column(false, eventTypeNum, filterBy);
-					return loader;
+			let axis = [];
+			for(let i = 0; i < days; ++i) {
+				axis.push({
+					xAxis: {
+						conditions: []
+					},
+					yAxis: {
+						conditions: [
+							{
+								key: "responseTime",
+								value: day.toString(),
+								operator: CONDITION_OPERATOR_LESS
+							},
+							{
+								key: "responseTime",
+								value: (day -= oneDay_ms).toString(),
+								operator: CONDITION_OPERATOR_GREATER
+							}
+						],
+						variableName: variableName,
+						observedVariableIndex: i,
+						conditionType: CONDITION_TYPE_AND
+					},
+					label: !i ? Lang.get("today") : (i === 1 ? Lang.get("yesterday") : Lang.get("x_days_ago", i)),
+					color: colors[i % colors.length]
 				});
 			}
-			page.loader.showLoader(Lang.get("state_loading"), PromiseCache.loadCSV(url).then(function(loader) {
-				return loader.index_data_async(false);
-			}).then(function(loader) {
-				eventIndex = loader.get_columnIndex("eventType");
-				eventTypeNum = loader.get_columnNum("eventType");
-				
-				
-				loader.set_columnVisibility(eventTypeNum, false);
-				loader.filter_column(true, eventTypeNum, "questionnaire");
-				
-				return loader.index_data_async(false);
-			}).then(function(loader) { //filtered by questionnaire
-				
-				//appType
+			return OwnMapping.fromJS({
+				title: title,
+				publicVariables: [],
+				axisContainer: axis,
+				valueType: STATISTICS_VALUETYPES_COUNT,
+				dataType: dataType,
+				chartType: STATISTICS_CHARTTYPES_BARS
+			}, Defaults.charts);
+		};
+		let create_sumChartCode = function(title, variableName, chartType) {
+			return OwnMapping.fromJS({
+				title: title,
+				publicVariables: [],
+				axisContainer: [{
+					xAxis: {
+						conditions: []
+					},
+					yAxis: {
+						conditions: [],
+						variableName: variableName,
+						observedVariableIndex: 0
+					},
+					label: variableName
+				}],
+				valueType: STATISTICS_VALUETYPES_COUNT,
+				dataType: STATISTICS_DATATYPES_FREQ_DISTR,
+				chartType: chartType
+			}, Defaults.charts);
+		};
+		
+		let loader = new CsvLoader(url, page);
+		
+		let count;
+		loader.waitUntilReady()
+			.then(function() {
+				return loader.get_valueCount("eventType", ["questionnaire", "joined", "quit"])
+					.then(function(countLoaded) {
+						count = countLoaded;
+					});
+			})
+			.then(function() {
+				loader.filter_column(false, "eventType");
+				loader.filter(true, "eventType", "questionnaire");
 				setup_chart(
 					loader,
 					"app_type_el",
 					create_sumChartCode(Lang.get("app_type_per_questionnaire"), "appType", STATISTICS_CHARTTYPES_PIE)
 				);
-				
-				//models-list:
-				self.modelCount(listVariable(loader, "model", self.modelsList));
-				
-				//manufacturer
 				setup_chart(
 					loader,
 					"manufacturer_el",
 					create_sumChartCode(Lang.get("questionnaire_per_manufacturer"), "manufacturer", STATISTICS_CHARTTYPES_BARS)
 				);
 				
+				loader.get_valueList("model", true)
+					.then(function(valueList) {
+						self.modelsList(valueList);
+						self.modelCount(valueList.length);
+					});
 				
 				let oneDay_ms = ONE_DAY * 1000;
 				let day = Date.now() - (oneDay_ms * self.days);
-				loader.filter_rows(false, "responseTime", function(value) {
-					return value < day;
-				});
-				
-				return loader.index_data_async(false);
-			}).then(function(loader) { //filtered by questionnaire & days
-				//questionnaires
-				let l = eventIndex.hasOwnProperty("questionnaire") ? eventIndex["questionnaire"][0].length : 0;
+				loader.filter_rowsByResponseTime(false, day);
 				setup_chart(
 					loader,
 					"questionnaire_el",
-					create_dayChartCode(Lang.get("questionnaires_with_total", l), STATISTICS_DATATYPES_FREQ_DISTR, "questionnaireName", self.days)
+					create_dayChartCode(Lang.get("questionnaires_with_total", count.questionnaire), STATISTICS_DATATYPES_FREQ_DISTR, "questionnaireName", self.days)
 				);
-				
-				//questionnaires per user
 				setup_chart(
 					loader,
 					"user_el",
@@ -168,17 +138,27 @@ export function ViewModel(page) {
 					}
 				);
 				
-				loader.filter_column(false, eventTypeNum, "questionnaire");
 				
-				return loader.index_data_async(false);
-			}).then(function(loader) { //filtered by days with no events
-				return setup_filteredChart(loader, Lang.get("joined_study_with_total"), "joined", "joined_el", STATISTICS_DATATYPES_SUM, self.days);
-			}).then(function(loader) { //filtered by days with no events
-				return setup_filteredChart(loader, Lang.get("quit_study_with_total"), "quit", "quit_el", STATISTICS_DATATYPES_SUM, self.days);
-			}).then(function(loader) { //filtered by days with no events
-				loader.set_columnVisibility(eventTypeNum, true);
-				return loader.index_data_async(false);
-			}).then(function(loader) { //filtered by days
+				loader.filter(false, "eventType", "questionnaire");
+				loader.filter(true, "eventType", "joined");
+				setup_chart(
+					loader,
+					"joined_el",
+					create_dayChartCode(Lang.get("joined_study_with_total").replace("%", count.joined), STATISTICS_DATATYPES_SUM, "userId", self.days)
+				);
+				loader.filter(false, "eventType", "joined");
+				
+				
+				loader.filter(true, "eventType", "quit");
+				setup_chart(
+					loader,
+					"quit_el",
+					create_dayChartCode(Lang.get("quit_study_with_total").replace("%", count.quit), STATISTICS_DATATYPES_SUM, "userId", self.days)
+				);
+				loader.filter(false, "eventType", "quit");
+				
+				
+				loader.filter_column(true, "eventType");
 				setup_chart(
 					loader,
 					"app_version_el",
@@ -189,8 +169,16 @@ export function ViewModel(page) {
 					"study_version_el",
 					create_dayChartCode(Lang.get("used_study_version"), STATISTICS_DATATYPES_FREQ_DISTR, "studyVersion", self.days)
 				);
-			}));
-		}
+			});
+	};
+	
+	this.promiseBundle = [
+		Studies.init(page)
+	];
+	this.preInit = function({id}, studies) {
+		let study = studies[id];
+		url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
+		
 		this.reload();
 	};
 }

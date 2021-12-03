@@ -9,11 +9,6 @@ import {Lang} from "../main_classes/lang";
 export const Defaults = {};
 
 
-//
-// Codes for OwnMapping:
-// $.children.XXX : Array with objects
-// _XXX : Should not be compared with defaults
-//
 export function fillDefaults() {
 	Defaults.conditions = {
 		key: "",
@@ -27,7 +22,7 @@ export function fillDefaults() {
 			}
 		},
 		variableName: "",
-		observedVariableIndex: -1,
+		observedVariableIndex: 0,
 		conditionType: CONDITION_TYPE_ALL
 	};
 	Defaults.axisContainer = {

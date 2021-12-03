@@ -27,7 +27,10 @@ export function createElement(el_type, css, values, attr) {
 
 export function createFloatingDropdown(referenceEl, className) {
 	let rect = referenceEl.getBoundingClientRect();
-	let dropdownEl = createElement("div", "left:" + (rect.left + rect.width/2) + "px; top:" + (rect.top + rect.height + 1) + "px;", {className: "dropdown"});
+	let x = rect.left + rect.width/2;
+	let y = Math.max(0, rect.top + rect.height + 1);
+	
+	let dropdownEl = createElement("div", "left:" + x + "px; top:" + y + "px;", {className: "dropdown"});
 	dropdownEl.classList.add(className);
 	document.body.appendChild(dropdownEl);
 	return dropdownEl;
@@ -38,6 +41,8 @@ export function filter_box(search_text, box_el) {
 	for(let i = children.length - 1; i >= 0; --i) {
 		let el = children[i];
 		let searchEl = el.childElementCount ? el.getElementsByClassName("searchTarget")[0] : el;
+		if(!searchEl)
+			continue;
 		el.style.display = searchEl.innerText.startsWith(search_text) ? 'block' : 'none';
 	}
 }

@@ -12,16 +12,7 @@
 	
 	<div class="stretched" id="manufacturer_el"></div>
 	
-	<div class="stretched">
-		<h2 data-bind="text: Lang.get('model_with_count', $root.modelCount())"></h2>
-		<div class="scrollBox">
-			<label>
-				<small data-bind="text: Lang.get('search')"></small>
-				<input type="text" data-bind="event: {keyup: function() {$root.filter_box($element.value, document.getElementById('modelsList'));}}"/>
-			</label>
-			<div id="modelsList" data-bind="foreach: $root.modelsList">
-				<div class="verticalPadding searchTarget small_text" data-bind="text: Lang.get('text_with_questionnaireCount', name, count)"></div>
-			</div>
-		</div>
-	</div>
+	<search-box class="stretched dashEl" params="titleKey: 'model_with_count', count: $root.modelCount, list: $root.modelsList">
+		<div class="searchTarget small_text" data-bind="text: Lang.get('text_with_questionnaireCount', name, count)"></div>
+	</search-box>
 </dash-row>

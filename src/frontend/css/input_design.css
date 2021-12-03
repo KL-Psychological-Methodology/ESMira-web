@@ -180,3 +180,9 @@ input[type="button"], input[type="submit"] {
 input[type="button"]:hover, input[type="submit"]:hover {
 	background-color: #2b98ca;
 }
+
+input.search {
+	background: url(../imgs/search.svg) no-repeat scroll 7px 9px;
+	background-size: 15px;
+	padding-left:30px;
+}

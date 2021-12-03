@@ -108,7 +108,6 @@ jsoneditor
 userList
 **********/
 
-
 #userList th {
 	text-align: center;
 	padding-right: 10px;
@@ -489,4 +488,26 @@ lang-options .codes .element:hover {
 }
 lang-options .codes .element.selected {
 	background-color: #9fe0f7;
+}
+
+/**********
+search-box
+**********/
+
+search-box .header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+search-box .header h2 {
+	flex-grow: 1;
+	text-align: center;
+}
+/**********
+participantList
+**********/
+
+search-box.participantList .selected{
+	font-weight: bold;
+	text-decoration: underline;
 }

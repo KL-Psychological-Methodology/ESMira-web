@@ -11,9 +11,10 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR,
 	STATISTICS_VALUETYPES_COUNT
 } from "../js/variables/statistics";
-import {PromiseCache} from "../js/main_classes/promise_cache";
 import {filter_box} from "../js/helpers/basics";
 import {Studies} from "../js/main_classes/studies";
+import {CsvLoader} from "../js/dynamic_imports/csv_loader";
+import {colors, create_perDayChartCode, setup_chart} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
 	let self = this;
@@ -28,99 +29,110 @@ export function ViewModel(page) {
 	this.user_agentCount = ko.observable(0);
 	
 	this.filter_box = filter_box;
-	this.reload = null;
+	let study;
+	let create_perMonthChartCode = function(title, monthsMax) {
+		let date = new Date();
+		let currentDate = date.getTime();
+		let month = date.getMonth();
+		let year = date.getFullYear();
+		date.setHours(0, 0, 0, 0);
+		date.setFullYear(year, month, 1);
+		
+		let axis = [];
+		for(let i=0; i<monthsMax; ++i) {
+			axis.push({
+				xAxis: {
+					conditions: []
+				},
+				yAxis: {
+					conditions: [
+						{
+							key: "responseTime",
+							value: currentDate,
+							operator: CONDITION_OPERATOR_LESS
+						},
+						{
+							key: "responseTime",
+							value: currentDate = date.getTime(),
+							operator: CONDITION_OPERATOR_GREATER
+						}
+					],
+					variableName: "page",
+					observedVariableIndex: i,
+					conditionType: CONDITION_TYPE_AND
+				},
+				label: date.toLocaleString('default', { month: 'long' }),
+				color: colors[i%colors.length]
+			});
+			
+			if(--month <0) {
+				date.setFullYear(year -= 1);
+				date.setMonth(month = 11);
+			}
+			else
+				date.setMonth(month);
+		}
+		return OwnMapping.fromJS({
+			title: title,
+			publicVariables: [],
+			axisContainer: axis,
+			valueType: STATISTICS_VALUETYPES_COUNT,
+			dataType: STATISTICS_DATATYPES_FREQ_DISTR,
+			chartType: STATISTICS_CHARTTYPES_BARS
+		}, Defaults.charts);
+	};
+	let create_pieChartCode = function(title) {
+		return OwnMapping.fromJS({
+			title: title,
+			publicVariables: [],
+			axisContainer: [{
+				xAxis: {
+					conditions: []
+				},
+				yAxis: {
+					conditions: [],
+					variableName: "page",
+					observedVariableIndex: 0
+				},
+				label: "page"
+			}],
+			valueType: STATISTICS_VALUETYPES_COUNT,
+			dataType: STATISTICS_DATATYPES_FREQ_DISTR,
+			chartType: STATISTICS_CHARTTYPES_PIE
+		}, Defaults.charts);
+	};
+	
+	this.reload = function() {
+		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'web_access');
+		
+		
+		let loader = new CsvLoader(url, page);
+		loader.waitUntilReady().then(function() {
+			create_perDayChartCode(loader, Lang.get("daily_pageViews"), "page").then(function(chartCode) {
+				setup_chart(loader, "days_el", chartCode);
+			});
+			setup_chart(loader, "total_el", create_pieChartCode(Lang.get("total_pageViews")));
+			setup_chart(loader, "months_el", create_perMonthChartCode(Lang.get("monthly_pageViews"), self.months));
+
+			loader.get_valueList("referer").then(function(valueList) {
+				self.refererList(valueList);
+				self.refererCount(valueList.length);
+			});
+			loader.get_valueList("user_agent").then(function(valueList) {
+				self.user_agentList(valueList);
+				self.user_agentCount(valueList.length);
+			});
+		});
+	};
 	
 	this.promiseBundle = [
 		Studies.init(page),
 		import("../js/dynamic_imports/statistic_tools")
 	];
-	this.preInit = function({id}, studies, {colors, setup_chart, listVariable, create_perDayChartCode}) {
-		this.reload = function() {
-			let study = studies[id];
-			let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'web_access');
-			let create_perMonthChartCode = function(title, monthsMax) {
-				let date = new Date();
-				let currentDate = date.getTime();
-				let month = date.getMonth();
-				let year = date.getFullYear();
-				date.setHours(0, 0, 0, 0);
-				date.setFullYear(year, month, 1);
-				
-				let axis = [];
-				for(let i=0; i<monthsMax; ++i) {
-					axis.push({
-						xAxis: {
-							conditions: []
-						},
-						yAxis: {
-							conditions: [
-								{
-									key: "responseTime",
-									value: currentDate,
-									operator: CONDITION_OPERATOR_LESS
-								},
-								{
-									key: "responseTime",
-									value: currentDate = date.getTime(),
-									operator: CONDITION_OPERATOR_GREATER
-								}
-							],
-							variableName: "page",
-							observedVariableIndex: i,
-							conditionType: CONDITION_TYPE_AND
-						},
-						label: date.toLocaleString('default', { month: 'long' }),
-						color: colors[i%colors.length]
-					});
-					
-					if(--month <0) {
-						date.setFullYear(year -= 1);
-						date.setMonth(month = 11);
-					}
-					else
-						date.setMonth(month);
-				}
-				return OwnMapping.fromJS({
-					title: title,
-					publicVariables: [],
-					axisContainer: axis,
-					valueType: STATISTICS_VALUETYPES_COUNT,
-					dataType: STATISTICS_DATATYPES_FREQ_DISTR,
-					chartType: STATISTICS_CHARTTYPES_BARS
-				}, Defaults.charts);
-			};
-			let create_pieChartCode = function(title) {
-				return OwnMapping.fromJS({
-					title: title,
-					publicVariables: [],
-					axisContainer: [{
-						xAxis: {
-							conditions: []
-						},
-						yAxis: {
-							conditions: [],
-							variableName: "page",
-							observedVariableIndex: 0
-						},
-						label: "page"
-					}],
-					valueType: STATISTICS_VALUETYPES_COUNT,
-					dataType: STATISTICS_DATATYPES_FREQ_DISTR,
-					chartType: STATISTICS_CHARTTYPES_PIE
-				}, Defaults.charts);
-			};
-			
-			page.loader.showLoader(Lang.get("state_loading"), PromiseCache.loadCSV(url).then(function(loader) {
-				return loader.index_data_async(false);
-			}).then(function(loader) {
-				setup_chart(loader, "days_el", create_perDayChartCode(loader, Lang.get("daily_pageViews"), "page"));
-				setup_chart(loader, "total_el", create_pieChartCode(Lang.get("total_pageViews")));
-				setup_chart(loader, "months_el", create_perMonthChartCode(Lang.get("monthly_pageViews"), self.months));
-				
-				self.refererCount(listVariable(loader, "referer", self.refererList));
-				self.user_agentCount(listVariable(loader, "user_agent", self.user_agentList));
-			}));
-		}
+	this.preInit = function({id}, studies) {
+		study = studies[id];
+		
+		
 		this.reload();
 	};
 }

@@ -786,6 +786,20 @@ switch($type) {
 		} while(file_exists(Files::get_folder_study($id)) || isset($study_index["~$id"]) || isset($filtered[$id]));
 		Output::successObj($id);
 		break;
+	case 'list_participants':
+		$usernames_folder = Files::get_folder_userData($study_id);
+		$usernames = [];
+		if(file_exists($usernames_folder)) {
+			$h_folder = opendir($usernames_folder);
+			while($file = readdir($h_folder)) {
+				if($file[0] != '.') {
+					$usernames[] = Files::get_urlFriendly($file);
+				}
+			}
+			closedir($h_folder);
+		}
+		Output::successObj($usernames);
+		break;
 	case 'list_data':
 		if(!$is_admin && !Permission::has_permission($study_id, 'read'))
 			Output::error('No permission');
@@ -1076,20 +1090,6 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'msg'))
 			else
 				Output::successObj();
 			
-			break;
-		case 'list_usernames':
-			$usernames_folder = Files::get_folder_userData($study_id);
-			$usernames = [];
-			if(file_exists($usernames_folder)) {
-				$h_folder = opendir($usernames_folder);
-				while($file = readdir($h_folder)) {
-					if($file[0] != '.') {
-						$usernames[] = Files::get_urlFriendly($file);
-					}
-				}
-				closedir($h_folder);
-			}
-			Output::successObj($usernames);
 			break;
 	}
 }

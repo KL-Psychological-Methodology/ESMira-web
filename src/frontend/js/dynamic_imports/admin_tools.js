@@ -3,6 +3,7 @@ import {OwnMapping} from "../helpers/knockout_own_mapping";
 import {bindEvent, check_string, safe_confirm} from "../helpers/basics";
 import {FILE_ADMIN} from "../variables/urls";
 import ko from "knockout";
+import search_box from '../../widgets/search_box.html';
 import btn_add from '../../widgets/btn_add.html';
 import btn_delete from '../../widgets/btn_delete.html';
 import btn_ok from '../../widgets/btn_ok.html';
@@ -18,6 +19,7 @@ import {Defaults} from "../variables/defaults";
 import "../../css/style_admin.css";
 import {LangOptions} from "../../widgets/lang_options";
 import lang_options from "../../widgets/lang_options.html";
+import {SearchBox} from "../../widgets/search_box";
 
 function ListTools(page) {
 	let self = this;
@@ -278,6 +280,14 @@ export const AdminTools = {
 				}
 			},
 			template: lang_options
+		});
+		ko.components.register('search-box', {
+			viewModel: {
+				createViewModel: function(params, componentInfo) {
+					return new SearchBox(componentInfo.element, params);
+				}
+			},
+			template: search_box
 		});
 	},
 	

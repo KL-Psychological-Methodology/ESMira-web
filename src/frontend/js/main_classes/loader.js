@@ -51,7 +51,11 @@ export function Loader(page) {
 	}.bind(this));
 	
 	this.enable = function(s) {
-		if(enabled || has_error)
+		if(enabled) {
+			this.update(s);
+			return;
+		}
+		else if(has_error)
 			return;
 		enabled = true;
 		state_el.innerText = s;

@@ -1,10 +1,3 @@
-import * as ko from "knockout";
-import {Lang} from "../js/main_classes/lang";
-import {PromiseCache} from "../js/main_classes/promise_cache";
-import {FILE_ADMIN} from "../js/variables/urls";
-import {OwnMapping} from "../js/helpers/knockout_own_mapping";
-import {Defaults} from "../js/variables/defaults";
-import {Site} from "../js/main_classes/site";
 import {Studies} from "../js/main_classes/studies";
 import {add_lang, load_langConfigs} from "../js/shared/lang_configs";
 
