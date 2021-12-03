@@ -113,6 +113,7 @@ export function ViewModel(page) {
 				while(el.hasChildNodes()) {
 					el.removeChild(el.firstChild);
 				}
+				self.isLoading(false);
 				drawCharts(
 					el,
 					charts,
@@ -120,7 +121,6 @@ export function ViewModel(page) {
 					publicStatistics,
 					Admin.tools.has_readPermission(study.id())
 				);
-				self.isLoading(false);
 		});
 	};
 }

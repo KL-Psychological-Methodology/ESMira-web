@@ -29,34 +29,32 @@ import {PromiseCache} from "../main_classes/promise_cache";
 import {Requests} from "../main_classes/requests";
 import {CHART_MIN_ENTRY_WIDTH, ONE_DAY, SMALLEST_TIMED_DISTANCE} from "../variables/constants";
 import {createElement} from "../helpers/basics";
-import Chart from "chart.js";
-//TODO: ChartJs 3 (needs to be filtered)
-// import {
-// 	Chart,
-// 	ArcElement,
-// 	LineElement,
-// 	BarElement,
-// 	PointElement,
-// 	BarController,
-// 	BubbleController,
-// 	DoughnutController,
-// 	LineController,
-// 	PieController,
-// 	PolarAreaController,
-// 	RadarController,
-// 	ScatterController,
-// 	CategoryScale,
-// 	LinearScale,
-// 	LogarithmicScale,
-// 	RadialLinearScale,
-// 	TimeScale,
-// 	TimeSeriesScale,
-// 	Decimation,
-// 	Filler,
-// 	Legend,
-// 	Title,
-// 	Tooltip
-// } from 'chart.js';
+import {
+	Chart,
+	ArcElement,
+	LineElement,
+	BarElement,
+	PointElement,
+	BarController,
+	BubbleController,
+	DoughnutController,
+	LineController,
+	PieController,
+	PolarAreaController,
+	RadarController,
+	ScatterController,
+	CategoryScale,
+	LinearScale,
+	LogarithmicScale,
+	RadialLinearScale,
+	TimeScale,
+	TimeSeriesScale,
+	Decimation,
+	Filler,
+	Legend,
+	Title,
+	Tooltip
+} from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {CsvLoader} from "./csv_loader";
 
@@ -93,33 +91,33 @@ const BACKGROUND_ALPHA = 0.7;
 
 let isInitialzed = false;
 function init_ChartBox() {
-	//TODO: ChartJs 3 (needs to b filtered)
-	// Chart.register(
-	// 	ArcElement,
-	// 	LineElement,
-	// 	BarElement,
-	// 	PointElement,
-	// 	BarController,
-	// 	BubbleController,
-	// 	DoughnutController,
-	// 	LineController,
-	// 	PieController,
-	// 	PolarAreaController,
-	// 	RadarController,
-	// 	ScatterController,
-	// 	CategoryScale,
-	// 	LinearScale,
-	// 	LogarithmicScale,
-	// 	RadialLinearScale,
-	// 	TimeScale,
-	// 	TimeSeriesScale,
-	// 	Decimation,
-	// 	Filler,
-	// 	Legend,
-	// 	Title,
-	// 	Tooltip
-	// );
-	Chart.plugins.register(ChartDataLabels);
+	Chart.register(
+		ArcElement,
+		LineElement,
+		BarElement,
+		PointElement,
+		BarController,
+		BubbleController,
+		DoughnutController,
+		LineController,
+		PieController,
+		PolarAreaController,
+		RadarController,
+		ScatterController,
+		CategoryScale,
+		LinearScale,
+		LogarithmicScale,
+		RadialLinearScale,
+		TimeScale,
+		TimeSeriesScale,
+		Decimation,
+		Filler,
+		Legend,
+		Title,
+		Tooltip
+	);
+	Chart.register(ChartDataLabels);
+	// Chart.plugins.register(ChartDataLabels);
 }
 function last_value(a, num) {
 	return a[a.length-(num || 1)];
@@ -146,13 +144,11 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 			drawnChartType = "line";
 			option_fill = "origin";
 			option_line_curvature = 0.5;
-			Chart.defaults.line.spanGaps = true;
-			// Chart.defaults.elements.line.spanGaps = true; //TODO: for ChartJs 3
+			Chart.defaults.elements.line.spanGaps = true;
 			break;
 		case STATISTICS_CHARTTYPES_LINE:
 			drawnChartType = "line";
-			Chart.defaults.line.spanGaps = true;
-			// Chart.defaults.elements.line.spanGaps = true; //TODO: for ChartJs 3
+			Chart.defaults.elements.line.spanGaps = true;
 			break;
 		default:
 		case STATISTICS_CHARTTYPES_BARS:
@@ -700,9 +696,9 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	
 	let window_div = createElement("div", false, {className: "chartWindow"}),
 		legendBox = createElement("div", false, {className: "legend"}),
-		scroll_div = createElement("div", false, {className: "scrollEl"}),
+		scroll_div = createElement("div", false, {className: chartType === STATISTICS_CHARTTYPES_PIE ? "scrollEl pie" : "scrollEl"}),
 		scrollable = chartType !== STATISTICS_CHARTTYPES_PIE && chart.dataType() !== STATISTICS_DATATYPES_XY && parent.clientWidth / labels.length < CHART_MIN_ENTRY_WIDTH,
-		width = scrollable ? (labels.length*CHART_MIN_ENTRY_WIDTH)+"px" : "100%",
+		width = (chartType === STATISTICS_CHARTTYPES_PIE) ? "200px" : (scrollable ? (labels.length*CHART_MIN_ENTRY_WIDTH)+"px" : "100%"),
 		
 		chart_div = createElement("div", "width: "+width, {className: "chartEl"}),
 		el = createElement("canvas", "height: 200px; width: "+width);
@@ -733,55 +729,10 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 				}
 			},
 			responsive: true,
-			// animation: {
-			// 	duration: 0,
-			// 	onComplete: function(aninmation) {
-			// 		yAxis_div.style.height = aninmation.chart.chartArea.bottom + "px";
-			// 	},
-			// },
-			
-			legendCallback: function(chart_js) {
-				let legendItems = chart_js.legend.legendItems;
-				for(let i = 0, max = legendItems.length; i < max; ++i) {
-					let item = legendItems[i];
-					if(item.text === undefined || item.text === "")
-						continue;
-					let line = createElement("div", false, {className: "line"});
-					line.appendChild(createElement("span", "background-color:"+item.fillStyle, {className: "colorRect"}));
-					line.appendChild(createElement("small", false, {innerText: item.text}));
-					legendBox.appendChild(line);
-				}
-			},
 			scales: {
-				yAxes: [{
-					ticks: {
-						// beginAtZero: true,
-						// display: !scrollable && chartType !== STATISTICS_CHARTTYPES_PIE
-						display: chartType === STATISTICS_CHARTTYPES_SCATTER
-					},
-					// afterFit: !scrollable ? null : function(options) {
-					// 	if(options.extras_are_initialized)
-					// 		return;
-					// 	let chart_js = options.chart;
-					// 	let i, max;
-					//
-					// 	//x-Axis
-					//
-					// 	// let yAxis_div = createElement("div", "bottom:"+(200-chart_js.chartArea.bottom+10)+"px", {className: "yAxis"});
-					// 	let values = chart_js.scales['y-axis-0'].ticks;
-					//
-					// 	max = values.length;
-					// 	let step = 100 / (max-1);
-					// 	for(i=0; i<max; ++i) {
-					// 		// for(let i=max-1; i>=0; --i) {
-					// 		yAxis_div.appendChild(createElement("div", "bottom:"+(i*step)+"%", {innerText: values[max-i-1], className: "axisValue"}));
-					// 	}
-					//
-					// 	window_div.appendChild(yAxis_div);
-					// 	chart_div.style.marginLeft = yAxis_div.clientWidth+"px";
-					// 	options.extras_are_initialized = true;
-					// }
-				}]
+				y: {
+					display: chartType === STATISTICS_CHARTTYPES_SCATTER
+				}
 			},
 			legend: {
 				display: false
@@ -795,6 +746,9 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 					display: chartType === STATISTICS_CHARTTYPES_SCATTER ? false : function(context) {
 						return datasets[context.datasetIndex].data[context.dataIndex] !== 0;
 					}
+				},
+				legend: {
+					display: false
 				}
 			},
 			onClick: onClick_fu ? function(event, array) {
@@ -806,10 +760,25 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 			onHover: onClick_fu ? function(event, chartElement) {
 				event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
 			} : undefined
-		}
+		},
+		plugins: [{ //legend
+			afterUpdate: function(chart_js, args, options) {
+				while(legendBox.hasChildNodes()) {
+					legendBox.removeChild(legendBox.firstChild);
+				}
+				const legendItems = chart_js.options.plugins.legend.labels.generateLabels(chart_js);
+				for(let i = 0, max = legendItems.length; i < max; ++i) {
+					let item = legendItems[i];
+					if(item.text === undefined || item.text === "")
+						continue;
+					let line = createElement("div", false, {className: "line"});
+					line.appendChild(createElement("span", "background-color:"+item.fillStyle, {className: "colorRect"}));
+					line.appendChild(createElement("small", false, {innerText: item.text}));
+					legendBox.appendChild(line);
+				}
+			},
+		}]
 	});
-	
-	chart_js.generateLegend();
 }
 
 export function drawCharts(el, charts, statistics, publicStatistics, noHiding) {

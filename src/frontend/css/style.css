@@ -982,6 +982,13 @@ charts
 .chartWindow .scrollEl {
 	overflow-x: auto;
 }
+.chartWindow .scrollEl.pie {
+	display: flex;
+	justify-content: center;
+}
+.chartWindow .pie .chartEl {
+	min-width: 200px;
+}
 .chartWindow .chartEl {
 	min-width: 100%;
 }
