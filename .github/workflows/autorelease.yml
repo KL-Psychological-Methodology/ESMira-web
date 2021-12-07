@@ -1,20 +1,11 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Create release
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    tags:
+      - "v*"
 
 jobs:
-  # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
     
@@ -36,7 +27,5 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
           prerelease: false
-          title: "Release"
           files: ESMira-web.zip
