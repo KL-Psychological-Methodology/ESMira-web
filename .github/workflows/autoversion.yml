@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  create-tag:
     runs-on: ubuntu-latest
     
     steps:
