@@ -507,7 +507,14 @@ search-box .header h2 {
 participantList
 **********/
 
-search-box.participantList .selected{
+.sumUser search-box .selected{
 	font-weight: bold;
 	text-decoration: underline;
+}
+.sumUser .hideable {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+.sumUser .hideable.visible {
+	opacity: 1;
 }

@@ -28,8 +28,8 @@ export function ViewModel(page) {
 	this.currentParticipant = ko.observable("");
 	this.isLoading = ko.observable(false);
 	this.showData = ko.computed(function() {
-		return !!self.currentParticipant();
-		// return !self.isLoading() && !!self.currentParticipant();
+		// return !!self.currentParticipant();
+		return !self.isLoading() && !!self.currentParticipant();
 	});
 	
 	
@@ -101,6 +101,7 @@ export function ViewModel(page) {
 			.then(function() {
 				page.loader.update(Lang.get("state_loading_file", Lang.get("statistics")));
 				
+				self.isLoading(false);
 				return load_statisticsFromFiles(
 					page,
 					study,
