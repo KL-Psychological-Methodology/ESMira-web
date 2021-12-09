@@ -2,8 +2,9 @@ name: Automatic release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [ main ]
+  
+  workflow_dispatch:
 
 jobs:
   build-and-release:
@@ -13,21 +14,43 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
+      
       - name: Install Dependencies
         run: npm install
-
+      
       - name: Build for production
         run: npm run prod
-        
+      
+      - name: Create tag
+        uses: butlerlogic/action-autotag@stable
+        id: autotag
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          strategy: package
+          tag_prefix: "v"
+      
       - name: Zip dist folder
         run: |
           cd dist
           zip -r ../ESMira-web.zip ./*
       
-      - name: Upload Release
+      - name: Create named release
+        if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: Release version ${{ steps.autotag.outputs.version }}
+          tag_name: v${{ steps.autotag.outputs.version}}
+          body_path: CHANGELOG.md
+          files: ESMira-web.zip
+
+      - name: Create latest pre release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
+          title: Latest pre release
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
+          automatic_release_tag: "latest"
+          prerelease: true
           files: ESMira-web.zip
