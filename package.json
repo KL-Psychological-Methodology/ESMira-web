@@ -1,6 +1,6 @@
 {
 	"name": "web",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "",
 	"main": "index.js",
 	"dependencies": {
@@ -43,8 +43,7 @@
 		"papaparse": "^5.3.0",
 		"qrcode-generator": "^1.4.4",
 		"style-loader": "^2.0.0",
-		"webpack-merge": "^5.7.3",
-		"webpack-version-file": "^0.1.6"
+		"webpack-merge": "^5.7.3"
 	},
 	"devDependencies": {
 		"webpack": "^5.37.0",
