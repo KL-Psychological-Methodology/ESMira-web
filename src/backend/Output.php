@@ -7,7 +7,7 @@ class Output {
 	static function error($string) {
 		header('Content-Type: application/json;charset=UTF-8');
 		header('Cache-Control: no-cache, must-revalidate');
-		exit(json_encode(['success' => false, 'serverVersion' => Base::SERVER_VERSION, 'dataset' => $string]));
+		exit(json_encode(['success' => false, 'serverVersion' => Base::SERVER_VERSION, 'error' => $string]));
 	}
 	
 	static function successString($s = 1) {
