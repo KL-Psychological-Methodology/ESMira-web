@@ -1,7 +1,5 @@
 # Changelog
 
-## Version 1.0.0 (2021-12-09)
+### 🚀 Added
 
-### ✏️ Changed
-
-- Officially stating ESMira-web as stable
+- Update ESMira directly from the server settings
