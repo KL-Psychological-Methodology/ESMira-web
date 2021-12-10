@@ -51,6 +51,6 @@ jobs:
         with:
           title: Latest pre release
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "pre-release"
           prerelease: true
           files: ESMira-web.zip
