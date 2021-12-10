@@ -4,6 +4,8 @@
 		<small data-bind="text: Lang.get('server_name')"></small>
 		<input type="text" data-bind="value: serverName"/>
 	</label>
+	
+	
 	<title-row params="title: Lang.get('additional_languages')"></title-row>
 	<div class="list_parent">
 		<div class="list_child" data-bind="foreach: langCodes">
@@ -13,6 +15,22 @@
 			</div>
 		</div>
 		<widget-add data-bind="click: $root.add_lang" params="title: Lang.get('add')"></widget-add>
+	</div>
+	
+	<title-row params="title: Lang.get('server_update', version())"></title-row>
+	
+	<div class="spacing_top" data-bind="if: $root.hasUpdate()">
+		<div class="center">
+			<span data-bind="html: Lang.get('info_newVersionAvailable')"></span>
+			<span class="highlight" data-bind="html: $root.newVersion"></span>
+		</div>
+		<div class="center spacing_top">
+			<input type="button" data-bind="click: $root.updateNow, value: Lang.get('update_now')"/>
+		</div>
+		<div class="spacing_top" data-bind="html: $root.changelog"></div>
+	</div>
+	<div class="center highlight" data-bind="if: $root.isUpToDate">
+		<div class="center highlight" data-bind="text: Lang.get('info_ESMira_is_up_to_date')"></div>
 	</div>
 </div>
 

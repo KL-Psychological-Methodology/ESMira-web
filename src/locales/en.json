@@ -509,5 +509,13 @@
     "no": "No",
     
     "cookie_consent": "Cookie-Consent",
-    "cookie_consent_desc": "For each study, ESMira uses <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP_cookie\">cookies</a> to store the following information:<ul><li><b>The provided username</b>: To not having to ask for the username every time.</li><li><b>Acceptance of the informed consent</b>: To not having to accept the informed consent every time.</li><li><b>Status information from specific questionnaire items</b>: Some questionnaires need status informationen from the last visit to be able to present itself differently from last time.</li></ul>"
+    "cookie_consent_desc": "For each study, ESMira uses <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP_cookie\">cookies</a> to store the following information:<ul><li><b>The provided username</b>: To not having to ask for the username every time.</li><li><b>Acceptance of the informed consent</b>: To not having to accept the informed consent every time.</li><li><b>Status information from specific questionnaire items</b>: Some questionnaires show different items every time. In order to be able to do that, they need to save which items were already shown before.</li></ul>",
+    "server_update": "Server update (current version %s)",
+    "no_updates_found": "No updates found",
+    "update_available": "A new update is available (version %d)",
+    "info_ESMira_is_up_to_date": "ESMira is up to date \uD83D\uDE00",
+    "info_newVersionAvailable": "A new version is available:",
+    "info_update_complete": "ESMira was successfully updated to version %s.\n\nThe page will now reload and hopefully ESMira will then be super modern an cutting edge! ;)",
+    "update_now": "Update now",
+    "state_installing": "Installing…"
 }

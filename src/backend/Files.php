@@ -3,14 +3,17 @@
 namespace backend;
 
 class Files {
-	const FILENAME_DATA = 'esmira_data',
+	const PATH_CONFIG = 'backend/config/configs.php',
+		FILENAME_DATA = 'esmira_data',
+		FILENAME_EVENTS = 'events',
+		FILENAME_SERVER_BACKUP = 'backup',
+		FILENAME_STATISTICS_JSONFILE = 'json',
 		FILENAME_STATISTICS_METADATA = '.metadata',
 		FILENAME_STATISTICS_NEWLINES = '.new_data',
-		FILENAME_STATISTICS_JSONFILE = 'json',
 		FILENAME_STUDY_INDEX = '.index',
+		FILENAME_UPDATE = 'update.zip',
 		FILENAME_WEB_ACCESS = 'web_access',
-		FILENAME_EVENTS = 'events',
-		FILE_CONFIG = DIR_BASE.'backend/config/configs.php',
+		FILE_CONFIG = DIR_BASE .self::PATH_CONFIG,
 		FILE_DEFAULT_CONFIG = DIR_BASE.'backend/config/configs.default.php';
 		
 	
@@ -82,6 +85,9 @@ class Files {
 	}
 	static function get_folder_token($user) {
 		return self::get_folder_tokenRoot() .Files::make_urlFriendly($user).'/';
+	}
+	static function get_folder_serverBackup() {
+		return DIR_BASE .self::FILENAME_SERVER_BACKUP .'/';
 	}
 	
 	static function interpret_errorReport_file($filename) {
@@ -195,6 +201,12 @@ class Files {
 	}
 	static function get_file_langPrivacyPolicy($code) {
 		return $code === '_' ? self::get_folder_legal().'privacy_policy.html' : self::get_folder_legal(). "privacy_policy.$code.html";
+	}
+	static function get_file_serverUpdate() {
+		return DIR_BASE .self::FILENAME_UPDATE;
+	}
+	static function get_file_version() {
+		return DIR_BASE .'backend/config/version.txt';
 	}
 	
 	//For make_urlFriendly() and get_urlFriendly(), thanks to https://www.php.net/manual/en/function.base64-encode.php#123098

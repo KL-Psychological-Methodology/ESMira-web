@@ -15,6 +15,10 @@ return [
 	'url_about_esmira_host' => 'esmira.kl.ac.at',
 	'url_about_esmira_json_location' => '/documents/about/langs/%s.json',
 	
+	'url_update_packageInfo' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/main/package.json',
+	'url_update_changelog' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/main/CHANGELOG.md',
+	'url_update_releaseZip' => 'https://github.com/KL-Psychological-Methodology/ESMira-web/releases/latest/download/ESMira-web.zip',
+	
 	'csv_delimiter' => ';',
 	
 	'serverName' => ['_' => ''], //_ is the default languages. All alternative languages need to be added via language-code (langCodes needs to be updates as well)

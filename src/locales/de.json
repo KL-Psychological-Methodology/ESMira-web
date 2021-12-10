@@ -509,5 +509,13 @@
     "no": "Nein",
     
     "cookie_consent": "Cookie-Einverständnis-Erklärung",
-    "cookie_consent_desc": "Folgende Informationen werden per Studie in <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP-Cookie\">Cookies</a> gespeichert:<ul><li><b>Der eingegebene Username</b>: Damit der Username nicht wiederholt eingegeben werden muss.</li><li><b>Das Akzeptieren der Einverständniserklärung</b>: Damit die Einverständniserklärung nicht vor jedem Ausfüllen akzeptiert werden muss.</li><li><b>Statusinformationen von bestimmten Fragebogenitems</b>: Manche Fragebögen benötigen Statusinformationen vom letzten Aufruf um sich jedes Mal unterschiedlich präsentieren zu können.</li></ul>"
+    "cookie_consent_desc": "Folgende Informationen werden per Studie in <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP-Cookie\">Cookies</a> gespeichert:<ul><li><b>Der eingegebene Username</b>: Damit der Username nicht wiederholt eingegeben werden muss.</li><li><b>Das Akzeptieren der Einverständniserklärung</b>: Damit die Einverständniserklärung nicht vor jedem Ausfüllen akzeptiert werden muss.</li><li><b>Statusinformationen von bestimmten Fragebogenitems</b>: Manche Fragebögen zeigen jedes Mal unterschiedliche Items und müssen daher speichern welche Items bereits gezeigt wurden.</li></ul>",
+    "server_update": "Server update (current version %d)",
+    "no_updates_found": "Keine Updates gefunden",
+    "update_available": "Ein neues Update ist verfügbar (Version %d)",
+    "info_ESMira_is_up_to_date": "ESMira ist auf dem neuesten Stand \uD83D\uDE00",
+    "info_newVersionAvailable": "Eine neue Version ist verfügbar:",
+    "info_update_complete": "ESMira wurde erfolgreich auf Version %s aktualisiert!\n\nDie Seite wird nun neu laden und ESMira ist dann hoffentlich super neu und modern! ;)",
+    "update_now": "Jetzt updaten",
+    "state_installing": "Installiere…"
 }

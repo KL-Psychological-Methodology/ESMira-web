@@ -6,6 +6,7 @@ const HtmlWebpackSkipAssetsPlugin = require('html-webpack-skip-assets-plugin').H
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
+const VersionFile = require('webpack-version-file');
 
 module.exports = {
 	entry: {
@@ -112,6 +113,10 @@ module.exports = {
 				{
 					from: path.resolve(__dirname, '..', 'README.md'),
 					to: path.resolve(DIST)
+				},
+				{
+					from: path.resolve(__dirname, '..', 'CHANGELOG.md'),
+					to: path.resolve(DIST)
 				}
 			]}),
 		
@@ -128,8 +133,10 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].[contenthash].css',
 		}),
-		
-		
-		new HtmlWebpackSkipAssetsPlugin() //so we are able to use "skipAssets" in HtmlWebpackPlugin
+		new HtmlWebpackSkipAssetsPlugin(), //so we are able to use "skipAssets" in HtmlWebpackPlugin
+		new VersionFile({
+			output: path.resolve(DIST, 'backend/config/version.txt'),
+			templateString: "<%= version %>\nBuild date: <%= buildDate %>"
+		}),
 	]
 }

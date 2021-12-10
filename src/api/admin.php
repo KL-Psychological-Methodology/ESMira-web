@@ -71,20 +71,25 @@ function getQuestionnaireId() {
 	return rand(10000, 99999);
 }
 
-function empty_folder($path) { //TODO: check for errors!
+function empty_folder($path) {
 	$h_folder = opendir($path);
+	if(!$h_folder)
+		return false;
 	while($file = readdir($h_folder)) {
 		if($file != '.' && $file != '..') {
 			$filename = $path.$file;
 			if(is_dir($filename)) {
-				empty_folder($filename.'/');
-				rmdir($filename);
+				if(!empty_folder($filename.'/') || !rmdir($filename))
+					return false;
 			}
-			else
-				unlink($filename);
+			else {
+				if(!unlink($filename))
+					return false;
+			}
 		}
 	}
 	closedir($h_folder);
+	return true;
 }
 function remove_study_from_index(&$key_index, $study_id) {
 	$removeCount = 0;
@@ -418,7 +423,6 @@ function write_file($file, $s) {
 	}
 }
 
-
 function checkLoginPost() {
 	if(!isset($_POST['user']) || !isset($_POST['pass']))
 		return false;
@@ -437,6 +441,15 @@ function checkLoginPost() {
 	Permission::set_loggedIn($user);
 	return true;
 }
+
+function get_version() {
+	$file_version = Files::get_file_version();
+	if(!file_exists($file_version) || !($f = fopen($file_version, 'r')) || !($version = fgets($f)))
+		return "0.0.0";
+	fclose($f);
+	return substr($version, 0, -1);
+}
+
 
 
 if(!isset($_GET['type']))
@@ -1530,6 +1543,7 @@ switch($type) {
 		$serverSettings = Configs::getAll();
 		$serverSettings['impressum'] = [];
 		$serverSettings['privacyPolicy'] = [];
+		$serverSettings['version'] = get_version();
 		
 		$langCodes = Configs::get('langCodes');
 		array_push($langCodes, '_');
@@ -1895,6 +1909,115 @@ switch($type) {
 		write_file(Files::get_file_permissions(), serialize($permissions));
 		
 		Output::successObj();
+		break;
+	case 'check_update':
+		$currentVersion = get_version();
+		$json=file_get_contents(Configs::get('url_update_packageInfo'));
+		$version = json_decode($json)->version;
+		
+		if($currentVersion != $version) {
+			$changelog=file_get_contents(Configs::get('url_update_changelog'));
+			Output::successObj(['has_update' => true, 'newVersion' => $version, 'changelog' => $changelog]);
+		}
+		else
+			Output::successObj(['has_update' => false]);
+		break;
+	case 'download_update':
+		$file_update = Files::get_file_serverUpdate();
+		if(file_exists($file_update))
+			unlink($file_update);
+		
+		if(!file_put_contents($file_update, fopen(Configs::get('url_update_releaseZip'), 'r')))
+			Output::error('Downloading update failed. Nothing was changed');
+		
+		Output::successObj();
+		break;
+	case 'do_update':
+		function revertUpdate() {
+			$folder_backup = Files::get_folder_serverBackup();
+			$file_update = Files::get_file_serverUpdate();
+			
+			if(file_exists($file_update))
+				unlink($file_update);
+			
+			$h_folder = opendir($folder_backup);
+			while($file = readdir($h_folder)) {
+				if($file[0] != '.') {
+					$oldLocation = $folder_backup .$file;
+					$newLocation = DIR_BASE .$file;
+					
+					if(file_exists($newLocation)) {
+						if(is_dir($newLocation)) {
+							empty_folder($newLocation);
+							rmdir($newLocation);
+						}
+						else
+							unlink($newLocation);
+					}
+					rename($oldLocation, $newLocation);
+				}
+			}
+			closedir($h_folder);
+			
+			rmdir($folder_backup);
+		}
+		
+		$needsBackup = ['api/', 'backend/', 'frontend/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md', 'version.txt'];
+		$folder_backup = Files::get_folder_serverBackup();
+		$file_update = Files::get_file_serverUpdate();
+		
+		if(!file_exists($file_update))
+			Output::error('Could not find update. Has it been downloaded yet?');
+		
+		if(!file_exists($folder_backup))
+			create_folder($folder_backup);
+		
+		//moving current files to backup location:
+		foreach($needsBackup as $file) {
+			$oldLocation = DIR_BASE .$file;
+			$newLocation = $folder_backup .$file;
+			
+			if(!file_exists($oldLocation))
+				continue;
+			if(file_exists($newLocation)) {
+				if(is_dir($newLocation)) {
+					empty_folder($newLocation);
+					rmdir($newLocation);
+				}
+				else
+					unlink($newLocation);
+			}
+			
+			if(!rename($oldLocation, $newLocation)) {
+				revertUpdate();
+				Output::error("Renaming $oldLocation to $newLocation failed. Reverting...");
+			}
+		}
+		
+		
+		//unpacking update:
+		$zip = new ZipArchive;
+		if(!$zip->open($file_update)) {
+			revertUpdate();
+			Output::error("Could not open the the zipped update: $file_update. Reverting...");
+		}
+		if(!$zip->extractTo(DIR_BASE)) {
+			revertUpdate();
+			Output::error("Could not unzip update: $file_update. Reverting...");
+		}
+		$zip->close();
+		
+		//restore config file:
+		if(!rename($folder_backup .Files::PATH_CONFIG, Files::FILE_CONFIG)) {
+			revertUpdate();
+			Output::error('Could not restore settings. Reverting...');
+		}
+		
+		//cleaning up
+		if(!empty_folder($folder_backup) || !rmdir($folder_backup))
+			Output::error("Cleaning up backup failed. The update was successful. But please delete this folder and its contents manually: $folder_backup");
+		
+		Output::successObj(['newVersion' => get_version()]);
 		break;
 	default:
 		Output::error('Unexpected request');
