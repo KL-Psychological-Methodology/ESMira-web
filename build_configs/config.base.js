@@ -7,7 +7,6 @@ const HtmlWebpackSkipAssetsPlugin = require('html-webpack-skip-assets-plugin').H
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
-const VersionFile = require('webpack-version-file');
 
 module.exports = {
 	entry: {
