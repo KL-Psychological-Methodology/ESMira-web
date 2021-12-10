@@ -442,14 +442,6 @@ function checkLoginPost() {
 	return true;
 }
 
-function get_version() {
-	$file_version = Files::get_file_version();
-	if(!file_exists($file_version) || !($f = fopen($file_version, 'r')) || !($version = fgets($f)))
-		return "0.0.0";
-	fclose($f);
-	return substr($version, 0, -1);
-}
-
 
 
 if(!isset($_GET['type']))
@@ -1543,7 +1535,6 @@ switch($type) {
 		$serverSettings = Configs::getAll();
 		$serverSettings['impressum'] = [];
 		$serverSettings['privacyPolicy'] = [];
-		$serverSettings['version'] = get_version();
 		
 		$langCodes = Configs::get('langCodes');
 		array_push($langCodes, '_');
@@ -1911,7 +1902,7 @@ switch($type) {
 		Output::successObj();
 		break;
 	case 'check_update':
-		$currentVersion = get_version();
+		$currentVersion = $_GET['version'];
 		$json=file_get_contents(Configs::get('url_update_packageInfo'));
 		$version = json_decode($json)->version;
 		
@@ -2017,7 +2008,7 @@ switch($type) {
 		if(!empty_folder($folder_backup) || !rmdir($folder_backup))
 			Output::error("Cleaning up backup failed. The update was successful. But please delete this folder and its contents manually: $folder_backup");
 		
-		Output::successObj(['newVersion' => get_version()]);
+		Output::successObj();
 		break;
 	default:
 		Output::error('Unexpected request');

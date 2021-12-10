@@ -271,7 +271,6 @@ export function fillDefaults() {
 				serverName: "",
 				privacyPolicy: "",
 			}
-		},
-		version: "1.0"
+		}
 	}
 }

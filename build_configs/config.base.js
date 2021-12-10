@@ -1,5 +1,6 @@
 const path = require('path');
 const {SRC, DIST} = require('./paths.js');
+const {DefinePlugin} = require('webpack');
 const JSONMinifyPlugin = require('node-json-minify');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackSkipAssetsPlugin = require('html-webpack-skip-assets-plugin').HtmlWebpackSkipAssetsPlugin;
@@ -10,12 +11,6 @@ const VersionFile = require('webpack-version-file');
 
 module.exports = {
 	entry: {
-		// scripts: path.resolve(SRC, 'js', 'index.js'),
-		// style: path.resolve(SRC, 'css', 'style.css'),
-		// input_design: path.resolve(SRC, 'css', 'input_design.css'),
-		// loader: path.resolve(SRC, 'css', 'loader.css'),
-		// widgets: path.resolve(SRC, 'css', 'widgets.css'),
-		
 		main: [
 			path.resolve(SRC, 'frontend', 'css', 'style.css'),
 			path.resolve(SRC, 'frontend', 'css', 'input_design.css'),
@@ -133,10 +128,9 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].[contenthash].css',
 		}),
-		new HtmlWebpackSkipAssetsPlugin(), //so we are able to use "skipAssets" in HtmlWebpackPlugin
-		new VersionFile({
-			output: path.resolve(DIST, 'backend/config/version.txt'),
-			templateString: "<%= version %>\nBuild date: <%= buildDate %>"
+		new DefinePlugin({
+			PACKAGE_VERSION: JSON.stringify(require(path.resolve(__dirname, '..', 'package.json')).version)
 		}),
+		new HtmlWebpackSkipAssetsPlugin(), //so we are able to use "skipAssets" in HtmlWebpackPlugin
 	]
 }

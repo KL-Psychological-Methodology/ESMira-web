@@ -25,7 +25,6 @@ export function ViewModel(page) {
 			serverSettings.serverName(data.serverName._);
 			serverSettings.impressum(data.impressum._);
 			serverSettings.privacyPolicy(data.privacyPolicy._);
-			serverSettings.version(data.version);
 			
 			let langCodes = data.langCodes;
 			for(let i=langCodes.length-1; i>=0; --i) {
@@ -59,7 +58,7 @@ export function ViewModel(page) {
 	};
 	this.postInit = function() {
 		page.loader.loadRequest(
-			FILE_ADMIN + "?type=check_update"
+			FILE_ADMIN + "?type=check_update&version="+PACKAGE_VERSION
 		).then(function({has_update, newVersion, changelog}) {
 			if(has_update) {
 				self.hasUpdate(true);
@@ -78,6 +77,7 @@ export function ViewModel(page) {
 	this.serverName = ko.observable();
 	this.impressum = ko.observable();
 	this.privacyPolicy = ko.observable();
+	this.currentVersion = PACKAGE_VERSION;
 	
 	this.hasUpdate = ko.observable(false);
 	this.isUpToDate = ko.observable(false);
@@ -139,8 +139,8 @@ export function ViewModel(page) {
 					page.loader.update(Lang.get("state_installing"))
 					return Requests.load(FILE_ADMIN + "?type=do_update");
 				})
-				.then(function({newVersion}) {
-					alert(Lang.get("info_update_complete", newVersion));
+				.then(function() {
+					alert(Lang.get("info_update_complete"));
 					return window.location.reload();
 				})
 		)

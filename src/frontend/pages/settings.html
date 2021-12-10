@@ -17,7 +17,7 @@
 		<widget-add data-bind="click: $root.add_lang" params="title: Lang.get('add')"></widget-add>
 	</div>
 	
-	<title-row params="title: Lang.get('server_update', version())"></title-row>
+	<title-row params="title: Lang.get('server_update', $root.currentVersion)"></title-row>
 	
 	<div class="spacing_top" data-bind="if: $root.hasUpdate()">
 		<div class="center">

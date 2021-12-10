@@ -515,7 +515,7 @@
     "update_available": "Ein neues Update ist verfügbar (Version %d)",
     "info_ESMira_is_up_to_date": "ESMira ist auf dem neuesten Stand \uD83D\uDE00",
     "info_newVersionAvailable": "Eine neue Version ist verfügbar:",
-    "info_update_complete": "ESMira wurde erfolgreich auf Version %s aktualisiert!\n\nDie Seite wird nun neu laden und ESMira ist dann hoffentlich super neu und modern! ;)",
+    "info_update_complete": "ESMira wurde erfolgreich aktualisiert!\n\nDie Seite wird nun neu laden und ESMira ist dann hoffentlich super neu und modern! ;)",
     "update_now": "Jetzt updaten",
     "state_installing": "Installiere…"
 }
