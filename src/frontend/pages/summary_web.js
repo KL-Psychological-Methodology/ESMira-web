@@ -27,6 +27,7 @@ export function ViewModel(page) {
 	this.refererCount = ko.observable(0);
 	this.user_agentList = ko.observableArray();
 	this.user_agentCount = ko.observable(0);
+	this.showData = ko.observable(true);
 	
 	this.filter_box = filter_box;
 	let study;
@@ -102,27 +103,31 @@ export function ViewModel(page) {
 		}, Defaults.charts);
 	};
 	
+	let loader;
 	this.reload = function() {
-		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'web_access');
-		
-		
-		let loader = new CsvLoader(url, page);
-		loader.waitUntilReady().then(function() {
-			create_perDayChartCode(loader, Lang.get("daily_pageViews"), "page").then(function(chartCode) {
-				setup_chart(loader, "days_el", chartCode);
+		this.showData(false);
+		loader.waitUntilReady()
+			.then(function() {
+				loader.reset();
+				return loader.waitUntilReady();
+			})
+			.then(function() {
+				create_perDayChartCode(loader, Lang.get("daily_pageViews"), "page").then(function(chartCode) {
+					setup_chart(loader, "days_el", chartCode);
+				});
+				setup_chart(loader, "total_el", create_pieChartCode(Lang.get("total_pageViews")));
+				setup_chart(loader, "months_el", create_perMonthChartCode(Lang.get("monthly_pageViews"), self.months));
+	
+				loader.get_valueList("referer").then(function(valueList) {
+					self.refererList(valueList);
+					self.refererCount(valueList.length);
+				});
+				loader.get_valueList("user_agent").then(function(valueList) {
+					self.user_agentList(valueList);
+					self.user_agentCount(valueList.length);
+				});
+				self.showData(true);
 			});
-			setup_chart(loader, "total_el", create_pieChartCode(Lang.get("total_pageViews")));
-			setup_chart(loader, "months_el", create_perMonthChartCode(Lang.get("monthly_pageViews"), self.months));
-
-			loader.get_valueList("referer").then(function(valueList) {
-				self.refererList(valueList);
-				self.refererCount(valueList.length);
-			});
-			loader.get_valueList("user_agent").then(function(valueList) {
-				self.user_agentList(valueList);
-				self.user_agentCount(valueList.length);
-			});
-		});
 	};
 	
 	this.promiseBundle = [
@@ -133,6 +138,9 @@ export function ViewModel(page) {
 		study = studies[id];
 		
 		
+		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'web_access');
+		
+		loader = new CsvLoader(url, page);
 		this.reload();
 	};
 }

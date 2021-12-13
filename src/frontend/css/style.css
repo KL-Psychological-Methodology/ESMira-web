@@ -212,6 +212,14 @@ svg.highlight {
 	display: none !important;
 }
 
+.vanishing {
+	transition: opacity 0.3s;
+	opacity: 0;
+}
+.vanishing.visible {
+	opacity: 1;
+}
+
 .nowrap {
 	white-space: nowrap;
 }

@@ -713,6 +713,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	if(scrollable)
 		chart_div.classList.add("scrollable");
 	
+	let verticalPadding = chartType === STATISTICS_CHARTTYPES_PIE ? 20 : 0;
 	let chart_js = new Chart(el.getContext('2d'), {
 		type: drawnChartType,
 		data: {
@@ -722,8 +723,8 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 		options: {
 			layout: {
 				padding: {
-					left: 0,
-					right: 0,
+					left: verticalPadding,
+					right: verticalPadding,
 					top: 20,
 					bottom: 0
 				}
@@ -744,7 +745,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 					// align: "end",
 					offset: 0,
 					display: chartType === STATISTICS_CHARTTYPES_SCATTER ? false : function(context) {
-						return datasets[context.datasetIndex].data[context.dataIndex] !== 0;
+						return datasets[context.datasetIndex].data[context.dataIndex] !== 0 ? "auto" : false;
 					}
 				},
 				legend: {
@@ -959,81 +960,6 @@ export function load_statisticsFromFiles(loaderList, study, charts, username, do
 				return loader.waitUntilReady();
 			});
 	}
-	
-	
-	// let questionnaires = study.questionnaires(),
-	// 	urlStart = FILE_RESPONSES.replace('%1', study.id()),
-	// 	variableGroupIndex = {};
-	//
-	// //check which files need to be loaded
-	// for(let i=questionnaires.length-1; i>=0; --i) {
-	// 	let pages = questionnaires[i].pages();
-	// 	for(let j=pages.length-1; j>=0; --j) {
-	// 		let inputs = pages[j].inputs();
-	// 		for(let k=inputs.length-1; k>=0; --k) {
-	// 			let input = inputs[k];
-	// 			variableGroupIndex[input.hasOwnProperty("name") ? input.name() : Defaults.inputs.name] = i;
-	// 		}
-	// 	}
-	// }
-	// let neededGroups = [],
-	// 	checkAxis = function(axisContainer) {
-	// 		for(let axisI=axisContainer.length-1; axisI>=0; --axisI) {
-	// 			let xAxis = axisContainer[axisI].xAxis,
-	// 				yAxis = axisContainer[axisI].yAxis;
-	//
-	// 			neededGroups[variableGroupIndex[xAxis.variableName()]] = true;
-	// 			neededGroups[variableGroupIndex[yAxis.variableName()]] = true;
-	// 		}
-	// 	};
-	// for(let i=charts.length-1; i>=0; --i) {
-	// 	let chart = charts[i];
-	//
-	// 	checkAxis(chart.axisContainer());
-	// 	if(chart.displayPublicVariable())
-	// 		checkAxis(chart.publicVariables());
-	// }
-	//
-	// //create statistics:
-	// let statistics = {},
-	// 	needsPublicStatistics = false;
-	// let get_statistics = function(loader) {
-	// 	for(let i = charts.length - 1; i >= 0; --i) {
-	// 		let chart = charts[i];
-	//
-	// 		loader.get_statistics(
-	// 			chart.axisContainer(),
-	// 			chart.dataType()
-	// 		).then(function(newStatistics) {
-	// 			combineStatistics(statistics, newStatistics);
-	// 		});
-	// 		if(chart.displayPublicVariable())
-	// 			needsPublicStatistics = true;
-	// 	}
-	// };
-	//
-	//
-	// let promise = Promise.resolve();
-	//
-	// for(let questionnaireI=questionnaires.length-1; questionnaireI>=0; --questionnaireI) {
-	// 	if(!neededGroups[questionnaireI])
-	// 		continue;
-	//
-	// 	let url = urlStart.replace('%2', questionnaires[questionnaireI].internalId());
-	//
-	// 	let loader = new CsvLoader(url, page);
-	// 	promise = promise.then(function() {
-	// 		return loader.waitUntilReady().then(function() {
-	// 			if(username) {
-	// 				loader.filter_column(false, "userId");
-	// 				loader.filter(true, "userId", username);
-	// 			}
-	//
-	// 			get_statistics(loader);
-	// 			return loader.waitUntilReady();
-	// 		});
-	// 	});
-	// }
 	
 	return promise.then(function() {
 		if(needsPublicStatistics && !dontLoadPublicStatistics) {

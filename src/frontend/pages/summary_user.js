@@ -110,7 +110,6 @@ export function ViewModel(page) {
 			.then(function() {
 				page.loader.update(Lang.get("state_loading_file", Lang.get("statistics")));
 				
-				self.isLoading(false);
 				return load_statisticsFromFiles(
 					questionnaireLoaderList,
 					study,
@@ -131,7 +130,7 @@ export function ViewModel(page) {
 					el,
 					charts,
 					statistics,
-					publicStatistics,
+					publicStatisticsCache,
 					Admin.tools.has_readPermission(study.id())
 				);
 		});

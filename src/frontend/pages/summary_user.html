@@ -5,7 +5,7 @@
 				text: Lang.get('text_with_questionnaireCount', name, count)
 			"></span>
 	</search-box>
-	<div class="multipleChildren vertical hideable" data-bind="css: {visible: $root.showData()}">
+	<div class="multipleChildren vertical vanishing" data-bind="css: {visible: $root.showData()}">
 		<div class="dashEl">
 			<h2 class="center" data-bind="text: Lang.get('colon_joined_study')"></h2>
 			<div class="horizontalPadding small_text" data-bind="foreach: $root.joined_time()">
@@ -32,17 +32,17 @@
 			</div>
 		</div>
 	</div>
-	<div class="dashEl stretched hideable" data-bind="css: {visible: $root.showData()}">
+	<div class="dashEl stretched vanishing" data-bind="css: {visible: $root.showData()}">
 		<h2 class="center" data-bind="text: Lang.get('colon_model')"></h2>
 		<div class="horizontalPadding small_text" data-bind="foreach: $root.model()">
 			<div class="verticalPadding" data-bind="text: name"></div>
 		</div>
 	</div>
 	
-	<div class="dashEl stretched hideable" id="day_questionnaire_el" data-bind="css: {visible: $root.showData()}"></div>
+	<div class="dashEl stretched vanishing" id="day_questionnaire_el" data-bind="css: {visible: $root.showData()}"></div>
 </dash-row>
 
 
 
-<title-row class="hideable" params="title: Lang.get('personal_charts_for_x', $root.currentParticipant())" data-bind="css: {visible: $root.showData()}"></title-row>
-<div class="hideable" id="user_personalStatistics" data-bind="css: {visible: $root.showData()}"></div>
+<title-row class="vanishing" params="title: Lang.get('personal_charts_for_x', $root.currentParticipant())" data-bind="css: {visible: $root.showData()}"></title-row>
+<div class="vanishing" id="user_personalStatistics" data-bind="css: {visible: $root.showData()}"></div>

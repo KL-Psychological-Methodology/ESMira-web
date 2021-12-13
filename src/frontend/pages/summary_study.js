@@ -26,9 +26,9 @@ export function ViewModel(page) {
 	this.days = 3;
 	this.modelsList = ko.observableArray();
 	this.modelCount = ko.observable(0);
+	this.showData = ko.observable(true);
 	
-	
-	let url;
+	let loader;
 	this.reload = function() {
 		let create_dayChartCode = function(title, dataType, variableName, days) {
 			let oneDay_ms = ONE_DAY * 1000;
@@ -91,10 +91,13 @@ export function ViewModel(page) {
 			}, Defaults.charts);
 		};
 		
-		let loader = new CsvLoader(url, page);
-		
+		this.showData(false);
 		let count;
 		loader.waitUntilReady()
+			.then(function() {
+				loader.reset();
+				return loader.waitUntilReady();
+			})
 			.then(function() {
 				return loader.get_valueCount("eventType", ["questionnaire", "joined", "quit"])
 					.then(function(countLoaded) {
@@ -169,6 +172,8 @@ export function ViewModel(page) {
 					"study_version_el",
 					create_dayChartCode(Lang.get("used_study_version"), STATISTICS_DATATYPES_FREQ_DISTR, "studyVersion", self.days)
 				);
+				
+				self.showData(true);
 			});
 	};
 	
@@ -177,8 +182,9 @@ export function ViewModel(page) {
 	];
 	this.preInit = function({id}, studies) {
 		let study = studies[id];
-		url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
+		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
 		
+		loader = new CsvLoader(url, page);
 		this.reload();
 	};
 }
