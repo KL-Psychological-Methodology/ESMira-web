@@ -249,11 +249,10 @@ const CsvData = {
 			let rows = this.rowsIndex;
 			for(let i = rows.length - 1; i >= 0; --i) {
 				let row = rows[i];
-				let state = row[1];
-				if(!state.visible) { //if it is already visible we do nothing
+				if(!row.visible) { //if it is already visible we do nothing
 					++this.rows_count;
-					state.hidden_sum = 0;
-					state.visible = true;
+					row.hidden_sum = 0;
+					row.visible = true;
 				}
 			}
 			for(let column in this.filteredColumnsIndex) {
