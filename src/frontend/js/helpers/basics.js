@@ -25,12 +25,14 @@ export function createElement(el_type, css, values, attr) {
 	return el;
 }
 
-export function createFloatingDropdown(referenceEl, className) {
+export function createFloatingDropdown(referenceEl, className, dontCenter) {
 	let rect = referenceEl.getBoundingClientRect();
-	let x = rect.left + rect.width/2;
+	let x = dontCenter ? rect.left : rect.left + rect.width/2;
 	let y = Math.max(0, rect.top + rect.height + 1);
 	
 	let dropdownEl = createElement("div", "left:" + x + "px; top:" + y + "px;", {className: "dropdown"});
+	if(dontCenter)
+		dropdownEl.style.transform = "unset";
 	dropdownEl.classList.add(className);
 	document.body.appendChild(dropdownEl);
 	return dropdownEl;
@@ -47,7 +49,7 @@ export function filter_box(search_text, box_el) {
 	}
 }
 
-export function close_on_clickOutside(el, custom_closeFu) {
+export function close_on_clickOutside(el, custom_closeFu, closeAlways) {
 	if(el.hasOwnProperty("close-outside"))
 		return
 	el["close-outside"] = true;
@@ -69,7 +71,7 @@ export function close_on_clickOutside(el, custom_closeFu) {
 		let target = e.target;
 		
 		if(el != null) {
-			if(el.contains(target))
+			if(!closeAlways && el.contains(target))
 				return;
 			
 			closeFu();

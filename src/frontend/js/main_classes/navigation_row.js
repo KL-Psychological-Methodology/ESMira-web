@@ -85,16 +85,23 @@ export const NavigationRow = {
 			}
 			this._dropdownCloseFu = null;
 		}
-		let target = e.target.nextElementSibling;
-		let dropdownEl = createFloatingDropdown(target, "small_text");
+		let target = e.target;
+		let dropdownEl = createFloatingDropdown(target, "navAlternatives", true);
 		let entries = page.getAlternatives();
 		for(let i=0, max=entries.length; i<max; ++i) {
 			let entry = entries[i];
-			let el = createElement("a", false, {innerText: entry.title, href: entry.url, className: "line verticalPadding"});
+			let el;
+			
+			if(entry.disabled)
+				el = createElement("span", false, {innerText: entry.title, className: "line disabled"});
+			else {
+				el = createElement("span", false, {className: "line"});
+				el.appendChild(createElement("a", false, {innerText: entry.title, href: entry.url}));
+			}
 			dropdownEl.appendChild(el);
 		}
 		
 		
-		this._dropdownCloseFu = close_on_clickOutside(dropdownEl);
+		this._dropdownCloseFu = close_on_clickOutside(dropdownEl, false, true);
 	}
 }

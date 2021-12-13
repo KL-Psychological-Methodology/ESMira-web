@@ -678,6 +678,22 @@ nav_content: to calculate the needed width of all elements while nav_menu is res
 	content: "\25BC";
 }
 
+.navAlternatives > .line:before {
+	content: "\25B6";
+	color: #2b98ca;
+	padding-right: 2px;
+}
+.navAlternatives > .line.disabled:before {
+	content: "\25B7";
+}
+.navAlternatives .line.disabled {
+	color: #2b98ca;
+}
+.navAlternatives .line {
+	font-size: 9pt;
+	padding-bottom: 5px;
+}
+
 
 /**********
 el_pages

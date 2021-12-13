@@ -12,22 +12,24 @@ export function ViewModel(page) {
 	this.promiseBundle = [Studies.init(page), Admin.wait_ifNeeded(page)];
 	page.getAlternatives = function() {
 		let currentStudy = Studies.get_current();
-		if(currentStudy) {
-			let id = currentStudy.id();
-			return [
-				{title: Lang.get('edit_studies'), url: "#admin/studies,edit/studyEdit,id:" + id},
-				{title: Lang.get('messages'), url: "#admin/studies,msgs/messages,id:" + id},
-				{title: Lang.get('show_data_statistics'), url:  "#admin/studies,data/dataStatistics,id:" + id}
-			];
-		}
-		else {
-			return [
-				{title: Lang.get('edit_studies'), url: "#admin/studies,edit"},
-				{title: Lang.get('messages'), url: "#admin/studies,msgs"},
-				{title: Lang.get('show_data_statistics'), url: "#admin/studies,data"}
-			];
-			
-		}
+		
+		return [
+			{
+				title: Lang.get('edit_studies'),
+				url: currentStudy ? ("#admin/studies,edit/studyEdit,id:" + currentStudy.id()) : "#admin/studies,edit",
+				disabled: page.index.hasOwnProperty("edit")
+			},
+			{
+				title: Lang.get('messages'),
+				url: currentStudy ? ("#admin/studies,msgs/messages,id:" + currentStudy.id()) : "#admin/studies,msgs",
+				disabled: page.index.hasOwnProperty("msgs")
+			},
+			{
+				title: Lang.get('show_data_statistics'),
+				url: currentStudy ? ("#admin/studies,data/dataStatistics,id:" + currentStudy.id()) : "#admin/studies,data",
+				disabled: page.index.hasOwnProperty("data")
+			}
+		];
 	};
 	
 	this.check = function() {return true;};
@@ -35,19 +37,15 @@ export function ViewModel(page) {
 	this.selectedIndex = ko.observable(1);
 	this.useAccessKeys = true;
 	this.showFilter = false;
-	// this.has_messages = Admin.is_loggedIn() ? Studies.tools.newMessages().count : 0;
 	this.currentAccessKeyIndex = ko.observable(-1);
 	this.tabs = ['public_studies', 'hidden_studies', 'disabled'];
 	
 	
 	
 	this.preInit = function() {
-		// if(!Admin.is_loggedIn() && !studies.length && Studies.accessKey().length) {
-		// 	page.loader.info(Lang.get("error_wrong_accessKey"));
-		// 	// throw new Error(Lang.get("error_wrong_accessKey"));
-		// }
+		page.hasAlternatives(Admin.is_loggedIn());
+		
 		if(Admin.is_loggedIn() && Studies.tools.newMessages().count()) {
-			page.hasAlternatives(true);
 			this.has_messages = true;
 			this.tabs.unshift("messages");
 			this.selectedIndex(2);
