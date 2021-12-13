@@ -62,18 +62,18 @@ const CsvData = {
 	not_indexed_data: [],
 	
 	loadRow: function(columns) {
-		// let columns = row.data;
 		if(columns.length === 1) {
 			let msg = columns[0];
-			let errorMsg;
+			let errorMsg = null;
 			try {
 				let json = JSON.parse(msg);
 				errorMsg =  json.error || msg;
 			}
 			catch(e) {
-				errorMsg = msg;
+				console.error("Row "+this.not_indexed_data.length+" is faulty. Contents: \""+msg+"\"");
 			}
-			throw errorMsg;
+			if(errorMsg != null)
+				throw errorMsg;
 		}
 		
 		if(this.needsHeader) {
