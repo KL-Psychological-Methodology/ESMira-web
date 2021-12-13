@@ -781,6 +781,27 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	});
 }
 
+export function combineStatistics(statistics, newStatistics) {
+	for(let variableName in newStatistics) {
+		if(!newStatistics.hasOwnProperty(variableName))
+			continue;
+		
+		let newVariable = newStatistics[variableName];
+		
+		if(!statistics.hasOwnProperty(variableName))
+			statistics[variableName] = newVariable
+		else {
+			let currentVariable = statistics[variableName];
+			for(let i=newVariable.length-1; i>=0; --i) {
+				let newEntry = newVariable[i];
+				if(!newEntry)
+					continue;
+				currentVariable[i] = newEntry;
+			}
+		}
+	}
+}
+
 export function drawCharts(el, charts, statistics, publicStatistics, noHiding) {
 	for(let chart_i=0, chart_max=charts.length; chart_i<chart_max; ++chart_i) {
 		let chart = charts[chart_i];
@@ -892,7 +913,7 @@ export function load_statisticsFromFiles(page, study, charts, username) {
 				chart.axisContainer(),
 				chart.dataType()
 			).then(function(newStatistics) {
-				statistics = Object.assign(statistics, newStatistics);
+				combineStatistics(statistics, newStatistics);
 			});
 			if(chart.displayPublicVariable())
 				needsPublicStatistics = true;

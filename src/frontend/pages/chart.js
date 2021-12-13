@@ -5,7 +5,7 @@ import {Studies} from "../js/main_classes/studies";
 import {get_chart, get_pageType} from "../js/shared/charts";
 import {DetectChange} from "../js/main_classes/detect_change";
 import {CsvCreator} from "../js/dynamic_imports/csv_loader";
-import {drawCharts, load_statisticsFromFiles} from "../js/dynamic_imports/statistic_tools";
+import {combineStatistics, drawCharts, load_statisticsFromFiles} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
 	let isFor_calc = get_pageType() === "calc";
@@ -27,7 +27,7 @@ export function ViewModel(page) {
 				let currentChart = charts[i];
 				if(allVariables || currentChart.displayPublicVariable()) {
 					loader.get_statistics(currentChart[containerName](), currentChart.dataType()).then(function(newStatistics) {
-						statistics = Object.assign(statistics, newStatistics);
+						combineStatistics(statistics, newStatistics);
 					});
 					if(allVariables)
 						needsPublicStatistics = true;

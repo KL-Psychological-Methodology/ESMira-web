@@ -71,8 +71,7 @@ function CsvContainer(page) {
 				empty_dataSymbol: Lang.get("empty_dataSymbol"),
 				colon_timestamp: Lang.get("colon_timestamp")
 			};
-		addPromise(obj, "state_downloading"
-		)
+		addPromise(obj, "state_downloading")
 			.then(function(data) {
 				self.header_names = data.header_names;
 				self.rows_count = data.rows_count;
@@ -112,7 +111,7 @@ function CsvContainer(page) {
 		if(isNaN(column)) {
 			let r = self.header_names.indexOf(column);
 			if(r === -1)
-				console.trace(column + " does not exist in get_columnNum()");
+				console.trace(column + " does not exist in get_columnNum()", self.header_names);
 			return r;
 		}
 		else
