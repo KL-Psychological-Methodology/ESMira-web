@@ -868,14 +868,16 @@ export function create_perDayChartCode(loader, title, columnKey) {
 	});
 }
 
-export function load_statisticsFromFiles(page, study, charts, username) {
+export function create_loaderForNeededFiles(page, study, charts) {
 	let questionnaires = study.questionnaires(),
 		urlStart = FILE_RESPONSES.replace('%1', study.id()),
 		variableGroupIndex = {};
 	
-	//check which files need to be loaded
 	for(let i=questionnaires.length-1; i>=0; --i) {
-		let pages = questionnaires[i].pages();
+		let quesionnaire = questionnaires[i];
+		let pages = quesionnaire.pages();
+		let sumScores = quesionnaire.sumScores();
+		
 		for(let j=pages.length-1; j>=0; --j) {
 			let inputs = pages[j].inputs();
 			for(let k=inputs.length-1; k>=0; --k) {
@@ -883,17 +885,30 @@ export function load_statisticsFromFiles(page, study, charts, username) {
 				variableGroupIndex[input.hasOwnProperty("name") ? input.name() : Defaults.inputs.name] = i;
 			}
 		}
+		for(let j=sumScores.length-1; j>=0; --j) {
+			let sumScore = sumScores[j];
+			variableGroupIndex[sumScore.hasOwnProperty("name") ? sumScore.name() : Defaults.sumScores.name] = i;
+		}
 	}
-	let neededGroups = [],
+	let groupLoaders = [],
+		addLoader = function(variableName) {
+			if(!variableName)
+				return;
+			let questionnaireI = variableGroupIndex[variableName];
+			let url = urlStart.replace('%2', questionnaires[questionnaireI].internalId());
+			if(!groupLoaders[questionnaireI])
+				groupLoaders[questionnaireI] = new CsvLoader(url, page);
+		},
 		checkAxis = function(axisContainer) {
 			for(let axisI=axisContainer.length-1; axisI>=0; --axisI) {
 				let xAxis = axisContainer[axisI].xAxis,
 					yAxis = axisContainer[axisI].yAxis;
 				
-				neededGroups[variableGroupIndex[xAxis.variableName()]] = true;
-				neededGroups[variableGroupIndex[yAxis.variableName()]] = true;
+				addLoader(xAxis.variableName());
+				addLoader(yAxis.variableName());
 			}
 		};
+	
 	for(let i=charts.length-1; i>=0; --i) {
 		let chart = charts[i];
 		
@@ -901,10 +916,15 @@ export function load_statisticsFromFiles(page, study, charts, username) {
 		if(chart.displayPublicVariable())
 			checkAxis(chart.publicVariables());
 	}
-	
-	//create statistics:
+	return groupLoaders;
+}
+
+// export function load_statisticsFromFiles(page, study, charts, username) {
+export function load_statisticsFromFiles(loaderList, study, charts, username, dontLoadPublicStatistics) {
 	let statistics = {},
-		needsPublicStatistics = false;
+		needsPublicStatistics = false,
+		promise = Promise.resolve();
+	
 	let get_statistics = function(loader) {
 		for(let i = charts.length - 1; i >= 0; --i) {
 			let chart = charts[i];
@@ -919,33 +939,104 @@ export function load_statisticsFromFiles(page, study, charts, username) {
 				needsPublicStatistics = true;
 		}
 	};
-	
-	
-	
-	let promise = Promise.resolve();
-	
-	for(let questionnaireI=questionnaires.length-1; questionnaireI>=0; --questionnaireI) {
-		if(!neededGroups[questionnaireI])
+
+	for(let i=loaderList.length-1; i>=0; --i) {
+		let loader = loaderList[i];
+		if(!loader)
 			continue;
-		
-		let url = urlStart.replace('%2', questionnaires[questionnaireI].internalId());
-		
-		let loader = new CsvLoader(url, page);
-		promise = promise.then(function() {
-			return loader.waitUntilReady().then(function() {
+
+		promise = promise
+			.then(function() {
+				return loader.waitUntilReady();
+			})
+			.then(function() {
 				if(username) {
 					loader.filter_column(false, "userId");
 					loader.filter(true, "userId", username);
 				}
-				
+
 				get_statistics(loader);
 				return loader.waitUntilReady();
 			});
-		});
 	}
 	
+	
+	// let questionnaires = study.questionnaires(),
+	// 	urlStart = FILE_RESPONSES.replace('%1', study.id()),
+	// 	variableGroupIndex = {};
+	//
+	// //check which files need to be loaded
+	// for(let i=questionnaires.length-1; i>=0; --i) {
+	// 	let pages = questionnaires[i].pages();
+	// 	for(let j=pages.length-1; j>=0; --j) {
+	// 		let inputs = pages[j].inputs();
+	// 		for(let k=inputs.length-1; k>=0; --k) {
+	// 			let input = inputs[k];
+	// 			variableGroupIndex[input.hasOwnProperty("name") ? input.name() : Defaults.inputs.name] = i;
+	// 		}
+	// 	}
+	// }
+	// let neededGroups = [],
+	// 	checkAxis = function(axisContainer) {
+	// 		for(let axisI=axisContainer.length-1; axisI>=0; --axisI) {
+	// 			let xAxis = axisContainer[axisI].xAxis,
+	// 				yAxis = axisContainer[axisI].yAxis;
+	//
+	// 			neededGroups[variableGroupIndex[xAxis.variableName()]] = true;
+	// 			neededGroups[variableGroupIndex[yAxis.variableName()]] = true;
+	// 		}
+	// 	};
+	// for(let i=charts.length-1; i>=0; --i) {
+	// 	let chart = charts[i];
+	//
+	// 	checkAxis(chart.axisContainer());
+	// 	if(chart.displayPublicVariable())
+	// 		checkAxis(chart.publicVariables());
+	// }
+	//
+	// //create statistics:
+	// let statistics = {},
+	// 	needsPublicStatistics = false;
+	// let get_statistics = function(loader) {
+	// 	for(let i = charts.length - 1; i >= 0; --i) {
+	// 		let chart = charts[i];
+	//
+	// 		loader.get_statistics(
+	// 			chart.axisContainer(),
+	// 			chart.dataType()
+	// 		).then(function(newStatistics) {
+	// 			combineStatistics(statistics, newStatistics);
+	// 		});
+	// 		if(chart.displayPublicVariable())
+	// 			needsPublicStatistics = true;
+	// 	}
+	// };
+	//
+	//
+	// let promise = Promise.resolve();
+	//
+	// for(let questionnaireI=questionnaires.length-1; questionnaireI>=0; --questionnaireI) {
+	// 	if(!neededGroups[questionnaireI])
+	// 		continue;
+	//
+	// 	let url = urlStart.replace('%2', questionnaires[questionnaireI].internalId());
+	//
+	// 	let loader = new CsvLoader(url, page);
+	// 	promise = promise.then(function() {
+	// 		return loader.waitUntilReady().then(function() {
+	// 			if(username) {
+	// 				loader.filter_column(false, "userId");
+	// 				loader.filter(true, "userId", username);
+	// 			}
+	//
+	// 			get_statistics(loader);
+	// 			return loader.waitUntilReady();
+	// 		});
+	// 	});
+	// }
+	
 	return promise.then(function() {
-		if(needsPublicStatistics) {
+		if(needsPublicStatistics && !dontLoadPublicStatistics) {
 			let accessKey = study.accessKeys().length ? study.accessKeys()[0]() : '';
 			
 			return Requests.load(FILE_STATISTICS.replace("%d", study.id()).replace("%s", accessKey)).then(function(publicStatistics) {

@@ -1,11 +1,18 @@
 import html from "./summary_user.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
-import {FILE_RESPONSES} from "../js/variables/urls";
+import {FILE_RESPONSES, FILE_STATISTICS} from "../js/variables/urls";
 import {Studies} from "../js/main_classes/studies";
 import {Admin} from "../js/main_classes/admin";
 import {CsvLoader} from "../js/dynamic_imports/csv_loader";
-import {drawCharts, setup_chart, create_perDayChartCode, load_statisticsFromFiles} from "../js/dynamic_imports/statistic_tools";
+import {
+	drawCharts,
+	setup_chart,
+	create_perDayChartCode,
+	load_statisticsFromFiles,
+	create_loaderForNeededFiles
+} from "../js/dynamic_imports/statistic_tools";
+import {Requests} from "../js/main_classes/requests";
 
 export function ViewModel(page) {
 	let self = this;
@@ -33,23 +40,25 @@ export function ViewModel(page) {
 	});
 	
 	
-	let study, loader;
+	let study, eventsLoader, questionnaireLoaderList, publicStatisticsCache = false;
 	
 	this.postInit = function({id}, studies) {
 		study = studies[id];
 		
 		
 		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
-		loader = new CsvLoader(url, page);
-		loader.waitUntilReady().then(function() {
-			loader.filter_column(false, "eventType");
-			loader.filter(true, "eventType", "questionnaire");
-			loader.get_valueList("userId", true)
+		eventsLoader = new CsvLoader(url, page);
+		eventsLoader.waitUntilReady().then(function() {
+			eventsLoader.filter_column(false, "eventType");
+			eventsLoader.filter(true, "eventType", "questionnaire");
+			eventsLoader.get_valueList("userId", true)
 				.then(function(valueList) {
 					self.participantList(valueList);
 					self.participantCount(valueList.length);
 				});
 		});
+		
+		questionnaireLoaderList = create_loaderForNeededFiles(page, study, study.personalStatistics.charts());
 	};
 	
 	this.selectUser = function(userData) {
@@ -60,56 +69,59 @@ export function ViewModel(page) {
 		self.currentParticipant(user);
 		let charts = study.personalStatistics.charts();
 		
-		loader.reset();
-		loader.waitUntilReady()
+		eventsLoader.reset();
+		eventsLoader.waitUntilReady()
 			.then(function() {
-				loader.filter_column(false, "userId");
-				loader.filter(true, "userId", user);
-				loader.get_valueList("timezone").then(function(valueList) {
+				eventsLoader.filter_column(false, "userId");
+				eventsLoader.filter(true, "userId", user);
+				eventsLoader.get_valueList("timezone").then(function(valueList) {
 					self.timezones(valueList);
 				});
-				loader.get_valueList("appType").then(function(valueList) {
+				eventsLoader.get_valueList("appType").then(function(valueList) {
 					self.appType(valueList);
 				});
-				loader.get_valueList("model").then(function(valueList) {
+				eventsLoader.get_valueList("model").then(function(valueList) {
 					self.model(valueList);
 				});
 				
-				loader.filter_column(false, "eventType");
-				loader.filter(true, "eventType", "questionnaire");
+				eventsLoader.filter_column(false, "eventType");
+				eventsLoader.filter(true, "eventType", "questionnaire");
 				
 				//we need to wo wait until chart is created (to call setup_chart() ) before we can do another filter:
-				return create_perDayChartCode(loader, Lang.get("questionnaires"), "questionnaireName")
+				return create_perDayChartCode(eventsLoader, Lang.get("questionnaires"), "questionnaireName")
 			})
 			.then(function(chartCode) {
-				setup_chart(loader, "day_questionnaire_el", chartCode);
+				setup_chart(eventsLoader, "day_questionnaire_el", chartCode);
 				
-				loader.filter(false, "eventType", "questionnaire");
-				loader.filter(true, "eventType", "joined");
-				loader.get_valueList("responseTime").then(function(valueList) {
+				eventsLoader.filter(false, "eventType", "questionnaire");
+				eventsLoader.filter(true, "eventType", "joined");
+				eventsLoader.get_valueList("responseTime").then(function(valueList) {
 					self.joined_time(valueList);
 				});
-				loader.filter(false, "eventType", "joined");
+				eventsLoader.filter(false, "eventType", "joined");
 				
-				loader.filter(true, "eventType", "quit");
-				loader.get_valueList("responseTime").then(function(valueList) {
+				eventsLoader.filter(true, "eventType", "quit");
+				eventsLoader.get_valueList("responseTime").then(function(valueList) {
 					self.quit_time(valueList);
 				});
 				
-				return loader.waitUntilReady();
+				return eventsLoader.waitUntilReady();
 			})
 			.then(function() {
 				page.loader.update(Lang.get("state_loading_file", Lang.get("statistics")));
 				
 				self.isLoading(false);
 				return load_statisticsFromFiles(
-					page,
+					questionnaireLoaderList,
 					study,
 					charts,
-					user
+					user,
+					!!publicStatisticsCache
 				);
 			})
 			.then(function([statistics, publicStatistics]) {
+				if(!publicStatisticsCache)
+					publicStatisticsCache = publicStatistics;
 				let el = document.getElementById("user_personalStatistics");
 				while(el.hasChildNodes()) {
 					el.removeChild(el.firstChild);

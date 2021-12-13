@@ -5,7 +5,12 @@ import {Studies} from "../js/main_classes/studies";
 import {get_chart, get_pageType} from "../js/shared/charts";
 import {DetectChange} from "../js/main_classes/detect_change";
 import {CsvCreator} from "../js/dynamic_imports/csv_loader";
-import {combineStatistics, drawCharts, load_statisticsFromFiles} from "../js/dynamic_imports/statistic_tools";
+import {
+	combineStatistics,
+	create_loaderForNeededFiles,
+	drawCharts,
+	load_statisticsFromFiles
+} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
 	let isFor_calc = get_pageType() === "calc";
@@ -43,7 +48,7 @@ export function ViewModel(page) {
 		let promise;
 		if(isFor_calc) {
 			promise = load_statisticsFromFiles(
-				page,
+				create_loaderForNeededFiles(page, study, study.personalStatistics.charts()),
 				study,
 				charts
 			);
