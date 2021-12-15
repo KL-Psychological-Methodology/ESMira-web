@@ -187,4 +187,8 @@ export function ViewModel(page) {
 		loader = new CsvLoader(url, page);
 		this.reload();
 	};
+	
+	this.destroy = function() {
+		loader.close();
+	}
 }

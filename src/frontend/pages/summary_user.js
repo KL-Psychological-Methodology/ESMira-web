@@ -135,4 +135,12 @@ export function ViewModel(page) {
 				);
 		});
 	};
+	
+	this.destroy = function() {
+		eventsLoader.close();
+		for(let i=questionnaireLoaderList.length-1; i>=0; --i) {
+			if(publicStatisticsCache[i])
+				publicStatisticsCache[i].close();
+		}
+	}
 }

@@ -11,7 +11,6 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR,
 	STATISTICS_VALUETYPES_COUNT
 } from "../js/variables/statistics";
-import {filter_box} from "../js/helpers/basics";
 import {Studies} from "../js/main_classes/studies";
 import {CsvLoader} from "../js/dynamic_imports/csv_loader";
 import {colors, create_perDayChartCode, setup_chart} from "../js/dynamic_imports/statistic_tools";
@@ -29,7 +28,6 @@ export function ViewModel(page) {
 	this.user_agentCount = ko.observable(0);
 	this.showData = ko.observable(true);
 	
-	this.filter_box = filter_box;
 	let study;
 	let create_perMonthChartCode = function(title, monthsMax) {
 		let date = new Date();
@@ -143,4 +141,8 @@ export function ViewModel(page) {
 		loader = new CsvLoader(url, page);
 		this.reload();
 	};
+	
+	this.destroy = function() {
+		loader.close();
+	}
 }

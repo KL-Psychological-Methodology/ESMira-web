@@ -102,6 +102,7 @@ export function ViewModel(page) {
 		while(header.hasChildNodes()) {
 			header.removeChild(header.firstChild);
 		}
+		empty_table();
 		
 		selectedRows = 0;
 		
@@ -334,5 +335,9 @@ export function ViewModel(page) {
 		}
 		else
 			selectedRowCount_el.classList.add("hidden");
+	}
+	
+	this.destroy = function() {
+		loader.close();
 	}
 }

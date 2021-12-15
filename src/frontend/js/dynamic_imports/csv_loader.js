@@ -104,6 +104,10 @@ function CsvContainer(page) {
 		return addPromise({type: "reset"}, "state_loading");
 	};
 	
+	this.close = function() {
+		csvWorker.terminate();
+	}
+	
 	//
 	// convenience functions
 	//
