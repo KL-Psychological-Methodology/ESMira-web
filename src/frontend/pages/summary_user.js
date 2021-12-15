@@ -4,7 +4,7 @@ import ko from "knockout";
 import {FILE_RESPONSES, FILE_STATISTICS} from "../js/variables/urls";
 import {Studies} from "../js/main_classes/studies";
 import {Admin} from "../js/main_classes/admin";
-import {CsvLoader} from "../js/dynamic_imports/csv_loader";
+import {CsvLoader} from "../js/dynamic_imports/csv_container";
 import {
 	drawCharts,
 	setup_chart,

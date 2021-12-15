@@ -12,7 +12,7 @@ import {
 	STATISTICS_VALUETYPES_COUNT
 } from "../js/variables/statistics";
 import {Studies} from "../js/main_classes/studies";
-import {CsvLoader} from "../js/dynamic_imports/csv_loader";
+import {CsvLoader} from "../js/dynamic_imports/csv_container";
 import {colors, create_perDayChartCode, setup_chart} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {

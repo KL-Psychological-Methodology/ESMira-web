@@ -10,7 +10,7 @@ export function ViewModel(page) {
 	let self = this;
 	this.html = html;
 	page.title(Lang.get("questionnaires"));
-	this.promiseBundle = [Studies.init(page), import("../js/dynamic_imports/drag_input")];
+	this.promiseBundle = [Studies.init(page), import("../js/dynamic_imports/drag_class")];
 	this.extraContent = "<div data-bind=\"if: $root.selectedIndex() !== undefined\">" +
 		"<a class=\"right\" data-bind=\"navi: 'attend,demo,q:'+$root.selectedIndex(), text: Lang.get('preview')\"></a>" +
 		"</div>";

@@ -11,7 +11,7 @@ import {
 } from "../js/helpers/basics";
 import {Studies} from "../js/main_classes/studies";
 import {Admin} from "../js/main_classes/admin";
-import {CsvLoader} from "../js/dynamic_imports/csv_loader";
+import {CsvLoader} from "../js/dynamic_imports/csv_container";
 
 const ROW_HEIGHT = 25;
 function get_backupTitle(s) {

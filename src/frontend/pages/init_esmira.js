@@ -1,7 +1,6 @@
 import html from "./init_esmira.html"
 import {Lang} from "../js/main_classes/lang";
 import {Requests} from "../js/main_classes/requests";
-import {check_string, save_cookie} from "../js/helpers/basics";
 import {FILE_ADMIN, FILE_CHECK_HTACCESS} from "../js/variables/urls";
 import * as ko from "knockout";
 import {Admin} from "../js/main_classes/admin";

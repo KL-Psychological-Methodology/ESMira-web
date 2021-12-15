@@ -4,7 +4,7 @@ import reload_svg from "../imgs/reload.svg?raw";
 import {Studies} from "../js/main_classes/studies";
 import {get_chart, get_pageType} from "../js/shared/charts";
 import {DetectChange} from "../js/main_classes/detect_change";
-import {CsvCreator} from "../js/dynamic_imports/csv_loader";
+import {CsvCreator} from "../js/dynamic_imports/csv_container";
 import {
 	combineStatistics,
 	create_loaderForNeededFiles,
