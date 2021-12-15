@@ -23,14 +23,14 @@ export function ViewModel(page) {
 	page.title(Lang.get("server_statistics"));
 	if(Admin.enable_adminFeatures)
 		this.promiseBundle = [
-			import("../js/dynamic_imports/statistic_tools.js"),
+			import("../js/dynamic_imports/chart_box.js"),
 			Requests.load(FILE_SERVER_STATISTICS),
 			Studies.init(page),
 			Admin.init(page)
 		];
 	else
 		this.promiseBundle = [
-			import("../js/dynamic_imports/statistic_tools.js"),
+			import("../js/dynamic_imports/chart_box.js"),
 			Requests.load(FILE_SERVER_STATISTICS)
 		];
 	

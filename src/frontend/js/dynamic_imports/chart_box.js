@@ -656,7 +656,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 		legendBox = createElement("div", false, {className: "legend"}),
 		scroll_div = createElement("div", false, {className: chartType === STATISTICS_CHARTTYPES_PIE ? "scrollEl pie" : "scrollEl"}),
 		scrollable = chartType !== STATISTICS_CHARTTYPES_PIE && chart.dataType() !== STATISTICS_DATATYPES_XY && parent.clientWidth / labels.length < CHART_MIN_ENTRY_WIDTH,
-		width = (chartType === STATISTICS_CHARTTYPES_PIE) ? "200px" : (scrollable ? (labels.length*CHART_MIN_ENTRY_WIDTH)+"px" : "100%"),
+		width = scrollable ? (labels.length*CHART_MIN_ENTRY_WIDTH)+"px" : "100%",
 		
 		chart_div = createElement("div", "width: "+width, {className: "chartEl"}),
 		el = createElement("canvas", "height: 200px; width: "+width);
@@ -684,7 +684,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 					left: verticalPadding,
 					right: verticalPadding,
 					top: 20,
-					bottom: 0
+					bottom: verticalPadding
 				}
 			},
 			responsive: true,

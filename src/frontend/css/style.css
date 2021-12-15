@@ -1007,11 +1007,8 @@ charts
 	overflow-x: auto;
 }
 .chartWindow .scrollEl.pie {
-	display: flex;
-	justify-content: center;
-}
-.chartWindow .pie .chartEl {
-	min-width: 200px;
+	max-width: 200px;
+	margin: auto;
 }
 .chartWindow .chartEl {
 	min-width: 100%;
