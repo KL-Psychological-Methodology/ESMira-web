@@ -345,7 +345,7 @@ export const AdminTools = {
 			FILE_ADMIN + "?type=change_password",
 			false,
 			"post",
-			"user="+username + "&pass="+password
+			"user="+username + "&new_pass="+password
 		).then(function() {
 			page.loader.info(Lang.get("info_successful"));
 		});

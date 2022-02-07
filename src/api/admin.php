@@ -678,10 +678,10 @@ $is_admin = Permission::is_admin();
 //is logged in or read permission:
 switch($type) {
 	case 'change_password':
-		if(!isset($_POST['pass']))
+		if(!isset($_POST['new_pass']))
 			Output::error('Unexpected data');
 		
-		$pass = $_POST['pass'];
+		$pass = $_POST['new_pass'];
 		
 		if($is_admin && isset($_POST['user']))
 			$user = $_POST['user'];
