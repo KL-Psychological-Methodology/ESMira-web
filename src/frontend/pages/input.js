@@ -44,7 +44,8 @@ export function ViewModel(pageModel) {
 		{key: "va_scale", value: Lang.get("input_va_scale")},
 		{key: "list_single", value: Lang.get("input_list_single")},
 		{key: "list_multiple", value: Lang.get("input_list_multiple")},
-		{key: "dynamic_input", value: Lang.get("input_dynamic_input")}
+		{key: "dynamic_input", value: Lang.get("input_dynamic_input")},
+		{key: "app_usage", value: Lang.get("input_app_usage")}
 	];
 	this.optionsSubInput = [
 		{key: "text", value: Lang.get("input_text")},

@@ -308,12 +308,20 @@ function checkUnique_and_collectKeys($study) {
 				foreach($page->inputs as $input) {
 					$responseType = isset($input->responseType) ? $input->responseType : 'text_input';
 					
+					$name = $input->name;
+					
 					switch($responseType) {
 						case 'text':
 							continue 2;
+						case 'dynamic_input':
+							$keys_questionnaire[] = $name .'~index';
+							break;
+						case 'app_usage':
+							$keys_questionnaire[] = $name .'~visibleTime';
+							$keys_questionnaire[] = $name .'~usageCount';
+							$keys_questionnaire[] = $name .'~measuredFrom';
+							break;
 					}
-					
-					$name = $input->name;
 					
 					if(!strlen($name))
 						Output::error('Input name is empty!');
@@ -1155,17 +1163,20 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 		case 'load_langs':
 			$folder_langs = Files::get_folder_langs($study_id);
 			$langObj = [];
+			$langString = "{";
 			if(file_exists($folder_langs)) {
 				$h_folder = opendir($folder_langs);
 				while($file = readdir($h_folder)) {
 					if($file[0] != '.') {
 						$s = file_get_contents($folder_langs .$file);
-						$langObj[explode('.', $file)[0]] =  $s;
+//						$langObj[explode('.', $file)[0]] =  $s;
+						$langString .= '"' .explode('.', $file)[0] .'":' .$s;
 					}
 				}
 				closedir($h_folder);
 			}
-			Output::successObj($langObj);
+//			Output::successObj($langObj);
+			Output::successString($langString .'}');
 			break;
 		case 'save_study':
 			$studyCollection_json = file_get_contents('php://input');
@@ -1425,7 +1436,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 				write_file(Files::get_file_studyIndex(), serialize($study_index));
 			}
 			else {
-				$old_study = json_decode(file_get_contents($file_config));
+				$old_study = file_exists($file_config) ? json_decode(file_get_contents($file_config)) : [];
 				
 				foreach($studyCollection as &$langStudy) {
 					$langStudy->accessKeys = isset($old_study->accessKeys) ? $old_study->accessKeys : [];
@@ -1448,7 +1459,10 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 					$langStudy->subVersion += 1;
 				}
 			}
-
+			
+			//delete old language files
+			empty_folder(Files::get_folder_langs($study_id));
+			
 			$studies_json = [];
 			foreach($studyCollection as $code => $s) {
 				$study_json = json_encode($s);

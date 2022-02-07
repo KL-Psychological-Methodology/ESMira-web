@@ -12,6 +12,7 @@ import {FILE_RESPONSES, FILE_STATISTICS} from "../variables/urls";
 import {Requests} from "../main_classes/requests";
 import {CsvLoader} from "./csv_container";
 import {ChartBox} from "./chart_box";
+import {Studies} from "../main_classes/studies";
 
 
 
@@ -136,21 +137,15 @@ export function create_loaderForNeededFiles(page, study, charts) {
 		urlStart = FILE_RESPONSES.replace('%1', study.id()),
 		variableGroupIndex = {};
 	
+	
+	
+	
 	for(let i=questionnaires.length-1; i>=0; --i) {
-		let quesionnaire = questionnaires[i];
-		let pages = quesionnaire.pages();
-		let sumScores = quesionnaire.sumScores();
+		let questionnaire = questionnaires[i];
 		
-		for(let j=pages.length-1; j>=0; --j) {
-			let inputs = pages[j].inputs();
-			for(let k=inputs.length-1; k>=0; --k) {
-				let input = inputs[k];
-				variableGroupIndex[input.hasOwnProperty("name") ? input.name() : Defaults.inputs.name] = i;
-			}
-		}
-		for(let j=sumScores.length-1; j>=0; --j) {
-			let sumScore = sumScores[j];
-			variableGroupIndex[sumScore.hasOwnProperty("name") ? sumScore.name() : Defaults.sumScores.name] = i;
+		let variables = Studies.tools.get_questionnaireVariables(questionnaire);
+		for(let j=variables.length-1; j>=0; --j) {
+			variableGroupIndex[variables[j]] = i;
 		}
 	}
 	let groupLoaders = [],

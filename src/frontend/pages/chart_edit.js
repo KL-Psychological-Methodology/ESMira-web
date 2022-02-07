@@ -117,22 +117,8 @@ export function ViewModel(page) {
 			for(let i=questionnaires.length-1; i>=0; --i) {
 				let questionnaire = questionnaires[i];
 				
-				if(questionnaire.hasOwnProperty("sumScores")) {
-					let sumScores = questionnaire.sumScores();
-					for(let i = sumScores.length - 1; i >= 0; --i) {
-						if(sumScores[i].name() === axisValue)
-							return questionnaire;
-					}
-				}
-				
-				let pages = questionnaire.pages();
-				for(let j=pages.length-1; j>=0; --j) {
-					let page = pages[j].inputs();
-					for(let k = page.length - 1; k >= 0; --k) {
-						if(page[k].name() === axisValue)
-							return questionnaire
-					}
-				}
+				if(Studies.tools.get_questionnaireVariables(questionnaire).indexOf(axisValue) !== -1)
+					return questionnaire;
 			}
 		};
 		

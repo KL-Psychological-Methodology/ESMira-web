@@ -316,7 +316,7 @@ export const Site = {
 	save_access: function(page, study_id, page_name) {
 		return page.loader.loadRequest(FILE_SAVE_ACCESS, true, "post", "study_id="+study_id+"&page_name="+page_name);
 	},
-	save_dataset: function(page, type, participant, questionnaire_name, questionnaire_id, responses) {
+	save_dataset: function(page, type, participant, questionnaire, responses) {
 		let study = Studies.get_current();
 		
 		responses = responses || {};
@@ -334,8 +334,8 @@ export const Site = {
 				studySubVersion: study.subVersion(),
 				studyLang: study.lang(),
 				accessKey: Studies.accessKey(),
-				questionnaireName: questionnaire_name,
-				questionnaireInternalId: questionnaire_id,
+				questionnaireName: questionnaire ? questionnaire.title() : null,
+				questionnaireInternalId: questionnaire ? questionnaire.internalId() : null,
 				eventType: type,
 				responseTime: Date.now(),
 				timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,

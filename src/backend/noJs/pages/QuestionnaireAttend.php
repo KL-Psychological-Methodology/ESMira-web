@@ -108,8 +108,11 @@ class QuestionnaireAttend implements Page {
 					if(isset($input->responseType)) {
 						switch($input->responseType) {
 							case 'dynamic_input':
-								if(isset($concat[$i]))
-									$value = $concat[$i].'/'.$value;
+								if(isset($concat[$i])) {
+//									$value = $concat[$i] . '/' . $value;
+									$this->dataCache[$input->name .'~index'] = $value;
+									$value = $concat[$i];
+								}
 								break;
 							case 'time':
 								if(isset($input->forceInt) && $input->forceInt) {

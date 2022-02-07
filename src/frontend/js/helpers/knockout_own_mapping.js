@@ -266,10 +266,7 @@ export const OwnMapping = {
 			else {
 				if(old_obj.hasOwnProperty(key)) {
 					let obs = old_obj[key];
-					if(obs.hasOwnProperty("___setLang"))
-						obs.___setLang(value, "_");
-					else
-						obs(value);
+					obs(value);
 				}
 				else //lang-objects are always set after OwnMapping.fromJS
 					old_obj[key] = this.fromJS(value, defaultObj[key]); //this will return an observable with a ___defaultValue

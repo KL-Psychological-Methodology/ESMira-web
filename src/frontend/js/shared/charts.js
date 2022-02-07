@@ -36,36 +36,8 @@ export function get_pageType() {
 }
 
 export function create_axisValues(questionnaire) {
-	let options = [];
-	let addValues = function(questionnaire) {
-		let pages = questionnaire.pages();
-		for(let i=0, maxI=pages.length; i<maxI; ++i) {
-			let inputs = pages[i].inputs();
-			for(let j=0, maxJ=inputs.length; j<maxJ; ++j) {
-				switch(inputs[j].responseType()) {
-					case "text":
-					case "video":
-						continue;
-				}
-				options.push(inputs[j].name());
-			}
-		}
-		
-		if(questionnaire.hasOwnProperty("sumScores")) {
-			let sumScores = questionnaire.sumScores();
-			for(let i=0, max=sumScores.length; i<max; ++i) {
-				options.push(sumScores[i].name());
-			}
-		}
-	};
-	if(questionnaire == null) {
-		let questionnaires = Studies.get_current().questionnaires();
-		for(let i=0,max=questionnaires.length; i<max; ++i) {
-			addValues(questionnaires[i]);
-		}
-	}
+	if(questionnaire == null)
+		return Studies.tools.get_studyVariables(Studies.get_current().questionnaires());
 	else
-		addValues(questionnaire);
-	
-	return options;
+		return Studies.tools.get_questionnaireVariables(questionnaire);
 }

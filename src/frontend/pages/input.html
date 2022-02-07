@@ -51,9 +51,16 @@
 	</label>
 	
 	<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video'">
-		<small data-bind="text: Lang.get('colon_prefilledValue')"></small>
+		<small data-bind="text: Lang.get('prefilledValue')"></small>
 		<input type="text" data-bind="value: defaultValue, disable: required"/>
 		<lang-options></lang-options>
+	</label>
+	
+	
+	<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() === 'app_usage'">
+		<small data-bind="text: Lang.get('packageId')"></small>
+		<input type="text" data-bind="value: packageId"/>
+		<small data-bind="text: Lang.get('packageId_desc')"></small>
 	</label>
 
 

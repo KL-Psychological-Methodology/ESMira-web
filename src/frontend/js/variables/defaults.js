@@ -88,9 +88,9 @@ export function fillDefaults() {
 		random: false,
 		likertSteps: 5,
 		numberHasDecimal: false,
-		// listChoices: [],
 		asDropDown: true,
-		forceInt: false
+		forceInt: false,
+		packageId: ""
 	};
 	Defaults.inputs.$.children = {
 		subInputs: JSON.parse(JSON.stringify(Defaults.inputs))

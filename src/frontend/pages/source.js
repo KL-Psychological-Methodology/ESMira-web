@@ -49,6 +49,8 @@ export function ViewModel(page) {
 				console.error(e);
 				return;
 			}
+			console.log(study)
+			console.log(json);
 			json.id = study.id();
 			repairStudy(json);
 			

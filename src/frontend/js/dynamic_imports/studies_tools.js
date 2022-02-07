@@ -146,7 +146,7 @@ export const Studies_tools = {
 		).then(function({lastChanged, json}) {
 			self.lastChanged[studyId] = lastChanged;
 			
-			
+			Studies.tools.currentLang("_");
 			OwnMapping.update(study, json._, Defaults.studies); //language fields were not changed
 			
 			// self.set_study_unchanged(study);
@@ -246,5 +246,35 @@ export const Studies_tools = {
 			Studies.list()[study_id].new_changes,
 			this.mark_study_as_updated.bind(this)
 		);
+	},
+	
+	get_studyVariables: function(study) {
+		let variables = [];
+		let questionnaires = study.questionnaires();
+		for(let i=0, max=questionnaires.length; i<max; ++i) {
+			variables.concat(this.get_questionnaireVariables(questionnaires[i]));
+		}
+		return variables;
+	},
+	get_questionnaireVariables: function(questionnaire) {
+		let variables = [];
+		let pages = questionnaire.pages();
+		for(let i=0, maxI=pages.length; i<maxI; ++i) {
+			let inputs = pages[i].inputs();
+			for(let j=0, maxJ=inputs.length; j<maxJ; ++j) {
+				if(inputs[j].responseType() === "text")
+					continue;
+				variables.push(inputs[j].name());
+			}
+		}
+		
+		if(questionnaire.hasOwnProperty("sumScores")) {
+			let sumScores = questionnaire.sumScores();
+			for(let i=0, max=sumScores.length; i<max; ++i) {
+				variables.push(sumScores[i].name());
+			}
+		}
+		
+		return variables;
 	}
 }

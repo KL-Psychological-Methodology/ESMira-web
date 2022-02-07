@@ -162,13 +162,19 @@ export function ViewModel(page) {
 		);
 	}
 	
+	this.scrollUp = function() {
+		window.setTimeout(function() {
+			self.viewModel_page().inputs[0].currentElement.scrollIntoView({behavior: 'smooth'});
+		}, 0);
+	};
 	this.next_page = function() {
 		let study_id = study.id();
-		let pageNum = self.current_page();
 		
-		if(!viewModel_pages()[pageNum].has_missings()) {
+		if(!self.viewModel_page().has_missings()) {
+			let pageNum = self.current_page();
 			self.current_page(pageNum+1);
 			save_cookie(COOKIE_CURRENT_PAGE.replace("%1", study_id).replace("%2", questionnaire.internalId()), pageNum+1);
+			self.scrollUp();
 		}
 	};
 	this.prev_page = function() {
@@ -176,6 +182,7 @@ export function ViewModel(page) {
 		let pageNum = self.current_page() - 1;
 		self.current_page(pageNum);
 		save_cookie(COOKIE_CURRENT_PAGE.replace("%1", study_id).replace("%2", questionnaire.internalId()), pageNum);
+		self.scrollUp();
 	};
 	
 	this.save_responses = function() {
@@ -214,7 +221,7 @@ export function ViewModel(page) {
 		
 		self.responses_cache.formDuration = Date.now() - self.formStarted;
 
-		Site.save_dataset(page, "questionnaire", participant_id, questionnaire.title(), questionnaire.internalId(), self.responses_cache).then(function({states}) {
+		Site.save_dataset(page, "questionnaire", participant_id, questionnaire, self.responses_cache).then(function({states}) {
 			let data_answer = states[0];
 			if(data_answer) {
 				if(!data_answer.hasOwnProperty("success") || !data_answer.success) {
@@ -232,6 +239,8 @@ export function ViewModel(page) {
 		});
 	};
 }
+
+
 
 function get_inputHtml(responseType) {
 	switch(responseType) {
@@ -330,9 +339,9 @@ function Questionnaire_viewModel(page, study, questionnaire, qPage, responses_ca
 
 function Input_viewModel(study, questionnaire, input, responses_cache) {
 	let self = this;
+	let cookieUrl = COOKIE_RESPONSES_CACHE.replace("%1",  study.id()).replace("%2", questionnaire.internalId());
 	this.input = input;
 	this.currentElement = null;
-	this.defaults = Defaults;
 	let defaultValue = responses_cache.hasOwnProperty(input.name())
 		? responses_cache[input.name()]
 		: ((input.required && input.required()) || !input.defaultValue || !input.defaultValue() || input.defaultValue().length === 0 ? "" : input.defaultValue());
@@ -343,7 +352,7 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 	register(responseType, html);
 	
 	//TODO
-	//for older IOS we would need to add an empty optgroup to make sure long lines are wrapped. But thats hacky and creates an empty line on other browsers
+	//for older IOS we would need to add an empty optgroup into the list item to make sure long lines are wrapped. But thats hacky and creates an empty line on other browsers
 	//also, Apple already makes us jump through enough hoops...
 	//https://stackoverflow.com/questions/19011978/ios-7-doesnt-show-more-than-one-line-when-option-is-longer-than-screen-size
 	switch(responseType) {
@@ -446,10 +455,12 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 			let subModel = new Input_viewModel(study, questionnaire, element, responses_cache);
 			this.value = ko.observable(index);
 			this.exportValue = ko.computed(function() {
-				return subModel.exportValue() + "/" + index;
+				// return subModel.exportValue() + "/" + index;
+				return subModel.exportValue();
 			});
 			this.subModel = subModel;
 			this.required = element.required ? element.required() : false;
+			responses_cache[input.name() + "~index"] = index;
 			break;
 		default:
 			this.value = ko.observable(defaultValue);
@@ -460,6 +471,6 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 	this.exportValue.subscribe(function(newValue) {
 		let study_id = study.id();
 		responses_cache[input.name()] = newValue;
-		save_cookie(COOKIE_RESPONSES_CACHE.replace("%1", study_id).replace("%2", questionnaire.internalId()), JSON.stringify(responses_cache));
+		save_cookie(cookieUrl, JSON.stringify(responses_cache));
 	});
 }
