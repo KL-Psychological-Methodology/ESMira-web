@@ -6,6 +6,10 @@
 				<a data-bind="navi:'action:' + $index(), text: $root.actions[type()]"></a>
 			</div>
 	</div>
+	<div data-bind="if: !actions().length">
+		<img src="../imgs/warn.svg" alt="warn" class="horizontal"/>
+		<span class="highlight" data-bind="text: Lang.get('info_trigger_needs_action')"></span>
+	</div>
 	<widget-add data-bind="click: $root.ko__add_default('actions', 'action:%')"></widget-add>
 </div>
 
