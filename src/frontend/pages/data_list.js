@@ -82,7 +82,7 @@ export function ViewModel(page) {
 	
 	
 	this.reload = function() {
-		PromiseCache.remove(FILE_ADMIN+"?type=list_data");
+		PromiseCache.remove(FILE_ADMIN+"?type=list_data&study_id="+self.dataObj.id());
 		return init();
 	};
 	this.empty_data = function() {
@@ -97,4 +97,8 @@ export function ViewModel(page) {
 				page.loader.info(Lang.get("info_successful"));
 			});
 	};
+	
+	this.backup_study = function() {
+		Studies.tools.backup_study(page, self.dataObj).then(self.reload);
+	}
 }

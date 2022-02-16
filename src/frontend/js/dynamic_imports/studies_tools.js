@@ -175,7 +175,7 @@ export const Studies_tools = {
 			return;
 		
 		let needsBackup = this.needsBackup;
-		page.loader.loadRequest(FILE_ADMIN+"?type=backup_study", false, "post", "study_id="+studyId).then(function() {
+		return page.loader.loadRequest(FILE_ADMIN+"?type=backup_study", false, "post", "study_id="+studyId).then(function() {
 			let index = needsBackup.indexOf(studyId);
 			if(index > -1)
 				needsBackup.splice(index, 1);
