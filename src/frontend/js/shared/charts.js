@@ -37,7 +37,7 @@ export function get_pageType() {
 
 export function create_axisValues(questionnaire) {
 	if(questionnaire == null)
-		return Studies.tools.get_studyVariables(Studies.get_current().questionnaires());
+		return Studies.tools.get_studyVariables(Studies.get_current());
 	else
 		return Studies.tools.get_questionnaireVariables(questionnaire);
 }

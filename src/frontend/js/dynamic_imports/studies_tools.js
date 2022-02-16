@@ -112,8 +112,11 @@ export const Studies_tools = {
 		
 		return page.loader.showLoader(Lang.get("state_loading"),
 			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
-				let newQuestionnaire = add_default(study.questionnaires, "questionnaires", pageCode);
+				let newQuestionnaire = add_default(study.questionnaires, "questionnaires");
 				newQuestionnaire.internalId(internalId);
+				
+				if(pageCode)
+					Site.add_page(pageCode.replace("%", study.questionnaires().length-1), page.depth);
 				return newQuestionnaire;
 			}));
 	},
@@ -252,7 +255,7 @@ export const Studies_tools = {
 		let variables = [];
 		let questionnaires = study.questionnaires();
 		for(let i=0, max=questionnaires.length; i<max; ++i) {
-			variables.concat(this.get_questionnaireVariables(questionnaires[i]));
+			variables = variables.concat(this.get_questionnaireVariables(questionnaires[i]));
 		}
 		return variables;
 	},
