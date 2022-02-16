@@ -4,19 +4,31 @@ import {get_uniqueName} from "../js/shared/inputs";
 import {Admin} from "../js/main_classes/admin";
 import {Defaults} from "../js/variables/defaults";
 import {Lang} from "../js/main_classes/lang";
+import {selectedQuestionnaire} from "../js/shared/questionnaire_edit";
+import * as ko from "knockout";
 
 export function ViewModel(pageModel) {
+	let self = this;
 	this.html = html;
 	this.promiseBundle = [Studies.init(pageModel)];
 	
 	this.preInit = function({id, q, page, input}, studies) {
 		this.for_subItem = pageModel.index.hasOwnProperty("sub");
-		if(this.for_subItem)
-			this.dataObj = studies[id].questionnaires()[q].pages()[page].inputs()[input].subInputs()[pageModel.index.sub];
-		else
-			this.dataObj = studies[id].questionnaires()[q].pages()[page].inputs()[input];
+		let questionnaire = studies[id].questionnaires()[q];
 		
-		pageModel.title(this.dataObj.name);
+		if(this.for_subItem)
+			this.dataObj = questionnaire.pages()[page].inputs()[input].subInputs()[pageModel.index.sub];
+		else
+			this.dataObj = questionnaire.pages()[page].inputs()[input];
+		
+		
+		pageModel.title(ko.pureComputed(function() {
+			return self.dataObj.name() + " (" + questionnaire.title() + ")";
+		}));
+		
+		this.isCurrent = ko.pureComputed(function() {
+			return parseInt(q) === selectedQuestionnaire();
+		});
 	};
 	
 	let listTools = Admin.tools.get_listTools(pageModel);

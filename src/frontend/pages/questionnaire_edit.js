@@ -3,8 +3,8 @@ import {Studies} from "../js/main_classes/studies";
 import {get_uniqueName} from "../js/shared/inputs";
 import {Admin} from "../js/main_classes/admin";
 import {Defaults} from "../js/variables/defaults";
-import * as ko from "knockout";
 import {Lang} from "../js/main_classes/lang";
+import {selectedQuestionnaire} from "../js/shared/questionnaire_edit";
 
 export function ViewModel(page) {
 	let self = this;
@@ -15,23 +15,20 @@ export function ViewModel(page) {
 		"<a class=\"right\" data-bind=\"navi: 'attend,demo,q:'+$root.selectedIndex(), text: Lang.get('preview')\"></a>" +
 		"</div>";
 	
-	this.selectedIndex = ko.observable();
+	this.selectedIndex = selectedQuestionnaire;
 	
 	this.preInit = function({id, q}, studies) {
 		this.study = studies[id];
-		this.selectedIndex(0);
-		
-		// this.dataObj = study.questionnaires()[q];
-		// page.title(this.dataObj.title);
+		this.selectedIndex(q ? parseInt(q) : 0);
 	};
 	
 	let listTools = Admin.tools.get_listTools(page);
-	this.add_input = function(pageIndex, questionnaireIndex, page) {
+	this.add_input = function(pageIndex, questionnaireIndex, selectedPage) {
 		let name = get_uniqueName();
 		if(!name)
 			return;
 		
-		let input = listTools.add_obj(page.inputs, Defaults.inputs, "input:%,page:"+pageIndex+",q:"+questionnaireIndex);
+		let input = listTools.add_obj(selectedPage.inputs, Defaults.inputs, "input:%,pageI:"+pageIndex+",q:"+questionnaireIndex);
 		input.name(name);
 	};
 	this.add_questionnaire = function() {

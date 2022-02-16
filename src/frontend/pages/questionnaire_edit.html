@@ -15,7 +15,7 @@
 				<widget-delete data-bind="click:$root.ko__remove_from_list($parents[2].pages, pIndex, Lang.get('confirm_delete_inputPage'), true)"></widget-delete>
 			</title-row>
 			
-			<a class="line drag_hidden center spacing_top spacing_bottom" data-bind="navi: 'pageSettings,page:'+pIndex+',q:'+qIndex, text: Lang.get('page_settings')"></a>
+			<a class="line drag_hidden center spacing_top spacing_bottom" data-bind="navi: 'pageSettings,pageI:'+pIndex, text: Lang.get('page_settings')"></a>
 			
 			<div class="drag_placer" data-bind="visible: $data.inputs().length === 0, dragPlacer: inputs"></div>
 			

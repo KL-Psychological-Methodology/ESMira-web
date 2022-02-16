@@ -320,7 +320,6 @@
     "permission_read": "Daten",
     "per_day": "Pro Tag",
     "personal_charts_for_x": "Persönliche diagramme für %s",
-    "questionnaires_edit": "Fragebögen bearbeiten",
     "packageId": "Package Id",
     "packageId_desc": "Zum Beispiel: \"at.jodlidev.esmira\"",
     "password": "Passwort",
@@ -521,5 +520,7 @@
     "info_newVersionAvailable": "Eine neue Version ist verfügbar:",
     "info_update_complete": "ESMira wurde erfolgreich aktualisiert!\n\nDie Seite wird nun neu laden und ESMira ist dann hoffentlich super neu und modern! ;)",
     "update_now": "Jetzt updaten",
-    "state_installing": "Installiere…"
+    "state_installing": "Installiere…",
+    "info_trigger_needs_action": "Es wird mindestens eine Aktion benötigt.",
+    "edit_page_x": "Bearbeite Seite %d"
 }

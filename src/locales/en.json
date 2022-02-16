@@ -320,7 +320,6 @@
     "permission_read": "Data",
     "per_day": "Per day",
     "personal_charts_for_x": "Personal charts for %s",
-    "questionnaires_edit": "Edit questionnaires",
     "packageId": "package id",
     "packageId_desc": "for example \"at.jodlidev.esmira\"",
     "password": "Password",
@@ -521,5 +520,7 @@
     "info_newVersionAvailable": "A new version is available:",
     "info_update_complete": "ESMira was successfully updated.\n\nThe page will now reload and hopefully ESMira will then be super modern an cutting edge! ;)",
     "update_now": "Update now",
-    "state_installing": "Installing…"
+    "state_installing": "Installing…",
+    "info_trigger_needs_action": "You need at least one action.",
+    "edit_page_x": "Edit page %d"
 }
