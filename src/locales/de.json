@@ -242,7 +242,7 @@
     "help_time": "Zum Eingeben einer Uhrzeit.",
     "help_va_scale": "Erzeugt eine Visual Analogue Skala. Der Schieber erscheint erst, wenn von Teilnehmenden eine Position auf der Skala ausgewählt wurde. In der Web-Version, wenn der Benutzer JavaScript deaktiviert hat (\"Web NOJS\"), wird der Schieber zum Beginn auf stattdessen Position 50 platziert. Dadurch kann auch nicht erhoben werden ob eine Eingabe getätigt wurde oder nicht.",
     "help_video": "Zeigt ein eingebettes Video. Der Ausgabewert ist 1 wenn das Video erfolgreich geladen wurde. Ansonsten 0. Beispiel für eine Youtube-url: \"https://www.youtube.com/embed/XXXX\".",
-    "hidden_studies": "Versteckte Studien",
+    "hidden_studies": "Eingeschränkte Studien",
     "hideUntilCompletion": "Zeige nur Teilnehmenden welche die Studie bereits abgeschlossen haben.",
     "highlighted": "Hervorgehoben",
     "home": "Home",
@@ -522,5 +522,6 @@
     "update_now": "Jetzt updaten",
     "state_installing": "Installiere…",
     "info_trigger_needs_action": "Es wird mindestens eine Aktion benötigt.",
-    "edit_page_x": "Bearbeite Seite %d"
+    "edit_page_x": "Bearbeite Seite %d",
+    "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen."
 }

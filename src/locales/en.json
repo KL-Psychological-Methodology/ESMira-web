@@ -242,7 +242,7 @@
     "help_time": "For providing a time of day.",
     "help_va_scale": "Creates a Visual Analogue Scale. The scale will initially be empty and when clicked, a thumb will appear at the clicked position. In the Web interface when the user has JavaScript disabled (\"Web NOJS\"), the thumb will instead initially be positioned at position 50. Then it will also not be possible to determine if that Item has been filled out not.",
     "help_video": "Shows an embedded video. The return value will be 1 if the video was loaded successfully. Otherwise, it will be 0. Example for a Youtube video: \"https://www.youtube.com/embed/XXXX\".",
-    "hidden_studies": "Hidden studies",
+    "hidden_studies": "Restricted studies",
     "hideUntilCompletion": "Only visible for participants who have finished the study.",
     "highlighted": "Highlighted",
     "home": "Home",
@@ -522,5 +522,6 @@
     "update_now": "Update now",
     "state_installing": "Installing…",
     "info_trigger_needs_action": "You need at least one action.",
-    "edit_page_x": "Edit page %d"
+    "edit_page_x": "Edit page %d",
+    "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it."
 }

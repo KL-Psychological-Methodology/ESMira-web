@@ -14,6 +14,9 @@
 			<widget-delete data-bind="click: $root.remove_accessKey, visible: accessKeys().length"></widget-delete>
 			<widget-add data-bind="click: $root.add_accessKey" class="horizontal" params="title: Lang.get('add')"></widget-add>
 		</label>
+		<div data-bind="if: published() && !accessKeys().length">
+			<div class="spacing_top spacing_bottom highlight" data-bind="text: Lang.get('info_study_is_public')"></div>
+		</div>
 	</div>
 	
 	<div data-bind="if: published">

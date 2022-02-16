@@ -77,7 +77,7 @@ export function ViewModel(page) {
 	this.serverName = ko.observable();
 	this.impressum = ko.observable();
 	this.privacyPolicy = ko.observable();
-	this.currentVersion = PACKAGE_VERSION;
+	this.currentVersion = parseInt(PACKAGE_VERSION);
 	
 	this.hasUpdate = ko.observable(false);
 	this.isUpToDate = ko.observable(false);
