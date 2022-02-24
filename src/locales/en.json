@@ -504,7 +504,7 @@
     "path_to_data_directory": "Path to data directory",
     "info_path_to_data_directory": "A folder named \"esmira_data\", which will contain all data, will be created in this path. PHP must have write permission for this location. Furthermore, you need to make sure that this folder can not be accessed from the internet (an according htaccess file is  placed inside the folder). If you are unsure what to enter, leave the preselected value as it is.",
     "installation_settings": "Installation settings",
-    "info_init_additional_steps": "Some additional server configuration is necessary to make ESMira work as expected. You can find more information <a href=\"https://github.com/KL-Psychological-Methodology/ESMira/wiki/Setting-up-a-server#additional-steps-for-servers-without-htaccess-or-mod_replace-apache\" target=\"_blank\">[in the wiki]</a>:",
+    "info_init_additional_steps": "Some additional server configuration is necessary to make ESMira work as expected. You can find more information <a href=\"https://github.com/KL-Psychological-Methodology/ESMira/wiki/Setting-up-a-server#optional-steps-for-specific-server-setups\" target=\"_blank\">[in the wiki]</a>:",
     "enabled": "Enabled",
     "additional_server_settings": "Additional server settings",
     "info_dataFolder_already_exists": "A folder named \"esmira_data\" already exist at this location. Should the existing folder be reused for ESMira (if you choose \"No\" the existing folder will be renamed)?",
