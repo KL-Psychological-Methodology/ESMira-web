@@ -12,14 +12,14 @@ export function ViewModel(pageModel) {
 	this.html = html;
 	this.promiseBundle = [Studies.init(pageModel)];
 	
-	this.preInit = function({id, q, page, input}, studies) {
+	this.preInit = function({id, q, pageI, input}, studies) {
 		this.for_subItem = pageModel.index.hasOwnProperty("sub");
 		let questionnaire = studies[id].questionnaires()[q];
 		
 		if(this.for_subItem)
-			this.dataObj = questionnaire.pages()[page].inputs()[input].subInputs()[pageModel.index.sub];
+			this.dataObj = questionnaire.pages()[pageI].inputs()[input].subInputs()[pageModel.index.sub];
 		else
-			this.dataObj = questionnaire.pages()[page].inputs()[input];
+			this.dataObj = questionnaire.pages()[pageI].inputs()[input];
 		
 		
 		pageModel.title(ko.pureComputed(function() {
