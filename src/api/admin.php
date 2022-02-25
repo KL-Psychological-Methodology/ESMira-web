@@ -201,6 +201,15 @@ function write_indexAndResponses_files($study, $identifier, $new_keys) {
 		write_file($file_index, serialize($new_keys) .',');
 	}
 }
+
+function get_conditionString($key, $storageType, $timeInterval, $conditions) {
+	$a = [];
+	foreach($conditions as $c) {
+		array_push($a, $c->key .$c->operator .$c->value);
+	}
+	sort($a);
+	return $key .$storageType .$timeInterval .implode('', $a);
+}
 function write_statistics($study) {
 	$study_id = $study->id;
 	if($study->publicStatistics->observedVariables !== new stdClass()) { //check if empty
@@ -317,9 +326,16 @@ function checkUnique_and_collectKeys($study) {
 							$keys_questionnaire[] = $name .'~index';
 							break;
 						case 'app_usage':
+							$keys_questionnaire[] = $name .'~usageTime';
+							$keys_questionnaire[] = $name .'~usageTimeFromApps'; //TODO - for testing
 							$keys_questionnaire[] = $name .'~visibleTime';
 							$keys_questionnaire[] = $name .'~usageCount';
-							$keys_questionnaire[] = $name .'~measuredFrom';
+							$keys_questionnaire[] = $name .'~todayUsageTime';
+							$keys_questionnaire[] = $name .'~todayVisibleTime';
+							$keys_questionnaire[] = $name .'~todayUsageCount';
+							$keys_questionnaire[] = $name .'~yesterdayUsageTime';
+							$keys_questionnaire[] = $name .'~yesterdayVisibleTime';
+							$keys_questionnaire[] = $name .'~yesterdayUsageCount';
 							break;
 					}
 					
@@ -1140,8 +1156,11 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			foreach($study->questionnaires as $i => $q) {
 				write_indexAndResponses_files($study, $q->internalId, $keys[$i]);
 			}
+			write_indexAndResponses_files($study, Files::FILENAME_EVENTS, KEYS_EVENT_RESPONSES);
+			write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, KEYS_WEB_ACCESS);
 			write_statistics($study);
 			
+			Output::successObj();
 			break;
 		case 'check_changed':
 			$sentChanged = (int) $_GET['lastChanged'];
@@ -1266,14 +1285,7 @@ if($study_id != 0 && ($is_admin || Permission::has_permission($study_id, 'write'
 			//Creating observable variables and statistics
 			//*****
 			
-			function get_conditionString($key, $storageType, $timeInterval, $conditions) {
-				$a = [];
-				foreach($conditions as $c) {
-					array_push($a, $c->key .$c->operator .$c->value);
-				}
-				sort($a);
-				return $key .$storageType .$timeInterval .implode('', $a);
-			}
+			
 			function check_axis(&$axisData, &$index, &$observed_variables, $storageType, $timeInterval) {
 				if(!isset($axisData))
 					return;
