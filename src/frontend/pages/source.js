@@ -49,17 +49,10 @@ export function ViewModel(page) {
 				console.error(e);
 				return;
 			}
-			console.log(study)
-			console.log(json);
 			json.id = study.id();
 			repairStudy(json);
 			
-			// console.log(OwnMapping.toJS(study));
-			// console.log(JSON.parse(JSON.stringify(json)));
-			
 			OwnMapping.update(study, json, Defaults.studies);
-			
-			// console.log(OwnMapping.toJS(study));
 			
 			btn.classList.add("hidden");
 		});
