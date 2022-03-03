@@ -326,15 +326,9 @@ function checkUnique_and_collectKeys($study) {
 							$keys_questionnaire[] = $name .'~index';
 							break;
 						case 'app_usage':
-							$keys_questionnaire[] = $name .'~usageTime';
+							$keys_questionnaire[] = $name .'~usageTimeFromApps'; //TODO - for testing
 							$keys_questionnaire[] = $name .'~visibleTime';
 							$keys_questionnaire[] = $name .'~usageCount';
-							$keys_questionnaire[] = $name .'~todayUsageTime';
-							$keys_questionnaire[] = $name .'~todayVisibleTime';
-							$keys_questionnaire[] = $name .'~todayUsageCount';
-							$keys_questionnaire[] = $name .'~yesterdayUsageTime';
-							$keys_questionnaire[] = $name .'~yesterdayVisibleTime';
-							$keys_questionnaire[] = $name .'~yesterdayUsageCount';
 							break;
 					}
 					

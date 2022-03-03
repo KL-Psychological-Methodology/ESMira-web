@@ -228,7 +228,7 @@
     "questionnaire_view": "Studien-Information",
     "header": "Kopfzeile",
     "heading": "Überschrift",
-    "help_app_usage": "Speichert wie lange (in ms) entweder eine spezifische App, oder das Smartphone im Allgemeinen seit dem letzten Ausfüllen des Fragebogens (oder in den letzten 24 Stunden, falls noch kein Fragebogen gespeichert ist) verwendet wurde",
+    "help_app_usage": "Speichert wie lange (in ms) entweder eine spezifische App, oder das Smartphone im Allgemeinen gestern aktiv war (erstellt zwei zusätzliche Variablen: \"visibleTime\" wie lange die App sichtbar war. \"usageCount\" wie oft die App geöffnet / der Bildschirm eingeschaltet wurde. -1 wenn der Wert nicht verfügbar war)",
     "help_binary": "Item mit zwei Antwortmöglichkeiten. Linke Antwort repräsentiert \"0\" in Daten. Rechte Antwort repräsentiert \"1\".",
     "help_date": "Zum Eingeben eines Datums.",
     "help_dynamic_input": "Zeigt einfachen Text der sich jedes Mal verändert nachdem der Fragebogen abgeschickt wurde. Alle Items müssen gezeigt worden sein bevor sie sich wiederholen können.",
