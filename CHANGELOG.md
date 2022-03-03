@@ -10,4 +10,4 @@
 - Improved questionnaire editing.
 - Fixed bug when attempting to change password.
 - Displayed server version was faulty in german language.
-
+- Saving a study disabled the saving button
