@@ -9,4 +9,5 @@
 - Caching and visual improvements for statistic summaries.
 - Improved questionnaire editing.
 - Fixed bug when attempting to change password.
+- Displayed server version was faulty in german language.
 
