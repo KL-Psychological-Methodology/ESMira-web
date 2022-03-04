@@ -74,7 +74,7 @@ class CreateDataSet {
 	}
 	
 	function success_lineOutput($dataset_id) {
-		if(!isset($output_index[$dataset_id])) {
+		if(!isset($this->output_index[$dataset_id])) {
 			$this->output_index[$dataset_id] = count($this->output);
 			$this->output[] = ['dataSetId' => $dataset_id, 'success' => true];
 		}
