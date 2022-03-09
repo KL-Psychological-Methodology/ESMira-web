@@ -332,6 +332,7 @@
     "prompt_image_fileSize": "\"%s\" ist sehr groß. Sind Sie sicher, dass Sie es in das Studienfile einbetten wollen? Dies kann die Download- und Verarbeitungszeit der Studie erhöhen.",
     "prompt_input_name": "Bitte wählen Sie einen Variablen-Namen (Dieser darf über alle Fragebögen nur einmal vorkommen):",
 	"prompt_languageCode": "Bitte geben Sie einen Sprach-Code an (z.B.: en, de, fr, ...):",
+    "prompt_newUsername": "Bitte wähle einen neuen Usernamen:",
     "prompt_studyName": "Bitte wählen Sie ein Studien-Namen:",
     "prompt_title": "Bitte wählen Sie einen Titel:",
     "prompt_url": "Bitte geben Sie eine Url ein:",
