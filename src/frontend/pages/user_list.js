@@ -48,7 +48,7 @@ export function ViewModel(page) {
 	this.add = function(username, password) {
 		return page.loader.loadRequest(FILE_ADMIN + "?type=create_user", false, "post", "new_user="+username + "&pass="+password).then(function(user) {
 			self.userList.push(OwnMapping.fromJS(user, Defaults.user));
-			Site.add_page("user_view,user:"+btoa(user.username));
+			Site.add_page("userView,user:"+(self.userList().length-1));
 		});
 	};
 }
