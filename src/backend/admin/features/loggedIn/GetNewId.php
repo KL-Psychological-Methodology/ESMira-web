@@ -1,13 +1,13 @@
 <?php
 
-namespace backend\admin\features\writePermission;
+namespace backend\admin\features\loggedIn;
 
-use backend\admin\HasWritePermission;
+
+use backend\admin\IsLoggedIn;
 use backend\Files;
 use backend\Output;
-use function getStudyId;
 
-class GetNewId extends HasWritePermission {
+class GetNewId extends IsLoggedIn {
 	
 	function exec() {
 		$forQuestionnaire = $_GET['for'] === 'questionnaire';

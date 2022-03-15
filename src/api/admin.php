@@ -22,6 +22,7 @@ $classIndex = [
 	'get_permissions' => 'backend\admin\features\noPermission\GetPermissions',
 	
 	//logged in:
+	'get_new_id' => 'backend\admin\features\loggedIn\GetNewId',
 	'change_password' => 'backend\admin\features\loggedIn\ChangePassword',
 	'change_username' => 'backend\admin\features\loggedIn\ChangeUsername',
 	'get_tokenList' => 'backend\admin\features\loggedIn\GetTokenList',
@@ -41,7 +42,6 @@ $classIndex = [
 	'get_data' => 'backend\admin\features\readPermission\GetData',
 	
 	//write
-	'get_new_id' => 'backend\admin\features\writePermission\GetNewId',
 	'is_frozen' => 'backend\admin\features\writePermission\IsFrozen',
 	'freeze_study' => 'backend\admin\features\writePermission\IsFrozen',
 	'empty_data' => 'backend\admin\features\writePermission\EmptyData',
