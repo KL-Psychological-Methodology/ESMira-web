@@ -9,6 +9,14 @@ abstract class IsLoggedIn extends NoPermission {
 	protected $study_id;
 	protected $is_admin;
 	
+	
+	protected function getStudyId() {
+		return rand(1000, 9999);
+	}
+	protected function getQuestionnaireId() {
+		return rand(10000, 99999);
+	}
+	
 	protected function empty_folder($path) {
 		$h_folder = opendir($path);
 		if(!$h_folder) {

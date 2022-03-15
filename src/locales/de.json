@@ -237,6 +237,7 @@
     "help_list_multiple": "Gibt eine Liste mit mehreren Auswahlmöglichkeiten vor, aus denen mehrere ausgewählt werden können.",
     "help_list_single": "Gibt eine Liste mit mehreren Auswahlmöglichkeiten vor, aus denen eine Auswahl getroffen werden kann.",
     "help_number": "Zum Eingeben von Zahlen.",
+    "help_photo": "Zum Aufnehmen eines Fotos mit der Kamera.",
     "help_text": "Zeigt einen einfachen Text ohne Eingabemöglichkeit.",
     "help_text_input": "Zum Eingeben von Text.",
     "help_time": "Zum Eingeben einer Uhrzeit.",
@@ -275,6 +276,7 @@
     "input_list_multiple": "Liste - Multiple choice",
     "input_list_single": "Liste - Single choice",
     "input_number": "Zahlen-Eingabe",
+    "input_photo": "Foto aufnehmen",
     "input_text": "Einfache Text-Anzeige",
     "input_text_input": "Text-Eingabe",
     "input_time": "Zeit-Eingabe",
@@ -524,5 +526,6 @@
     "state_installing": "Installiere…",
     "info_trigger_needs_action": "Es wird mindestens eine Aktion benötigt.",
     "edit_page_x": "Bearbeite Seite %d",
-    "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen."
+    "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen.",
+    "colon_media_download": "Zippe und lade Medien-Daten herunter:"
 }

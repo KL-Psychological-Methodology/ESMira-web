@@ -140,27 +140,19 @@ class SaveStudy extends HasWritePermission {
 		//create folders
 		//*****
 		
-		$folder_study = Files::get_folder_study($this->study_id);
-		$folder_langConfigs = Files::get_folder_langs($this->study_id);
-		$folder_study_responses = Files::get_folder_responses($this->study_id);
-		$folder_study_messages = Files::get_folder_messages($this->study_id);
-		$folder_study_messages_user = Files::get_folder_messages_archive($this->study_id);
-		$folder_study_messages_outgoing = Files::get_folder_messages_pending($this->study_id);
-		$folder_study_messages_unread = Files::get_folder_messages_unread($this->study_id);
-		$folder_study_responsesIndex = Files::get_folder_responsesIndex($this->study_id);
-		$folder_study_statistics = Files::get_folder_statistics($this->study_id);
-		$folder_study_token = Files::get_folder_userData($this->study_id);
-		
-		$this->create_folder($folder_study);
-		$this->create_folder($folder_langConfigs);
-		$this->create_folder($folder_study_token);
-		$this->create_folder($folder_study_messages);
-		$this->create_folder($folder_study_messages_user);
-		$this->create_folder($folder_study_messages_outgoing);
-		$this->create_folder($folder_study_messages_unread);
-		$this->create_folder($folder_study_responses);
-		$this->create_folder($folder_study_responsesIndex);
-		$this->create_folder($folder_study_statistics);
+		$this->create_folder(Files::get_folder_study($this->study_id));
+		$this->create_folder(Files::get_folder_langs($this->study_id));
+		$this->create_folder(Files::get_folder_userData($this->study_id));
+		$this->create_folder(Files::get_folder_statistics($this->study_id));
+		$this->create_folder(Files::get_folder_messages($this->study_id));
+		$this->create_folder(Files::get_folder_media($this->study_id));
+		$this->create_folder(Files::get_folder_pendingUploads($this->study_id));
+		$this->create_folder(Files::get_folder_images($this->study_id));
+		$this->create_folder(Files::get_folder_responses($this->study_id));
+		$this->create_folder(Files::get_folder_responsesIndex($this->study_id));
+		$this->create_folder(Files::get_folder_messages_archive($this->study_id));
+		$this->create_folder(Files::get_folder_messages_pending($this->study_id));
+		$this->create_folder(Files::get_folder_messages_unread($this->study_id));
 		
 		
 		//*****
@@ -291,8 +283,8 @@ class SaveStudy extends HasWritePermission {
 		//
 		//create web_access and events file
 		//
-		$this->write_indexAndResponses_files($study, Files::FILENAME_EVENTS, self::KEYS_EVENT_RESPONSES);
-		$this->write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, self::KEYS_WEB_ACCESS);
+		$this->write_indexAndResponses_files($study, Files::FILENAME_EVENTS, ['keys' => self::KEYS_EVENT_RESPONSES, 'types' => []]);
+		$this->write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, ['keys' => self::KEYS_WEB_ACCESS, 'types' => []]);
 		
 		
 		//

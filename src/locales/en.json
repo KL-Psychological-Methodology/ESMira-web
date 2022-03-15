@@ -237,6 +237,7 @@
     "help_list_multiple": "Creates a list with several items from which several items can be chosen.",
     "help_list_single": "Creates a list with several items from which one item can be chosen.",
     "help_number": "For providing numbers.",
+    "help_photo": "For capturing photos with the camera.",
     "help_text": "Shows just text.",
     "help_text_input": "For providing text.",
     "help_time": "For providing a time of day.",
@@ -275,6 +276,7 @@
     "input_list_multiple": "List - multiple choice",
     "input_list_single": "List - single choice",
     "input_number": "Number input",
+    "input_photo": "Take a picture",
     "input_text": "Simple text view",
     "input_text_input": "Text input",
     "input_time": "Time input",
@@ -524,5 +526,6 @@
     "state_installing": "Installing…",
     "info_trigger_needs_action": "You need at least one action.",
     "edit_page_x": "Edit page %d",
-    "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it."
+    "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it.",
+    "colon_media_download": "Zip and download media files:"
 }

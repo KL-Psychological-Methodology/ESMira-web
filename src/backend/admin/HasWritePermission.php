@@ -59,12 +59,6 @@ abstract class HasWritePermission extends IsLoggedIn {
 		'user_agent',
 	];
 	
-	protected function getStudyId() {
-		return rand(1000, 9999);
-	}
-	protected function getQuestionnaireId() {
-		return rand(10000, 99999);
-	}
 	
 	
 	protected function get_conditionString($key, $storageType, $timeInterval, $conditions) {
@@ -146,13 +140,18 @@ abstract class HasWritePermission extends IsLoggedIn {
 		
 		if(file_exists($file_responses) && file_exists($file_index)) {
 			$old_keys = unserialize(file_get_contents($file_index));
+			if(!isset($old_keys['keys'])) {//TODO: check is needed for old index design
+				$this->write_file($file_index, serialize($new_keys)); //update index file in case index has not changed
+				$old_keys = ['keys' => $old_keys];
+			}
+			$old_keys['types'] = $new_keys['types'];
 			
 			//finding out if there are new headers:
 			$index = [];
-			foreach($new_keys as $value) {
+			foreach($new_keys['keys'] as $value) {
 				$index[$value] = $value;
 			}
-			foreach($old_keys as $value) {
+			foreach($old_keys['keys'] as $value) {
 				unset($index[$value]);
 			}
 			
@@ -170,10 +169,10 @@ abstract class HasWritePermission extends IsLoggedIn {
 					Output::error("Could not rename $file_responses to $file_responsesBackup");
 				}
 				
-				
-				if(filesize($file_responsesBackup) > Configs::get('max_filesize_for_changes')) { //the file is too big to be changed on the fly. So we just create a new file
-					$this->write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
-					$this->write_file($file_index, serialize($new_keys) .',');
+				//if the file is too big to be changed on the fly, we just create a new file and that's it:
+				if(filesize($file_responsesBackup) > Configs::get('max_filesize_for_changes')) {
+					$this->write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys['keys']).'"');
+					$this->write_file($file_index, serialize($new_keys));
 					Base::freeze_study($study_id, false);
 					return;
 				}
@@ -183,7 +182,7 @@ abstract class HasWritePermission extends IsLoggedIn {
 				$addedContent = '';
 				foreach($index as $value) {
 					$addedContent .= $csv_delimiter .'""';
-					$old_keys[] = $value;
+					$old_keys['keys'][] = $value;
 				}
 				
 				
@@ -203,18 +202,18 @@ abstract class HasWritePermission extends IsLoggedIn {
 				
 				
 				if(feof($handle_backup)) { //there is no data. So we can just use the new headers
-					fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
-					$this->write_file($file_index, serialize($new_keys) .',');
+					fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $new_keys['keys']).'"');
+					$this->write_file($file_index, serialize($new_keys));
 					unlink($file_responsesBackup); //there is no point in keeping this backup
 				}
 				else {
-					fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $old_keys).'"');
+					fputs($handle_newResponses, '"'.implode('"'.$csv_delimiter.'"', $old_keys['keys']).'"');
 					
 					while(($line = fgets($handle_backup)) !== false) {
 						fputs($handle_newResponses, "\n".rtrim($line, "\n").$addedContent);
 					}
 					
-					$this->write_file($file_index, serialize($old_keys) .',');
+					$this->write_file($file_index, serialize($old_keys));
 				}
 				
 				
@@ -226,8 +225,8 @@ abstract class HasWritePermission extends IsLoggedIn {
 			}
 		}
 		else {
-			$this->write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys).'"');
-			$this->write_file($file_index, serialize($new_keys) .',');
+			$this->write_file($file_responses, '"'.implode('"'.$csv_delimiter.'"', $new_keys['keys']).'"');
+			$this->write_file($file_index, serialize($new_keys));
 		}
 	}
 	protected function checkUnique_and_collectKeys($study, $study_index) {
@@ -272,6 +271,7 @@ abstract class HasWritePermission extends IsLoggedIn {
 			
 			$questionnaire_title = $questionnaire->title; //only used for error feedback
 			$keys_questionnaire = self::KEYS_QUESTIONNAIRE_BASE_RESPONSES; //Note: php always creates copies, which is what we need right now
+			$input_types = [];
 			
 			//make sure input and sumScore names are unique:
 			if(isset($questionnaire->pages)) {
@@ -280,21 +280,6 @@ abstract class HasWritePermission extends IsLoggedIn {
 						$responseType = isset($input->responseType) ? $input->responseType : 'text_input';
 						
 						$name = $input->name;
-						
-						switch($responseType) {
-							case 'text':
-								continue 2;
-							case 'dynamic_input':
-								$keys_questionnaire[] = $name .'~index';
-								break;
-							case 'app_usage':
-								$keys_questionnaire[] = $name .'~usageTimeFromApps'; //TODO - for testing
-								$keys_questionnaire[] = $name .'~visibleTime';
-								$keys_questionnaire[] = $name .'~usageCount';
-								break;
-							default:
-								break;
-						}
 						
 						if(!strlen($name))
 							Output::error('Input name is empty!');
@@ -307,7 +292,28 @@ abstract class HasWritePermission extends IsLoggedIn {
 						else
 							$key_check_array[$name] = $questionnaire_title;
 						
-						$keys_questionnaire[] = $name;
+						switch($responseType) {
+							case 'text':
+								unset($key_check_array[$name]);
+								continue 2;
+							case 'dynamic_input':
+								$keys_questionnaire[] = $name;
+								$keys_questionnaire[] = "$name~index";
+								break;
+							case 'app_usage':
+								$keys_questionnaire[] = $name;
+								$keys_questionnaire[] = "$name~usageTimeFromApps"; //TODO - for testing
+								$keys_questionnaire[] = "$name~visibleTime";
+								$keys_questionnaire[] = "$name~usageCount";
+								break;
+							case 'photo':
+								$keys_questionnaire[] = $name;
+								$input_types[$name] = 'image';
+								break;
+							default:
+								$keys_questionnaire[] = $name;
+								break;
+						}
 					}
 				}
 			}
@@ -319,7 +325,7 @@ abstract class HasWritePermission extends IsLoggedIn {
 				}
 			}
 			
-			$keys_questionnaire_array[$i] = $keys_questionnaire; // used for responses index below
+			$keys_questionnaire_array[$i] = ['keys' => $keys_questionnaire, 'types' => $input_types];
 		}
 		return $keys_questionnaire_array;
 	}

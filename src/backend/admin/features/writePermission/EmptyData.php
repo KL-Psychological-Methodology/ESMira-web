@@ -39,8 +39,8 @@ class EmptyData extends HasWritePermission {
 		foreach($study->questionnaires as $i => $q) {
 			$this->write_indexAndResponses_files($study, $q->internalId, $keys[$i]);
 		}
-		$this->write_indexAndResponses_files($study, Files::FILENAME_EVENTS, self::KEYS_EVENT_RESPONSES);
-		$this->write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, self::KEYS_WEB_ACCESS);
+		$this->write_indexAndResponses_files($study, Files::FILENAME_EVENTS, ['keys' => self::KEYS_EVENT_RESPONSES, 'types' => []]);
+		$this->write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, ['keys' => self::KEYS_WEB_ACCESS, 'types' => []]);
 		$this->write_statistics($study);
 		
 		Output::successObj();

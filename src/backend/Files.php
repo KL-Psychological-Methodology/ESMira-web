@@ -13,6 +13,7 @@ class Files {
 		FILENAME_STUDY_INDEX = '.index',
 		FILENAME_UPDATE = 'update.zip',
 		FILENAME_WEB_ACCESS = 'web_access',
+		FILENAME_MEDIA_ZIP = 'media.zip',
 		FILE_CONFIG = DIR_BASE .self::PATH_CONFIG,
 		FILE_DEFAULT_CONFIG = DIR_BASE.'backend/config/configs.default.php';
 		
@@ -89,6 +90,18 @@ class Files {
 	static function get_folder_serverBackup() {
 		return DIR_BASE .self::FILENAME_SERVER_BACKUP .'/';
 	}
+	static function get_folder_media($study_id) {
+		$study_id = (int) $study_id;
+		return self::get_folder_studies() ."$study_id/media/";
+	}
+	static function get_folder_images($study_id) {
+		$study_id = (int) $study_id;
+		return self::get_folder_media($study_id) .'images/';
+	}
+	static function get_folder_pendingUploads($study_id) {
+		$study_id = (int) $study_id;
+		return self::get_folder_media($study_id) .'.pending_uploads/';
+	}
 	
 	static function interpret_errorReport_file($filename) {
 		if(substr($filename, 0, 1) === '_') {
@@ -105,6 +118,7 @@ class Files {
 			'timestamp' => (int) $parts[0]
 		];
 	}
+	
 	static function get_file_errorReport($timestamp, $note=false, $seen=false) {
 		$path = self::get_folder_errorReports();
 		if($seen)
@@ -205,11 +219,29 @@ class Files {
 	static function get_file_serverUpdate() {
 		return DIR_BASE .self::FILENAME_UPDATE;
 	}
-	static function get_file_version() {
-		return DIR_BASE .'backend/config/version.txt';
+	static function get_file_pendingUploads($study_id, $user_id, $identifier) {
+		return self::get_folder_pendingUploads($study_id) .self::make_urlFriendly($user_id) .'_' .((int)$identifier);
+	}
+	static function get_file_mediaZip($study_id) {
+		return self::get_folder_media($study_id) .self::FILENAME_MEDIA_ZIP;
 	}
 	
-	//For make_urlFriendly() and get_urlFriendly(), thanks to https://www.php.net/manual/en/function.base64-encode.php#123098
+	static function get_fileAndName_image($study_id, $user_id, $dataset_id, $responseTime, $key) {
+		$mediaFolder = self::get_folder_images($study_id) .self::make_urlFriendly($user_id) .'/';
+		
+		if(!file_exists($mediaFolder)) {
+			mkdir($mediaFolder, 0775);
+			chmod($mediaFolder, 0775);
+		}
+		
+		$fileName = "$key-$responseTime-$dataset_id";
+		for($originalFileName = $fileName, $i=2; file_exists("$mediaFolder$fileName.png"); ++$i) {
+			$fileName = "$originalFileName~$i";
+		}
+		return ["$mediaFolder$fileName.png", $fileName];
+	}
+	
+	//Thanks to https://www.php.net/manual/en/function.base64-encode.php#123098
 	private static function make_urlFriendly($s) {
 		return str_replace(['+','/','='], ['-','_',''], base64_encode($s));
 	}

@@ -10,7 +10,6 @@ use stdClass;
 const ONE_DAY = 86400; //in seconds: 60*60*24
 
 class CreateDataSet {
-
 	const DATASET_TYPE_JOINED = 'joined';
 	const DATASET_TYPE_QUIT = 'quit';
 	const DATASET_TYPE_QUESTIONNAIRE = 'questionnaire';
@@ -46,13 +45,14 @@ class CreateDataSet {
 	
 	private $output_index = [];
 	private $write_cache = [];
+	private $file_cache = [];
 	private $questionnaire_events = 0;
 	private $join_events = 0;
 	private $total_users = 0; //will only be 0 or 1
 
 	private $dataColumns_index = [];
 	
-	private $app_type, $app_version;
+	private $app_type, $app_version, $user_id;
 	
 	static function format_date($time) {
 		return date('Y/m/d H:i:s', round($time / 1000));
@@ -93,8 +93,16 @@ class CreateDataSet {
 			return $this->dataColumns_index[$study_id.$identifier];
 		else {
 			$path = Files::get_file_responsesIndex($study_id, $identifier);
-			if(file_exists($path))
-				return $this->dataColumns_index[$study_id.$identifier] = unserialize(file_get_contents($path));
+			if(file_exists($path)) {
+				$index = unserialize(file_get_contents($path));
+				if($index == null)
+					return null;
+				
+				if(!isset($index['keys'])) //TODO: check is needed for old index design
+					$index = ['keys' => $index, 'types' => []];
+				
+				return $this->dataColumns_index[$study_id . $identifier] = $index;
+			}
 			else {
 				Base::report("$path does not exist! Canceled saving for study $study_id");
 				return null;
@@ -102,6 +110,9 @@ class CreateDataSet {
 		}
 	}
 	
+	function addTo_fileCache($study_id, $file_url, $identifier, $dataset_id) {
+		$this->file_cache[$dataset_id] = ['study_id' => $study_id, 'path' => $file_url, 'identifier' => $identifier];
+	}
 	function addTo_writeCache($filename, $content, $dataset_id) {
 		if(isset($this->write_cache[$filename])) {
 			$this->write_cache[$filename]['cache'] .= $content;
@@ -136,11 +147,11 @@ class CreateDataSet {
 			throw new Exception('This app is outdated. Aborting');
 		
 		$uploaded = Base::get_milliseconds();
-		$user_id = $json->userId;
+		$this->user_id = $json->userId;
 		$this->app_type = $json->appType;
 		$this->app_version = $json->appVersion;
 		
-		if(!Base::check_input($user_id) || !Base::check_input($this->app_type) || !Base::check_input($this->app_version))
+		if(!Base::check_input($this->user_id) || !Base::check_input($this->app_type) || !Base::check_input($this->app_version))
 			throw new Exception('Input data not valid');
 		
 		$metadata_index = [];
@@ -156,7 +167,7 @@ class CreateDataSet {
 			if(isset($responses->lastInvitation) && $responses->lastInvitation != 0)
 				$responses->lastInvitation_formatted = self::format_date($responses->lastInvitation);
 			
-			$responses->userId = $user_id;
+			$responses->userId = $this->user_id;
 			$responses->uploaded = $uploaded;
 			$responses->appType = $this->app_type;
 			$responses->appVersion = $this->app_version;
@@ -200,7 +211,7 @@ class CreateDataSet {
 			if(isset($current_studyTokens[$study_id]))
 				$currentToken = $current_studyTokens[$study_id];
 			else {
-				$file_token = Files::get_file_userData($study_id, $user_id);
+				$file_token = Files::get_file_userData($study_id, $this->user_id);
 				if(file_exists($file_token)) {
 					$userdata = unserialize(file_get_contents($file_token));
 					$currentToken = $userdata['token'];
@@ -218,7 +229,7 @@ class CreateDataSet {
 				$newToken = $this->new_studyTokens->{$study_id};
 			else {
 				if(!isset($file_token))
-					$file_token = Files::get_file_userData($study_id, $user_id);
+					$file_token = Files::get_file_userData($study_id, $this->user_id);
 				$newToken = Base::get_milliseconds();
 				$userdata = [
 					'token' => $newToken,
@@ -226,7 +237,7 @@ class CreateDataSet {
 					'appType' => $this->app_type
 				];
 				if(!file_put_contents($file_token, serialize($userdata), LOCK_EX)) {
-					Base::report("Could not save token for user \"$user_id\" in study $study_id");
+					Base::report("Could not save token for user \"$this->user_id\" in study $study_id");
 					$newToken = -1;
 				}
 				$this->new_studyTokens->{$study_id} = $newToken;
@@ -310,16 +321,25 @@ class CreateDataSet {
 					continue;
 				}
 				
+				$types = $questionnaire_index['types'];
 				$questionnaire_write = [];
 				$statistic_write = '';
 				
-				foreach($questionnaire_index as $key) {
+				
+				foreach($questionnaire_index['keys'] as $key) {
 					if(isset($responses->{$key}))
 						$answer = Base::strip_oneLineInput($responses->{$key});
 					else if(isset($dataSet->{$key}))
 						$answer = Base::strip_oneLineInput($dataSet->{$key});
 					else
 						$answer = '';
+					
+					
+					if(isset($types[$key]) && $types[$key] === 'image') { // we are expecting a file:
+						$file_urlData = Files::get_fileAndName_image($study_id, $this->user_id, $dataset_id, $dataSet->responseTime, $key);
+						$this->addTo_fileCache($study_id, $file_urlData[1], $answer, $dataset_id);
+						$answer = "images/$this->user_id/$file_urlData[0]";
+					}
 					
 					$questionnaire_write[] = $answer;
 					
@@ -393,14 +413,9 @@ class CreateDataSet {
 			//*****
 			//fill event output:
 			//*****
-//		$ip = $_SERVER['REMOTE_ADDR'];
-//		if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
-//			$responses->ip = preg_replace('/(?::[\da-f]*){4}$/', ':XXXX:XXXX:XXXX:XXXX', $ip);
-//		else
-//			$responses->ip = preg_replace('/\.\d*$/', '.XXX', $ip);
 			
 			$events_write = [];
-			foreach($eventIndex as $key) {
+			foreach($eventIndex['keys'] as $key) {
 				if(isset($dataSet->{$key}))
 					$events_write[] = Base::strip_oneLineInput($dataSet->{$key});
 				else if(isset($responses->{$key}))
@@ -421,7 +436,17 @@ class CreateDataSet {
 		}
 	}
 	
+	function add_fileReceiver($dataset_id, $study_id, $identifier, $path) {
+		$folder = Files::get_file_pendingUploads($study_id, $this->user_id, $identifier);
+		if(!file_put_contents($folder, $path, LOCK_EX))
+			$this->error_lineOutput($dataset_id, 'Internal Server Error: Saving failed');
+	}
+	
 	function exec() {
+		foreach($this->file_cache as $dataset_id => $entry) {
+			self::add_fileReceiver($dataset_id, $entry['study_id'], $entry['identifier'], $entry['path']);
+		}
+		
 		foreach($this->write_cache as $file => $data) {
 			if(file_put_contents($file, $data['cache'], FILE_APPEND | LOCK_EX)) {
 				foreach($data['ids'] as $dataset_id) {
@@ -435,7 +460,6 @@ class CreateDataSet {
 				}
 			}
 		}
-		
 		
 		Base::update_serverStatistics(function(&$statistics, $values) {
 			list($app_type, $app_version, $total_users, $questionnaire_events, $join_events) = $values;

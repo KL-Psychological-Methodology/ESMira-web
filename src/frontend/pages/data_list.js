@@ -1,6 +1,6 @@
 import html from "./data_list.html"
 import {Lang} from "../js/main_classes/lang";
-import {FILE_ADMIN, FILE_RESPONSES} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_MEDIA, FILE_RESPONSES} from "../js/variables/urls";
 import {PromiseCache} from "../js/main_classes/promise_cache";
 import * as ko from "knockout";
 import {safe_confirm} from "../js/helpers/basics";
@@ -70,6 +70,7 @@ export function ViewModel(page) {
 	};
 	
 	this.fileResponsesUrl = FILE_RESPONSES;
+	this.fileMediaUrl = FILE_MEDIA;
 	
 	this.lists = {
 		defaults: [
