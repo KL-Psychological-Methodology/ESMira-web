@@ -169,8 +169,6 @@ class SaveStudy extends HasWritePermission {
 		//*****
 		
 		
-		
-		
 		//publicStatistics:
 		$public_index = $this->set_observedVariables_from_axis($studyCollection, 'publicStatistics');
 		

@@ -226,19 +226,23 @@ class Files {
 		return self::get_folder_media($study_id) .self::FILENAME_MEDIA_ZIP;
 	}
 	
-	static function get_fileAndName_image($study_id, $user_id, $dataset_id, $responseTime, $key) {
-		$mediaFolder = self::get_folder_images($study_id) .self::make_urlFriendly($user_id) .'/';
-		
-		if(!file_exists($mediaFolder)) {
-			mkdir($mediaFolder, 0775);
-			chmod($mediaFolder, 0775);
-		}
-		
-		$fileName = "$key-$responseTime-$dataset_id";
-		for($originalFileName = $fileName, $i=2; file_exists("$mediaFolder$fileName.png"); ++$i) {
-			$fileName = "$originalFileName~$i";
-		}
-		return ["$mediaFolder$fileName.png", $fileName];
+	static function get_file_image_fromData($study_id, $user_id, $uploaded, $responseTime, $key) {
+		return self::get_folder_images($study_id) .self::make_urlFriendly(self::get_publicFile_media($user_id, $uploaded, $responseTime, $key));
+	}
+	
+	
+	
+	static function get_publicFile_media($user_id, $uploaded, $responseTime, $key) {
+		return "$user_id/$key-$responseTime-$uploaded";
+	}
+	static function get_publicFile_image_fromData($user_id, $uploaded, $responseTime, $key) {
+		return self::get_publicFile_image_fromFileName(self::get_publicFile_media($user_id, $uploaded, $responseTime, $key));
+	}
+	static function get_publicFile_image_fromMediaFilename($fileName) {
+		return self::get_publicFile_image_fromFileName(self::get_urlFriendly($fileName));
+	}
+	static function get_publicFile_image_fromFileName($fileName) {
+		return 'images/' .$fileName .'.png';
 	}
 	
 	//Thanks to https://www.php.net/manual/en/function.base64-encode.php#123098

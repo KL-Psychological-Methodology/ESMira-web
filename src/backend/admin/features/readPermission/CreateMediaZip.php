@@ -17,6 +17,18 @@ class CreateMediaZip extends HasReadPermission {
 			
 			$images_path = Files::get_folder_images($this->study_id);
 			$images_h = opendir($images_path);
+			
+			
+			
+			while($file = readdir($images_h)) {
+				if($file[0] != '.') {
+					$zip->addFile("$images_path/$file", Files::get_publicFile_image_fromMediaFilename($file));
+				}
+			}
+			
+			
+			
+			
 			while($user_folder = readdir($images_h)) {
 				if($user_folder[0] != '.') {
 					$user_id = Files::get_urlFriendly($user_folder);

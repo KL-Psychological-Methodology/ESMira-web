@@ -13,7 +13,7 @@ if(!isset($_POST['studyId']) || !isset($_POST['userId']) || !isset($_POST['dataT
 	Output::error('Missing data');
 
 $study_id = (int) $_POST['studyId'];
-$userId = (int) $_POST['userId'];
+$userId = $_POST['userId'];
 $dataType = $_POST['dataType'];
 
 //get fileData:
@@ -56,7 +56,7 @@ switch($dataType) {
 
 $waiting_file = Files::get_file_pendingUploads($study_id, $userId, $identifier);
 if(!file_exists($waiting_file))
-	Output::error('Not allowed' .$waiting_file);
+	Output::error('Not allowed');
 
 $target_path = file_get_contents($waiting_file);
 if(!$target_path)
@@ -77,6 +77,6 @@ if(!move_uploaded_file($fileData["tmp_name"], $target_path) || !unlink($waiting_
 $file_mediaZip = Files::get_file_mediaZip($study_id);
 
 if(file_exists($file_mediaZip))
-	unset($file_mediaZip);
+	unlink($file_mediaZip);
 
 Output::successObj();

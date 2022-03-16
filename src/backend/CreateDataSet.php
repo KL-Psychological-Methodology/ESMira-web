@@ -130,7 +130,7 @@ class CreateDataSet {
 	 * @throws Exception
 	 */
 	function __construct($json) {
-		$this->new_studyTokens = new stdClass();
+		$this->new_studyTokens = new stdClass(); //will be serialized into json - stdClass makes sure it stays an object even when its empty
 		$this->prepare($json);
 		$this->exec();
 	}
@@ -183,6 +183,7 @@ class CreateDataSet {
 				continue;
 			}
 			
+			
 			//*****
 			//check accessKey:
 			//*****
@@ -203,12 +204,13 @@ class CreateDataSet {
 				continue;
 			}
 			
+			
 			//*****
 			//check token:
 			//*****
 			
 			//get current token:
-			if(isset($current_studyTokens[$study_id]))
+			if(isset($current_studyTokens[$study_id])) //only process tokens once per study
 				$currentToken = $current_studyTokens[$study_id];
 			else {
 				$file_token = Files::get_file_userData($study_id, $this->user_id);
@@ -259,9 +261,11 @@ class CreateDataSet {
 			}
 			
 			
+			//*****
+			//basic checks:
+			//*****
+			
 			$dataSet_questionnaireName = isset($dataSet->questionnaireName) ? $dataSet->questionnaireName : '';
-			
-			
 			
 			if((!Base::check_input($dataSet_questionnaireName)) || !Base::check_input($event_type)) {
 				$this->error_lineOutput($dataset_id, "Unexpected input! Group: $dataSet_questionnaireName; Event-Type: $event_type");
@@ -282,8 +286,6 @@ class CreateDataSet {
 			//format responseTime:
 			if(isset($dataSet->responseTime))
 				$dataSet->responseTime_formatted = self::format_date($dataSet->responseTime);
-			
-			
 			
 			
 			//*****
@@ -336,9 +338,13 @@ class CreateDataSet {
 					
 					
 					if(isset($types[$key]) && $types[$key] === 'image') { // we are expecting a file:
-						$file_urlData = Files::get_fileAndName_image($study_id, $this->user_id, $dataset_id, $dataSet->responseTime, $key);
-						$this->addTo_fileCache($study_id, $file_urlData[1], $answer, $dataset_id);
-						$answer = "images/$this->user_id/$file_urlData[0]";
+						$this->addTo_fileCache(
+							$study_id,
+							Files::get_file_image_fromData($study_id, $this->user_id, $uploaded, $dataSet->responseTime, $key),
+							$answer,
+							$dataset_id
+						);
+						$answer = Files::get_publicFile_image_fromData($this->user_id, $uploaded, $dataSet->responseTime, $key);
 					}
 					
 					$questionnaire_write[] = $answer;
@@ -391,6 +397,7 @@ class CreateDataSet {
 						}
 					}
 				}
+				
 				
 				//*****
 				//Export data
