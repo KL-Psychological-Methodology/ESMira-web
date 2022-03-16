@@ -85,7 +85,7 @@ export function ViewModel(page) {
 						break;
 					case "empty":
 						td = createElement("td", "font-style: italic", {innerText: set.value});
-						hoverInfo = "";
+						hoverInfo = header_names[column_i];;
 						break;
 				}
 			}

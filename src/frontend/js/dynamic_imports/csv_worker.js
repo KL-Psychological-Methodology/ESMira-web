@@ -175,8 +175,15 @@ const CsvData = {
 			}
 			else if(this.image_columns_numIndex[i]) {
 				cell.special = true;
-				cell.specialType = "image";
-				cell.value = raw_row[i];
+				cell.real_value = raw_row[i];
+				if(cell.real_value) {
+					cell.specialType = "image";
+					cell.value = cell.real_value;
+				}
+				else {
+					cell.specialType = "empty";
+					cell.value = EMPTY_DATA_SYMBOL;
+				}
 			}
 			else if(!raw_row[i].length) {
 				cell.special = true;
