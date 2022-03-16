@@ -41,6 +41,7 @@ $classIndex = [
 	'list_data' => 'backend\admin\features\readPermission\ListData',
 	'get_data' => 'backend\admin\features\readPermission\GetData',
 	'create_mediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',
+	'get_mediaImage' => 'backend\admin\features\readPermission\GetMediaImage',
 	
 	//write
 	'is_frozen' => 'backend\admin\features\writePermission\IsFrozen',

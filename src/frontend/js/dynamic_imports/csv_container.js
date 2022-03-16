@@ -1,5 +1,6 @@
 import {Lang} from "../main_classes/lang";
 import {OwnMapping} from "../helpers/knockout_own_mapping";
+import {Studies} from "../main_classes/studies";
 
 export function CsvLoader(url, page) {
 	let loader = new CsvContainer(page);
@@ -66,11 +67,13 @@ function CsvContainer(page) {
 		return actions;
 	}
 	
+	let getSpecialColumns = function() {
+		let study = Studies.get_current();
+		return Studies.tools.list_specialDataColumns(study);
+	}
+	
 	let load = function(obj) {
-		obj.translations = {
-				empty_dataSymbol: Lang.get("empty_dataSymbol"),
-				colon_timestamp: Lang.get("colon_timestamp")
-			};
+		obj.specialColumns = getSpecialColumns();
 		addPromise(obj, "state_downloading")
 			.then(function(data) {
 				self.header_names = data.header_names;

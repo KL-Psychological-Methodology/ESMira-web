@@ -284,18 +284,44 @@ export const Studies_tools = {
 	is_media: function(input) {
 		return input.responseType() === 'photo';
 	},
-	has_media: function(study) {
+	forEachInput: function(study, fu) {
 		let questionnaires = study.questionnaires();
 		for(let iQ=questionnaires.length-1; iQ>=0; iQ--) {
 			let pages = questionnaires[iQ].pages();
 			for(let iP=pages.length-1; iP>=0; iP--) {
 				let inputs = pages[iP].inputs();
 				for(let iI=inputs.length-1; iI>=0; iI--) {
-					if(this.is_media(inputs[iI]))
-						return true;
+					if(fu(inputs[iI]) === false)
+						return;
 				}
 			}
 		}
-		return false;
+	},
+	has_media: function(study) {
+		let self = this;
+		let has_media = false;
+		this.forEachInput(study, function(input) {
+			if(self.is_media(input)) {
+				has_media = true;
+				return false;
+			}
+		});
+		return has_media;
+	},
+	list_specialDataColumns: function(study) {
+		let columns = [];
+		this.forEachInput(study, function(input) {
+			switch(input.responseType()) {
+				case 'photo':
+					columns.push({key: input.name(), type: 'image'});
+					break;
+				case 'app_usage':
+					columns.push({key: input.name(), type: 'timestamp'});
+					columns.push({key: input.name() + "~visibleTime", type: 'timestamp'});
+					break;
+			}
+		});
+		
+		return columns;
 	}
 }

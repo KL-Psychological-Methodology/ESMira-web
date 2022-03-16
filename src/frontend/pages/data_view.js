@@ -1,6 +1,6 @@
 import html from "./data_view.html"
 import {Lang} from "../js/main_classes/lang";
-import {FILE_ADMIN, FILE_RESPONSES} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_IMAGE, FILE_RESPONSES} from "../js/variables/urls";
 import reload_svg from '../imgs/reload.svg?raw';
 import {
 	bindEvent,
@@ -32,7 +32,11 @@ function get_backupTitle(s) {
 export function ViewModel(page) {
 	let self = this;
 	let loader;
+	let studyId;
 	let selectedRows = 0;
+	
+	
+	let userId_columnNum, uploaded_columnNum, responseTime_columnNum;
 	
 	let table, contentSize_el, selectedRowCount_el, scroll_el, header, body,
 		max_elements_displayed;
@@ -41,6 +45,67 @@ export function ViewModel(page) {
 		while(body.hasChildNodes()) {
 			body.removeChild(body.firstChild);
 		}
+	};
+	
+	let create_rowElement = function(row, rowIndex) {
+		let header_names = loader.header_names;
+		
+		let cells = row.columnCells;
+		let tr = createElement("tr", "height:"+ROW_HEIGHT+"px", {"row-index": rowIndex});
+		if(row.marked)
+			tr.className = "marked";
+		
+		bindEvent(tr, "click", self.markRow.bind(self, row, tr));
+		
+		tr.appendChild(createElement("td", false, {innerText: cells[0].index+1, className: "index_column"}));
+		
+		for(let column_i=0, column_max=cells.length; column_i<column_max; ++column_i) {
+			let set = cells[column_i];
+			let td, hoverInfo;
+			if(set.special) {
+				switch(set.specialType) {
+					case "timestamp":
+						td = createElement("td", set.special ? "font-style: italic" : false);
+						td.appendChild(createElement("div", false, {innerText: set.value, className: "pretty_value"}));
+						td.appendChild(createElement("div", false, {innerText: set.real_value, className: "real_value"}));
+						hoverInfo = header_names[column_i]+"<br/>"+Lang.get("colon_timestamp")+" "+set.real_value;
+						break;
+					case "image":
+						let url = FILE_IMAGE
+							.replace("%1", studyId)
+							.replace("%2", cells[userId_columnNum].value)
+							.replace("%3", cells[uploaded_columnNum].real_value)
+							.replace("%4", cells[responseTime_columnNum].real_value)
+							.replace("%5", header_names[column_i]);
+						
+						td = createElement("td", "font-style: italic");
+						let a = createElement("a", false, {href: url, target: "_blank", innerText: set.value});
+						td.appendChild(a);
+						hoverInfo = "<img alt='image' style='max-width: 500px; max-height: 500px;' src='"+url+"'/>";
+						break;
+					case "empty":
+						td = createElement("td", "font-style: italic", {innerText: set.value});
+						hoverInfo = "";
+						break;
+				}
+			}
+			else {
+				td = createElement("td", false, {innerText: set.value});
+				hoverInfo = header_names[column_i];
+			}
+			
+			let mouseEnterEl;
+			bindEvent(td, "mouseenter", function() {
+				mouseEnterEl = createFloatingDropdown(td);
+				mouseEnterEl.innerHTML = hoverInfo;
+			})
+			bindEvent(td, "mouseleave", function() {
+				mouseEnterEl.parentNode.removeChild(mouseEnterEl);
+			})
+			tr.appendChild(td);
+		}
+		
+		return tr;
 	};
 	let display_rows = function() {
 		let bottomIndex = Math.min(loader.rows_count, Math.ceil(scroll_el.scrollTop / ROW_HEIGHT) + max_elements_displayed -1); //-1 index starts with 0
@@ -52,29 +117,7 @@ export function ViewModel(page) {
 				empty_table();
 				
 				for(let i=rows.length-1; i>=0; --i) {
-					let row = rows[i];
-					
-					let cells = row.columnCells;
-					let tr = createElement("tr", "height:"+ROW_HEIGHT+"px", {"row-index": i});
-					if(row.marked)
-						tr.className = "marked";
-					
-					bindEvent(tr, "click", self.markRow.bind(self, row, tr));
-					
-					tr.appendChild(createElement("td", false, {innerText: cells[0].index+1, className: "index_column"}));
-					
-					for(let column_i=0, column_max=cells.length; column_i<column_max; ++column_i) {
-						let set = cells[column_i];
-						let td;
-						if(set.special && set.real_value.toString().length) {
-							td = createElement("td", set.special ? "font-style: italic" : false, {title: set.title});
-							td.appendChild(createElement("div", false, {innerText: set.value, className: "pretty_value"}));
-							td.appendChild(createElement("div", false, {innerText: set.real_value, className: "real_value"}));
-						}
-						else
-							td = createElement("td", set.special ? "font-style: italic" : false, {innerText: set.value, title: set.title});
-						tr.appendChild(td);
-					}
+					let tr = create_rowElement(rows[i], i);
 					
 					if(body.firstElementChild)
 						body.insertBefore(tr, body.firstElementChild);
@@ -108,6 +151,11 @@ export function ViewModel(page) {
 		
 		loader = new CsvLoader(fileUrl, page);
 		loader.waitUntilReady().then(function() {
+			
+			userId_columnNum = loader.get_columnNum("userId");
+			uploaded_columnNum = loader.get_columnNum("uploaded");
+			responseTime_columnNum = loader.get_columnNum("responseTime");
+			
 			//create header line:
 			
 			let header_names = loader.header_names;
@@ -176,7 +224,8 @@ export function ViewModel(page) {
 				break;
 		}
 	};
-	this.postInit = function() {
+	this.postInit = function({id}) {
+		studyId = id;
 		if(!window.Worker) {
 			page.loader.error(Lang.get('error_no_webWorkers'));
 			return;
