@@ -12,6 +12,7 @@ use stdClass;
 abstract class HasWritePermission extends IsLoggedIn {
 	//basic keys which are included in every questionnaire dataset
 	const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
+		'entryId',
 		'userId',
 		'uploaded',
 		'appType',
@@ -32,6 +33,7 @@ abstract class HasWritePermission extends IsLoggedIn {
 
 	//all event-related keys that are included in the event file:
 	const KEYS_EVENT_RESPONSES = [
+		'entryId',
 		'userId',
 		'uploaded',
 		'appType',

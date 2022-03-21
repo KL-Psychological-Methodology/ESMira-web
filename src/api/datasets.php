@@ -22,7 +22,7 @@ try {
 	$dataSet = new CreateDataSet($json);
 	Output::successObj([
 		'states' => $dataSet->output,
-		'tokens' => $dataSet->new_studyTokens
+		'tokens' => $dataSet->userTokens->get_newStudyTokens()
 	]);
 }
 catch(Exception $e) {

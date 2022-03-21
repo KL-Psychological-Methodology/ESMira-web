@@ -226,17 +226,17 @@ class Files {
 		return self::get_folder_media($study_id) .self::FILENAME_MEDIA_ZIP;
 	}
 	
-	static function get_file_image_fromData($study_id, $user_id, $uploaded, $responseTime, $key) {
-		return self::get_folder_images($study_id) .self::make_urlFriendly(self::get_publicFile_media($user_id, $uploaded, $responseTime, $key));
+	static function get_file_image_fromData($study_id, $user_id, $entry_id, $key) {
+		return self::get_folder_images($study_id) .self::make_urlFriendly(self::get_publicFile_media($user_id, $entry_id, $key));
 	}
 	
 	
 	
-	static function get_publicFile_media($user_id, $uploaded, $responseTime, $key) {
-		return "$user_id/$key-$responseTime-$uploaded";
+	static function get_publicFile_media($user_id, $entry_id, $key) {
+		return "$user_id/$key-$entry_id";
 	}
-	static function get_publicFile_image_fromData($user_id, $uploaded, $responseTime, $key) {
-		return self::get_publicFile_image_fromFileName(self::get_publicFile_media($user_id, $uploaded, $responseTime, $key));
+	static function get_publicFile_image_fromData($user_id, $entry_id, $key) {
+		return self::get_publicFile_image_fromFileName(self::get_publicFile_media($user_id, $entry_id, $key));
 	}
 	static function get_publicFile_image_fromMediaFilename($fileName) {
 		return self::get_publicFile_image_fromFileName(self::get_urlFriendly($fileName));

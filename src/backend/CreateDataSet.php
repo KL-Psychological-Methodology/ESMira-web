@@ -37,18 +37,16 @@ class CreateDataSet {
 		STATISTICS_DATATYPES_SUM = 2,
 		STATISTICS_DATATYPES_XY = 3;
 	
-	
-	
+	/** @var UserTokens */
+	public $userTokens;
 	
 	public $output = [];
-	public $new_studyTokens;
 	
 	private $output_index = [];
 	private $write_cache = [];
 	private $file_cache = [];
 	private $questionnaire_events = 0;
 	private $join_events = 0;
-	private $total_users = 0; //will only be 0 or 1
 
 	private $dataColumns_index = [];
 	
@@ -72,6 +70,16 @@ class CreateDataSet {
 		$statistics->week->{$event}[date('w')] += $count;
 		$statistics->total->{$event} += $count;
 	}
+	
+	
+	/**
+	 * @throws Exception
+	 */
+	function __construct($json) {
+		$this->prepare($json);
+		$this->exec();
+	}
+	
 	
 	function success_lineOutput($dataset_id) {
 		if(!isset($this->output_index[$dataset_id])) {
@@ -126,14 +134,6 @@ class CreateDataSet {
 		}
 	}
 	
-	/**
-	 * @throws Exception
-	 */
-	function __construct($json) {
-		$this->new_studyTokens = new stdClass(); //will be serialized into json - stdClass makes sure it stays an object even when its empty
-		$this->prepare($json);
-		$this->exec();
-	}
 	
 	/**
 	 * @throws Exception
@@ -146,17 +146,19 @@ class CreateDataSet {
 		if($json->serverVersion < Base::ACCEPTED_SERVER_VERSION)
 			throw new Exception('This app is outdated. Aborting');
 		
+		if(!Base::check_input($json->userId) || !Base::check_input($json->appType) || !Base::check_input($json->appVersion))
+			throw new Exception('Input data not valid');
+		
 		$uploaded = Base::get_milliseconds();
 		$this->user_id = $json->userId;
 		$this->app_type = $json->appType;
 		$this->app_version = $json->appVersion;
 		
-		if(!Base::check_input($this->user_id) || !Base::check_input($this->app_type) || !Base::check_input($this->app_version))
-			throw new Exception('Input data not valid');
+		$this->userTokens = new UserTokens($this->user_id, $this->app_version, $this->app_type);
+		
 		
 		$metadata_index = [];
 		$statisticMetadata_index = [];
-		$current_studyTokens = [];
 		$csv_delimiter = Configs::get('csv_delimiter');
 		
 		foreach($json->dataset as $dataSet) {
@@ -209,56 +211,18 @@ class CreateDataSet {
 			//check token:
 			//*****
 			
-			//get current token:
-			if(isset($current_studyTokens[$study_id])) //only process tokens once per study
-				$currentToken = $current_studyTokens[$study_id];
-			else {
-				$file_token = Files::get_file_userData($study_id, $this->user_id);
-				if(file_exists($file_token)) {
-					$userdata = unserialize(file_get_contents($file_token));
-					$currentToken = $userdata['token'];
-				}
-				else {
-					$currentToken = -1;
-					++$this->total_users;
-				}
-				$current_studyTokens[$study_id] = $currentToken;
-			}
-			
-			
-			//get / create new token:
-			if(isset($this->new_studyTokens->{$study_id}))
-				$newToken = $this->new_studyTokens->{$study_id};
-			else {
-				if(!isset($file_token))
-					$file_token = Files::get_file_userData($study_id, $this->user_id);
-				$newToken = Base::get_milliseconds();
-				$userdata = [
-					'token' => $newToken,
-					'appVersion' => $this->app_version,
-					'appType' => $this->app_type
-				];
-				if(!file_put_contents($file_token, serialize($userdata), LOCK_EX)) {
-					Base::report("Could not save token for user \"$this->user_id\" in study $study_id");
-					$newToken = -1;
-				}
-				$this->new_studyTokens->{$study_id} = $newToken;
-			}
-			
-			//check for too many requests:
-			if($currentToken !== -1 && $newToken !== -1 && $newToken - $currentToken < Configs::get('dataset_server_timeout')) {
+			if(!$this->userTokens->nextDataSet($study_id)) {
 				$this->error_lineOutput($dataset_id, "Too many requests in succession");
 				continue;
 			}
 			
-			//check if data was reuploaded with outdated token:
-			if(isset($dataSet->token)) {
-				$sentToken = (int) $dataSet->token;
-				if($sentToken != 0 && $newToken !== -1 && isset($dataSet->reupload) && $dataSet->reupload && $sentToken != $currentToken) {
-					$this->success_lineOutput($dataset_id); //data was already sent
-					continue;
-				}
+			if(isset($dataSet->token) && $this->userTokens->is_outdated($study_id, (int) $dataSet->token, isset($dataSet->reupload) && $dataSet->reupload)) {
+				$this->success_lineOutput($dataset_id); //data was already sent
+				continue;
 			}
+			
+			
+			$dataSet->entryId = $this->userTokens->get_dataSetId($study_id);
 			
 			
 			//*****
@@ -338,13 +302,18 @@ class CreateDataSet {
 					
 					
 					if(isset($types[$key]) && $types[$key] === 'image') { // we are expecting a file:
-						$this->addTo_fileCache(
-							$study_id,
-							Files::get_file_image_fromData($study_id, $this->user_id, $uploaded, $dataSet->responseTime, $key),
-							$answer,
-							$dataset_id
-						);
-						$answer = Files::get_publicFile_image_fromData($this->user_id, $uploaded, $dataSet->responseTime, $key);
+						$identifier = (int) $answer;
+						if($identifier != 0) {
+							$this->addTo_fileCache(
+								$study_id,
+								Files::get_file_image_fromData($study_id, $this->user_id, $dataSet->entryId, $key),
+								$identifier,
+								$dataset_id
+							);
+							$answer = Files::get_publicFile_image_fromData($this->user_id, $uploaded, $dataSet->responseTime, $key);
+						}
+						else
+							$answer = '';
 					}
 					
 					$questionnaire_write[] = $answer;
@@ -468,24 +437,26 @@ class CreateDataSet {
 			}
 		}
 		
+		$this->userTokens->writeAndClose();
+		
 		Base::update_serverStatistics(function(&$statistics, $values) {
-			list($app_type, $app_version, $total_users, $questionnaire_events, $join_events) = $values;
+			list($app_type, $app_version, $is_newUser, $questionnaire_events, $join_events) = $values;
 			
 			$is_dev = false;
-			if($total_users !== 0) {
-				$statistics->total->users += $total_users;
+			if($is_newUser) {
+				$statistics->total->users += 1;
 				switch($app_type) {
 					case 'Android':
 					case 'Android_wasDev':
-						$statistics->total->android += $total_users;
+						$statistics->total->android += 1;
 						break;
 					case 'iOS':
 					case 'iOS_wasDev':
-						$statistics->total->ios += $total_users;
+						$statistics->total->ios += 1;
 						break;
 					case 'Web':
 					case 'Web-NOJS':
-						$statistics->total->web += $total_users;
+						$statistics->total->web += 1;
 						break;
 					default:
 						$is_dev = true;
@@ -525,6 +496,6 @@ class CreateDataSet {
 			}
 			else
 				return true;
-		}, [$this->app_type, $this->app_version, $this->total_users, $this->questionnaire_events, $this->join_events]);
+		}, [$this->app_type, $this->app_version, $this->userTokens->is_newUser(), $this->questionnaire_events, $this->join_events]);
 	}
 }
