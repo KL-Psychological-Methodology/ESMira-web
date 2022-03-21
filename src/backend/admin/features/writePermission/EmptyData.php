@@ -8,20 +8,24 @@ use backend\Output;
 
 class EmptyData extends HasWritePermission {
 	
+	function empty_folderOrError($folder) {
+		if(file_exists($folder))
+			$this->empty_folder($folder);
+		else
+			Output::error("$folder does not exist");
+	}
+	
 	function exec() {
-		$responses_folder = Files::get_folder_responses($this->study_id);
-		if(file_exists($responses_folder))
-			$this->empty_folder($responses_folder);
-		else
-			Output::error("$responses_folder does not exist");
+		$this->empty_folderOrError(Files::get_folder_responses($this->study_id));
+		$this->empty_folderOrError(Files::get_folder_statistics($this->study_id));
+		$this->empty_folderOrError(Files::get_folder_images($this->study_id));
+		$this->empty_folderOrError(Files::get_folder_pendingUploads($this->study_id));
 		
 		
-		//delete statistics
-		$statistics_folder = Files::get_folder_statistics($this->study_id);
-		if(file_exists($statistics_folder))
-			$this->empty_folder($statistics_folder);
-		else
-			Output::error("$statistics_folder does not exist");
+		$mediaZip = Files::get_file_mediaZip($this->study_id);
+		if(file_exists($mediaZip))
+			unlink($mediaZip);
+		
 		
 		//recreate study
 		$study_file = Files::get_file_studyConfig($this->study_id);
