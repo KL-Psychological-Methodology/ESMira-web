@@ -114,6 +114,9 @@ function CsvContainer(page) {
 	//
 	// convenience functions
 	//
+	this.has_column = function(column) {
+		return self.header_names.includes(column);
+	}
 	this.get_columnNum = function(column) {
 		if(isNaN(column)) {
 			let r = self.header_names.indexOf(column);

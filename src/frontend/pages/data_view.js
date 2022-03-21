@@ -36,7 +36,7 @@ export function ViewModel(page) {
 	let selectedRows = 0;
 	
 	
-	let userId_columnNum, uploaded_columnNum, responseTime_columnNum;
+	let userId_columnNum, entryId_columnNum;
 	
 	let table, contentSize_el, selectedRowCount_el, scroll_el, header, body,
 		max_elements_displayed;
@@ -74,9 +74,8 @@ export function ViewModel(page) {
 						let url = FILE_IMAGE
 							.replace("%1", studyId)
 							.replace("%2", cells[userId_columnNum].value)
-							.replace("%3", cells[uploaded_columnNum].real_value)
-							.replace("%4", cells[responseTime_columnNum].real_value)
-							.replace("%5", header_names[column_i]);
+							.replace("%3", cells[entryId_columnNum].real_value)
+							.replace("%4", header_names[column_i]);
 						
 						td = createElement("td", "font-style: italic");
 						let a = createElement("a", false, {href: url, target: "_blank", innerText: set.value});
@@ -152,9 +151,11 @@ export function ViewModel(page) {
 		loader = new CsvLoader(fileUrl, page);
 		loader.waitUntilReady().then(function() {
 			
-			userId_columnNum = loader.get_columnNum("userId");
-			uploaded_columnNum = loader.get_columnNum("uploaded");
-			responseTime_columnNum = loader.get_columnNum("responseTime");
+			//columns dont exist in web_access or in old studies
+			//But these values are only needed for photo items, which are new and dont exist in web_access
+			//so we can ignore them if they dont exist
+			userId_columnNum = loader.has_column("userId") ? loader.get_columnNum("userId") : -1;
+			entryId_columnNum = loader.has_column("userId") ? loader.get_columnNum("entryId") : -1;
 			
 			//create header line:
 			

@@ -8,14 +8,13 @@ use backend\Files;
 class GetMediaImage extends HasReadPermission {
 	
 	function exec() {
-		if(!isset($_GET['userId']) || !isset($_GET['uploaded']) || !isset($_GET['responseTime']) || !isset($_GET['key']))
+		if(!isset($_GET['userId']) || !isset($_GET['entryId']) || !isset($_GET['key']))
 			return;
 		$user_id = $_GET['userId'];
-		$uploaded = (int) $_GET['uploaded'];
-		$responseTime = (int) $_GET['responseTime'];
+		$entryId = (int) $_GET['entryId'];
 		$key = $_GET['key'];
 		
-		$images_path = Files::get_file_image_fromData($this->study_id, $user_id, $uploaded, $responseTime, $key);
+		$images_path = Files::get_file_image_fromData($this->study_id, $user_id, $entryId, $key);
 		
 		if(!file_exists($images_path))
 			return;

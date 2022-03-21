@@ -20,6 +20,11 @@
 <div data-bind="if: version() !== 0">
 	<div data-bind="template: {name: 'data_line', data: {key: 'defaults', id: id()}}"></div>
 	
+	
+	<title-row params="title: Lang.get('colon_questionnaires')"></title-row>
+	<div data-bind="template: {name: 'data_line', data: {key: 'current', id: id(), showQuestionnaire: true}}"></div>
+	
+	
 	<div data-bind="if: Studies.tools.has_media($data)">
 		<title-row params="title: Lang.get('colon_media_download')"></title-row>
 		<a class="spacing_right" data-bind="attr: {href:$root.fileMediaUrl.replace('%1', id()), download: 'media.zip'}">
@@ -30,8 +35,6 @@
 		</a>
 	</div>
 	
-	<title-row params="title: Lang.get('colon_questionnaires')"></title-row>
-	<div data-bind="template: {name: 'data_line', data: {key: 'current', id: id(), showQuestionnaire: true}}"></div>
 	
 	<title-row params="title: Lang.get('colon_backups')"></title-row>
 	<div class="verticalPadding">
