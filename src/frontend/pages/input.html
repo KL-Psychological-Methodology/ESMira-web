@@ -13,7 +13,11 @@
 				}}"/>
 		</label>
 	</div>
-	<div class="vertical verticalPadding small_text" data-bind="text: Lang.get('help_'+responseType())"></div>
+	<div>
+		<widget-only params="android" data-bind="visible: responseType() == 'app_usage'"></widget-only>
+		<widget-only params="android, ios" data-bind="visible: responseType() == 'photo'"></widget-only>
+		<span class="vertical verticalPadding small_text" data-bind="text: Lang.get('help_'+responseType())"></span>
+	</div>
 	
 	<div data-bind="text: $root.selectedQuestionnaire"></div>
 	
@@ -47,13 +51,13 @@
 		</label>
 		
 		
-		<label class="vertical spacing_top" data-bind="visible: responseType() === 'video' || responseType() === 'image'">
+		<label class="line spacing_top" data-bind="visible: responseType() === 'video' || responseType() === 'image'">
 			<small data-bind="text: Lang.get('url')"></small>
 			<input class="big" type="url" data-bind="value: url"/>
 			<lang-options></lang-options>
 		</label>
 		
-		<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video'">
+		<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video' && responseType() !== 'photo' && responseType() !== 'app_usage'">
 			<small data-bind="text: Lang.get('prefilledValue')"></small>
 			<input type="text" data-bind="value: defaultValue, disable: required"/>
 			<lang-options></lang-options>
