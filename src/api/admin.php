@@ -15,7 +15,7 @@ if(!isset($_GET['type']))
 $classIndex = [
 	//no permission:
 	'data_folder_exists' => 'backend\admin\features\noPermission\DataFolderExists',
-	'prep_init_esmira' => 'backend\admin\features\noPermission\InitESMiraPrep',
+	'init_esmira_prep' => 'backend\admin\features\noPermission\InitESMiraPrep',
 	'init_esmira' => 'backend\admin\features\noPermission\InitESMira',
 	'login' => 'backend\admin\features\noPermission\Login',
 	'logout' => 'backend\admin\features\noPermission\Logout',
