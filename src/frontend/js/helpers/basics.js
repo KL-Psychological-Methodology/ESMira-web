@@ -33,7 +33,8 @@ export function createFloatingDropdown(referenceEl, className, dontCenter) {
 	let dropdownEl = createElement("div", "left:" + x + "px; top:" + y + "px;", {className: "dropdown"});
 	if(dontCenter)
 		dropdownEl.style.transform = "unset";
-	dropdownEl.classList.add(className);
+	if(className)
+		dropdownEl.classList.add(className);
 	document.body.appendChild(dropdownEl);
 	return dropdownEl;
 }

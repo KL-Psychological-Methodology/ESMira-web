@@ -144,6 +144,7 @@
     "days": "days",
 	"default": "Default",
     "default_chooseUsernameInstructions": "Please choose a user id",
+    "default_questionnaire_name": "Questionnaire %d",
     "default_study_name": "Study",
     "default_webQuestionnaireCompletedInstructions": "Thank you!",
     "delete_questionnaire": "Delete questionnaire",
@@ -186,7 +187,6 @@
     "edit_users": "Change accounts",
     "empty_data": "Empty data",
     "embedded": "Embedded",
-    "empty_dataSymbol": "-",
     "endDate": "End date",
     "endTime": "End time",
     "error_accessKey_wrong_format": "Access keys need to start with a character and can only contain characters and numbers.",
@@ -237,6 +237,7 @@
     "help_list_multiple": "Creates a list with several items from which several items can be chosen.",
     "help_list_single": "Creates a list with several items from which one item can be chosen.",
     "help_number": "For providing numbers.",
+    "help_photo": "For capturing photos with the camera.",
     "help_text": "Shows just text.",
     "help_text_input": "For providing text.",
     "help_time": "For providing a time of day.",
@@ -275,6 +276,7 @@
     "input_list_multiple": "List - multiple choice",
     "input_list_single": "List - single choice",
     "input_number": "Number input",
+    "input_photo": "Take a picture",
     "input_text": "Simple text view",
     "input_text_input": "Text input",
     "input_time": "Time input",
@@ -332,6 +334,7 @@
     "prompt_image_fileSize": "\"%s\" is a very big file. Are you sure that you want it embed into the studyfile? It could increase the download and processing time of the study.",
     "prompt_input_name": "Please select a variable name (it has to be unique over all questionnaires):",
 	"prompt_languageCode": "Please choose a language code (e.g.: en, de, fr, ...):",
+	"prompt_newUsername": "Please select a new username",
     "prompt_studyName": "Please select a study name:",
     "prompt_title": "Please choose a title:",
     "prompt_url": "Please provide an url:",
@@ -523,5 +526,6 @@
     "state_installing": "Installing…",
     "info_trigger_needs_action": "You need at least one action.",
     "edit_page_x": "Edit page %d",
-    "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it."
+    "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it.",
+    "colon_media_download": "Zip and download media files:"
 }

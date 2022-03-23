@@ -5,6 +5,7 @@ return [
 	'number_of_saved_days_in_server_statistics' => 14,
 	'max_msgs_per_user' => 100,
 	'max_possible_backups_per_day' => 1000, //should never be reached. Mainly there to prevent too many backups in case of a bug
+	'max_filesize_for_uploads' => 100000000, //100mb
 	'max_filesize_for_changes' => 1000000000, //1gb; when variables are changed, lines will be adjusted. If file is too big, a new file will be created instead (after backup of course!)
 	'dataset_server_timeout' => 1000, //milliseconds between received datasets (per user) or the server will decline them (excludes quit event)
 	'statistics_timed_storage_max_entries' => 2000, //higher numbers leads to bigger files for statistics and higher performance impact when adding new values too statistics (and can also lag the statistic charts)

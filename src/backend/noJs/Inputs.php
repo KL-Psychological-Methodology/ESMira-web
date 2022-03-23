@@ -25,12 +25,24 @@ class Inputs {
 		
 		$responseType = isset($input->responseType) ? $input->responseType : 'text_input';
 		
-		if(!method_exists($this, $responseType))
+		if($this->is_skipped($responseType)) {
+			return '';
+		}
+		else if(!method_exists($this, $responseType))
 			$output = $this->error($input);
 		else
 			$output = $this->{$responseType}($input, $required, $name, $value, $inputIndex);
 		
 		return "<div class=\"line horizontalPadding verticalPadding\">$output</div>";
+	}
+	
+	function is_skipped($responseType) {
+		switch($responseType) {
+			case "app_usage":
+			case "photo":
+				return true;
+		}
+		return false;
 	}
 	
 	

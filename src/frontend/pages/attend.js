@@ -20,7 +20,6 @@ import time from "../inputs/time.html";
 import va_scale from "../inputs/va_scale.html";
 import video from "../inputs/video.html";
 import error from "../inputs/error.html";
-import {Defaults} from "../js/variables/defaults";
 
 
 const COOKIE_LAST_COMPLETED = "last_completed%1_%2";
@@ -275,6 +274,15 @@ function get_inputHtml(responseType) {
 			return error;
 	}
 }
+function is_itemSkipped(responseType) {
+	switch(responseType) {
+		case "app_usage":
+		case "photo":
+			return true;
+	}
+	return false;
+}
+
 
 let isRegistered = {};
 function register(key, html) {
@@ -313,6 +321,10 @@ function Questionnaire_viewModel(page, study, questionnaire, qPage, responses_ca
 	
 	for(let i=0, max=sourceInputs.length; i<max; ++i) {
 		let input = sourceInputs[i];
+		
+		if(is_itemSkipped(input.responseType()))
+			continue;
+		
 		let viewModel = new Input_viewModel(study, questionnaire, input, responses_cache);
 		this.inputs.push(viewModel);
 		
@@ -348,8 +360,8 @@ function Input_viewModel(study, questionnaire, input, responses_cache) {
 	
 	let responseType = input.hasOwnProperty("responseType") ? input.responseType() : "text_input";
 	
-	let html = get_inputHtml(responseType);
-	register(responseType, html);
+	let inputHtml = get_inputHtml(responseType);
+	register(responseType, inputHtml);
 	
 	//TODO
 	//for older IOS we would need to add an empty optgroup into the list item to make sure long lines are wrapped. But thats hacky and creates an empty line on other browsers

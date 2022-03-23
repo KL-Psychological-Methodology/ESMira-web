@@ -15,21 +15,19 @@ import {
 } from "../variables/statistics";
 import {ONE_DAY, SMALLEST_TIMED_DISTANCE} from "../variables/constants";
 import {Defaults, fillDefaults} from "../variables/defaults";
+import {FILE_IMAGE} from "../variables/urls";
 
-function Cell(index, title, row, value, real_value) {
+const EMPTY_DATA_SYMBOL = "-";
+
+function Cell(index, row) {
 	this.index = index;
 	this.row = row;
-	this.value = value; //the value that is shown in the data viewer
-	this.title = title;
-	if(real_value === undefined) {
-		this.special = false;
-		this.real_value = "";
-	}
-	else {
-		this.special = true;
-		this.real_value = real_value;
-	}
+	this.value = ""; //the value that is shown in the data viewer
+	this.real_value = undefined;
+	this.special = false;
+	this.specialType = undefined;
 }
+
 function Row(pos, cells) {
 	this.pos = pos;
 	this.hidden_sum = 0; //how many columns are hiding this row
@@ -40,7 +38,11 @@ function Row(pos, cells) {
 }
 
 const CsvData = {
-	translations: {},
+	specialColumnsIndex: {
+		timestamp: {},
+		skipped: {},
+		image: {},
+	},
 	
 	loadingStarted: false,
 	needsHeader: true,
@@ -51,6 +53,7 @@ const CsvData = {
 	rows_count: 0,
 	timestamp_columns_numIndex: [],
 	timestamp_columns_nameIndex: {},
+	image_columns_numIndex: [],
 	skipped_index: [],
 	valueIndex: [],
 	rowsIndex: [],
@@ -61,6 +64,20 @@ const CsvData = {
 	filteredRowsIndex: {},
 	not_indexed_data: [],
 	
+	init: function(specialColumns) {
+		for(let i=specialColumns.length-1; i>=0; --i) {
+			let entry = specialColumns[i];
+			this.specialColumnsIndex[entry.type][entry.key] = true;
+		}
+		for(let i=DATAVIEWER_TIMESTAMP_COLUMNS.length-1; i>=0; --i) {
+			let entry = DATAVIEWER_TIMESTAMP_COLUMNS[i];
+			this.specialColumnsIndex.timestamp[entry] = true;
+		}
+		for(let i=DATAVIEWER_SKIPPED_COLUMNS.length-1; i>=0; --i) {
+			let entry = DATAVIEWER_SKIPPED_COLUMNS[i];
+			this.specialColumnsIndex.skipped[entry] = true;
+		}
+	},
 	loadRow: function(columns) {
 		if(columns.length === 1) {
 			let msg = columns[0];
@@ -81,14 +98,18 @@ const CsvData = {
 			for(let column_i = 0, i = 0, max = columns.length; i < max; ++i) {
 				let column_value = columns[i];
 				
-				if(DATAVIEWER_TIMESTAMP_COLUMNS.indexOf(column_value) !== -1) {
+				if(this.specialColumnsIndex.timestamp.hasOwnProperty(column_value)) {
 					this.timestamp_columns_numIndex[i] = true;
 					this.timestamp_columns_nameIndex[column_value] = true;
 				}
-				else if(DATAVIEWER_SKIPPED_COLUMNS.indexOf(column_value) !== -1) {
+				else if(this.specialColumnsIndex.image.hasOwnProperty(column_value)) {
+					this.image_columns_numIndex[i] = true;
+				}
+				else if(this.specialColumnsIndex.skipped.hasOwnProperty(column_value)) {
 					this.skipped_index[i] = true;
 					continue;
 				}
+				
 				this.valueIndex[column_i] = {};
 				this.visible_valueIndex[column_i] = {};
 				this.header_names.push(column_value);
@@ -133,33 +154,47 @@ const CsvData = {
 			if(this.skipped_index[i])
 				continue;
 			
-			let value, title;
-			let real_value = undefined;
+			let cell = new Cell(index, row_data);
+			
 			if(this.timestamp_columns_numIndex[i]) {
+				cell.special = true;
+				cell.specialType = "timestamp";
+				
 				let timestamp = parseInt(raw_row[i]);
 				if(!timestamp) {
-					value = this.translations["empty_dataSymbol"];
+					cell.specialType = "empty";
+					cell.value = EMPTY_DATA_SYMBOL;
 					timestamp = "";
 				}
 				else if(timestamp > 32532447600)//test if timestamp is in ms or seconds. NOTE: Exactly in the year 3000 when ducks have taken over the world, this code will stop working!!
-					value = (new Date(timestamp)).toLocaleString();
+					cell.value = (new Date(timestamp)).toLocaleString();
 				else
-					value = (new Date(timestamp * 1000)).toLocaleString();
+					cell.value = (new Date(timestamp * 1000)).toLocaleString();
 				
-				title = header_names[column_i]+"\n"+this.translations["colon_timestamp"]+" "+timestamp;
-				real_value = timestamp;
+				cell.real_value = timestamp
+			}
+			else if(this.image_columns_numIndex[i]) {
+				cell.special = true;
+				cell.real_value = raw_row[i];
+				if(cell.real_value) {
+					cell.specialType = "image";
+					cell.value = cell.real_value;
+				}
+				else {
+					cell.specialType = "empty";
+					cell.value = EMPTY_DATA_SYMBOL;
+				}
 			}
 			else if(!raw_row[i].length) {
-				value = this.translations["empty_dataSymbol"];
-				real_value = "";
-				title = header_names[column_i];
+				cell.special = true;
+				cell.specialType = "empty";
+				cell.value = EMPTY_DATA_SYMBOL;
+				cell.real_value = "";
 			}
 			else {
-				value = raw_row[i];
-				title = header_names[column_i];
+				cell.value = raw_row[i];
 			}
 			
-			let cell = new Cell(index, title, row_data, value, real_value);
 			
 			
 			let column_index = this.valueIndex[column_i];
@@ -629,7 +664,7 @@ onmessage = function(event) {
 	let returnObj = {id: id};
 	switch(data.type) {
 		case "load":
-			CsvData.translations = data.translations;
+			CsvData.init(data.specialColumns);
 			CsvData.loadData(data.url)
 				.then(function() {
 					returnObj.rows_count = CsvData.rows_count;
@@ -644,7 +679,7 @@ onmessage = function(event) {
 				});
 			return;
 		case "fromCsv":
-			CsvData.translations = data.translations;
+			CsvData.init(data.specialColumns);
 			CsvData.loadCsv(data.csv);
 			
 			returnObj.rows_count = CsvData.rows_count;

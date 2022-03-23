@@ -114,6 +114,7 @@ export const Studies_tools = {
 			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
 				let newQuestionnaire = add_default(study.questionnaires, "questionnaires");
 				newQuestionnaire.internalId(internalId);
+				newQuestionnaire.title(Lang.get("default_questionnaire_name", questionnaires.length));
 				
 				if(pageCode)
 					Site.add_page(pageCode.replace("%", study.questionnaires().length-1), page.depth);
@@ -279,5 +280,49 @@ export const Studies_tools = {
 		}
 		
 		return variables;
+	},
+	
+	is_media: function(input) {
+		return input.responseType() === 'photo';
+	},
+	forEachInput: function(study, fu) {
+		let questionnaires = study.questionnaires();
+		for(let iQ=questionnaires.length-1; iQ>=0; iQ--) {
+			let pages = questionnaires[iQ].pages();
+			for(let iP=pages.length-1; iP>=0; iP--) {
+				let inputs = pages[iP].inputs();
+				for(let iI=inputs.length-1; iI>=0; iI--) {
+					if(fu(inputs[iI]) === false)
+						return;
+				}
+			}
+		}
+	},
+	has_media: function(study) {
+		let self = this;
+		let has_media = false;
+		this.forEachInput(study, function(input) {
+			if(self.is_media(input)) {
+				has_media = true;
+				return false;
+			}
+		});
+		return has_media;
+	},
+	list_specialDataColumns: function(study) {
+		let columns = [];
+		this.forEachInput(study, function(input) {
+			switch(input.responseType()) {
+				case 'photo':
+					columns.push({key: input.name(), type: 'image'});
+					break;
+				case 'app_usage':
+					columns.push({key: input.name(), type: 'timestamp'});
+					columns.push({key: input.name() + "~visibleTime", type: 'timestamp'});
+					break;
+			}
+		});
+		
+		return columns;
 	}
 }

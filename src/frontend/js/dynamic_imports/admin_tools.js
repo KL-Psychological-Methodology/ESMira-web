@@ -351,9 +351,9 @@ export const AdminTools = {
 		});
 	},
 	change_username : function(page, username) {
-		let newUsername = prompt(Lang.get("prompt_choice"), username);
+		let newUsername = prompt(Lang.get("prompt_newUsername"), username);
 		if(!newUsername)
-			return;
+			return Promise.reject("Canceled");
 		
 		return page.loader.loadRequest(
 			FILE_ADMIN + "?type=change_username",

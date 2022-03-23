@@ -20,8 +20,21 @@
 <div data-bind="if: version() !== 0">
 	<div data-bind="template: {name: 'data_line', data: {key: 'defaults', id: id()}}"></div>
 	
+	
 	<title-row params="title: Lang.get('colon_questionnaires')"></title-row>
 	<div data-bind="template: {name: 'data_line', data: {key: 'current', id: id(), showQuestionnaire: true}}"></div>
+	
+	
+	<div data-bind="if: Studies.tools.has_media($data)">
+		<title-row params="title: Lang.get('colon_media_download')"></title-row>
+		<a class="spacing_right" data-bind="attr: {href:$root.fileMediaUrl.replace('%1', id()), download: 'media.zip'}">
+			<svg class="middle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+				<path d="M0 0h24v24H0z" fill="none"/>
+				<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+			</svg><span class="spacing_left" data-bind="text: 'media.zip'"></span>
+		</a>
+	</div>
+	
 	
 	<title-row params="title: Lang.get('colon_backups')"></title-row>
 	<div class="verticalPadding">
