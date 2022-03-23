@@ -114,6 +114,7 @@ export const Studies_tools = {
 			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
 				let newQuestionnaire = add_default(study.questionnaires, "questionnaires");
 				newQuestionnaire.internalId(internalId);
+				newQuestionnaire.title(Lang.get("default_questionnaire_name", questionnaires.length));
 				
 				if(pageCode)
 					Site.add_page(pageCode.replace("%", study.questionnaires().length-1), page.depth);

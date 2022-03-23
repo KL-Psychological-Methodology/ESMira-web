@@ -144,6 +144,7 @@
     "days": "Tage",
 	"default": "Standard",
     "default_chooseUsernameInstructions": "Bitte wählen Sie eine User-Id",
+    "default_questionnaire_name": "Fragebogen %d",
     "default_study_name": "Studie",
     "default_webQuestionnaireCompletedInstructions": "Vielen Dank!",
     "delete_questionnaire": "Fragebogen löschen",

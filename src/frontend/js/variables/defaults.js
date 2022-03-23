@@ -176,7 +176,7 @@ export function fillDefaults() {
 				sumScores: Defaults.sumScores,
 			},
 			translated: {
-				title: "Questionnaire"
+				title: ""
 			}
 		},
 		internalId: -1,

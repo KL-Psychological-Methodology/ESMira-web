@@ -144,6 +144,7 @@
     "days": "days",
 	"default": "Default",
     "default_chooseUsernameInstructions": "Please choose a user id",
+    "default_questionnaire_name": "Questionnaire %d",
     "default_study_name": "Study",
     "default_webQuestionnaireCompletedInstructions": "Thank you!",
     "delete_questionnaire": "Delete questionnaire",
