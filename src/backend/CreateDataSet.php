@@ -310,7 +310,7 @@ class CreateDataSet {
 								$identifier,
 								$dataset_id
 							);
-							$answer = Files::get_publicFile_image_fromData($this->user_id, $uploaded, $dataSet->responseTime, $key);
+							$answer = Files::get_publicFile_image_fromData($this->user_id, $dataSet->entryId, $key);
 						}
 						else
 							$answer = '';

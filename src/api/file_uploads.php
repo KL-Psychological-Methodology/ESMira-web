@@ -9,6 +9,10 @@ use backend\Output;
 use backend\Files;
 use backend\Configs;
 
+if(intval($_SERVER['CONTENT_LENGTH'])>0 && empty($_POST)){
+	Output::error('File is too big');
+}
+
 if(!isset($_POST['studyId']) || !isset($_POST['userId']) || !isset($_POST['dataType']))
 	Output::error('Missing data');
 
