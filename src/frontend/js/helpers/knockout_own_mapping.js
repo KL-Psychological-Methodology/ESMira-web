@@ -113,6 +113,12 @@ export const OwnMapping = {
 				thisObj[fu] = function() {
 					let obj = getObs();
 					obj[fu].apply(obj, arguments);
+					
+					let code = Studies.tools ? Studies.tools.currentLang() : "_";
+					if(!changedValues.hasOwnProperty(code))
+						changedValues[code] = true;
+					else if(!obj.___isDirty())
+						delete changedValues[code];
 				};
 			});
 			thisObj.indexOf =  function(s) {return self.indexOf(getObs()(), s);};
