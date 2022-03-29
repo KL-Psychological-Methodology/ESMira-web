@@ -84,11 +84,25 @@ class DoUpdate extends HasAdminPermission {
 		}
 		$zip->close();
 		
+		//run update script
+		if(file_exists(Files::FILE_UPDATE_SCRIPT)) {
+			require_once Files::FILE_UPDATE_SCRIPT;
+			try {
+				run_updateScript((int)$_GET['fromVersion']);
+				unlink(Files::FILE_UPDATE_SCRIPT);
+			}
+			catch(Exception $e) {
+				$this->revertUpdate();
+				Output::error("Error while running update script. Reverting... \n$e");
+			}
+		}
+		
 		//restore config file:
 		if(!rename($folder_backup .Files::PATH_CONFIG, Files::FILE_CONFIG)) {
 			$this->revertUpdate();
 			Output::error('Could not restore settings. Reverting...');
 		}
+		
 		
 		//cleaning up
 		if(!$this->empty_folder($folder_backup) || !rmdir($folder_backup))

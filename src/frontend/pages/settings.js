@@ -137,7 +137,7 @@ export function ViewModel(page) {
 			Requests.load(FILE_ADMIN + "?type=download_update")
 				.then(function() {
 					page.loader.update(Lang.get("state_installing"))
-					return Requests.load(FILE_ADMIN + "?type=do_update");
+					return Requests.load(FILE_ADMIN + "?type=do_update&fromVersion="+PACKAGE_VERSION);
 				})
 				.then(function() {
 					alert(Lang.get("info_update_complete"));
