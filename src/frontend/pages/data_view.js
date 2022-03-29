@@ -74,7 +74,7 @@ export function ViewModel(page) {
 						let url = FILE_IMAGE
 							.replace("%1", studyId)
 							.replace("%2", cells[userId_columnNum].value)
-							.replace("%3", cells[entryId_columnNum].real_value)
+							.replace("%3", cells[entryId_columnNum].value)
 							.replace("%4", header_names[column_i]);
 						
 						td = createElement("td", "font-style: italic");

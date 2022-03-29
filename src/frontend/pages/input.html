@@ -94,15 +94,18 @@
 	<div data-bind="if: responseType() === 'list_single' || responseType() === 'list_multiple'">
 		<title-row params="title: Lang.get('colon_choices')"></title-row>
 		<div class="list_parent">
-			<div class="list_child">
+			<div class="list_child" data-bind="dragRoot">
 				<lang-options></lang-options>
 				<div data-bind="foreach: listChoices">
-					<label class="vertical">
-						<small data-bind="text: Lang.get('text')"></small>
-						<input type="text" data-bind="value: $rawData"/>
-						<img src="../imgs/warn.svg" alt="warn" class="horizontal" data-bind="visible: !$data.length"/>
-						<widget-delete data-bind="click: $root.ko__remove_from_list($parent.listChoices, $index())"></widget-delete>
-					</label>
+					<div class="vertical" data-bind="dragTarget: $parent.listChoices">
+						<div class="horizontal" data-bind="dragStart: $parent.listChoices"></div>
+						<label class="horizontal">
+							<small data-bind="text: Lang.get('text')"></small>
+							<input type="text" data-bind="value: $rawData"/>
+							<img src="../imgs/warn.svg" alt="warn" class="horizontal" data-bind="visible: !$data.length"/>
+							<widget-delete data-bind="click: $root.ko__remove_from_list($parent.listChoices, $index())"></widget-delete>
+						</label>
+					</div>
 				</div>
 			</div>
 			<widget-add data-bind="click: $root.add_listChoice" params="title: Lang.get('add')"></widget-add>
@@ -110,9 +113,10 @@
 	</div>
 	<div data-bind="if: responseType() === 'dynamic_input'">
 		<title-row params="title: Lang.get('colon_choices')"></title-row>
-		<div class="list_parent" >
+		<div class="list_parent" data-bind="dragRoot">
 			<div class="list_child relative" data-bind="foreach: subInputs">
-				<div class="vertical">
+				<div class="vertical" data-bind="dragTarget: $parent.subInputs">
+					<div class="horizontal" data-bind="dragStart: $parent.subInputs"></div>
 					<widget-delete data-bind="click: $root.ko__remove_from_list($parent.subInputs, $index())"></widget-delete>
 					<a data-bind="navi: 'input,sub:'+$index(), text: $index()+': '+Lang.get('input_' + responseType()) + (required() ? '*' : '')"></a>
 				</div>

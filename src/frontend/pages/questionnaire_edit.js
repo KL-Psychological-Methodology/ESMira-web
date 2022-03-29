@@ -5,12 +5,13 @@ import {Admin} from "../js/main_classes/admin";
 import {Defaults} from "../js/variables/defaults";
 import {Lang} from "../js/main_classes/lang";
 import {selectedQuestionnaire} from "../js/shared/questionnaire_edit";
+import {Site} from "../js/main_classes/site";
 
 export function ViewModel(page) {
 	let self = this;
 	this.html = html;
 	page.title(Lang.get("questionnaires"));
-	this.promiseBundle = [Studies.init(page), import("../js/dynamic_imports/drag_class")];
+	this.promiseBundle = [Studies.init(page), Site.init_drag()];
 	this.extraContent = "<div data-bind=\"if: $root.selectedIndex() !== undefined\">" +
 		"<a class=\"right\" data-bind=\"navi: 'attend,demo,q:'+$root.selectedIndex(), text: Lang.get('preview')\"></a>" +
 		"</div>";

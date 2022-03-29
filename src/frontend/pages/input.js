@@ -6,11 +6,12 @@ import {Defaults} from "../js/variables/defaults";
 import {Lang} from "../js/main_classes/lang";
 import {selectedQuestionnaire} from "../js/shared/questionnaire_edit";
 import * as ko from "knockout";
+import {Site} from "../js/main_classes/site";
 
 export function ViewModel(pageModel) {
 	let self = this;
 	this.html = html;
-	this.promiseBundle = [Studies.init(pageModel)];
+	this.promiseBundle = [Studies.init(pageModel), Site.init_drag()];
 	
 	this.preInit = function({id, q, pageI, input}, studies) {
 		this.for_subItem = pageModel.index.hasOwnProperty("sub");
@@ -39,6 +40,7 @@ export function ViewModel(pageModel) {
 	
 	this.add_listChoice = function(input) {
 		listTools.add_prompted(input.listChoices);
+		console.log(input.listChoices());
 	}
 	
 	this.optionsInput = [

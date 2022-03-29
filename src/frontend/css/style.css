@@ -284,10 +284,24 @@ svg.highlight {
 	position: relative;
 }
 
-.colored_lines .line:nth-child(even), .colored_lines .line:nth-child(even) label small, .colored_lines .line:nth-child(even) .fakeLabel small {
+.colored_lines .line:nth-child(even) {
 	background-color: lightgrey;
 }
 
+/**********
+flex designs
+**********/
+
+.flexHorizontal {
+	display: flex;
+	flex-direction: row;
+}
+.flexGrow {
+	flex-grow: 1;
+}
+.flexCenter {
+	align-self: center;
+}
 
 /**********
 design elements

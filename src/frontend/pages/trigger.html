@@ -1,10 +1,11 @@
 <title-row params="title: Lang.get('colon_actions')"></title-row>
-<div class="list_parent">
+<div class="list_parent" data-bind="dragRoot">
 	<div class="list_child" data-bind="foreach:actions">
-			<div class="verticalPadding">
-				<widget-delete data-bind="click:$root.ko__remove_from_list($parent.actions, $index(), Lang.get('confirm_delete_action', $root.actions[type()]))"></widget-delete>
-				<a data-bind="navi:'action:' + $index(), text: $root.actions[type()]"></a>
-			</div>
+		<div class="verticalPadding" data-bind="dragTarget: $parent.actions">
+			<div class="horizontal" data-bind="dragStart: $parent.actions"></div>
+			<widget-delete data-bind="click:$root.ko__remove_from_list($parent.actions, $index(), Lang.get('confirm_delete_action', $root.actions[type()]))"></widget-delete>
+			<a class="middle" data-bind="navi:'action:' + $index(), text: $root.actions[type()]"></a>
+		</div>
 	</div>
 	<div data-bind="if: !actions().length">
 		<img src="../imgs/warn.svg" alt="warn" class="horizontal"/>

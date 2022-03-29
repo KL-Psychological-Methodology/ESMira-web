@@ -261,7 +261,7 @@ tabBar
 **********/
 
 
-tab-bar.smallBar > .tabBar > * {
+tab-bar.smallBar > .tabBar > .tab {
 	font-size: 9pt;
 	padding: 2px 5px;
 }
@@ -291,7 +291,7 @@ tab-bar .tabBar {
 	flex-wrap: wrap;
 	margin: 0 -1% 0 -1%;
 }
-tab-bar .tabBar > * {
+tab-bar .tabBar > .tab {
 	flex-grow: 1;
 	border-left: 1px solid white;
 	border-right: 1px solid white;
@@ -305,7 +305,7 @@ tab-bar .tabBar > * {
 	text-align: center;
 	transition: background-color 0.5s, margin-top 0.1s, padding-bottom 0.1s, color 0.5s;
 }
-tab-bar .tabBar > * > svg {
+tab-bar .tabBar > .tab > svg {
 	max-height: 15px;
 }
 tab-bar .tabBar > .addBtn {
@@ -322,7 +322,8 @@ tab-bar .tabBar > .selected {
 	padding-bottom: 10px; /*prevent below content from moving in case there are only 2 (or one) entries in a row*/
 }
 
-tab-bar .tabBar > *:not(.selected):hover {
+tab-bar .tabBar > .tab:not(.selected):hover {
 	background-color: #9fe0f7;
+	color: #2DBFF3;
 	cursor: pointer;
 }

@@ -14,6 +14,7 @@ import {Studies} from "../js/main_classes/studies";
 import {create_axisValues, get_chart, get_pageType, remove_chart} from "../js/shared/charts";
 import {Admin} from "../js/main_classes/admin";
 import {Defaults} from "../js/variables/defaults";
+import {Site} from "../js/main_classes/site";
 
 function get_chartCache() {
 	let cookieName_content = "chartCache_content";
@@ -33,7 +34,7 @@ export function ViewModel(page) {
 	let self = this;
 	this.html = html;
 	page.title(Lang.get("edit_chart"));
-	this.promiseBundle = [Studies.init(page)];
+	this.promiseBundle = [Studies.init(page), Site.init_drag()];
 	
 	this.preInit = function() {
 		this.dataObj = get_chart();

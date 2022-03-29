@@ -24,7 +24,7 @@ Dragging
 	transition: background-color 0.5s;
 }
 .is_dragging .drag_target {
-	background-color: #2DBFF333 !important;
+	background-color: #9fe0f7 !important;
 }
 .drag_placer {
 	height: 50px;
@@ -62,7 +62,6 @@ label > small, .fakeLabel > small {
 	display: block;
 	min-height: 15px;
 	color: #2b98ca;
-	background-color: white;
 }
 label > small:first-child, .fakeLabel > small:first-child {
 	z-index: 1;

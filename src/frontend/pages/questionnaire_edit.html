@@ -1,4 +1,4 @@
-<tab-bar params="tabs: $root.study.questionnaires, tabName: function(q) {return q.title()}, selectedIndex: $root.selectedIndex, addFu: $root.add_questionnaire">
+<tab-bar params="tabs: $root.study.questionnaires, tabName: function(q) {return q.title()}, selectedIndex: $root.selectedIndex, addFu: $root.add_questionnaire, draggable: true">
 	<div class="center">
 		<label>
 			<small data-bind="text: Lang.get('questionnaire_name')"></small>
@@ -8,43 +8,45 @@
 		<widget-delete class="right spacing_top" data-bind="click: $root.delete_questionnaire.bind($root, tabIndex)" params="title: Lang.get('delete_questionnaire')"></widget-delete>
 	
 	</div>
-	
-	<div data-bind="foreach: $data.pages">
-		<div data-bind="let: {qIndex: tabIndex, pIndex: $index()}">
-			<title-row params="title: Lang.get('page')+' '+(pIndex+1)">
-				<widget-delete data-bind="click:$root.ko__remove_from_list($parents[2].pages, pIndex, Lang.get('confirm_delete_inputPage'), true)"></widget-delete>
-			</title-row>
-			
-			<a class="line drag_hidden center spacing_top spacing_bottom" data-bind="navi: 'pageSettings,pageI:'+pIndex, text: Lang.get('page_settings')"></a>
-			
-			<div class="drag_placer" data-bind="visible: $data.inputs().length === 0, dragPlacer: inputs"></div>
-			
-			
-			<div class="colored_lines" data-bind="foreach: $data.inputs">
-				<div class="line horizontalPadding verticalPadding drag_target" data-bind="dragTarget: [$parent.inputs, $index()]">
-					
-					<div class="right" data-bind="with: $data">
-						<div class="horizontal" data-bind="dragStart: [$parents[1].inputs, $index()]">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-						</div>
-						<widget-delete data-bind="click:$root.ko__remove_from_list($parentContext.$parentContext.$data.inputs, $index(), Lang.get('confirm_delete_input'))"></widget-delete>
+	<div data-bind="dragRoot">
+		<div data-bind="foreach: $data.pages">
+			<div data-bind="let: {qIndex: tabIndex, pIndex: $index()}">
+				<title-row params="title: Lang.get('page')+' '+(pIndex+1)">
+					<widget-delete data-bind="click:$root.ko__remove_from_list($parents[2].pages, pIndex, Lang.get('confirm_delete_inputPage'), true)"></widget-delete>
+				</title-row>
+				
+				<a class="line drag_hidden center spacing_top spacing_bottom" data-bind="navi: 'pageSettings,pageI:'+pIndex, text: Lang.get('page_settings')"></a>
+				
+				<div data-bind="visible: $data.inputs().length === 0, dragPlacer: inputs"></div>
+				
+				
+				<div class="colored_lines" data-bind="foreach: $data.inputs">
+					<div class="line horizontalPadding verticalPadding flexHorizontal" data-bind="dragTarget: $parent.inputs">
 						
-						<a class="right" data-bind="navi: 'input:'+$index()+',pageI:'+pIndex+',q:'+qIndex">
-							<span class="middle small_text" data-bind="text: Lang.get('change')"></span>
-						</a>
+						<div class="flexCenter spacing_right" data-bind="dragStart: $parent.inputs"></div>
+						
+						<div class="flexGrow">
+							<div class="verticalPadding highlight small_text" data-bind="text: Lang.get('input_' + responseType())+(required() ? '*' : '')+' ('+name()+')'"></div>
+							<div class="verticalPadding" data-bind="html: text"></div>
+						</div>
+						
+						<div class="nowrap" data-bind="with: $data">
+							<widget-delete data-bind="click:$root.ko__remove_from_list($parentContext.$parentContext.$data.inputs, $index(), Lang.get('confirm_delete_input'))"></widget-delete>
+							
+							<a data-bind="navi: 'input:'+$index()+',pageI:'+pIndex+',q:'+qIndex">
+								<span class="middle small_text" data-bind="text: Lang.get('change')"></span>
+							</a>
+						</div>
 					</div>
-					
-					<div class="verticalPadding highlight small_text" data-bind="text: Lang.get('input_' + responseType())+(required() ? '*' : '')+' ('+name()+')'"></div>
-					<div class="verticalPadding" data-bind="html: text"></div>
 				</div>
+				<widget-add
+						params="title: Lang.get('add_item')"
+						data-bind="click: $root.add_input.bind($root, pIndex, qIndex)"
+						class="drag_hidden verticalPadding"
+				></widget-add>
 			</div>
-			<widget-add
-					params="title: Lang.get('add_item')"
-					data-bind="click: $root.add_input.bind($root, pIndex, qIndex)"
-					class="drag_hidden verticalPadding"
-			></widget-add>
 		</div>
+		<hr/>
+		<widget-add class="drag_hidden spacing_bottom" params="title: Lang.get('add_page')" data-bind="click: $root.ko__add_default('pages')"></widget-add>
 	</div>
-	<hr/>
-	<widget-add class="drag_hidden spacing_bottom" params="title: Lang.get('add_page')" data-bind="click: $root.ko__add_default('pages')"></widget-add>
 </tab-bar>

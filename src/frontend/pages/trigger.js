@@ -5,11 +5,12 @@ import {
 	option_actions
 } from "../js/shared/actions";
 import {Admin} from "../js/main_classes/admin";
+import {Site} from "../js/main_classes/site";
 
 export function ViewModel(page) {
 	this.html = html;
 	page.title(Lang.get("edit_actionTrigger"));
-	this.promiseBundle = [Studies.init(page)];
+	this.promiseBundle = [Studies.init(page), Site.init_drag()];
 	
 	this.preInit = function({id, q, trigger}, studies) {
 		let questionnaire = studies[id].questionnaires()[q];

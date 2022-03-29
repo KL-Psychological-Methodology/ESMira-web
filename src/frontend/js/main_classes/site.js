@@ -177,6 +177,10 @@ export const Site = {
 		
 	},
 	
+	init_drag: function() {
+		return import("../dynamic_imports/drag_class");
+	},
+	
 	reload_allPages: function() {
 		let pages = this.pages();
 		for(let i=pages.length-1; i>=0; --i) {

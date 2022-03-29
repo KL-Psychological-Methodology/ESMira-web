@@ -2,11 +2,12 @@ import html from "./charts.html"
 import {Lang} from "../js/main_classes/lang";
 import {Studies} from "../js/main_classes/studies";
 import {Admin} from "../js/main_classes/admin";
+import {Site} from "../js/main_classes/site";
 
 export function ViewModel(page) {
 	this.html = html;
 	page.title(Lang.get("create_charts"));
-	this.promiseBundle = [Studies.init(page)];
+	this.promiseBundle = [Studies.init(page), Site.init_drag()];
 	
 	this.preInit = function({id}, studies) {
 		this.dataObj = studies[id];
