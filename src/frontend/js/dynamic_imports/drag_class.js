@@ -1,5 +1,6 @@
 import ko from "knockout";
 import drag_handle from "../../imgs/drag_handle.svg?raw";
+import btn_ok from "../../widgets/btn_ok.html";
 
 const {bindEvent} = require("../helpers/basics");
 const {createElement} = require("../helpers/basics");
@@ -7,7 +8,6 @@ const {createElement} = require("../helpers/basics");
 export const DragClass = {
 	_dragSpacerEl: createElement("div", false, {className: "drag_spacer"}),
 	
-	_dragIdCount: 0,
 	_startEl: null,
 	_startList: null,
 	_startIndex: -1,
@@ -16,16 +16,12 @@ export const DragClass = {
 	_stopList: null,
 	_stopIndex: -1,
 	
-	_listEl: null,
-	
 	init: function() {
 		let self = this;
 		
 		ko.bindingHandlers.dragRoot = {
 			init: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
-				ko.applyBindingsToDescendants(bindingContext.extend({"$dragRoot": el}), el);
-
-				return { 'controlsDescendantBindings': true };
+				el.__dragRoot = true;
 			}
 		};
 		ko.bindingHandlers.dragTarget = {
@@ -33,57 +29,56 @@ export const DragClass = {
 				let list = valueAccessor();
 				if(!list)
 					return;
-				let index = bindingContext.$index();
-				self.set_dragRoot(el, bindingContext.$dragRoot);
-				self.make_dragTarget(el, list, index);
+				let index = el.hasAttribute("drag-index") ? parseInt(el.getAttribute("drag-index")) : bindingContext.$index();
+				self.update_el_vars(el, list, index);
+				
+				el.classList.add("drag_target");
+				
+				bindEvent(el, "dragend", self.event_dragend.bind(self));
+				bindEvent(el, "dragenter", self.event_dragenter.bind(self));
 			},
 			update: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
 				let list = valueAccessor();
 				if(!list)
 					return;
-				let index = bindingContext.$index();
+				let index = el.hasAttribute("drag-index") ? parseInt(el.getAttribute("drag-index")) : bindingContext.$index();
 				self.update_el_vars(el, list, index);
 			}
 		};
-		ko.bindingHandlers.dragPlacer = {
-			init: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
-				let list = valueAccessor();
-				if(!list)
-					return;
-				self.set_dragRoot(el, bindingContext.$dragRoot);
-				self.make_dragPlacer(el, list);
+		
+		ko.components.register('drag-start', {
+			viewModel: {
+				createViewModel: function(viewModel, componentInfo) {
+					return function() {
+						let el = componentInfo.element;
+						el.classList.add("clickable");
+						el.style.cursor = "move";
+						el.setAttribute("draggable", true);
+						
+						bindEvent(el, "dragstart", self.event_dragstart.bind(self));
+					}
+				}
 			},
-			update: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
-				let list = valueAccessor();
-				if(!list)
-					return;
-				self.update_el_vars(el, list);
-			}
-		};
-		ko.bindingHandlers.dragStart = {
-			init: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
-				let list = valueAccessor();
-				if(!list)
-					return;
-				let index = bindingContext.$index();
-				self.set_dragRoot(el, bindingContext.$dragRoot);
-				self.make_dragStarter(el, list, index);
-				el.innerHTML = drag_handle;
-			},
-			update: function(el, valueAccessor, allBindings, viewModel, bindingContext) {
-				let list = valueAccessor();
-				if(!list)
-					return;
-				let index = bindingContext.$index();
-				self.update_el_vars(el, list, index);
-			}
-		};
+			template: drag_handle
+		});
+	},
+	
+	get_collectionIndex(htmlCollection, searchEl) {
+		for(let i=htmlCollection.length-1; i>=0; --i) {
+			if(htmlCollection[i] === searchEl)
+				return i;
+		}
+		return -1;
 	},
 	
 	add_dragSpacer: function(el) {
 		let insertBefore = el;
 		if(this._dragSpacerEl.parentNode) {
-			if((this._dragSpacerEl.offsetTop < el.offsetTop || this._dragSpacerEl.offsetLeft < el.offsetLeft) && this._stopList().length) {
+			let children = this._current_dragRoot.getElementsByClassName("drag_target");
+			let elPosition = this.get_collectionIndex(children, el);
+			let spacerPosition = this.get_collectionIndex(children, this._dragSpacerEl);
+			
+			if(spacerPosition < elPosition) {
 				insertBefore = el.nextElementSibling;
 				if(this._startIndex > this._stopIndex) //When mouse was moved up and then down again
 					++this._stopIndex;
@@ -144,12 +139,12 @@ export const DragClass = {
 	},
 	event_dragstart: function(e) {
 		let el = e.currentTarget;
-		let list = this.get_list(el);
-		let index = this.get_index(el);
-		let dragRoot = this.get_dragRoot(el);
 		while(el && !el.classList.contains("drag_target")) {
 			el = el.parentNode;
 		}
+		let list = this.get_list(el);
+		let index = this.get_index(el);
+		let dragRoot = this.get_dragRoot(el);
 		
 		this._startList = list;
 		this._startIndex = index;
@@ -194,41 +189,15 @@ export const DragClass = {
 			el["drag-index"] = index;
 	},
 	
-	set_dragRoot: function(el, dragRoot) {
-		el["drag-root"] = dragRoot;
-	},
 	get_dragRoot: function(el) {
-		return el["drag-root"];
+		while(!el.__dragRoot) {
+			el = el.parentNode;
+		}
+		return el;
 	},
 	is_sameDragRoot: function(el) {
 		return this.get_dragRoot(el) === this._current_dragRoot;
 	},
-	
-	make_dragStarter: function(el, list, index) {
-		el.classList.add("clickable");
-		el.style.cursor = "move";
-		el.setAttribute("draggable", true);
-		this.update_el_vars(el, list, index);
-		
-		bindEvent(el, "dragstart", this.event_dragstart.bind(this));
-	},
-	make_dragTarget: function(el, list, index) {
-		el.classList.add("drag_target");
-		this.update_el_vars(el, list, index);
-		
-		bindEvent(el, "dragend", this.event_dragend.bind(this));
-		bindEvent(el, "dragenter", this.event_dragenter.bind(this));
-	},
-	
-	make_dragPlacer: function(el, list) {
-		el.classList.add("drag_placer");
-		
-		this.make_dragTarget(el, list, list().length);
-		
-		bindEvent(el, "drop", this.drop.bind(this));
-		bindEvent(el, "dragover", this.event_dragover.bind(this));
-		bindEvent(el, "dragover", this.event_dragover.bind(this));
-	}
 };
 
 DragClass.init();

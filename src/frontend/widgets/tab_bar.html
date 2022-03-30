@@ -1,12 +1,10 @@
-<div data-bind="dragRoot">
-	<div class="tabBar" data-bind="foreach: $component.listTabs">
-		<div class="tab" data-bind="click: clickFu, dragTarget: draggable ? $component.realTabs : false">
-			<div class="left" data-bind="dragStart: draggable ? $component.realTabs : false"></div>
-			<span class="middle" data-bind="
-					html: content,
-					css: {selected: $component.is_selected(index), highlight: $data.is_allTab, addBtn: $data.is_addBtn}
-				"></span>
-		</div>
+<div class="tabBar" data-bind="foreach: $component.listTabs, dragRoot">
+	<div class="tab" data-bind="click: clickFu,
+			dragTarget: (draggable ? $component.realTabs : false),
+			css: {selected: $component.is_selected(index), highlight: $data.is_allTab, addBtn: $data.is_addBtn}
+	">
+		<drag-start data-bind="visible: draggable" class="left"></drag-start>
+		<span class="middle" data-bind="html: content"></span>
 	</div>
 </div>
 

@@ -1,14 +1,12 @@
 <title-row params="title: Lang.get('colon_charts_public')"></title-row>
 <div data-bind="with: publicStatistics" class="list_parent">
-	<div data-bind="dragRoot">
-		<div class="list_child" data-bind="foreach: charts">
-			<div class="verticalPadding" data-bind="dragTarget: $parent.charts">
-				<div class="horizontal" data-bind="dragStart: $parent.charts"></div>
-				<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
-				<a data-bind="navi: 'chartEdit,public:'+$index()">
-					<span data-bind="text: title"></span>
-				</a>
-			</div>
+	<div class="list_child" data-bind="foreach: charts, dragRoot">
+		<div class="verticalPadding" data-bind="dragTarget: $parent.charts">
+			<drag-start class="horizontal"></drag-start>
+			<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
+			<a data-bind="navi: 'chartEdit,public:'+$index()">
+				<span data-bind="text: title"></span>
+			</a>
 		</div>
 	</div>
 	<widget-add data-bind="click: $root.ko__add_default('charts', 'chartEdit,public:%')" params="title: Lang.get('add')"></widget-add>
@@ -18,15 +16,13 @@
 
 <title-row params="title: Lang.get('colon_charts_personal')"></title-row>
 <div data-bind="with: personalStatistics" class="list_parent">
-	<div data-bind="dragRoot">
-		<div class="list_child" data-bind="foreach: charts">
-			<div class="verticalPadding" data-bind="dragTarget: $parent.charts">
-				<div class="horizontal" data-bind="dragStart: $parent.charts"></div>
-				<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
-				<a data-bind="navi: 'chartEdit,personal:'+$index()">
-					<span data-bind="text: title"></span>
-				</a>
-			</div>
+	<div class="list_child" data-bind="foreach: charts, dragRoot">
+		<div class="verticalPadding" data-bind="dragTarget: $parent.charts">
+			<drag-start class="horizontal"></drag-start>
+			<widget-delete data-bind="click: $root.ko__remove_from_list($parent.charts, $index())"></widget-delete>
+			<a data-bind="navi: 'chartEdit,personal:'+$index()">
+				<span data-bind="text: title"></span>
+			</a>
 		</div>
 	</div>
 	<widget-add data-bind="click: $root.ko__add_default('charts', 'chartEdit,personal:%')" params="title: Lang.get('add')"></widget-add>

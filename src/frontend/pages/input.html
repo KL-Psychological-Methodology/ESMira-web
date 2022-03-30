@@ -94,11 +94,11 @@
 	<div data-bind="if: responseType() === 'list_single' || responseType() === 'list_multiple'">
 		<title-row params="title: Lang.get('colon_choices')"></title-row>
 		<div class="list_parent">
-			<div class="list_child" data-bind="dragRoot">
+			<div class="list_child">
 				<lang-options></lang-options>
-				<div data-bind="foreach: listChoices">
+				<div data-bind="foreach: listChoices, dragRoot">
 					<div class="vertical" data-bind="dragTarget: $parent.listChoices">
-						<div class="horizontal" data-bind="dragStart: $parent.listChoices"></div>
+						<drag-start class="horizontal"></drag-start>
 						<label class="horizontal">
 							<small data-bind="text: Lang.get('text')"></small>
 							<input type="text" data-bind="value: $rawData"/>
@@ -113,10 +113,10 @@
 	</div>
 	<div data-bind="if: responseType() === 'dynamic_input'">
 		<title-row params="title: Lang.get('colon_choices')"></title-row>
-		<div class="list_parent" data-bind="dragRoot">
-			<div class="list_child relative" data-bind="foreach: subInputs">
+		<div class="list_parent">
+			<div class="list_child relative" data-bind="foreach: subInputs, dragRoot">
 				<div class="vertical" data-bind="dragTarget: $parent.subInputs">
-					<div class="horizontal" data-bind="dragStart: $parent.subInputs"></div>
+					<drag-start class="horizontal"></drag-start>
 					<widget-delete data-bind="click: $root.ko__remove_from_list($parent.subInputs, $index())"></widget-delete>
 					<a data-bind="navi: 'input,sub:'+$index(), text: $index()+': '+Lang.get('input_' + responseType()) + (required() ? '*' : '')"></a>
 				</div>

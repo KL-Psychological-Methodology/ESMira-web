@@ -46,44 +46,42 @@
 
 
 <script type="text/html" id="axis_template">
-	<div data-bind="dragRoot">
-		<div data-bind="foreach: list">
-			<div class="line verticalPadding" data-bind="dragTarget: $parent.list" style="clear: both; overflow: hidden;">
-				<div class="horizontal" data-bind="dragStart: $parent.list"></div>
-				<div class="horizontal">
-					<div class="horizontal top">
-						<widget-delete data-bind="click: $root.ko__remove_from_list($parent.list, $index())"></widget-delete>
-						<label class="middle">
-							<small data-bind="text: Lang.get('label')"></small>
-							<input class="small" type="text" data-bind="value: label"/>
-							<lang-options></lang-options>
-						</label>
-						<label class="horizontal">
-							<small data-bind="text: Lang.get('color')"></small>
-							<input type="color" data-bind="value: color"/>
-						</label>
-					</div>
+	<div data-bind="foreach: list, dragRoot">
+		<div class="line verticalPadding" data-bind="dragTarget: $parent.list" style="clear: both; overflow: hidden;">
+			<drag-start class="horizontal"></drag-start>
+			<div class="horizontal">
+				<div class="horizontal top">
+					<widget-delete data-bind="click: $root.ko__remove_from_list($parent.list, $index())"></widget-delete>
+					<label class="middle">
+						<small data-bind="text: Lang.get('label')"></small>
+						<input class="small" type="text" data-bind="value: label"/>
+						<lang-options></lang-options>
+					</label>
+					<label class="horizontal">
+						<small data-bind="text: Lang.get('color')"></small>
+						<input type="color" data-bind="value: color"/>
+					</label>
 				</div>
-				<div class="right" data-bind="let: {axisValues: $root.create_axisValues()}">
-					
-					<div data-bind="if: $parent.chart.dataType() === $root.STATISTICS_DATATYPES_XY">
-						<div data-bind="template: {name: 'conditions_template', data: {
-								title: Lang.get('axis_x'),
-								axis: $data.xAxis,
-								axisValues: axisValues,
-								conditionOptions: $root.get_conditionValues(xAxis.variableName())
-							}}" class="vertical"></div>
-					
-						<hr class="dark spacer"/>
-					</div>
-					
+			</div>
+			<div class="right" data-bind="let: {axisValues: $root.create_axisValues()}">
+				
+				<div data-bind="if: $parent.chart.dataType() === $root.STATISTICS_DATATYPES_XY">
 					<div data-bind="template: {name: 'conditions_template', data: {
-							title: Lang.get('axis_y'),
-							axis: $data.yAxis,
+							title: Lang.get('axis_x'),
+							axis: $data.xAxis,
 							axisValues: axisValues,
-							conditionOptions: $root.get_conditionValues(yAxis.variableName()),
+							conditionOptions: $root.get_conditionValues(xAxis.variableName())
 						}}" class="vertical"></div>
+				
+					<hr class="dark spacer"/>
 				</div>
+				
+				<div data-bind="template: {name: 'conditions_template', data: {
+						title: Lang.get('axis_y'),
+						axis: $data.yAxis,
+						axisValues: axisValues,
+						conditionOptions: $root.get_conditionValues(yAxis.variableName()),
+					}}" class="vertical"></div>
 			</div>
 		</div>
 	</div>

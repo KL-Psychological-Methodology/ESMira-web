@@ -16,21 +16,14 @@ Dragging
 	opacity: 0;
 	/*height: 0;*/
 }
-.drag_hiddenPlacer {
-	display: none;
-}
 
 .drag_target {
 	transition: background-color 0.5s;
+	min-height: 20px;
+	min-width: 20px;
 }
 .is_dragging .drag_target {
 	background-color: #9fe0f7 !important;
-}
-.drag_placer {
-	height: 50px;
-}
-.drag_placer.hidden {
-	display: none;
 }
 
 
