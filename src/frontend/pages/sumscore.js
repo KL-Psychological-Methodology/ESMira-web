@@ -1,4 +1,5 @@
 import html from "./sumscore.html"
+import ko from "knockout"
 import {Studies} from "../js/main_classes/studies";
 import {get_uniqueName} from "../js/shared/inputs";
 import {Admin} from "../js/main_classes/admin";
@@ -29,12 +30,12 @@ export function ViewModel(page) {
 	this.add_addition = function(sumScore, e) {
 		console.log(sumScore);
 		let el = e.target;
-		sumScore.addList.push(el.value);
+		sumScore.addList.push(ko.observable(el.value));
 		el.selectedIndex = 0;
 	};
 	this.add_subtraction = function(sumScore, e) {
 		let el = e.target;
-		sumScore.subtractList.push(el.value);
+		sumScore.subtractList.push(ko.observable(el.value));
 		el.selectedIndex = 0;
 	};
 	
