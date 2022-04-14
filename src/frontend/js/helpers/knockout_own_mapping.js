@@ -251,10 +251,13 @@ export const OwnMapping = {
 						this.update(realValue, value, defaultObj);
 					else if(defaultObj.hasOwnProperty("$") && defaultObj.$.hasOwnProperty("children") && defaultObj.$.children.hasOwnProperty(key)) //all array entries need to be checked against this defaultObj
 						this.update(realValue, value, defaultObj.$.children[key], true);
-					// else if(defaultObj.hasOwnProperty("$"+key)) //all array entries need to be checked against this defaultObj
-					// 	this.update(realValue, value, defaultObj["$"+key], true);
-					else
+					else if(defaultObj.hasOwnProperty("$") && defaultObj.$.hasOwnProperty("translated") && defaultObj.$.translated.hasOwnProperty(key)) //is a translated array
+						this.update(realValue, value, defaultObj.$.translated[key]);
+					else {
+						console.log(defaultObj)
+						console.log(key)
 						this.update(realValue, value, defaultObj[key]);
+					}
 					
 					if(Array.isArray(value)) {
 						if(realValue.length > value.length)
@@ -274,8 +277,10 @@ export const OwnMapping = {
 					let obs = old_obj[key];
 					obs(value);
 				}
-				else //lang-objects are always set after OwnMapping.fromJS
+				else { //lang-objects are always set after OwnMapping.fromJS
+					console.log(key)
 					old_obj[key] = this.fromJS(value, defaultObj[key]); //this will return an observable with a ___defaultValue
+				}
 			}
 		}
 		
