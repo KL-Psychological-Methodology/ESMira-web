@@ -61,6 +61,26 @@ export function ViewModel(page) {
 		}
 	}
 	
+	let movePage = function(qIndex, pIndex, direction, scrollDir) {
+		let ko_questionnaires = self.study.questionnaires()[qIndex].pages;
+		let questionnaires = ko_questionnaires()
+		let temp = questionnaires[pIndex];
+		questionnaires[pIndex] = questionnaires[pIndex + direction];
+		questionnaires[pIndex + direction] = temp;
+		ko_questionnaires.valueHasMutated();
+		
+		window.setTimeout(function() {
+			let parentBox = document.getElementById("questionnaire_editBox");
+			parentBox.children[pIndex + direction].scrollIntoView({behavior: "smooth", block: "start"});
+		}, 100);
+	}
+	this.movePageUp = function({qIndex, pIndex}) {
+		movePage(qIndex, pIndex, -1);
+		
+	}
+	this.movePageDown = function({qIndex, pIndex}) {
+		movePage(qIndex, pIndex, +1);
+	}
 	
 	this.ko__add_default = listTools.ko__add_default;
 	this.ko__remove_from_list = listTools.ko__remove_from_list;

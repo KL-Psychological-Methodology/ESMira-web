@@ -527,5 +527,6 @@
     "info_trigger_needs_action": "Es wird mindestens eine Aktion benötigt.",
     "edit_page_x": "Bearbeite Seite %d",
     "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen.",
-    "colon_media_download": "Zippe und lade Medien-Daten herunter:"
+    "colon_media_download": "Zippe und lade Medien-Daten herunter:",
+    "questionnaire_edit_title": "Seite %d (%d items):"
 }

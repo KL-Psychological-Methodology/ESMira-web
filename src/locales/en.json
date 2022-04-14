@@ -128,10 +128,10 @@
     "confirm_delete_study": "Do you really want to delete the study '%s'?\n\nALL ITS DATA WILL BE DELETED AS WELL!",
     "confirm_distribute_message": "The following message will be sent:\n\n%s",
     "confirm_delete_message": "Delete message?",
-    "confirm_delete_action": "Do you really want to delete the action '%'?",
+    "confirm_delete_action": "Do you really want to delete the action '%s'?",
     "confirm_delete_actionTrigger": "Do you really want to delete this trigger?",
     "confirm_delete_error": "Do you really want to delete the error report '%s'?",
-    "confirm_delete_questionnaire": "Do you really want to delete the questionnaire '%'?",
+    "confirm_delete_questionnaire": "Do you really want to delete the questionnaire '%s'?",
     "confirm_delete_input": "Do you really want to delete this entry?",
     "confirm_delete_inputPage": "Do you really want to delete the WHOLE page including all its entries?",
     "confirm_leave_page_unsaved_changes": "There are still unsaved changes. Do you really want to leave this site?",
@@ -527,5 +527,6 @@
     "info_trigger_needs_action": "You need at least one action.",
     "edit_page_x": "Edit page %d",
     "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it.",
-    "colon_media_download": "Zip and download media files:"
+    "colon_media_download": "Zip and download media files:",
+    "questionnaire_edit_title": "Page %d (%d items):"
 }

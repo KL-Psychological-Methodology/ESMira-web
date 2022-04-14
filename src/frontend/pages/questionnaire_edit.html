@@ -8,10 +8,19 @@
 		<widget-delete class="right spacing_top" data-bind="click: $root.delete_questionnaire.bind($root, tabIndex)" params="title: Lang.get('delete_questionnaire')"></widget-delete>
 	
 	</div>
-	<div data-bind="foreach: $data.pages, dragRoot">
-		<div data-bind="let: {qIndex: tabIndex, pIndex: $index()}">
-			<title-row params="title: Lang.get('page')+' '+(pIndex+1)">
-				<widget-delete data-bind="click:$root.ko__remove_from_list($parents[2].pages, pIndex, Lang.get('confirm_delete_inputPage'), true)"></widget-delete>
+	<div data-bind="foreach: $data.pages, dragRoot" id="questionnaire_editBox">
+		<div data-bind="let: {qIndex: tabIndex, pIndex: $index(), pCount: $parent.pages().length, itemCount: inputs().length}">
+			<title-row params="data: {qIndex: qIndex, pIndex: pIndex}">
+				<div class="horizontal" data-bind="click: $root.movePageUp, if: pIndex != 0">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 14l5-5 5 5z"/></svg>
+				</div>
+				<div class="horizontal spacing_right" data-bind="click: $root.movePageDown, if: pIndex != pCount-1">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M7 10l5 5 5-5z"/></svg>
+				</div>
+					
+				<div class="title horizontal" data-bind="text: Lang.get('questionnaire_edit_title', pIndex+1, itemCount)"></div>
+				
+				<widget-delete class="right" data-bind="click:$root.ko__remove_from_list($parents[2].pages, pIndex, Lang.get('confirm_delete_inputPage'), true)"></widget-delete>
 			</title-row>
 			
 			<a class="line drag_hidden center spacing_top spacing_bottom" data-bind="navi: 'pageSettings,pageI:'+pIndex, text: Lang.get('page_settings')"></a>

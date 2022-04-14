@@ -253,11 +253,8 @@ export const OwnMapping = {
 						this.update(realValue, value, defaultObj.$.children[key], true);
 					else if(defaultObj.hasOwnProperty("$") && defaultObj.$.hasOwnProperty("translated") && defaultObj.$.translated.hasOwnProperty(key)) //is a translated array
 						this.update(realValue, value, defaultObj.$.translated[key]);
-					else {
-						console.log(defaultObj)
-						console.log(key)
+					else
 						this.update(realValue, value, defaultObj[key]);
-					}
 					
 					if(Array.isArray(value)) {
 						if(realValue.length > value.length)
