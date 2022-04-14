@@ -68,8 +68,6 @@ export function fillDefaults() {
 				observedVariables: {}
 			}
 		},
-		
-		_observedVariables: {}
 	};
 	Defaults.inputs = {
 		$: {
