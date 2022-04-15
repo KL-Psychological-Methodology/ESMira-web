@@ -51,10 +51,12 @@ export const DragClass = {
 				createViewModel: function(viewModel, componentInfo) {
 					return function() {
 						let el = componentInfo.element;
+						if(el.wasInitialized)
+							return;
+						el.wasInitialized = true;
 						el.classList.add("clickable");
 						el.style.cursor = "move";
 						el.setAttribute("draggable", true);
-						
 						bindEvent(el, "dragstart", self.event_dragstart.bind(self));
 					}
 				}
