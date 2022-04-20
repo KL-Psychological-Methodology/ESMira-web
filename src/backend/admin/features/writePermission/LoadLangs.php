@@ -10,17 +10,17 @@ class LoadLangs extends HasWritePermission {
 	
 	function exec() {
 		$folder_langs = Files::get_folder_langs($this->study_id);
-		$langString = "{";
+		$langBox = [];
 		if(file_exists($folder_langs)) {
 			$h_folder = opendir($folder_langs);
 			while($file = readdir($h_folder)) {
 				if($file[0] != '.') {
 					$s = file_get_contents($folder_langs .$file);
-					$langString .= '"' .explode('.', $file)[0] .'":' .$s;
+					$langBox[] = '"' .explode('.', $file)[0] .'":' .$s;
 				}
 			}
 			closedir($h_folder);
 		}
-		Output::successString($langString .'}');
+		Output::successString('{' .implode(',', $langBox) .'}');
 	}
 }
