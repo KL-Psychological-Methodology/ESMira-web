@@ -516,7 +516,7 @@
     
     "cookie_consent": "Cookie-Einverständnis-Erklärung",
     "cookie_consent_desc": "Folgende Informationen werden per Studie in <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP-Cookie\">Cookies</a> gespeichert:<ul><li><b>Der eingegebene Username</b>: Damit der Username nicht wiederholt eingegeben werden muss.</li><li><b>Das Akzeptieren der Einverständniserklärung</b>: Damit die Einverständniserklärung nicht vor jedem Ausfüllen akzeptiert werden muss.</li><li><b>Statusinformationen von bestimmten Fragebogenitems</b>: Manche Fragebögen zeigen jedes Mal unterschiedliche Items und müssen daher speichern welche Items bereits gezeigt wurden.</li></ul>",
-    "server_update": "Server update (current version %s)",
+    "server_update": "Server update (momentane Version %s)",
     "no_updates_found": "Keine Updates gefunden",
     "update_available": "Ein neues Update ist verfügbar (Version %d)",
     "info_ESMira_is_up_to_date": "ESMira ist auf dem neuesten Stand \uD83D\uDE00",
