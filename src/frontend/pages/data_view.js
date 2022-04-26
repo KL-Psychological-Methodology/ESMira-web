@@ -38,7 +38,7 @@ export function ViewModel(page) {
 	
 	let userId_columnNum, entryId_columnNum;
 	
-	let table, contentSize_el, selectedRowCount_el, scroll_el, header, body,
+	let columnHoverDescriptionEl, table, contentSize_el, selectedRowCount_el, scroll_el, header, body,
 		max_elements_displayed;
 	
 	let empty_table = function() {
@@ -84,7 +84,7 @@ export function ViewModel(page) {
 						break;
 					case "empty":
 						td = createElement("td", "font-style: italic", {innerText: set.value});
-						hoverInfo = header_names[column_i];;
+						hoverInfo = header_names[column_i];
 						break;
 				}
 			}
@@ -93,13 +93,16 @@ export function ViewModel(page) {
 				hoverInfo = header_names[column_i];
 			}
 			
-			let mouseEnterEl;
 			bindEvent(td, "mouseenter", function() {
-				mouseEnterEl = createFloatingDropdown(td);
-				mouseEnterEl.innerHTML = hoverInfo;
+				if(columnHoverDescriptionEl) {
+					columnHoverDescriptionEl.parentNode.removeChild(columnHoverDescriptionEl);
+				}
+				columnHoverDescriptionEl = createFloatingDropdown(td);
+				columnHoverDescriptionEl.innerHTML = hoverInfo;
 			})
 			bindEvent(td, "mouseleave", function() {
-				mouseEnterEl.parentNode.removeChild(mouseEnterEl);
+				columnHoverDescriptionEl.parentNode.removeChild(columnHoverDescriptionEl);
+				columnHoverDescriptionEl = null;
 			})
 			tr.appendChild(td);
 		}
