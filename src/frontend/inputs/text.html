@@ -1,1 +1,1 @@
-<div class="verticalPadding" data-bind="html: $component.input.text() + ($component.input.required && $component.input.required() && $component.input.text().length ? '*' : '')"></div>
+<div class="verticalPadding" data-bind="html: $component.input.text(), css: {required: $component.input.required && $component.input.required() && $component.input.text().length}"></div>

@@ -1008,6 +1008,14 @@ questionnaire
 	max-width: 500px;
 }
 
+#questionnaire_box .required > div {
+	display: inline;
+	margin-right: 5px;
+}
+#questionnaire_box .required::after {
+	content: "*";
+}
+
 
 /**********
 charts
