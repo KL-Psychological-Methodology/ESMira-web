@@ -275,7 +275,6 @@ export const OwnMapping = {
 					obs(value);
 				}
 				else { //lang-objects are always set after OwnMapping.fromJS
-					console.log(key)
 					old_obj[key] = this.fromJS(value, defaultObj[key]); //this will return an observable with a ___defaultValue
 				}
 			}

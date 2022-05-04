@@ -97,9 +97,15 @@ export const Studies_tools = {
 				
 				Studies.list.push(new_study_mapped);
 				
-				// Page.goto(["nav", id], Page.get_lastBox());
 				Site.goto("admin/studies,edit/studyEdit,id:"+id, 0);
 			}));
+	},
+	
+	update_study: function(studyObj, updates) {
+		OwnMapping.update(studyObj, updates, Defaults.studies);
+		this.initStudy(studyObj);
+		this.change_observedStudy(studyObj.id());
+		this.set_study_changedState(studyObj, true);
 	},
 	
 	add_questionnaire: function(page, study, pageCode) {
@@ -151,9 +157,8 @@ export const Studies_tools = {
 			self.lastChanged[studyId] = lastChanged;
 			
 			Studies.tools.currentLang("_");
-			OwnMapping.update(study, json._, Defaults.studies); //language fields were not changed
-			
-			// self.set_study_unchanged(study);
+			self.update_study(study, json._); //language fields were not changed
+			self.set_study_changedState(study);
 			
 			if(study.published()) {
 				let studyAccessKeys = study.accessKeys();
@@ -215,7 +220,7 @@ export const Studies_tools = {
 			study.version(study.version() + 1);
 			study.subVersion(0);
 			study.new_changes(false);
-			self.set_study_unchanged(study);
+			self.set_study_changedState(study);
 			self.set_studyDetector_enabled(study, true);
 		});
 	},
@@ -229,8 +234,8 @@ export const Studies_tools = {
 		}
 		return false;
 	},
-	set_study_unchanged: function(study) {
-		this.changed_state[study.id()].setDirty(false);
+	set_study_changedState: function(study, changed) {
+		this.changed_state[study.id()].setDirty(changed || false);
 	},
 	set_studyDetector_enabled: function(study, enabled) {
 		this.changed_state[study.id()].set_enabled(enabled);
@@ -285,7 +290,7 @@ export const Studies_tools = {
 	is_media: function(input) {
 		return input.responseType() === 'photo';
 	},
-	forEachInput: function(study, fu) {
+	for_each_input: function(study, fu) {
 		let questionnaires = study.questionnaires();
 		for(let iQ=questionnaires.length-1; iQ>=0; iQ--) {
 			let pages = questionnaires[iQ].pages();
@@ -301,7 +306,7 @@ export const Studies_tools = {
 	has_media: function(study) {
 		let self = this;
 		let has_media = false;
-		this.forEachInput(study, function(input) {
+		this.for_each_input(study, function(input) {
 			if(self.is_media(input)) {
 				has_media = true;
 				return false;
@@ -311,7 +316,7 @@ export const Studies_tools = {
 	},
 	list_specialDataColumns: function(study) {
 		let columns = [];
-		this.forEachInput(study, function(input) {
+		this.for_each_input(study, function(input) {
 			switch(input.responseType()) {
 				case 'photo':
 					columns.push({key: input.name(), type: 'image'});

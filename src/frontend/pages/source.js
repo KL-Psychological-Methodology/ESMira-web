@@ -3,7 +3,6 @@ import {Lang} from "../js/main_classes/lang";
 import {bindEvent, createElement} from "../js/helpers/basics";
 import {OwnMapping} from "../js/helpers/knockout_own_mapping";
 import {repairStudy} from "../js/helpers/updater";
-import {Defaults} from "../js/variables/defaults";
 import JSONEditor from "jsoneditor"
 import "jsoneditor/dist/jsoneditor.css"
 
@@ -52,7 +51,7 @@ export function ViewModel(page) {
 			json.id = study.id();
 			repairStudy(json);
 			
-			OwnMapping.update(study, json, Defaults.studies);
+			Studies.tools.update_study(study, json);
 			
 			btn.classList.add("hidden");
 		});

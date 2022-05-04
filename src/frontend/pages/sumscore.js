@@ -15,7 +15,6 @@ export function ViewModel(page) {
 	this.preInit = function({id, q, sumScore}, studies) {
 		this.questionnaire = studies[id].questionnaires()[q];
 		this.dataObj = this.questionnaire.sumScores()[sumScore];
-		console.log(this.dataObj);
 		page.title(this.dataObj.name);
 		
 		this.axisValues = create_axisValues(this.questionnaire);
