@@ -1,7 +1,6 @@
 export const PageIndex = {
 	about:				{filename: "about",				permissions: false},
 	account:			{filename: "account",			permissions: ["*"]},
-	action:				{filename: "action",			permissions: ["write"]},
 	admin:				{filename: "admin_home",		permissions: ["*"]},
 	alarms:				{filename: "alarms",			permissions: ["write"]},
 	appInstall:			{filename: "app_install",		permissions: false},

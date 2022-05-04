@@ -18,10 +18,13 @@ export function ViewModel(page) {
 	this.add_schedule = function(qIndex, questionnaire) {
 		let item = listTools.add_obj(questionnaire.actionTriggers, Defaults.actionTriggers, 'trigger,q:'+qIndex+",trigger:%");
 		listTools.add_obj(item.schedules, Defaults.schedules);
+		listTools.add_obj(item.schedules()[0].signalTimes, Defaults.signalTimes);
+		listTools.add_obj(item.actions, Defaults.actions);
 	};
 	this.add_event = function(qIndex, questionnaire) {
 		let item = listTools.add_obj(questionnaire.actionTriggers, Defaults.actionTriggers, "trigger,q:"+qIndex+",trigger:%");
 		listTools.add_obj(item.eventTriggers, Defaults.eventTriggers);
+		listTools.add_obj(item.actions, Defaults.actions);
 	};
 	this.ko__remove_from_list = listTools.ko__remove_from_list;
 }

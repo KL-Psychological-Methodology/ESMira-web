@@ -1,0 +1,4 @@
+<span class="selector" data-bind="click: toggle_show, text: title, css: {shown: shown}">ds</span>
+<div data-bind="if: shown">
+	<div class="content" data-bind="template: { nodes: $componentTemplateNodes, data: data}"></div>
+</div>

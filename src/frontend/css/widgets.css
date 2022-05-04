@@ -327,3 +327,20 @@ tab-bar .tabBar > .tab:not(.selected):hover {
 	color: #2DBFF3;
 	cursor: pointer;
 }
+
+
+/**********
+show-hide
+**********/
+
+show-hide .selector::before {
+	content: "\23F5"
+}
+show-hide .content {
+	margin-left: 5px;
+	padding: 5px;
+	border-left: 5px solid #e6f9ff;
+}
+show-hide .selector.shown::before {
+	content: "\23F7"
+}

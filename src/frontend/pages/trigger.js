@@ -6,6 +6,7 @@ import {
 } from "../js/shared/actions";
 import {Admin} from "../js/main_classes/admin";
 import {Site} from "../js/main_classes/site";
+import {ACTION_INVITATION, ACTION_MESSAGE, ACTION_NOTIFICATION} from "../js/variables/constants";
 
 export function ViewModel(page) {
 	this.html = html;
@@ -42,7 +43,16 @@ export function ViewModel(page) {
 		"study_message",
 		"study_updated"
 	];
-	this.actions = option_actions;
+	this.actions = [
+		Lang.get("disabled"),
+		Lang.get("action_invitation"),
+		Lang.get("action_msg"),
+		Lang.get("action_notification")
+	];
+	this.ACTION_INVITATION = ACTION_INVITATION;
+	this.ACTION_MESSAGE = ACTION_MESSAGE;
+	this.ACTION_NOTIFICATION = ACTION_NOTIFICATION;
+	
 	
 	let listTools = Admin.tools.get_listTools(page);
 	this.ko__add_default = listTools.ko__add_default;

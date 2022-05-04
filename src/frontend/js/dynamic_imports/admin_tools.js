@@ -8,6 +8,7 @@ import btn_add from '../../widgets/btn_add.html';
 import btn_delete from '../../widgets/btn_delete.html';
 import btn_ok from '../../widgets/btn_ok.html';
 import rich_text from '../../widgets/rich_text.html';
+import show_hide from '../../widgets/show_hide.html';
 import {Admin} from "../main_classes/admin";
 import {Lang} from "../main_classes/lang";
 import {ChangeUser_viewModel} from "../../widgets/change_user";
@@ -20,6 +21,7 @@ import "../../css/style_admin.css";
 import {LangOptions} from "../../widgets/lang_options";
 import lang_options from "../../widgets/lang_options.html";
 import {SearchBox} from "../../widgets/search_box";
+import {ShowHide} from "../../widgets/show_hide";
 
 function ListTools(page) {
 	let self = this;
@@ -288,6 +290,10 @@ export const AdminTools = {
 				}
 			},
 			template: search_box
+		});
+		ko.components.register('show-hide', {
+			viewModel: ShowHide,
+			template: show_hide
 		});
 	},
 	

@@ -1,22 +1,10 @@
-<title-row params="title: Lang.get('colon_actions')"></title-row>
-<div class="list_parent">
-	<div class="list_child" data-bind="foreach:actions, dragRoot">
-		<div class="verticalPadding" data-bind="dragTarget: $parent.actions">
-			<drag-start class="horizontal"></drag-start>
-			<widget-delete data-bind="click:$root.ko__remove_from_list($parent.actions, $index(), Lang.get('confirm_delete_action', $root.actions[type()]))"></widget-delete>
-			<a class="middle" data-bind="navi:'action:' + $index(), text: $root.actions[type()]"></a>
-		</div>
-	</div>
-	<div data-bind="if: !actions().length">
-		<img src="../imgs/warn.svg" alt="warn" class="horizontal"/>
-		<span class="highlight" data-bind="text: Lang.get('info_trigger_needs_action')"></span>
-	</div>
-	<widget-add data-bind="click: $root.ko__add_default('actions', 'action:%')"></widget-add>
-</div>
-
+<!--
+Triggers are implemented so that each could hold MULTIPLE schedules, cues and actions.
+But since I suspect that this will not be used often and it is easier to grasp for configuration, I removed that functionality in the admin panel
+-->
 
 <div data-bind="with: schedules()[0]">
-	<title-row params="title: Lang.get('colon_schedule')" data-bind="call_fu: Page.change_pageTitle($element, Lang.get('edit_schedule'))"></title-row>
+	<title-row params="title: Lang.get('colon_selected_days')" data-bind="call_fu: Page.change_pageTitle($element, Lang.get('edit_schedule'))"></title-row>
 	
 	<label class="horizontal">
 		<small data-bind="text: Lang.get('repeat_every')"></small>
@@ -29,25 +17,26 @@
 		<span data-bind="text: Lang.get('wait_x_days_until_first', dailyRepeatRate())"></span>
 	</label>
 	
-	<label class="vertical">
-		<small data-bind="text: Lang.get('colon_dayOfMonth_desc')"></small>
-		<select data-bind="options: $root.dayValues_of_month, indexValue: dayOfMonth"></select>
-	</label>
-	
-	<div class="fakeLabel line">
-		<small data-bind="text: Lang.get('colon_weekdays_desc')"></small>
+	<show-hide class="vertical spacing_bottom spacing_top" params="title: Lang.get('advanced'), data: $data">
+		<label class="vertical">
+			<small data-bind="text: Lang.get('colon_dayOfMonth_desc')"></small>
+			<select data-bind="options: $root.dayValues_of_month, indexValue: dayOfMonth"></select>
+		</label>
 		
-		<table>
-			<tr>
-				<td class="horizontalPadding"><label for="weekday_all" data-bind="text: Lang.get('all')"></label></td>
-				<td class="horizontalPadding"><label for="weekday_sun" data-bind="text: Lang.get('weekday_sun')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_mo" data-bind="text: Lang.get('weekday_mon')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_di" data-bind="text: Lang.get('weekday_tue')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_mi" data-bind="text: Lang.get('weekday_wed')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_do" data-bind="text: Lang.get('weekday_thu')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_fr" data-bind="text: Lang.get('weekday_fri')"></label></td>
-				<td class="horizontalPadding"><label for="weekdays_sa" data-bind="text: Lang.get('weekday_sat')"></label></td>
-			</tr><tr>
+		<div class="fakeLabel line">
+			<small data-bind="text: Lang.get('colon_weekdays_desc')"></small>
+			
+			<table>
+				<tr>
+					<td class="horizontalPadding"><label for="weekday_all" data-bind="text: Lang.get('all')"></label></td>
+					<td class="horizontalPadding"><label for="weekday_sun" data-bind="text: Lang.get('weekday_sun')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_mo" data-bind="text: Lang.get('weekday_mon')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_di" data-bind="text: Lang.get('weekday_tue')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_mi" data-bind="text: Lang.get('weekday_wed')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_do" data-bind="text: Lang.get('weekday_thu')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_fr" data-bind="text: Lang.get('weekday_fri')"></label></td>
+					<td class="horizontalPadding"><label for="weekdays_sa" data-bind="text: Lang.get('weekday_sat')"></label></td>
+				</tr><tr>
 				<td class="center"><input type="checkbox" id="weekday_all" disabled="disabled" data-bind="checked: weekdays() == 0"/></td>
 				<td class="center"><input type="checkbox" id="weekday_sun" tag-index="0" data-bind="combinedValue: weekdays"/></td>
 				<td class="center"><input type="checkbox" id="weekdays_mo" tag-index="1" data-bind="combinedValue: weekdays"/></td>
@@ -57,8 +46,9 @@
 				<td class="center"><input type="checkbox" id="weekdays_fr" tag-index="5" data-bind="combinedValue: weekdays"/></td>
 				<td class="center"><input type="checkbox" id="weekdays_sa" tag-index="6" data-bind="combinedValue: weekdays"/></td>
 			</tr>
-		</table>
-	</div>
+			</table>
+		</div>
+	</show-hide>
 	
 	<title-row params="title: Lang.get('colon_times_of_day')"></title-row>
 	<label class="vertical no_title">
@@ -172,5 +162,46 @@
 	<label class="horizontal no_desc no_title">
 		<input type="checkbox" data-bind="checked: randomDelay"/>
 		<span data-bind="text: Lang.get('random')"></span>
+	</label>
+</div>
+
+
+
+<div data-bind="with: actions()[0]">
+	<title-row params="title: Lang.get('colon_action')"></title-row>
+	<label>
+		<small data-bind="text: Lang.get('type')"></small>
+		<select data-bind="options: $root.actions, indexValue: type"></select>
+	</label>
+	
+	<div class="spacing_top" data-bind="visible: type() === $root.ACTION_INVITATION">
+		<label>
+			<small data-bind="text: Lang.get('colon_number_of_reminders')"></small>
+			<input type="number" data-bind="numericValue: reminder_count"/>
+		</label>
+		
+		<div class="spacing_left" data-bind="visible: reminder_count() != 0">
+			<label class="vertical">
+				<small data-bind="text: Lang.get('colon_time_delay')"></small>
+				<input type="number" data-bind="numericValue: reminder_delay_minu"/>
+				<span data-bind="text: Lang.get('minutes')"></span>
+			</label>
+			
+			<label class="vertical">
+				<small data-bind="text: Lang.get('colon_timeout_after_last_reminder')"></small>
+				<widget-only params="android"></widget-only>
+				<input type="number" data-bind="numericValue: timeout"/>
+				<span data-bind="text: Lang.get('minutes')"></span>
+				<small class="footer" data-bind="text: Lang.get('info_timeout_notifications')"></small>
+			</label>
+		</div>
+	</div>
+	
+	<label class="spacing_top" data-bind="visible: type() === $root.ACTION_INVITATION || type() === $root.ACTION_MESSAGE || type() === $root.ACTION_NOTIFICATION">
+		<small data-bind="text: Lang.get('message')"></small>
+		<textarea data-bind="value: msgText"></textarea>
+		<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: !msgText().length"/>
+		<lang-options></lang-options>
+		<small data-bind="text: Lang.get('info_notification_title')"></small>
 	</label>
 </div>
