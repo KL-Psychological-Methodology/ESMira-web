@@ -20,7 +20,8 @@ export function ViewModel(page) {
 	
 	this.preInit = function({id, q}, studies) {
 		this.study = studies[id];
-		this.selectedIndex(q ? parseInt(q) : 0);
+		if(q)
+			this.selectedIndex(parseInt(q));
 	};
 	
 	let listTools = Admin.tools.get_listTools(page);

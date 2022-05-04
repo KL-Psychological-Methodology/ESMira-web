@@ -21,7 +21,7 @@
 </div>
 
 <title-row params="title: Lang.get('colon_questionnaires')"></title-row>
-<tab-bar params="tabs: $data.questionnaires(), tabName: function(q) {return q.title()}">
+<tab-bar params="tabs: $data.questionnaires(), tabName: function(q) {return q.title()}, selectedIndex: $root.selectedIndex">
 	
 	<table class="spaced_rows spaced_columns">
 		<tr>
