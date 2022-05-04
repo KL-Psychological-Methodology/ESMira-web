@@ -118,9 +118,11 @@ export const Studies_tools = {
 		
 		return page.loader.showLoader(Lang.get("state_loading"),
 			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
+				let title = Lang.get("default_questionnaire_name", questionnaires.length)
 				let newQuestionnaire = add_default(study.questionnaires, "questionnaires");
 				newQuestionnaire.internalId(internalId);
-				newQuestionnaire.title(Lang.get("default_questionnaire_name", questionnaires.length));
+				//in case another language was selected, we make sure to only set the default language (from which others automatically copy from):
+				newQuestionnaire.title.___setLang("_", title);
 				
 				if(pageCode)
 					Site.add_page(pageCode.replace("%", study.questionnaires().length-1), page.depth);
@@ -156,8 +158,13 @@ export const Studies_tools = {
 		).then(function({lastChanged, json}) {
 			self.lastChanged[studyId] = lastChanged;
 			
+			
+			//only default settings were changed:
+			let currentLang = Studies.tools.currentLang();
 			Studies.tools.currentLang("_");
-			self.update_study(study, json._); //language fields were not changed
+			self.update_study(study, json._);
+			Studies.tools.currentLang(currentLang);
+			
 			self.set_study_changedState(study);
 			
 			if(study.published()) {
