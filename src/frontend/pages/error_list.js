@@ -23,7 +23,9 @@ export function ViewModel(page) {
 	
 	let load = function() {
 		page.loader.loadRequest(FILE_ADMIN+"?type=list_errors").then(function(data) {
-			data = data.sort();
+			data = data.sort(function(a, b) {
+				return a.timestamp - b.timestamp;
+			});
 			
 			let list_known = [];
 			let list_new = [];
