@@ -56,12 +56,20 @@ export const OwnMapping = {
 		let thisObj = ko.pureComputed({
 			read: function() {
 				let code = Studies.tools ? Studies.tools.currentLang() : "_";
-				return data.hasOwnProperty(code) ? data[code]() : data._();
+				
+				if(!data.hasOwnProperty(code))
+					//we can not just pass data._ because this observable is used for update events
+					// meaning that when write creates a new observable, nobody would be notified about the change
+					data[code] = ko.observable(data._());
+				
+				return data[code]();
 			},
 			write: function(newValue) {
 				let code = Studies.tools ? Studies.tools.currentLang() : "_";
+				if(!data.hasOwnProperty(code)) //very unlikely to happen since it is already created in read
+					data[code] = ko.observable(newValue);
 				
-				let value = data.hasOwnProperty(code) ? data[code] : data._;
+				let value = data[code];
 				if(!changedValues.hasOwnProperty(code))
 					changedValues[code] = value();
 				else if(changedValues[code] === newValue)
@@ -97,7 +105,8 @@ export const OwnMapping = {
 			}
 		};
 		thisObj.___getLang = function(code) {
-			return data.hasOwnProperty(code) ? data[code]() : thisObj.___defaultValue;
+			// return data.hasOwnProperty(code) ? data[code]() : thisObj.___defaultValue;
+			return data.hasOwnProperty(code) ? data[code]() : data._();
 		};
 		
 		if(isArray) { //it is not an observableArray. So we "fake" it by adding all necessary methods:
@@ -388,43 +397,16 @@ export const OwnMapping = {
 		this.loopAll(obj, unsetFu, unsetFu);
 	},
 	
-	// filterObj: function(obj) {
-		// let value = typeof obj === "function" ? obj() : obj;
-		// if(typeof value === "object") {
-		// 	if(Array.isArray(value)) {
-		// 		let a = [];
-		// 		for(let i=0, max=value.length; i<max; ++i) {
-		// 			let newValue = this.filterObj(value[i]);
-		// 			if(newValue !== undefined)
-		// 				a.push(newValue);
-		// 		}
-		// 		return a;
-		// 	}
-		// 	else {
-		// 		let r = {};
-		// 		for(let key in value) {
-		// 			if(value.hasOwnProperty(key)) {
-		// 				let newValue = this.filterObj(value[key]);
-		// 				if(newValue !== undefined)
-		// 					r[key] = newValue;
-		// 			}
-		// 		}
-		// 		return r;
-		// 	}
-		// }
-		// else {
-		// 	return (value !== obj.___defaultValue) ? value : undefined;
-		// }
-	// },
 	toLangJs: function(obj, code) {
 		return this.loopAll(obj, function(currentObj) {
 			let value = currentObj.hasOwnProperty("___getLang") ? currentObj.___getLang(code) : currentObj();
-			return value !== currentObj.___defaultValue ? value : undefined;
+			
+			return value !== currentObj.___defaultValue ? value : undefined; //by setting it to undefined, we effectively strip the whole variable away
 		});
 	},
 	toJS: function(obj) {
 		return this.loopAll(obj, function(currentObj) {
-			return (currentObj() !== currentObj.___defaultValue) ? currentObj() : undefined;
+			return (currentObj() !== currentObj.___defaultValue) ? currentObj() : undefined; //by setting it to undefined, we effectively strip the whole variable away
 		});
 	},
 	toJSON: function(obj) {
