@@ -202,7 +202,7 @@ class CreateDataSet {
 			else
 				$metadata = $metadata_index[$study_id];
 			if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($dataSet->accessKey) || !in_array(strtolower($dataSet->accessKey), $metadata['accessKeys']))) {
-				$this->error_lineOutput($dataset_id, 'Wrong accessKey');
+				$this->error_lineOutput($dataset_id, "Wrong accessKey: $dataSet->accessKey");
 				continue;
 			}
 			

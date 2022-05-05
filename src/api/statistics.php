@@ -24,7 +24,7 @@ if(!file_exists($metadata_path))
 $metadata = unserialize(file_get_contents($metadata_path));
 
 if(sizeof($metadata['accessKeys']) && (!isset($_GET['access_key']) || !in_array(strtolower($_GET['access_key']), $metadata['accessKeys'])))
-	Output::error('Wrong accessKey');
+	Output::error("Wrong accessKey: $_GET[access_key]");
 
 
 $file_statistics_metadata = Files::get_file_statisticsMetadata($study_id);

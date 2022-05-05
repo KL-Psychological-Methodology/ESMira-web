@@ -82,7 +82,7 @@ foreach($data as $study_id => $line) {
 	
 	
 	if(isset($metadata['accessKeys']) && sizeof($metadata['accessKeys']) && (!isset($line->accessKey) || !in_array(strtolower($line->accessKey), $metadata['accessKeys'])))
-		Output::error('Wrong accessKey');
+		Output::error("Wrong accessKey: $line->accessKey");
 	
 	
 	$line = [];
