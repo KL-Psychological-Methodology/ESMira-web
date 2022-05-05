@@ -330,7 +330,7 @@
     "prompt_comment": "Please select a comment:",
     "prompt_image_fileSize": "\"%s\" is a very big file. Are you sure that you want it embed into the studyfile? It could increase the download and processing time of the study.",
     "prompt_input_name": "Please select a variable name (it has to be unique over all questionnaires):",
-	"prompt_languageCode": "Please choose a language code (e.g.: en, de, fr, ...):",
+	"prompt_languageCode": "Please provide a valid language code (e.g.: en, de, fr, ...):",
 	"prompt_newUsername": "Please select a new username",
     "prompt_studyName": "Please select a study name:",
     "prompt_title": "Please choose a title:",
@@ -526,5 +526,10 @@
     "info_study_is_public": "Study is publicly visible. Add one or more access keys to restrict access to it.",
     "colon_media_download": "Zip and download media files:",
     "questionnaire_edit_title": "Page %d (%d items):",
-    "colon_selected_days": "Selected days:"
+    "colon_selected_days": "Selected days:",
+    "group_count": "group count",
+    "randomGroups": "Random groups",
+    "info_randomGroups": "Each participant will be randomly assigned to a group. This can be used to hide questionnaires for specific groups.",
+    "info_languages": "Participants will either get the version of this study depending on the language code of their browser / smartphone or, of there is no version for their language, the default version of the study. You have to use valid language codes or the language version will not be detected!",
+    "languages_and_randomGroups": "Languages and random groups"
 }

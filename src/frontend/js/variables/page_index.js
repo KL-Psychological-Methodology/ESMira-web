@@ -18,6 +18,7 @@ export const PageIndex = {
 	errorView:			{filename: "error_view",		permissions: []},
 	init_esmira:		{filename: "init_esmira",		permissions: false},
 	input:				{filename: "input",				permissions: ["write"]},
+	langGroups:			{filename: "lang_groups",		permissions: ["write"]},
 	legal:				{filename: "legal",				permissions: false},
 	login:				{filename: "login",				permissions: false},
 	messages:			{filename: "messages",			permissions: ["msg"]},

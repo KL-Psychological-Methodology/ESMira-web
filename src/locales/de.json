@@ -330,7 +330,7 @@
     "prompt_comment": "Bitte wählen Sie ein Kommentar:",
     "prompt_image_fileSize": "\"%s\" ist sehr groß. Sind Sie sicher, dass Sie es in das Studienfile einbetten wollen? Dies kann die Download- und Verarbeitungszeit der Studie erhöhen.",
     "prompt_input_name": "Bitte wählen Sie einen Variablen-Namen (Dieser darf über alle Fragebögen nur einmal vorkommen):",
-	"prompt_languageCode": "Bitte geben Sie einen Sprach-Code an (z.B.: en, de, fr, ...):",
+	"prompt_languageCode": "Bitte geben Sie ein gültiges Sprachkürzel an (z.B.: en, de, fr, ...):",
     "prompt_newUsername": "Bitte wähle einen neuen Usernamen:",
     "prompt_studyName": "Bitte wählen Sie ein Studien-Namen:",
     "prompt_title": "Bitte wählen Sie einen Titel:",
@@ -526,5 +526,10 @@
     "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen.",
     "colon_media_download": "Zippe und lade Medien-Daten herunter:",
     "questionnaire_edit_title": "Seite %d (%d items):",
-    "colon_selected_days": "Ausgewählte Tage:"
+    "colon_selected_days": "Ausgewählte Tage:",
+    "group_count": "Gruppen-Anzahl",
+    "randomGroups": "Zufällige Gruppen",
+    "info_randomGroups": "Teilnehmer werden zufällig zu einer Gruppe eingeteilt. Dies kann verwendet werden, um Fragebogen für bestimmte Gruppen auszublenden.",
+    "info_languages": "Teilnehmer bekommen entweder die passende Sprachversion der Studie ausgehend vom Sprachkürzel in deren Browser / Smartphone oder, wenn es keine Version für deren Sprache gibt, die Standard-Version der Studie. Es müssen gültige Sprachkürzel verwendet werden, da die Sprache sonst nicht erkannt werden kann.",
+    "languages_and_randomGroups": "Sprachen und zufällige Gruppen"
 }
