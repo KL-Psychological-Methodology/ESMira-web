@@ -64,13 +64,16 @@
 				</label>
 				&nbsp;&nbsp;
 				<label class="no_desc">
-					<small data-bind="text: Lang.colon_end_date"></small>
+					<small data-bind="text: Lang.get('colon_end_date')"></small>
 					<input type="date" data-bind="dateValue: durationEnd, placeholder: Lang.endDate"/>
 				</label>
 			</td>
 		</tr>
 		<tr>
-			<td><span data-bind="text: Lang.get('colon_runtime')"></span></td>
+			<td>
+				<span data-bind="text: Lang.get('colon_runtime')"></span>
+				<widget-only params="android, ios"></widget-only>
+			</td>
 			<td>
 				<label>
 					<small data-bind="text: Lang.get('activation')"></small>
