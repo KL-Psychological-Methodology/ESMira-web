@@ -133,7 +133,12 @@ abstract class HasWritePermission extends IsLoggedIn {
 		//Note: When there is already data:
 		// If keys are removed, they will stay in the headers
 		// if keys are changed or new, they will be added at the end
-		
+
+        if(isset($study->randomGroups) && $study->randomGroups >= 0 && $identifier !== Files::FILENAME_WEB_ACCESS)
+            array_splice($new_keys['keys'], 1, 0, 'group');
+//        $new_keys[] = 'group';
+//        print_r($new_keys);
+
 		$study_id = (int) $study->id;
 		$file_responses = Files::get_file_responses($study_id, $identifier);
 		$file_index = Files::get_file_responsesIndex($study_id, $identifier);
@@ -142,10 +147,6 @@ abstract class HasWritePermission extends IsLoggedIn {
 		
 		if(file_exists($file_responses) && file_exists($file_index)) {
 			$old_keys = unserialize(file_get_contents($file_index));
-			if(!isset($old_keys['keys'])) {//TODO: check is needed for old index design
-				$this->write_file($file_index, serialize($new_keys)); //update index file in case index has not changed
-				$old_keys = ['keys' => $old_keys];
-			}
 			$old_keys['types'] = $new_keys['types'];
 			
 			//finding out if there are new headers:
@@ -326,7 +327,7 @@ abstract class HasWritePermission extends IsLoggedIn {
 					$keys_questionnaire[] = $score->name;
 				}
 			}
-			
+
 			$keys_questionnaire_array[$i] = ['keys' => $keys_questionnaire, 'types' => $input_types];
 		}
 		return $keys_questionnaire_array;

@@ -27,6 +27,7 @@ export function ViewModel(page) {
 	this.modelsList = ko.observableArray();
 	this.modelCount = ko.observable(0);
 	this.showData = ko.observable(true);
+	this.enableGroupStatistics = ko.observable(false);
 	
 	let loader;
 	this.reload = function() {
@@ -99,10 +100,11 @@ export function ViewModel(page) {
 				return loader.waitUntilReady();
 			})
 			.then(function() {
-				return loader.get_valueCount("eventType", ["questionnaire", "joined", "quit"])
-					.then(function(countLoaded) {
-						count = countLoaded;
-					});
+				self.enableGroupStatistics(loader.has_column("group"));
+				return loader.get_valueCount("eventType", ["questionnaire", "joined", "quit"]);
+			})
+			.then(function(countLoaded) {
+				count = countLoaded;
 			})
 			.then(function() {
 				loader.filter_column(false, "eventType");
@@ -112,11 +114,14 @@ export function ViewModel(page) {
 					"app_type_el",
 					create_sumChartCode(Lang.get("app_type_per_questionnaire"), "appType", STATISTICS_CHARTTYPES_PIE)
 				);
-				setup_chart(
-					loader,
-					"manufacturer_el",
-					create_sumChartCode(Lang.get("questionnaire_per_manufacturer"), "manufacturer", STATISTICS_CHARTTYPES_BARS)
-				);
+				if(self.enableGroupStatistics()) {
+					setup_chart(
+						loader,
+						"group_questionnaires_el",
+						create_sumChartCode(Lang.get("questionnaires_per_group"), "group", STATISTICS_CHARTTYPES_PIE)
+					);
+				}
+				
 				
 				loader.get_valueList("model", true)
 					.then(function(valueList) {
@@ -129,47 +134,79 @@ export function ViewModel(page) {
 				loader.filter_rowsByResponseTime(false, day);
 				setup_chart(
 					loader,
-					"questionnaire_el",
-					create_dayChartCode(Lang.get("questionnaires_with_total", count.questionnaire), STATISTICS_DATATYPES_FREQ_DISTR, "questionnaireName", self.days)
+					"questionnaire_per_day_el",
+					create_dayChartCode(Lang.get("questionnaires"), STATISTICS_DATATYPES_FREQ_DISTR, "questionnaireName", self.days)
 				);
-				setup_chart(
-					loader,
-					"user_el",
-					create_dayChartCode(Lang.get("questionnaires_per_user"), STATISTICS_DATATYPES_FREQ_DISTR, "userId", self.days),
-					function(user) {
-						Site.goto('sumUser,user:' + user);
-					}
-				);
+				if(self.enableGroupStatistics()) {
+					setup_chart(
+						loader,
+						"group_questionnaire_per_day_el",
+						create_dayChartCode(Lang.get("questionnaires_per_group", count.questionnaire), STATISTICS_DATATYPES_FREQ_DISTR, "group", self.days)
+					);
+				}
+				document.getElementById("questionnaires_total_el").innerHTML = count.questionnaire;
 				
 				
 				loader.filter(false, "eventType", "questionnaire");
 				loader.filter(true, "eventType", "joined");
-				setup_chart(
-					loader,
-					"joined_el",
-					create_dayChartCode(Lang.get("joined_study_with_total").replace("%", count.joined), STATISTICS_DATATYPES_SUM, "userId", self.days)
-				);
+				
+				if(self.enableGroupStatistics()) {
+					setup_chart(
+						loader,
+						"joined_per_day_el",
+						create_dayChartCode(Lang.get("joined_study"), STATISTICS_DATATYPES_FREQ_DISTR, "group", self.days)
+					);
+					setup_chart(
+						loader,
+						"group_joined_el",
+						create_sumChartCode(Lang.get("joined_per_group", count.joined), "group", STATISTICS_CHARTTYPES_PIE)
+					);
+				}
+				else {
+					setup_chart(
+						loader,
+						"joined_per_day_el",
+						create_dayChartCode(Lang.get("joined_study"), STATISTICS_DATATYPES_SUM, "userId", self.days)
+					);
+					document.getElementById("joined_total_el").innerHTML = count.joined;
+				}
+				
 				loader.filter(false, "eventType", "joined");
 				
 				
 				loader.filter(true, "eventType", "quit");
-				setup_chart(
-					loader,
-					"quit_el",
-					create_dayChartCode(Lang.get("quit_study_with_total").replace("%", count.quit), STATISTICS_DATATYPES_SUM, "userId", self.days)
-				);
+				if(self.enableGroupStatistics()) {
+					setup_chart(
+						loader,
+						"quit_per_day_el",
+						create_dayChartCode(Lang.get("quit_study"), STATISTICS_DATATYPES_FREQ_DISTR, "group", self.days)
+					);
+					setup_chart(
+						loader,
+						"group_quit_el",
+						create_sumChartCode(Lang.get("quit_per_group", count.quit), "group", STATISTICS_CHARTTYPES_PIE)
+					);
+				}
+				else {
+					setup_chart(
+						loader,
+						"quit_per_day_el",
+						create_dayChartCode(Lang.get("quit_study"), STATISTICS_DATATYPES_SUM, "userId", self.days)
+					);
+					document.getElementById("quit_total_el").innerHTML = count.quit;
+				}
 				loader.filter(false, "eventType", "quit");
 				
 				
 				loader.filter_column(true, "eventType");
 				setup_chart(
 					loader,
-					"app_version_el",
+					"app_version_per_day_el",
 					create_dayChartCode(Lang.get("used_app_version"), STATISTICS_DATATYPES_FREQ_DISTR, "appVersion", self.days)
 				);
 				setup_chart(
 					loader,
-					"study_version_el",
+					"study_version_per_day_el",
 					create_dayChartCode(Lang.get("used_study_version"), STATISTICS_DATATYPES_FREQ_DISTR, "studyVersion", self.days)
 				);
 				

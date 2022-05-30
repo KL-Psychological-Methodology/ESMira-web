@@ -52,8 +52,6 @@ export function ViewModel(pageModel) {
 		{key: "number", value: Lang.get("input_number")},
 		{key: "binary", value: Lang.get("input_binary")},
 		{key: "date", value: Lang.get("input_date")},
-		{key: "date_old", value:  "Alte Datumseingabe (nicht verwenden!!!)"}, //TODO: Kann nach Selinas Studie entfernt werden
-		{key: "time_old", value: "Alte Zeiteingabe (nicht verwenden!!!)"}, //TODO: Kann nach Selinas Studie entfernt werden
 		{key: "time", value: Lang.get("input_time")},
 		{key: "likert", value: Lang.get("input_likert")},
 		{key: "va_scale", value: Lang.get("input_va_scale")},

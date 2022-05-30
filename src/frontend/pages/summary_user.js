@@ -24,21 +24,21 @@ export function ViewModel(page) {
 	];
 	
 	
-	this.joined_time = ko.observable("");
-	this.quit_time = ko.observable("");
-	this.timezones = ko.observable("");
-	this.appType = ko.observable("");
-	this.model = ko.observable();
+	this.joined_time = ko.observableArray();
+	this.quit_time = ko.observableArray();
+	this.timezones = ko.observableArray();
+	this.appType = ko.observableArray();
+	this.model = ko.observableArray();
+	this.group = ko.observableArray();
 	
 	this.participantList = ko.observableArray();
 	this.participantCount = ko.observable(0);
 	this.currentParticipant = ko.observable("");
 	this.isLoading = ko.observable(false);
 	this.showData = ko.computed(function() {
-		// return !!self.currentParticipant();
 		return !self.isLoading() && !!self.currentParticipant();
 	});
-	
+	this.enableGroupStatistics = ko.observable();
 	
 	let study, eventsLoader, questionnaireLoaderList, publicStatisticsCache = false;
 	
@@ -49,6 +49,8 @@ export function ViewModel(page) {
 		let url = FILE_RESPONSES.replace('%1', study.id()).replace('%2', 'events');
 		eventsLoader = new CsvLoader(url, page);
 		eventsLoader.waitUntilReady().then(function() {
+			self.enableGroupStatistics(eventsLoader.has_column("group"));
+			
 			eventsLoader.filter_column(false, "eventType");
 			eventsLoader.filter(true, "eventType", "questionnaire");
 			eventsLoader.get_valueList("userId", true)
@@ -83,6 +85,11 @@ export function ViewModel(page) {
 				eventsLoader.get_valueList("model").then(function(valueList) {
 					self.model(valueList);
 				});
+				if(self.enableGroupStatistics()) {
+					eventsLoader.get_valueList("group").then(function(valueList) {
+						self.group(valueList);
+					});
+				}
 				
 				eventsLoader.filter_column(false, "eventType");
 				eventsLoader.filter(true, "eventType", "questionnaire");

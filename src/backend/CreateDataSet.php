@@ -179,6 +179,7 @@ class CreateDataSet {
 			$study_id = (int) $dataSet->studyId;
 			$dataset_id = (int) $dataSet->dataSetId;
 			$event_type = $dataSet->eventType;
+			$group = isset($dataSet->group) ? $dataSet->group : 0;
 			
 			if(Base::study_is_locked($study_id)) {
 				$this->error_lineOutput($dataset_id, 'Study is locked');
@@ -211,7 +212,7 @@ class CreateDataSet {
 			//check token:
 			//*****
 			
-			if(!$this->userTokens->nextDataSet($study_id)) {
+			if(!$this->userTokens->nextDataSet($study_id, $group)) {
 				$this->error_lineOutput($dataset_id, "Too many requests in succession");
 				continue;
 			}
@@ -232,7 +233,7 @@ class CreateDataSet {
 			$dataSet_questionnaireName = isset($dataSet->questionnaireName) ? $dataSet->questionnaireName : '';
 			
 			if((!Base::check_input($dataSet_questionnaireName)) || !Base::check_input($event_type)) {
-				$this->error_lineOutput($dataset_id, "Unexpected input! Group: $dataSet_questionnaireName; Event-Type: $event_type");
+				$this->error_lineOutput($dataset_id, "Unexpected input! Questionnaire: $dataSet_questionnaireName; Event-Type: $event_type");
 				continue;
 			}
 			else if(!file_exists(Files::get_folder_study($study_id))) {
@@ -261,7 +262,7 @@ class CreateDataSet {
 				$file_questionnaire = Files::get_file_responses($study_id, $dataSet_questionnaireId);
 				
 				if(!file_exists($file_questionnaire)) {
-					$this->error_lineOutput($dataset_id, "Group '$dataSet_questionnaireName' (id=$dataSet_questionnaireId) does not exist");
+					$this->error_lineOutput($dataset_id, "Questionnaire '$dataSet_questionnaireName' (id=$dataSet_questionnaireId) does not exist");
 					continue;
 				}
 				

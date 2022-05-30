@@ -100,10 +100,11 @@ export const AdminTools = {
 				let options = allBindings().options;
 				let interceptor = ko.computed({
 					read: function() {
-						return options[ko.unwrap(valueAccessor())];
+						el.selectedIndex = ko.unwrap(valueAccessor());
+						return el.value;
 					},
 					write: function(value) {
-						valueAccessor()(options.indexOf(value));
+						valueAccessor()(el.selectedIndex);
 					},
 					disposeWhenNodeIsRemoved: el
 				});
