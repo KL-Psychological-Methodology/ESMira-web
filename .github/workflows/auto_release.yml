@@ -45,12 +45,3 @@ jobs:
           tag_name: v${{ steps.autotag.outputs.version}}
           body_path: CHANGELOG.md
           files: ESMira-web.zip
-
-      - name: Create latest pre release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          title: Latest pre release
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "pre-release"
-          prerelease: true
-          files: ESMira-web.zip
