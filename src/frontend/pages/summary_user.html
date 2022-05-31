@@ -1,3 +1,10 @@
+<script type="text/html" id="list_el">
+	<h2 class="spacing_left" data-bind="text: Lang.get(header)"></h2>
+	<div class="horizontalPadding center" data-bind="foreach: obs()">
+		<div class="verticalPadding" data-bind="text: name"></div>
+	</div>
+</script>
+
 <dash-row>
 	<search-box class="dashEl" params="titleKey: 'participants_with_count', count: $root.participantCount, list: $root.participantList">
 		<span class="verticalPadding searchTarget small_text" data-bind="click: $root.selectUser,
@@ -6,38 +13,14 @@
 			"></span>
 	</search-box>
 	<div class="multipleChildren vertical vanishing" data-bind="css: {visible: $root.showData()}">
-		<div class="dashEl">
-			<h2 class="center" data-bind="text: Lang.get('colon_joined_study')"></h2>
-			<div class="horizontalPadding small_text" data-bind="foreach: $root.joined_time()">
-				<div class="verticalPadding" data-bind="text: name"></div>
-			</div>
-		</div>
-		<div class="dashEl mini_spacing_top">
-			<h2 class="center" data-bind="text: Lang.get('colon_quit_study')"></h2>
-			<div class="horizontalPadding small_text" data-bind="foreach: $root.quit_time()">
-				<div class="verticalPadding" data-bind="text: name"></div>
-			</div>
-		</div>
-		
-		<div class="dashEl mini_spacing_top">
-			<h2 class="center" data-bind="text: Lang.get('colon_app_type')"></h2>
-			<div class="horizontalPadding small_text" data-bind="foreach: $root.appType()">
-				<div class="verticalPadding" data-bind="text: name"></div>
-			</div>
-		</div>
-		<div class="dashEl mini_spacing_top">
-			<h2 class="center" data-bind="text: Lang.get('colon_timezone')"></h2>
-			<div class="horizontalPadding small_text" data-bind="foreach: $root.timezones()">
-				<div class="verticalPadding" data-bind="text: name"></div>
-			</div>
-		</div>
+		<div class="dashEl" data-bind="visible: $root.enableGroupStatistics(), template: {name: 'list_el', data: {header: 'colon_group', obs: $root.group}}"></div>
+		<div class="dashEl" data-bind="css: {mini_spacing_top: $root.enableGroupStatistics()}, template: {name: 'list_el', data: {header: 'colon_timezone', obs: $root.timezones}}"></div>
+		<div class="dashEl mini_spacing_top" data-bind="template: {name: 'list_el', data: {header: 'colon_app_type', obs: $root.appType}}"></div>
+		<div class="dashEl mini_spacing_top" data-bind="template: {name: 'list_el', data: {header: 'colon_model', obs: $root.model}}"></div>
 	</div>
-	<div class="dashEl stretched vanishing" data-bind="css: {visible: $root.showData()}">
-		<h2 class="center" data-bind="text: Lang.get('colon_model')"></h2>
-		<div class="horizontalPadding small_text" data-bind="foreach: $root.model()">
-			<div class="verticalPadding" data-bind="text: name"></div>
-		</div>
-	</div>
+	
+	<div class="dashEl vanishing" data-bind="css: {visible: $root.showData()}, template: {name: 'list_el', data: {header: 'colon_joined_study', obs: $root.joined_time}}"></div>
+	<div class="dashEl vanishing" data-bind="css: {visible: $root.showData()}, template: {name: 'list_el', data: {header: 'colon_quit_study', obs: $root.quit_time}}"></div>
 	
 	<div class="dashEl stretched vanishing" id="day_questionnaire_el" data-bind="css: {visible: $root.showData()}"></div>
 </dash-row>

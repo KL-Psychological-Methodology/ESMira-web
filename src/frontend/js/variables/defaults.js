@@ -193,7 +193,8 @@ export function fillDefaults() {
 		completionFrequencyMinutes: 60,
 		completableAtSpecificTime: false,
 		completableAtSpecificTimeStart: -1,
-		completableAtSpecificTimeEnd: -1
+		completableAtSpecificTimeEnd: -1,
+		limitToGroup: 0
 	};
 	Defaults.eventUploadSettings = {
 		actions_executed: false,
@@ -224,7 +225,6 @@ export function fillDefaults() {
 				contactEmail: ''
 			}
 		},
-		groups: [], //TODO: can be removed when all have lib-Version 16 (Android: 2.4.2.1, iOS: 1.1.3)
 		publicStatistics: Defaults.statistics,
 		personalStatistics: Defaults.statistics,
 		
@@ -241,7 +241,8 @@ export function fillDefaults() {
 		sendMessagesAllowed: true,
 		accessKeys: [],
 		langCodes: [],
-		eventUploadSettings: Defaults.eventUploadSettings
+		eventUploadSettings: Defaults.eventUploadSettings,
+		randomGroups: 0
 	};
 	
 	

@@ -1,3 +1,4 @@
+<div data-bind="if: $component.listTabs().length > 1">
 <div class="tabBar" data-bind="foreach: $component.listTabs, dragRoot">
 	<div class="tab" data-bind="click: clickFu,
 			dragTarget: (draggable ? $component.realTabs : false),
@@ -6,6 +7,7 @@
 		<drag-start data-bind="visible: draggable" class="left"></drag-start>
 		<span class="middle" data-bind="html: content"></span>
 	</div>
+</div>
 </div>
 
 <div data-bind="if: $componentTemplateNodes.length">

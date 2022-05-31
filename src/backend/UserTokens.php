@@ -10,7 +10,8 @@ class UserTokens {
 	private $file_handles = [];
 	private $dataSetCount = [];
 	private $userIds = [];
-	
+	private $groups = [];
+
 	private $user_id;
 	private $app_version;
 	private $app_type;
@@ -28,12 +29,13 @@ class UserTokens {
 			'userId' => $this->userIds[$study_id],
 			'token' => $this->get_newToken($study_id),
 			'dataSetCount' => $this->dataSetCount[$study_id],
+			'group' => $this->groups[$study_id],
 			'appVersion' => $this->app_version,
 			'appType' => $this->app_type
 		];
 	}
 	
-	private function load_userData($study_id) {
+	private function load_userData($study_id, $group) {
 		$file_token = Files::get_file_userData($study_id, $this->user_id);
 		
 		if(file_exists($file_token)) {
@@ -66,7 +68,8 @@ class UserTokens {
 			$this->is_newUser = true;
 			$this->current_studyTokens[$study_id] = -1;
 		}
-		
+
+		$this->groups[$study_id] = $group;
 		flock($handle, LOCK_EX);
 	}
 	
@@ -97,8 +100,8 @@ class UserTokens {
 	}
 	
 	
-	public function nextDataSet($study_id) {
-		$this->load_userData($study_id);
+	public function nextDataSet($study_id, $group) {
+		$this->load_userData($study_id, $group);
 		$this->addTo_dataSetCount($study_id, 1);
 		
 		$currentToken = $this->current_studyTokens[$study_id];

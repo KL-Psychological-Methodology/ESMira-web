@@ -290,16 +290,15 @@ const CsvData = {
 					row.visible = true;
 				}
 			}
-			for(let column in this.filteredColumnsIndex) {
-				if(!this.filteredColumnsIndex.hasOwnProperty(column))
+			for(let columnNum in this.filteredColumnsIndex) {
+				if(!this.filteredColumnsIndex.hasOwnProperty(columnNum))
 					continue;
 				
-				let columns = this.filteredColumnsIndex[column];
+				let columns = this.filteredColumnsIndex[columnNum];
 				for(let search_key in columns) {
 					if(!columns.hasOwnProperty(search_key) || search_key === "~")
 						continue;
 					
-					let columnNum = this.get_columnNum(column);
 					let index = this.valueIndex[columnNum];
 					if(index.hasOwnProperty(search_key))
 						index[search_key][1].visible = true;

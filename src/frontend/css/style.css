@@ -170,6 +170,9 @@ svg.highlight {
 }
 
 
+.large_text {
+	font-size: 50pt;
+}
 .small_text, small {
 	font-size: 9pt;
 }
@@ -178,6 +181,9 @@ svg.highlight {
 }
 .gray {
 	color: gray;
+}
+.mini_spacing_left {
+	margin-left: 5px;
 }
 .mini_spacing_top {
 	margin-top: 5px;
