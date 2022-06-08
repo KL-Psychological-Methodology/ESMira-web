@@ -976,6 +976,23 @@ Dash
 }
 
 
+.studiesList .line {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.studiesList .line .title {
+	flex-grow: 1;
+	white-space: nowrap;
+	max-width: 50%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.studiesList .line .accessKeys {
+	max-width: 50%;
+}
+
 /**********
 questionnaire
 **********/

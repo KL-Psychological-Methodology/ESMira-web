@@ -11,22 +11,24 @@
 <div data-bind="if: $root.showFilter">
 	<tab-bar params="tabs: $root.tabs, showAllTab: true, selectedIndex: $root.selectedIndex, tabName: $root.get_tabName"></tab-bar>
 	<div data-bind="if: $root.selectedIndex() === -1 || $root.tabs[$root.selectedIndex()] === 'hidden_studies'">
-		<tab-bar class="smallBar" params="tabs: Studies.all_accessKeys, showAllTab: Lang.get('all_accessKeys'), selectedIndex: $root.currentAccessKeyIndex"></tab-bar>
+		<tab-bar class="smallBar" params="tabs: $root.allAccessKeys, showAllTab: Lang.get('all_accessKeys'), selectedIndex: $root.currentAccessKeyIndex"></tab-bar>
 	</div>
 </div>
 
 
-<div data-bind="foreach: Studies.list()">
+<div class="studiesList" data-bind="foreach: Studies.list()">
 	<div data-bind="if:(!$root.showFilter || $root.is_selected($data))">
-		<div class="verticalPadding" data-bind="style: {opacity: published() ? 1 : 0.5}">
-			<span data-bind="if: $root.check($data)">
-				<a data-bind="navi: $root.target(id()), text:title"></a>
-			</span>
-			<span data-bind="ifnot: $root.check($data)">
-				<span class="gray" data-bind="text:title"></span><span class="info_sticker disabled" data-bind="text: Lang.get('disabled')"></span>
+		<div class="line" data-bind="style: {opacity: published() ? 1 : 0.5}">
+			<span class="title">
+				<span data-bind="if: $root.check($data)">
+					<a data-bind="navi: $root.target(id()), text: title"></a>
+				</span>
+				<span data-bind="ifnot: $root.check($data)">
+					<span class="gray" data-bind="text: title"></span><span class="info_sticker disabled" data-bind="text: Lang.get('disabled')"></span>
+				</span>
 			</span>
 			
-			<span data-bind="if: $root.showFilter">
+			<span class="accessKeys" data-bind="if: $root.showFilter">
 				<span data-bind="foreach: accessKeys">
 					<span class="info_sticker" data-bind="text: $data"></span>
 				</span>

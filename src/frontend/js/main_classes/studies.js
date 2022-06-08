@@ -12,7 +12,6 @@ import {Admin} from "./admin";
 export const Studies = {
 	list: ko.observable([]),
 	accessKey: ko.observable(""),
-	all_accessKeys: ko.observableArray([]),
 	
 	tools: null,
 	
@@ -31,8 +30,6 @@ export const Studies = {
 			//we create a fake array so it still works with our framework and we can also use ids in the url
 			// (if we would use index instead, updating study.title would lead to a different url because of its changed position in the list when sorted):
 			let list = {};
-			let accessKey_index = {};
-			let accessKeyList = [];
 			for(let i = studies.length - 1; i >= 0; --i) {
 				let study = studies[i];
 				
@@ -45,20 +42,7 @@ export const Studies = {
 				
 				if(self.tools)
 					self.tools.initStudy(o);
-				
-				let studyAccessKeys = study.accessKeys;
-				if(study.published) {
-					for(let j = studyAccessKeys.length - 1; j >= 0; --j) {
-						let accessKey = studyAccessKeys[j];
-						if(!accessKey_index.hasOwnProperty(accessKey)) {
-							accessKey_index[accessKey] = true;
-							accessKeyList.push(accessKey);
-						}
-					}
-				}
 			}
-			accessKeyList.sort();
-			self.all_accessKeys(accessKeyList);
 
 
 			list.length = studies.length;

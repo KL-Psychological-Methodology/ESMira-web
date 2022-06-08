@@ -266,7 +266,7 @@ tabBar
 **********/
 
 
-tab-bar.smallBar > .tabBar > .tab {
+tab-bar.smallBar .tabBar > .tab {
 	font-size: 9pt;
 	padding: 2px 5px;
 }

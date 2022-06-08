@@ -306,7 +306,6 @@ abstract class HasWritePermission extends IsLoggedIn {
 							case 'app_usage':
 								$keys_questionnaire[] = $name;
 								$keys_questionnaire[] = "$name~usageTimeFromApps"; //TODO - for testing
-								$keys_questionnaire[] = "$name~visibleTime";
 								$keys_questionnaire[] = "$name~usageCount";
 								break;
 							case 'photo':

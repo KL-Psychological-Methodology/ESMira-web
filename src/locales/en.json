@@ -226,7 +226,7 @@
     "questionnaire_view": "Study information",
     "header": "Header",
     "heading": "Heading",
-    "help_app_usage": "Tracks the time (in ms) that either an app or the smartphone in general was active yesterday (creates two additional values: \"visibleTime\" the time the app was visible on the screen. \"usageCount\" how many times the app was opened / the screen was enabled. -1 if the value was not available)",
+    "help_app_usage": "Tracks the time (in ms) that either an app or the smartphone in general was active yesterday (creates an additional variable: \"X~usageCount\" how many times the app was opened / the screen was enabled. -1 if the value was not available)",
     "help_binary": "Item with two possible responses. Left response represents \"0\" in data. Right response represents \"1\".",
     "help_date": "For providing a date.",
     "help_dynamic_input": "Shows a text which changes every time the questionnaire was completed. All items have to be shown before they are able to be repeated.",

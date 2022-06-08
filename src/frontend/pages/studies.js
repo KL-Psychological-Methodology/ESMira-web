@@ -37,6 +37,24 @@ export function ViewModel(page) {
 	this.selectedIndex = ko.observable(1);
 	this.useAccessKeys = true;
 	this.showFilter = false;
+	this.allAccessKeys = ko.pureComputed(function() {
+		let studies = Studies.list();
+		let accessKeys = [];
+		for(let iStudy = studies.length - 1; iStudy >= 0; --iStudy) {
+			let study = studies[iStudy];
+			if(study.published()) {
+				let studyAccessKeys = study.accessKeys();
+				for(let iAccessKey = studyAccessKeys.length - 1; iAccessKey >= 0; --iAccessKey) {
+					let accessKey = studyAccessKeys[iAccessKey]();
+					if(accessKeys.indexOf(accessKey) === -1) {
+						accessKeys.push(accessKey);
+					}
+				}
+			}
+		}
+		accessKeys.sort();
+		return accessKeys;
+	});
 	this.currentAccessKeyIndex = ko.observable(-1);
 	this.tabs = ['public_studies', 'hidden_studies', 'disabled'];
 	
@@ -108,7 +126,7 @@ export function ViewModel(page) {
 	}
 	
 	this.is_selected = function(study) {
-		let selectedAccessKey = self.currentAccessKeyIndex() !== -1 ? Studies.all_accessKeys()[self.currentAccessKeyIndex()] : null;
+		let selectedAccessKey = self.currentAccessKeyIndex() !== -1 ? self.allAccessKeys()[self.currentAccessKeyIndex()] : null;
 		switch(self.tabs[self.selectedIndex()]) {
 			case 'public_studies':
 				return study.published() && !study.accessKeys().length;

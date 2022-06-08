@@ -166,20 +166,6 @@ export const Studies_tools = {
 			Studies.tools.currentLang(currentLang);
 			
 			self.set_study_changedState(study);
-			
-			if(study.published()) {
-				let studyAccessKeys = study.accessKeys();
-				let all_accessKeys = Studies.all_accessKeys();
-				for(let i = studyAccessKeys.length - 1; i >= 0; --i) {
-					let accessKey = studyAccessKeys[i]();
-					if(all_accessKeys.indexOf(accessKey) === -1) {
-						all_accessKeys.push(accessKey);
-					}
-				}
-				all_accessKeys.sort();
-				Studies.all_accessKeys(all_accessKeys);
-				Studies.all_accessKeys.valueHasMutated()
-			}
 		});
 	},
 	backup_study: function(page, study) {
@@ -278,9 +264,22 @@ export const Studies_tools = {
 		for(let i=0, maxI=pages.length; i<maxI; ++i) {
 			let inputs = pages[i].inputs();
 			for(let j=0, maxJ=inputs.length; j<maxJ; ++j) {
-				if(inputs[j].responseType() === "text")
-					continue;
-				variables.push(inputs[j].name());
+				let input = inputs[j];
+				let name = input.name();
+				switch(input.responseType()) {
+					case "text":
+						continue;
+					case "app_usage":
+						variables.push(name+"~usageCount");
+						variables.push(name);
+						break;
+					case "dynamic_input":
+						variables.push(name+"~index");
+						variables.push(name);
+						break;
+					default:
+						variables.push(name);
+				}
 			}
 		}
 		
@@ -327,10 +326,6 @@ export const Studies_tools = {
 			switch(input.responseType()) {
 				case 'photo':
 					columns.push({key: input.name(), type: 'image'});
-					break;
-				case 'app_usage':
-					columns.push({key: input.name(), type: 'timestamp'});
-					columns.push({key: input.name() + "~visibleTime", type: 'timestamp'});
 					break;
 			}
 		});
