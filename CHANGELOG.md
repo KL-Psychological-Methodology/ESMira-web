@@ -1,4 +1,7 @@
 # Changelog
+### 🚀 Added
+
+- Added option to automatically install the pre-release version.
 
 ### ✏️ Changed
 

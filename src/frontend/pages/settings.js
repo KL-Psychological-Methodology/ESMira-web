@@ -48,17 +48,11 @@ export function ViewModel(page) {
 	this.dataObj = OwnMapping.fromJS(Defaults.serverSettings, Defaults.serverSettings);
 	this.defaults = Defaults.serverSettings;
 	
-	this.preInit = function(index, admin, [serverSettings, detector]) {
-		this.dataObj = serverSettings;
-		this.add_lang = add_lang.bind(this, serverSettings, Defaults.serverSettings);
-		NavigationRow.admin.change_observed(
-			detector,
-			self.change
-		);
-	};
-	this.postInit = function() {
+	this.branch = ko.observable(0);
+	
+	let checkForUpdate = function() {
 		page.loader.loadRequest(
-			FILE_ADMIN + "?type=check_update&version="+PACKAGE_VERSION
+			FILE_ADMIN + "?type=check_update&version="+PACKAGE_VERSION+"&preRelease="+self.branch()
 		).then(function({has_update, newVersion, changelog}) {
 			if(has_update) {
 				self.hasUpdate(true);
@@ -67,9 +61,21 @@ export function ViewModel(page) {
 				self.changelog(md.render(changelog));
 			}
 			else
-				self.isUpToDate(true);
+				self.hasUpdate(false);
 		});
 	};
+	
+	this.branch.subscribe(checkForUpdate);
+	
+	this.preInit = function(index, admin, [serverSettings, detector]) {
+		this.dataObj = serverSettings;
+		this.add_lang = add_lang.bind(this, serverSettings, Defaults.serverSettings);
+		NavigationRow.admin.change_observed(
+			detector,
+			self.changeText
+		);
+	};
+	this.postInit = checkForUpdate;
 	this.destroy = function() {
 		NavigationRow.admin.remove_observed();
 	}
@@ -80,7 +86,6 @@ export function ViewModel(page) {
 	this.currentVersion = PACKAGE_VERSION;
 	
 	this.hasUpdate = ko.observable(false);
-	this.isUpToDate = ko.observable(false);
 	this.newVersion = ko.observable("");
 	this.changelog = ko.observable("");
 	
@@ -90,7 +95,7 @@ export function ViewModel(page) {
 		self.dataObj.langCodes.splice(index, 1);
 	}
 	
-	this.change = function() {
+	this.changeText = function() {
 		let getValues = function(code) {
 			let obj = OwnMapping.toLangJs(self.dataObj, code);
 			if(obj.impressum)
@@ -131,10 +136,16 @@ export function ViewModel(page) {
 		);
 	};
 	
+	this.switchBranch = checkForUpdate;
+	
 	this.updateNow = function() {
+		if(self.branch() === 1) {
+			if(!confirm(Lang.get("confirm_prerelease_update")))
+				return;
+		}
 		page.loader.showLoader(
 			Lang.get("state_downloading"),
-			Requests.load(FILE_ADMIN + "?type=download_update")
+			Requests.load(FILE_ADMIN + "?type=download_update&version="+self.newVersion()+"&preRelease="+self.branch())
 				.then(function() {
 					page.loader.update(Lang.get("state_installing"))
 					return Requests.load(FILE_ADMIN + "?type=do_update&fromVersion="+PACKAGE_VERSION);

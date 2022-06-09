@@ -19,6 +19,14 @@
 	
 	<title-row params="title: Lang.get('server_update', $root.currentVersion)"></title-row>
 	
+	<label class="right">
+		<small data-bind="text: Lang.get('update_version')"></small>
+		<select class="small" data-bind="indexValue: $root.branch">
+			<option selected="selected" data-bind="text: Lang.get('stable')"></option>
+			<option data-bind="text: Lang.get('unstable')"></option>
+		</select>
+	</label>
+	
 	<div class="spacing_top" data-bind="if: $root.hasUpdate()">
 		<div class="center">
 			<span data-bind="html: Lang.get('info_newVersionAvailable')"></span>
@@ -29,7 +37,7 @@
 		</div>
 		<div class="spacing_top" data-bind="html: $root.changelog"></div>
 	</div>
-	<div class="center highlight" data-bind="if: $root.isUpToDate">
+	<div class="center highlight" data-bind="if: !$root.hasUpdate()">
 		<div class="center highlight" data-bind="text: Lang.get('info_ESMira_is_up_to_date')"></div>
 	</div>
 </div>

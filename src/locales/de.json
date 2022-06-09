@@ -534,5 +534,9 @@
     "questionnaires_per_group": "Fragebögen per Gruppe",
     "total": "Gesamt",
     "colon_group_availability": "Verfügbar in Gruppe:",
-    "in_all_groups": "in allen Gruppen"
+    "in_all_groups": "in allen Gruppen",
+    "stable": "Stabil",
+    "unstable": "Instabil",
+    "update_version": "Update Version",
+    "confirm_prerelease_update": "Die Instabile Version von ESMira wurde noch nicht vollständig getestet und könnte grobe Fehler enthalten. Fortfahren?"
 }

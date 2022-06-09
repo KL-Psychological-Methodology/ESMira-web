@@ -534,5 +534,9 @@
     "questionnaires_per_group": "Questionnaires per group",
     "total": "Total",
     "colon_group_availability": "Available in group:",
-    "in_all_groups": "In all groups"
+    "in_all_groups": "In all groups",
+    "stable": "Stable",
+    "unstable": "Unstable",
+    "update_version": "Update version",
+    "confirm_prerelease_update": "The unstable version of ESMira has not been fully tested and might contain breaking bugs. Are you sure you want to continue?"
 }

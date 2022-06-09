@@ -10,16 +10,16 @@ use ZipArchive;
 class DoUpdate extends HasAdminPermission {
 	
 	function revertUpdate() {
-		$folder_backup = Files::get_folder_serverBackup();
-		$file_update = Files::get_file_serverUpdate();
+		$pathBackup = Files::get_folder_serverBackup();
+		$pathUpdate = Files::get_file_serverUpdate();
 		
-		if(file_exists($file_update))
-			unlink($file_update);
+		if(file_exists($pathUpdate))
+			unlink($pathUpdate);
 		
-		$h_folder = opendir($folder_backup);
-		while($file = readdir($h_folder)) {
+		$handle = opendir($pathBackup);
+		while($file = readdir($handle)) {
 			if($file[0] != '.') {
-				$oldLocation = $folder_backup .$file;
+				$oldLocation = $pathBackup .$file;
 				$newLocation = DIR_BASE .$file;
 				
 				if(file_exists($newLocation)) {
@@ -33,26 +33,26 @@ class DoUpdate extends HasAdminPermission {
 				rename($oldLocation, $newLocation);
 			}
 		}
-		closedir($h_folder);
+		closedir($handle);
 		
-		rmdir($folder_backup);
+		rmdir($pathBackup);
 	}
 	
 	function exec() {
 		$needsBackup = ['api/', 'backend/', 'frontend/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md', 'version.txt'];
-		$folder_backup = Files::get_folder_serverBackup();
-		$file_update = Files::get_file_serverUpdate();
+		$folderPathBackup = Files::get_folder_serverBackup();
+		$pathUpdate = Files::get_file_serverUpdate();
 		
-		if(!file_exists($file_update))
+		if(!file_exists($pathUpdate))
 			Output::error('Could not find update. Has it been downloaded yet?');
 		
-		if(!file_exists($folder_backup))
-			$this->create_folder($folder_backup);
+		if(!file_exists($folderPathBackup))
+			$this->create_folder($folderPathBackup);
 		
 		//moving current files to backup location:
 		foreach($needsBackup as $file) {
 			$oldLocation = DIR_BASE .$file;
-			$newLocation = $folder_backup .$file;
+			$newLocation = $folderPathBackup .$file;
 			
 			if(!file_exists($oldLocation))
 				continue;
@@ -74,13 +74,13 @@ class DoUpdate extends HasAdminPermission {
 		
 		//unpacking update:
 		$zip = new ZipArchive;
-		if(!$zip->open($file_update)) {
+		if(!$zip->open($pathUpdate)) {
 			$this->revertUpdate();
-			Output::error("Could not open the the zipped update: $file_update. Reverting...");
+			Output::error("Could not open the the zipped update: $pathUpdate. Reverting...");
 		}
 		if(!$zip->extractTo(DIR_BASE)) {
 			$this->revertUpdate();
-			Output::error("Could not unzip update: $file_update. Reverting...");
+			Output::error("Could not unzip update: $pathUpdate. Reverting...");
 		}
 		$zip->close();
 		
@@ -98,15 +98,15 @@ class DoUpdate extends HasAdminPermission {
 		}
 		
 		//restore config file:
-		if(!rename($folder_backup .Files::PATH_CONFIG, Files::FILE_CONFIG)) {
+		if(!rename($folderPathBackup .Files::PATH_CONFIG, Files::FILE_CONFIG)) {
 			$this->revertUpdate();
 			Output::error('Could not restore settings. Reverting...');
 		}
 		
 		
 		//cleaning up
-		if(!$this->empty_folder($folder_backup) || !rmdir($folder_backup))
-			Output::error("Cleaning up backup failed. The update was successful. But please delete this folder and its contents manually: $folder_backup");
+		if(!$this->empty_folder($folderPathBackup) || !rmdir($folderPathBackup) || !unlink($pathUpdate))
+			Output::error("Cleaning up backup failed. The update was successful. But please delete this folder and its contents manually: $folderPathBackup");
 		
 		Output::successObj();
 	}

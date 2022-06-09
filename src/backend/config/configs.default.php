@@ -16,9 +16,10 @@ return [
 	'url_about_esmira_host' => 'esmira.kl.ac.at',
 	'url_about_esmira_json_location' => '/documents/about/langs/%s.json',
 	
-	'url_update_packageInfo' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/main/package.json',
-	'url_update_changelog' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/main/CHANGELOG.md',
-	'url_update_releaseZip' => 'https://github.com/KL-Psychological-Methodology/ESMira-web/releases/latest/download/ESMira-web.zip',
+	'url_update_packageInfo' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/%s/package.json',
+	'url_update_changelog' => 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira-web/%s/CHANGELOG.md',
+	'url_update_releaseZip' => 'https://github.com/KL-Psychological-Methodology/ESMira-web/releases/download/v%s/ESMira-web.zip',
+	'url_update_preReleaseZip' => 'https://github.com/KL-Psychological-Methodology/ESMira-web/releases/download/pre.%s/ESMira-web.zip',
 	
 	'csv_delimiter' => ';',
 	
