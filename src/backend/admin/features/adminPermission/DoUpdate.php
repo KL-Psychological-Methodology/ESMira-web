@@ -8,7 +8,7 @@ use backend\Output;
 use Exception;
 use ZipArchive;
 
-class DoUpdate extends HasAdminPermission {
+class DoUpdate extends CheckUpdate {
 	
 	function revertUpdate() {
 		$pathBackup = Files::get_folder_serverBackup();
@@ -96,7 +96,7 @@ class DoUpdate extends HasAdminPermission {
 		if(file_exists(Files::FILE_UPDATE_SCRIPT)) {
 			require_once Files::FILE_UPDATE_SCRIPT;
 			try {
-				run_updateScript((int)$_GET['fromVersion']);
+				run_updateScript($this->getVersionNumber($_GET['fromVersion']));
 				unlink(Files::FILE_UPDATE_SCRIPT);
 			}
 			catch(Exception $e) {

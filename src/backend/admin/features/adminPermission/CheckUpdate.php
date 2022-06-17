@@ -8,7 +8,7 @@ use backend\Output;
 
 class CheckUpdate extends HasAdminPermission {
 	
-	private function getVersionNumber($versionString): int {
+	protected function getVersionNumber($versionString): int {
 		$match = preg_match("/(\d+)\.(\d+)\.(\d+)/", $versionString, $matches);
 		
 		return $match && count($matches) == 4 ? ((int) ($matches[1] .$matches[2] .$matches[3])) : 0;
