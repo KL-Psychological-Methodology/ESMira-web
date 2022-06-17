@@ -15,7 +15,7 @@ class Files {
 		FILENAME_WEB_ACCESS = 'web_access',
 		FILENAME_MEDIA_ZIP = 'media.zip',
 		FILE_CONFIG = DIR_BASE .self::PATH_CONFIG,
-		FILE_UPDATE_SCRIPT = DIR_BASE .'backend/config/update_script.php',
+		FILE_UPDATE_SCRIPT = DIR_BASE .'backend/admin/features/adminPermission/UpdateVersion.php',
 		FILE_DEFAULT_CONFIG = DIR_BASE.'backend/config/configs.default.php';
 		
 	

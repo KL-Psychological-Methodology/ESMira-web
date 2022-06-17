@@ -94,10 +94,10 @@ class DoUpdate extends CheckUpdate {
 		
 		//run update script
 		if(file_exists(Files::FILE_UPDATE_SCRIPT)) {
-			require_once Files::FILE_UPDATE_SCRIPT;
 			try {
-				run_updateScript($this->getVersionNumber($_GET['fromVersion']));
-				unlink(Files::FILE_UPDATE_SCRIPT);
+				require_once Files::FILE_UPDATE_SCRIPT;
+				$updater = new UpdateVersion();
+				$updater->exec();
 			}
 			catch(Exception $e) {
 				$this->revertUpdate();
