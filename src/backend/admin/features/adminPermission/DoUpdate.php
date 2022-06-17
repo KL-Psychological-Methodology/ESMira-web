@@ -5,6 +5,7 @@ namespace backend\admin\features\adminPermission;
 use backend\admin\HasAdminPermission;
 use backend\Files;
 use backend\Output;
+use Exception;
 use ZipArchive;
 
 class DoUpdate extends HasAdminPermission {
@@ -84,6 +85,13 @@ class DoUpdate extends HasAdminPermission {
 		}
 		$zip->close();
 		
+		
+		//restore config file:
+		if(!copy($folderPathBackup .Files::PATH_CONFIG, Files::FILE_CONFIG) || !$this->write_serverConfigs([])) {
+			$this->revertUpdate();
+			Output::error('Could not restore settings. Reverting...');
+		}
+		
 		//run update script
 		if(file_exists(Files::FILE_UPDATE_SCRIPT)) {
 			require_once Files::FILE_UPDATE_SCRIPT;
@@ -95,12 +103,6 @@ class DoUpdate extends HasAdminPermission {
 				$this->revertUpdate();
 				Output::error("Error while running update script. Reverting... \n$e");
 			}
-		}
-		
-		//restore config file:
-		if(!rename($folderPathBackup .Files::PATH_CONFIG, Files::FILE_CONFIG)) {
-			$this->revertUpdate();
-			Output::error('Could not restore settings. Reverting...');
 		}
 		
 		
