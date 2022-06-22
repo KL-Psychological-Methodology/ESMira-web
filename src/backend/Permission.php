@@ -2,286 +2,175 @@
 
 namespace backend;
 
-use Exception;
-use backend\Files;
-use backend\Base;
-
 class Permission {
-	static function create_folder($folder) {
-		mkdir($folder, 0775);
-		chmod($folder, 0775);
-	}
-	static function check_pass($plain, $hashed) {
-		return password_verify($plain, $hashed);
-	}
-	
-	static function get_hashed_pass($pass) {
+	static function getHashedPass(string $pass) {
 		return password_hash($pass,  PASSWORD_DEFAULT);
 	}
 	
-	static function load_loginFile() {
-		if(!file_exists(Files::get_file_logins()))
-			return false;
-		return fopen(Files::get_file_logins(), 'r');
-	}
-	static function interpret_userLine($h) {
-		$line = substr(fgets($h), 0, -1);
-		if($line == '')
-			return false;
-		return explode(':', $line);
-	}
-	
-	static function check_login($user, $plain, &$blockTIme) {
-		//check if login is blocked:
-		$file_blocking = Files::get_file_blockLogin($user);
-		$has_blockingFile = file_exists($file_blocking);
-		if($has_blockingFile) {
-			$diff = (filemtime($file_blocking) + (int)file_get_contents($file_blocking)) - time();
-			if($diff > 0) {
-				$blockTIme = $diff;
-				return false;
-			}
-		}
+	/**
+	 * @throws PageFlowException
+	 * @throws CriticalError
+	 */
+	static function login(string $user, string $password) {
+		$userStore = Configs::getDataStore()->getUserStore();
+		$blockTime = $userStore->getUserBlockedTime($user);
+		if($blockTime != 0)
+			throw new PageFlowException("Please wait for $blockTime seconds.");
 		
-		//search for user:password:
-		$userExists = false;
-		$h = self::load_loginFile();
-		if($h) {
-			while(!feof($h)) {
-				$data = self::interpret_userLine($h);
-				
-				if($data && $data[0] == $user) {
-					$userExists = true;
-					if(self::check_pass($plain, $data[1])) {
-						if($has_blockingFile)
-							unlink($file_blocking);
-						self::save_loginHistory($user, 'Login form');
-						return true;
-					}
-				}
-			}
-			fclose($h);
-		}
-		
-		//block next login for a while because of failed attempt:
-		usleep(rand(0, 1000000)); //to prevent Timing Leaks
-		
-		if($userExists) { //TODO: the timeout only happens when a user exists. This can be used to find out usernames. Whats the best solution for that?
-			$folder_token = Files::get_folder_token($user);
+		if(!$userStore->checkUserLogin($user, $password)) {
+			usleep(rand(0, 1000000)); //to prevent Timing Leaks
 			
-			if(!file_exists($folder_token))
-				self::create_folder($folder_token);
-			if(!file_exists($file_blocking))
-				file_put_contents($file_blocking, 1);
-			else {
-				$num = (int)file_get_contents($file_blocking);
-				file_put_contents($file_blocking, min($num * 2, 1800));
-			}
-			self::save_loginHistory($user, 'Failed login attempt');
+			//block next login for a while because of failed attempt:
+			$userStore->createBlocking($user);
+			self::addToLoginHistoryEntry($user, 'Failed login attempt');
+			throw new PageFlowException('Wrong password');
 		}
-		return false;
+		
+		$userStore->removeBlocking($user);
+		self::setLoggedIn($user);
+		self::addToLoginHistoryEntry($user, 'Login form');
 	}
 	
-	static function set_loggedIn($user) {
-		if(session_status() !== PHP_SESSION_ACTIVE)
-			session_start();
+	/**
+	 * @throws CriticalError
+	 */
+	static function setLoggedIn(string $user) {
+		Main::sessionStart();
 		$_SESSION['user'] = $user;
 		$_SESSION['is_loggedIn'] = true;
 	}
-	static function set_loggedOut() {
-		if(session_status() !== PHP_SESSION_ACTIVE)
-			session_start();
+	
+	/**
+	 * @throws CriticalError
+	 */
+	static function setLoggedOut() {
+		Main::sessionStart();
 		
 		$_SESSION['is_loggedIn'] = false;
 		$_SESSION['user'] = null;
 		
-		if(isset($_COOKIE['tokenId']) && isset($_COOKIE['user'])) {
-			$file_token = Files::get_file_token($_COOKIE['user'], $_COOKIE['tokenId']);
-			if(file_exists($file_token))
-				unlink($file_token);
-		}
+		if(isset($_COOKIE['tokenId']) && isset($_COOKIE['user']))
+			Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($_COOKIE['user'], $_COOKIE['tokenId']);
 		
-		Base::delete_cookie('user');
-		Base::delete_cookie('tokenId');
-		Base::delete_cookie('tokenHash');
+		Main::deleteCookie('user');
+		Main::deleteCookie('tokenId');
+		Main::deleteCookie('token');
 	}
 	
-	static function is_loggedIn() {
-		switch(session_status()) {
-			case PHP_SESSION_DISABLED:
-				throw new Exception('This server does not support sessions!');
-			case PHP_SESSION_NONE:
-				session_start();
-				if(isset($_SESSION['is_loggedIn']) && $_SESSION['is_loggedIn'])
-					return true;
-				
-				if(!isset($_COOKIE['user']) || !isset($_COOKIE['tokenId']) || !isset($_COOKIE['tokenHash']))
-					return false;
-				
-				usleep(rand(0, 1000000)); //to prevent Timing Leaks
-				
-				$user = $_COOKIE['user'];
-				$token_id = $_COOKIE['tokenId'];
-				$token_hash = $_COOKIE['tokenHash'];
-				
-				$file_token = Files::get_file_token($user, $token_id);
-				
-				if(!file_exists($file_token)) { //can happen when a login was removed; also the tokenId cookie is not critical
-					self::set_loggedOut();
-					return false;
-				}
-				else if(self::hash_token($token_hash) !== file_get_contents($file_token)) { //Something fishy is going on
-					$ip = $_SERVER['REMOTE_ADDR'];
-					$userAgent = $_SERVER['HTTP_USER_AGENT'];
-					Base::report("Somebody tried to log in with a broken token. All token for that user have been deleted for security reasons.\nUser: $user,\nIp: $ip,\ntokenId: $token_id,\ntokenHash: $token_hash,\nUserAgent: $userAgent");
-					
-					$folder_token = Files::get_folder_token($user);
-					$h_folder = opendir($folder_token);
-					while($file = readdir($h_folder)) {
-						if($file[0] != '.')
-							unlink($folder_token.$file);
-					}
-					closedir($h_folder);
-					self::set_loggedOut();
-					return false;
-				}
-				self::save_loginHistory($user, $token_id);
-				
-				//Note: Should we renew the token every time? I am not sure.
-				// - On the one hand it is good to renew the token to make sure every token can only be used (in the long term) on one device.
-				//     This makes it easier to spot if a token has been stolen (because the user gets logged out and there will be another active entry in the token list).
-				// - On the other hand, if two token login requests are done at the same time (with the same cookies):
-				//     RequestA will change the token_hash which will make RequestB fail and trigger a report because its cookie still has the old token_hash.
-				//     Though unlikely, it might happen for example when a browser restores multiple tabs from an old session.
-				self::create_token($user, $token_id);
-				
-				self::set_loggedIn($user);
-				
-				return true;
-			case PHP_SESSION_ACTIVE:
-				return isset($_SESSION['is_loggedIn']) && $_SESSION['is_loggedIn'];
-		}
+	/**
+	 * @throws CriticalError
+	 */
+	static function isLoggedIn(): bool {
+		Main::sessionStart();
+		if(isset($_SESSION['is_loggedIn']) && $_SESSION['is_loggedIn'])
+			return true;
 		
-		return false;
+		if(!isset($_COOKIE['user']) || !isset($_COOKIE['tokenId']) || !isset($_COOKIE['token']))
+			return false;
+		
+		usleep(rand(0, 1000000)); //to prevent Timing Leaks
+		
+		$user = $_COOKIE['user'];
+		$tokenId = $_COOKIE['tokenId'];
+		$token = $_COOKIE['token'];
+		
+		
+		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
+		if(!$loginTokenStore->loginTokenExists($user, $tokenId)) { //can happen when a login was removed; also the tokenId cookie is not critical
+			self::setLoggedOut();
+			return false;
+		}
+		else if(self::getHashedToken($token) !== $loginTokenStore->getLoginToken($user, $tokenId)) { //Something fishy is going on
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$userAgent = $_SERVER['HTTP_USER_AGENT'];
+			Main::report("Somebody tried to log in with a broken token. All token for that user have been deleted for security reasons.\nUser: $user,\nIp: $ip,\ntokenId: $tokenId,\ntokenHash: $token,\nUserAgent: $userAgent");
+			
+			$loginTokenStore->clearAllLoginToken($user);
+			self::setLoggedOut();
+			return false;
+		}
+		self::addToLoginHistoryEntry($user, $tokenId);
+		
+		//Note: Should we renew the token every time? I am not sure.
+		// - On the one hand it is good to renew the token to make sure every token can only be used (in the long term) on one device.
+		//     This makes it easier to spot if a token has been stolen (because the user gets logged out and there will be another active entry in the token list).
+		// - On the other hand, if two token login requests are done at the same time (with the same cookies):
+		//     RequestA will change the token_hash which will make RequestB fail and trigger a report because its cookie still has the old token_hash.
+		//     Though unlikely, it might happen for example when a browser restores multiple tabs from an old session.
+		self::createNewLoginToken($user, $tokenId);
+		
+		self::setLoggedIn($user);
+		
+		return true;
 	}
 	
-	static function get_user() {
+	static function getUser() {
 		return $_SESSION['user'];
 	}
 	
-	static function get_currentToken() {
-		return isset($_COOKIE['tokenId']) ? $_COOKIE['tokenId'] : null;
+	static function getCurrentLoginTokenId() {
+		return $_COOKIE['tokenId'] ?? null;
 	}
 	
-	static function is_admin() {
-		if(!file_exists(Files::get_file_permissions()))
-			return false;
-		
-		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
-		return $permissions && isset($permissions[$user]) && isset($permissions[$user]['admin']) && $permissions[$user]['admin'];
-//	return $permissions && isset($permissions['admins']) && in_array($user, $permissions['admins']);
+	static function isAdmin(): bool {
+		$permissions = self::getPermissions();
+		return isset($permissions['admin']) && $permissions['admin'];
 	}
-	static function has_permission($study_id, $permCode) {
-		if(!file_exists(Files::get_file_permissions()))
-			return false;
-		
-		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
-		return $permissions && isset($permissions[$user]) && isset($permissions[$user][$permCode]) && in_array($study_id, $permissions[$user][$permCode]);
-//	return $permissions && isset($permissions[$permCode]) && isset($permissions[$permCode][$user]) && in_array($study_id, $permissions[$permCode][$user]);
+	static function hasPermission(int $studyId, string $permCode): bool {
+		$permissions = self::getPermissions();
+		return isset($permissions[$permCode]) && in_array($studyId, $permissions[$permCode]);
 	}
-	static function get_permissions() {
-		$user = self::get_user();
-		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
-		if(!$permissions || !isset($permissions[$user]))
-			return [];
-		else
-			return $permissions[$user];
+	static function getPermissions(): array {
+		return Configs::getDataStore()->getUserStore()->getPermissions(self::getUser());
 	}
 	
-	static function save_loginHistory($user, $login) {
-		$folder_token = Files::get_folder_token($user);
-		if(!file_exists($folder_token))
-			self::create_folder($folder_token);
-		
-		$file_tokenHistory1 = Files::get_file_tokenHistory($user, 1);
-		$file_tokenHistory2 = Files::get_file_tokenHistory($user, 2);
-		
-		if(!file_exists($file_tokenHistory1)) { //The very first entry is saved in $file_tokenHistory1
-			$file_tokenHistory = $file_tokenHistory1;
-			$flag = LOCK_EX;
-		}
-		else if(!file_exists($file_tokenHistory2)) { //The very second entry is saved in $file_tokenHistory2
-			$file_tokenHistory = $file_tokenHistory2;
-			$flag = LOCK_EX;
-		}
-		else { //Both files have been created:
-			$now = time();
-			$target = 60*60*24*60;
-			$diff_1 = $now - filemtime($file_tokenHistory1);
-			$diff_2 = $now - filemtime($file_tokenHistory2);
-			
-			if($diff_1 < $target && $diff_2 < $target) { //as long as no history file gets to old, always add to the most recent one
-				$file_tokenHistory = $diff_1 < $diff_2 ? $file_tokenHistory1 : $file_tokenHistory2;
-				$flag = FILE_APPEND | LOCK_EX;
-			}
-			else { //until a history file gets too old. Then overwrite it (which will then become the most recent one)
-				$file_tokenHistory = $diff_1 > $diff_2 ? $file_tokenHistory1 : $file_tokenHistory2; // overwrite the oldest one in case both are old
-				$flag = LOCK_EX;
-			}
-		}
-		
-		$csv_delimiter = Configs::get('csv_delimiter');
-		$data = "\n\"".time().'"' .$csv_delimiter .'"'.$login.'"' .$csv_delimiter .'"'.$_SERVER['REMOTE_ADDR'].'"' .$csv_delimiter .'"'. Base::strip_oneLineInput($_SERVER['HTTP_USER_AGENT']) .'"';
-		file_put_contents($file_tokenHistory, $data, $flag);
+	private static function addToLoginHistoryEntry(string $user, string $state) {
+		Configs::getDataStore()->getUserStore()->addToLoginHistoryEntry($user, [
+			time(),
+			$state,
+			$_SERVER['REMOTE_ADDR'],
+			CreateDataSet::stripOneLineInput($_SERVER['HTTP_USER_AGENT'])
+		]);
 	}
 	
-	static function randomToken($length) {
+	/**
+	 * @throws CriticalError
+	 */
+	static function calcRandomToken(int $length): string {
 		//Thanks to: https://www.php.net/manual/en/function.random-bytes.php#118932
-		if (function_exists('random_bytes'))
+		if(function_exists('random_bytes'))
 			return bin2hex(random_bytes($length));
-		else if (function_exists('mcrypt_create_iv'))
+		else if(function_exists('mcrypt_create_iv'))
 			return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
-		else if (function_exists('openssl_random_pseudo_bytes'))
+		else if(function_exists('openssl_random_pseudo_bytes'))
 			return bin2hex(openssl_random_pseudo_bytes($length));
 		else
-			return false;
+			throw new CriticalError('This server does not support random_bytes(), mcrypt_create_iv() or openssl_random_pseudo_bytes()');
 	}
-	
-	static function remove_token($user, $token_id) {
-		$file_token = Files::get_file_token($user, $token_id);
-		if(file_exists($file_token))
-			unlink($file_token);
-	}
-	static function hash_token($token_hash) {
+	static function getHashedToken(string $tokenHash) {
 		//simple hashing is enough. If somebody has access to our data, they dont need the random token anymore
-		return hash('sha256', $token_hash);
+		return hash('sha256', $tokenHash);
 	}
 	
-	static function create_token($user, $token_id = null) {
-		$folder_token = Files::get_folder_token($user);
-		if(!file_exists($folder_token))
-			self::create_folder($folder_token);
+	/**
+	 * @throws CriticalError
+	 */
+	static function createNewLoginToken(string $user, string $tokenId = null) {
+		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
+		$token = self::calcRandomToken(32);
 		
-		//create hashes:
-		if($token_id === null) {
+		if($tokenId === null) {
 			do {
-				$token_id = self::randomToken(16);
-				if(!$token_id)
-					return;
-			} while (file_exists(Files::get_file_token($user, $token_id)));
+				$tokenId = Permission::calcRandomToken(16);
+			} while ($loginTokenStore->loginTokenExists($user, $tokenId));
 		}
-		$token_hash = self::randomToken(32);
-		if(!$token_hash)
-			return;
 		
-		file_put_contents(Files::get_file_token($user, $token_id), self::hash_token($token_hash), LOCK_EX);
+		$loginTokenStore->saveLoginToken($user, Permission::getHashedToken($token), $tokenId);
 		
 		//save cookies:
 		$expire = time()+31536000; //60*60*24*365
-		Base::create_cookie('user', $_COOKIE['user'] = $user, $expire);
-		Base::create_cookie('tokenId', $_COOKIE['tokenId'] = $token_id, $expire);
-		Base::create_cookie('tokenHash', $_COOKIE['tokenHash'] = $token_hash, $expire);
+		Main::setCookie('user', $user, $expire);
+		Main::setCookie('tokenId', $tokenId, $expire);
+		Main::setCookie('token', $token, $expire);
 	}
 }

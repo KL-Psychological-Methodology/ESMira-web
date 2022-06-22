@@ -24,7 +24,7 @@ export function ViewModel(page) {
 		
 		note = atob(note);
 		page.title(get_name(timestamp, note));
-		page.loader.loadRequest(FILE_ADMIN+"?type=get_error&timestamp="+timestamp+"&note="+note+"&seen="+(!!seen ? 1 : 0), true).then(function(data) {
+		page.loader.loadRequest(FILE_ADMIN+"?type=get_error&timestamp="+timestamp, true).then(function(data) {
 			let update_sticky_els = function() {
 				sticky_els.sort(function(a,b) {
 					let indexA = a["line-index"];

@@ -1,17 +1,13 @@
 <?php
 namespace backend\admin;
 
-use backend\Base;
-use backend\Files;
-use backend\Output;
-use backend\Permission;
+use backend\PageFlowException;
 
 abstract class HasAdminPermission extends IsLoggedIn {
-	
 	function __construct() {
 		parent::__construct();
-		if(!$this->is_admin)
-			Output::error('No permission');
+		if(!$this->isAdmin)
+			throw new PageFlowException('No permission');
 	}
 }
 

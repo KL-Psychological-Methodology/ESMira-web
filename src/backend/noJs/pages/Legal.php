@@ -2,41 +2,34 @@
 
 namespace backend\noJs\pages;
 
-use backend\Files;
+use backend\Configs;
+use backend\Main;
 use backend\noJs\Lang;
 use backend\noJs\Page;
 
 class Legal implements Page {
-	public function getTitle() {
+	public function getTitle(): string {
 		return Lang::get('impressum');
 	}
 	
-	public function getContent() {
-		$langCode = Lang::getCode();
+	public function getContent(): string {
+		$langCode = Main::getLang();
 		
-		$file_default_impressum = Files::get_file_langImpressum('_');
-		$file_lang_impressum = Files::get_file_langImpressum($langCode);
+		$serverStore = Configs::getDataStore()->getServerStore();
 		$output = '';
 		
-		if(file_exists($file_lang_impressum)) {
-			$output .= '<div class="title-row">'.Lang::get('impressum').'</div>'
-				.file_get_contents($file_lang_impressum);
-		}
-		else if(file_exists($file_default_impressum)) {
-			$output .= '<div class="title-row">'.Lang::get('impressum').'</div>'
-				.file_get_contents($file_default_impressum);
+		$impressum = $serverStore->getImpressum($langCode);
+		if(empty($impressum))
+			$impressum = $serverStore->getImpressum('_');
+		if(!empty($impressum)) {
+			$output .= '<div class="title-row">'.Lang::get('impressum').'</div>' .$impressum;
 		}
 		
-		
-		$file_default_privacyPolicy = Files::get_file_langPrivacyPolicy('_');
-		$file_lang_privacyPolicy = Files::get_file_langPrivacyPolicy($langCode);
-		if(file_exists($file_lang_privacyPolicy)) {
-			$output .= '<br/><br/><div class="title-row">'.Lang::get('privacyPolicy').'</div>'
-				.file_get_contents($file_lang_privacyPolicy);
-		}
-		else if(file_exists($file_default_privacyPolicy)) {
-			$output .= '<br/><br/><div class="title-row">'.Lang::get('privacyPolicy').'</div>'
-				.file_get_contents($file_default_privacyPolicy);
+		$privacyPolicy = $serverStore->getPrivacyPolicy($langCode);
+		if(empty($privacyPolicy))
+			$privacyPolicy = $serverStore->getPrivacyPolicy('_');
+		if(!empty($privacyPolicy)) {
+			$output .= '<br/><br/><div class="title-row">'.Lang::get('privacyPolicy').'</div>' .$privacyPolicy;
 		}
 		
 		return $output;

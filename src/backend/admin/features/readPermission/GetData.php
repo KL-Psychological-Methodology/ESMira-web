@@ -3,19 +3,18 @@
 namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
-use backend\Files;
-use backend\Output;
+use backend\Configs;
+use backend\CriticalError;
+use backend\PageFlowException;
 
 class GetData extends HasReadPermission {
+	public function execAndOutput() {
+		if(!isset($_GET['q_id']))
+			throw new PageFlowException('Missing data');
+		Configs::getDataStore()->getResponsesStore()->outputResponsesFile($this->studyId, $_GET['q_id']);
+	}
 	
-	function exec() {
-		$file_responses = Files::get_file_responses($this->study_id, $_GET['q_id']);
-		if(file_exists($file_responses)) {
-			header('Content-Type: text/csv');
-			readfile($file_responses);
-			exit();
-		}
-		else
-			Output::error('Not found');
+	function exec(): array {
+		throw new CriticalError('Internal error. GetData can only be used with execAndOutput()');
 	}
 }

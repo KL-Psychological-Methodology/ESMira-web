@@ -2,45 +2,60 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once '../backend/autoload.php';
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-use backend\Base;
-use backend\Output;
-use backend\Files;
+use backend\CriticalError;
+use backend\FileUploader;
+use backend\JsonOutput;
 use backend\Configs;
 
-if(intval($_SERVER['CONTENT_LENGTH'])>0 && empty($_POST)){
-	Output::error('File is too big');
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
 }
 
-if(!isset($_POST['studyId']) || !isset($_POST['userId']) || !isset($_POST['dataType']))
-	Output::error('Missing data');
+if(intval($_SERVER['CONTENT_LENGTH']) > 0 && empty($_POST)){
+	echo JsonOutput::error('File is too big');
+	return;
+}
 
-$study_id = (int) $_POST['studyId'];
+if(!isset($_POST['studyId']) || !isset($_POST['userId']) || !isset($_POST['dataType'])) {
+	echo JsonOutput::error('Missing data');
+	return;
+}
+
+
+$studyId = (int) $_POST['studyId'];
 $userId = $_POST['userId'];
 $dataType = $_POST['dataType'];
 
 //get fileData:
 
-if(!isset($_FILES['upload']))
-	Output::error('No content to upload');
+if(!isset($_FILES['upload'])) {
+	echo JsonOutput::error('No content to upload');
+	return;
+}
+
 
 $fileData = $_FILES["upload"];
 
 
 //get identifier:
 
-if(!isset($fileData['name']))
-	Output::error('No content to upload');
+if(!isset($fileData['name'])) {
+	echo JsonOutput::error('No content information');
+	return;
+}
 
-$identifier = $fileData['name'];
+
+$identifier = (int) $fileData['name'];
 
 
 //check size:
 
 if ($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
-	Output::error('File is too big');
-	$uploadOk = 0;
+	echo JsonOutput::error('File is too big');
+	return;
 }
 
 
@@ -48,39 +63,27 @@ if ($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
 
 switch($dataType) {
 	case 'Image':
-		if(!getimagesize($fileData['tmp_name']))
-			Output::error('Not an image');
+		try {
+			if(!getimagesize($fileData['tmp_name']))
+				throw new CriticalError('getimagesize() failed');
+		}
+		catch(Exception $e) {
+			echo JsonOutput::error('Not an image');
+			return;
+		}
+		
 		break;
 	default:
-		Output::error('Unknown type');
+		echo JsonOutput::error('Unknown type');
+		return;
 }
 
+try {
+	Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $userId, $identifier, new FileUploader($fileData));
+}
+catch(CriticalError $e) {
+	echo JsonOutput::error($e->getMessage());
+	return;
+}
 
-//get target location info:
-
-$waiting_file = Files::get_file_pendingUploads($study_id, $userId, $identifier);
-if(!file_exists($waiting_file))
-	Output::error('Not allowed');
-
-$target_path = file_get_contents($waiting_file);
-if(!$target_path)
-	Output::error('Internal server error');
-
-
-if(file_exists($target_path))
-	Output::error('File already exists');
-
-
-//upload:
-
-if(!move_uploaded_file($fileData["tmp_name"], $target_path) || !unlink($waiting_file))
-	Output::error('Uploading failed');
-
-
-// delete zipped folder if it exists
-$file_mediaZip = Files::get_file_mediaZip($study_id);
-
-if(file_exists($file_mediaZip))
-	unlink($file_mediaZip);
-
-Output::successObj();
+echo JsonOutput::successObj();

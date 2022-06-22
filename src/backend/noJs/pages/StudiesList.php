@@ -2,56 +2,57 @@
 
 namespace backend\noJs\pages;
 
-use backend\Base;
-use backend\Files;
+use backend\Main;
+use backend\Configs;
+use backend\CriticalError;
 use backend\noJs\Lang;
 use backend\noJs\Page;
+use stdClass;
 
 class StudiesList implements Page {
-	static function index_study($s, $access_key) {
-		$json_values = json_decode($s);
-		
-		$study_id = $json_values->id;
+	static function studyToOutput(stdClass $study, string $accessKey): string {
+		$study_id = $study->id;
 		
 		return "<div class=\"vertical verticalPadding\">
 					<a href=\"?"
-			.(isset($json_values->publishedWeb) && !$json_values->publishedWeb ? 'app_install&' : '')
-			.($access_key ? "key=$access_key&" : '')
-			."id=$study_id\">".htmlspecialchars($json_values->title).'</a>
+			.(isset($study->publishedWeb) && !$study->publishedWeb ? 'app_install&' : '')
+			.($accessKey ? "key=$accessKey&" : '')
+			."id=$study_id\">".htmlspecialchars($study->title).'</a>
 				</div>';
 	}
 	
-	static function list_fromIndex($key) {
+	/**
+	 * @throws CriticalError
+	 */
+	static function listFromIndex(string $accessKey): string {
 		$output = '';
-		$key_index = unserialize(file_get_contents(Files::get_file_studyIndex()));
-		if(isset($key_index[$key])) {
-			$ids = $key_index[$key];
-			
-			foreach($ids as $id) {
-				$path = Files::get_file_studyConfig($id);
-				if(file_exists($path))
-					$output .= self::index_study(file_get_contents($path), $key);
-			}
+		$lang = Main::getLang();
+		
+		$studyStore = Configs::getDataStore()->getStudyStore();
+		$ids = Configs::getDataStore()->getStudyAccessIndexStore()->getStudyIds($accessKey);
+		foreach($ids as $studyId) {
+			$studyJsonString = $studyStore->getStudyLangConfig($studyId, $lang);
+			$output .= self::studyToOutput($studyJsonString, $accessKey);
 		}
 		return $output;
 	}
 	
-	public function getTitle() {
+	public function getTitle(): string {
 		return Lang::get('studies');
 	}
 	
-	public function getContent() {
-		$access_key = Base::get_accessKey();
+	public function getContent(): string {
+		$accessKey = Main::getAccessKey();
 		return '<form method="get" action="" class="access_key_box">
 			<label class="no_desc">
 				<small>' .Lang::get('accessKey') .'</small>
 				<input type="hidden" name="studies"/>
-				<input name="key" type="text" value="' .($access_key ? htmlentities($access_key) : '') .'">
+				<input name="key" type="text" value="' .($accessKey ? htmlentities($accessKey) : '') .'">
 				<input type="submit" value="' .Lang::get('send') .'"/>
 			</label>
 		</form>
 		<div>'
-			.self::list_fromIndex($access_key ?: '~open')
+			.self::listFromIndex($accessKey)
 		.'</div>';
 	}
 }

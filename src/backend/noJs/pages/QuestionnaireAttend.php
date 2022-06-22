@@ -3,207 +3,263 @@
 namespace backend\noJs\pages;
 
 use backend\CreateDataSet;
+use backend\CriticalError;
+use backend\PageFlowException;
 use Exception;
-use backend\Base;
+use backend\Main;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
-use backend\noJs\Extra;
-use backend\noJs\Inputs;
+use backend\noJs\NoJsMain;
+use backend\noJs\InputToString;
 use backend\noJs\Page;
+use stdClass;
 
 class QuestionnaireAttend implements Page {
 	const COOKIE_LAST_COMPLETED = 'last_completed%1$d_%2$d';
 	
+	/**
+	 * @var stdClass
+	 */
 	private $study;
+	/**
+	 * @var int
+	 */
 	private $pageInt;
-	private $form_started;
+	/**
+	 * @var int
+	 */
+	private $formStarted;
+	/**
+	 * @var stdClass|null
+	 */
 	private $questionnaire;
-	private $success_saving = false;
-	private $data_missing = false;
+	/**
+	 * @var bool
+	 */
+	private $successSaving = false;
+	/**
+	 * @var string|null
+	 */
+	private $errorMsg = null;
+	/**
+	 * @var bool
+	 */
+	private $dataMissing = false;
+	/**
+	 * @var string
+	 */
 	private $participant;
+	/**
+	 * @var array
+	 */
 	private $dataCache;
 	
 	/**
 	 * @throws ForwardingException
-	 * @throws Exception
+	 * @throws CriticalError
+	 * @throws PageFlowException
 	 */
 	public function __construct() {
-		$studyData = Extra::get_studyData();
-		if(isset($studyData['notFound'])) {
-			if(isset($studyData['error']))
-				throw new Exception($studyData['error']);
-			throw new ForwardingException(new StudiesList());
-		}
-		$this->study = $studyData['study'];
-		$study_id = $this->study->id;
+		$studyData = NoJsMain::getStudyData();
+		$this->study = $studyData->study;
 		
 		if(isset($this->study->publishedWeb) && !$this->study->publishedWeb)
 			throw new ForwardingException(new AppInstall());
 		
-		if(!$studyData['questionnaire'])
+		if(!$studyData->questionnaire)
 			throw new ForwardingException(new StudyOverview());
 		
-		$this->questionnaire = $studyData['questionnaire'];
-		
-		
-		
+		$this->questionnaire = $studyData->questionnaire;
+		$this->formStarted = (int) ($_POST['form_started'] ?? 0 ?: Main::getMilliseconds());
+		$this->dataCache = $_POST['responses'] ?? []; //TODO: save and load data from response_cache cookie
 		
 		if(isset($_POST['delete_participant'])) {
-			Extra::save_dataset(CreateDataSet::DATASET_TYPE_QUIT, $_POST['participant'], $this->study);
-			Base::delete_cookie('participant'.$study_id);
-			Extra::remove_postHeader();
-			return;
+			try {
+				NoJsMain::saveDataset(CreateDataSet::DATASET_TYPE_QUIT, $_POST['participant'], $this->study);
+			}
+			catch(CriticalError $e) {
+				$this->errorMsg = $e->getMessage();
+			}
+			Main::deleteCookie('participant'.$this->study->id);
+			unset($_POST['participant']);
+			throw new ForwardingException(new GetParticipant());
 		}
-		else if(strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$study_id"])) {
+		
+		$this->DoForwarding();
+		$this->doPageFinishActions(); //if data was sent, we check it now so we can show the correct page number in title
+	}
+	
+	/**
+	 * @throws ForwardingException
+	 */
+	private function setParticipant() {
+		if(!isset($_POST['participant']) || !self::participantIsValid($_POST['participant']))
+			throw new ForwardingException(new GetParticipant());
+		
+		$this->participant = $_POST['participant'];
+		if(isset($_POST['new_participant'])) {
+			try {
+				NoJsMain::saveDataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, $this->study);
+			}
+			catch(CriticalError $e) {
+				$this->errorMsg = $e->getMessage();
+			}
+		}
+		
+		$studyId = $this->study->id;
+		Main::setCookie("participant$studyId", $this->participant);
+	}
+	
+	/**
+	 * @throws ForwardingException
+	 */
+	private function DoForwarding() {
+		$studyId = $this->study->id;
+		
+		if(isset($this->study->informedConsentForm) && strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$studyId"])) {
 			if(!isset($_POST['informed_consent']))
 				throw new ForwardingException(new InformedConsent());
 			else
-				Base::create_cookie("informed_consent$study_id", '1', 32532447600);
+				Main::setCookie("informed_consent$studyId", '1');
 		}
 		
-		if(!isset($_COOKIE["participant$study_id"]) || !self::participant_isValid($_COOKIE["participant$study_id"])) {
-			if(!isset($_POST['participant']) || !self::participant_isValid($_POST['participant']))
-				throw new ForwardingException(new GetParticipant());
-			else {
-				$this->participant = $_POST['participant'];
-				if(isset($_POST['new_participant']))
-					Extra::save_dataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, $this->study);
-				
-				Base::create_cookie("participant$study_id", $this->participant, 32532447600);
-			}
-		}
+		if(!isset($_COOKIE["participant$studyId"]) || !self::participantIsValid($_COOKIE["participant$studyId"]))
+			$this->setParticipant();
 		else
-			$this->participant = $_COOKIE["participant$study_id"];
-		
-		
+			$this->participant = $_COOKIE["participant$studyId"];
+	}
+	
+	private function considerResponseType(stdClass $input, string $value): string {
+		switch($input->responseType ?? '') {
+			case 'time':
+				if(isset($input->forceInt) && $input->forceInt) {
+					$split = explode(':', $value);
+					if(sizeof($split) == 2)
+						$value = $split[0] * 60 + $split[1];
+				}
+				break;
+			default:
+				break;
+		}
+		return $value;
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	private function extractInputs() {
 		$pages = $this->questionnaire->pages;
+		$pageBefore = (int) ($_POST['page'] ?? 0);
 		
-		$this->form_started = isset($_POST['form_started']) && (int)$_POST['form_started'] ? (int)$_POST['form_started'] : Base::get_milliseconds();
+		if(!isset($pages[$pageBefore]))
+			throw new PageFlowException(Lang::get('error_unknown_data'));
 		
-		$this->dataCache = isset($_POST['cached_values']) ? $_POST['cached_values'] : []; //TODO: save and load data from response_cache cookie
+		$inputsBefore = $pages[$pageBefore]->inputs;
+		
+		$responses = $_POST['responses'] ?? [];
 		
 		
-		//if data was sent, we check it now so we can show the correct page number in title:
-		
-		$page_before = isset($_POST['page']) ? (int)$_POST['page'] : 0;
-		if(isset($_POST) && (isset($_POST['save']) || isset($_POST['continue']))) {
-			if(!isset($pages[$page_before]))
-				throw new Exception(Lang::get('error_unknown_data'));
+		foreach($inputsBefore as $input) {
+			if(!isset($input->name))
+				continue;
+			$value = $responses[$input->name] ?? '';
 			
-			$inputs_before = $pages[$page_before]->inputs;
-			$is_save = isset($_POST['save']);
+			if(isset($input->required) && $input->required && empty($value)) {
+				$this->dataMissing = true;
+				break;
+			}
 			
-			$responses = isset($_POST['responses']) ? $_POST['responses'][$page_before] : [];
-			$concat = isset($_POST['concat_values']) ? $_POST['concat_values'][$page_before] : [];
+			$this->dataCache[$input->name] = $this->considerResponseType($input, $value);
+		}
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	private function doPageFinishActions() {
+		$pageBefore = (int) ($_POST['page'] ?? 0);
+		
+		$this->extractInputs();
+		
+		if(!isset($_POST) || (!isset($_POST['save']) && !isset($_POST['continue']))) {
+			$this->pageInt = 0;
+			CreateDataSet::saveWebAccess($this->study->id, 'questionnaire ' .$this->questionnaire->internalId);
+			return;
+		}
+		
+		if($this->dataMissing) {
+			$this->pageInt = $pageBefore;
+			return;
+		}
+		
+		if(isset($_POST['save'])) {
+			$this->dataCache['formDuration'] = Main::getMilliseconds() - $this->formStarted; //used in CreateDataSet
 			
-			foreach($inputs_before as $i => $input) {
-				$input = $inputs_before[$i];
-				$value = isset($responses[$i]) ? $responses[$i] : '';
+			try {
+				NoJsMain::saveDataset(CreateDataSet::DATASET_TYPE_QUESTIONNAIRE, $this->participant, $this->study, $this->questionnaire, $this->dataCache);
 				
-				if(isset($input->required) && $input->required && $value == '') {
-					$this->data_missing = true;
-					break;
-				}
-				else {
-					if(isset($input->responseType)) {
-						switch($input->responseType) {
-							case 'dynamic_input':
-								if(isset($concat[$i])) {
-//									$value = $concat[$i] . '/' . $value;
-									$this->dataCache[$input->name .'~index'] = $value;
-									$value = $concat[$i];
-								}
-								break;
-							case 'time':
-								if(isset($input->forceInt) && $input->forceInt) {
-									$split = explode(':', $value);
-									if(sizeof($split) == 2)
-										$value = $split[0] * 60 + $split[1];
-								}
-								break;
-						}
-					}
-					
-					$this->dataCache[$input->name] = $value;
-					
-					//we will call save_dataset() in if($is_save) {
-				}
+				$this->successSaving = true;
+			}
+			catch(CriticalError $e) {
+				$this->successSaving = false;
+				$this->errorMsg = $e->getMessage();
 			}
 			
-			
-			if($is_save) {
-				if($this->data_missing) {
-					$this->pageInt = $page_before;
-				}
-				else {
-					//used in CreateDataSet:
-					$this->dataCache['formDuration'] = Base::get_milliseconds() - $this->form_started;
-					
-					$this->success_saving = Extra::save_dataset(CreateDataSet::DATASET_TYPE_QUESTIONNAIRE, $this->participant, $this->study, $this->questionnaire, $this->dataCache);
-					
-					if($this->success_saving) {
-						$last_completed_cookie_name = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
-						Base::create_cookie($last_completed_cookie_name, time(), 32532447600);
-						$this->pageInt = $page_before;
-					}
-					else
-						$this->pageInt = $page_before;
-				}
+			if($this->successSaving) {
+				$lastCompletedCookieName = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
+				Main::setCookie($lastCompletedCookieName, time());
+				$this->pageInt = $pageBefore;
 			}
-			else {
-				$this->pageInt = $this->data_missing ? $page_before : $page_before + 1;
-			}
+			else
+				$this->pageInt = $pageBefore;
 		}
 		else
-			$this->pageInt = 0;
-		
-		
-		
-		if($this->pageInt >= sizeof($pages))
-			throw new Exception(Lang::get('error_unknown_data'));
+			$this->pageInt = $pageBefore + 1;
 	}
 	
 	
-	static function participant_isValid($participant) {
+	static function participantIsValid($participant): bool {
 		return strlen($participant) >= 1 && preg_match('/^[a-zA-Z0-9À-ž_\s\-()]+$/', $participant);
 	}
 	
-	public function getTitle() {
+	public function getTitle(): string {
 		$pagesSize = sizeof($this->questionnaire->pages);
-		$output = isset($this->questionnaire->title) ? $this->questionnaire->title : Lang::get('questionnaire');
+		$output = $this->questionnaire->title ?? Lang::get('questionnaire');
 		if($pagesSize > 1)
 			$output .= ' (' .($this->pageInt+1).'/'.$pagesSize.')';
 		return $output;
 	}
 	
-	public function getContent() {
+	public function getContent(): string {
 		$pages = $this->questionnaire->pages;
 		
 		//used only in dynamicInput:
-		$last_completed_cookie_name = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
-		$last_completed = (isset($_COOKIE[$last_completed_cookie_name])) ? $_COOKIE[$last_completed_cookie_name] : 0;
+		$lastCompletedCookieName = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
+		$lastCompleted = $_COOKIE[$lastCompletedCookieName] ?? 0;
 		
-		$is_last_page = $this->pageInt + 1 == sizeof($pages);
+		$isLastPage = $this->pageInt + 1 == sizeof($pages);
 		
 		$page = $pages[$this->pageInt];
 		$inputs = $page->inputs;
 		
 		
-		
 		$output = '';
 	
-		if(!Extra::questionnaire_isActive($this->questionnaire))
+		if(!NoJsMain::questionnaireIsActive($this->questionnaire))
 			return '<p class="highlight center">' .Lang::get('error_questionnaire_not_active') .'</p>';
 		
 		
-		if($this->success_saving) {
+		if($this->errorMsg) {
+			$output .= '<p class="highlight center">' .$this->errorMsg .'</p>';
+		}
+		else if($this->successSaving) {
 			return '<p class="center">'
 				.((isset($this->study->webQuestionnaireCompletedInstructions) && strlen($this->study->webQuestionnaireCompletedInstructions))
 					? $this->study->webQuestionnaireCompletedInstructions
 					: Lang::get('default_webQuestionnaireCompletedInstructions'))
 				.'</p></div>';
 		}
-		else if($this->data_missing) {
+		else if($this->dataMissing) {
 			$output .= '<p class="highlight center">' .Lang::get('error_missing_requiredField') .'</p>';
 		}
 		
@@ -217,36 +273,33 @@ class QuestionnaireAttend implements Page {
 		
 		<form class="colored_lines" id="questionnaire_box" method="post">';
 		
-		$inputObj = new Inputs($this->study->id, $last_completed, $this->pageInt, $this->dataCache);
+		$inputObj = new InputToString($this->study->id, $lastCompleted, $this->pageInt, $this->dataCache);
 		
-		if(isset($page->randomized) && $page->randomized) {
-			foreach($inputs as $i => $input) {
-				$input->phpIndex = $i;
-			}
+		if(isset($page->randomized) && $page->randomized)
 			shuffle($inputs);
-			
-			foreach($inputs as $input) {
-				$output .= $inputObj->draw_input($input, $input->phpIndex);
-			}
-		}
-		else {
-			foreach($inputs as $i => $input) {
-				$output .= $inputObj->draw_input($input, $i);
-			}
+		
+		$visibleIndex = [];
+		foreach($inputs as $input) {
+			if(!isset($input->name))
+				continue;
+			$visibleIndex[$input->name] = true;
+			$output .= $inputObj->drawInput($input);
 		}
 		
 		
 		$output .= "<input type=\"hidden\" name=\"participant\" value=\"$this->participant\"/>
 			<input type=\"hidden\" name=\"informed_consent\" value=\"1\"/>
-			<input type=\"hidden\" name=\"form_started\" value=\"$this->form_started\"/>";
+			<input type=\"hidden\" name=\"form_started\" value=\"$this->formStarted\"/>";
 		
 		
 		foreach($this->dataCache as $key => $value) {
-			$output .= "<input type=\"hidden\" name=\"cached_values[$key]\" value=\"$value\"/>";
+			if(isset($visibleIndex[$key]))
+				continue;
+			$output .= "<input type=\"hidden\" name=\"responses[$key]\" value=\"$value\"/>";
 		}
 		
 		$output .= '<p class="small_text spacing_top">* input required</p>'
-			.($is_last_page
+			.($isLastPage
 				? '<input type="submit" name="save" class="right" value="' .Lang::get('save').'"/>'
 				: '<input type="submit" name="continue" class="right" value="'.Lang::get('continue').'"/>')
 			.'

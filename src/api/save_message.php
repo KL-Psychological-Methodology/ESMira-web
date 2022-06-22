@@ -1,77 +1,55 @@
 <?php
-require_once '../backend/autoload.php';
 
-use backend\Base;
-use backend\Files;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\JsonOutput;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-$rest_json = file_get_contents('php://input');
-if(!($json = json_decode($rest_json)))
-	Output::error('Error with data');
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
 
-if(!isset($json->userId) || !isset($json->studyId) || !isset($json->content) || !isset($json->serverVersion))
-	Output::error('Unexpected data');
+$rest_json = Main::getRawPostInput();
+if(!($json = json_decode($rest_json))) {
+	echo JsonOutput::error('Unexpected data');
+	return;
+}
 
-if($json->serverVersion < Base::ACCEPTED_SERVER_VERSION)
-	Output::error('This app is outdated. Aborting');
+if(!isset($json->userId) || !isset($json->studyId) || !isset($json->content) || !isset($json->serverVersion)) {
+	echo JsonOutput::error('Missing data');
+	return;
+}
 
-$user = $json->userId;
-$study_id = $json->studyId;
+if($json->serverVersion < Main::ACCEPTED_SERVER_VERSION) {
+	echo JsonOutput::error('This app is outdated. Aborting');
+	return;
+}
+
+$userId = $json->userId;
+$studyId = $json->studyId;
 $content = $json->content;
 
-if(Base::study_is_locked($study_id))
-	Output::error("This study is locked");
-
-if(strlen($content) < 2)
-	Output::error("Message is too short");
-else if(!Base::check_input($user))
-	Output::error('User is faulty');
-
-$msg = [
-	'from' => $user,
-	'content' => $content,
-	'sent' => Base::get_milliseconds(),
-	'unread' => true
-];
-
-$file = Files::get_file_message_unread($study_id, $user);
-
-
-if(file_exists($file)) {
-	$handle = fopen($file, 'r+');
-	if(!$handle)
-		Output::error('Something went wrong');
-	flock($handle, LOCK_EX);
-	$messages = unserialize(fread($handle, filesize($file)));
-	array_push($messages, $msg);
-}
-else {
-	//TODO: if there are no unread messages and several users write at exactly the same time, they will overwrite each other!
-	$handle = fopen($file, 'w');
-	if(!$handle)
-		Output::error('Something went wrong');
-	flock($handle, LOCK_EX);
-	$messages = [$msg];
+if(Configs::getDataStore()->getStudyStore()->isLocked($studyId)) {
+	echo JsonOutput::error("This study is locked");
+	return;
 }
 
-if(fseek($handle, 0) == -1 || !ftruncate($handle, 0)) {
-	flock($handle, LOCK_UN);
-	fclose($handle);
-	Output::error('Internal Server error: Could not save message');
+if(strlen($content) < 2) {
+	echo JsonOutput::error("Message is too short");
+	return;
+}
+else if(!Main::strictCheckInput($userId)) {
+	echo JsonOutput::error('User is faulty');
+	return;
 }
 
-if(fwrite($handle, serialize($messages))) {
-	fflush($handle);
-	flock($handle, LOCK_UN);
-	fclose($handle);
-	chmod($file, 0666);
-	Output::successObj($msg);
+try {
+	Configs::getDataStore()->getMessagesStore()->receiveMessage($studyId, $userId, $userId, $content);
 }
-else {
-	flock($handle, LOCK_UN);
-	fclose($handle);
-	Output::error('Internal Server error: Could not write message');
+catch(Exception $e) {
+	echo JsonOutput::error($e->getMessage());
+	return;
 }
+echo JsonOutput::successObj();

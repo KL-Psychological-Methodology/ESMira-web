@@ -53,15 +53,19 @@ export function ViewModel(page) {
 	let checkForUpdate = function() {
 		page.loader.loadRequest(
 			FILE_ADMIN + "?type=check_update&version="+PACKAGE_VERSION+"&preRelease="+self.branch()
-		).then(function({has_update, newVersion, changelog}) {
+		).then(function({has_update, newVersion, changelog, no_connection}) {
 			if(has_update) {
 				self.hasUpdate(true);
 				self.newVersion(newVersion);
 				let md = new MarkdownIt();
 				self.changelog(md.render(changelog));
 			}
-			else
-				self.hasUpdate(false);
+			else {
+				if(no_connection)
+					self.noConnectionToUpdate(true);
+				else
+					self.hasUpdate(false);
+			}
 		});
 	};
 	
@@ -86,6 +90,7 @@ export function ViewModel(page) {
 	this.currentVersion = PACKAGE_VERSION;
 	
 	this.hasUpdate = ko.observable(false);
+	this.noConnectionToUpdate = ko.observable(false);
 	this.newVersion = ko.observable("");
 	this.changelog = ko.observable("");
 	

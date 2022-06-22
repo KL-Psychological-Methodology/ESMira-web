@@ -1,15 +1,15 @@
 <?php
-echo isset($_SERVER['HTACCESS_ENABLED']) ? 1 : '';
+//because of .htaccess, this should never be called unless mod_rewrite is disabled
 require_once '../../backend/autoload.php';
 
-use backend\Output;
-use backend\Base;
+use backend\Configs;
+use backend\JsonOutput;
 
 
-if(Base::is_init())
-	Output::error('Disabled');
+if(Configs::getDataStore()->isInit())
+	echo JsonOutput::error('Disabled');
 else
-	Output::successObj([
+	echo JsonOutput::successObj([
 		'htaccess' => $_SERVER['HTACCESS_ENABLED'],
 		'mod_rewrite' => false
 	]);

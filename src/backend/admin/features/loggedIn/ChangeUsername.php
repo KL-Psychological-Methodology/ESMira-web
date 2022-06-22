@@ -3,48 +3,42 @@
 namespace backend\admin\features\loggedIn;
 
 use backend\admin\IsLoggedIn;
-use backend\Base;
-use backend\Files;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\PageFlowException;
 use backend\Permission;
 
 class ChangeUsername extends IsLoggedIn {
 	
-	function exec() {
+	function exec(): array {
 		if(!isset($_POST['new_user']))
-			Output::error('Unexpected data');
+			throw new PageFlowException('Missing data');
 		
-		if($this->is_admin && isset($_POST['user']))
+		$userStore = Configs::getDataStore()->getUserStore();
+		
+		if($this->isAdmin && isset($_POST['user'])) {
 			$user = $_POST['user'];
+			if(!$userStore->doesUserExist($user))
+				throw new PageFlowException("User $user does not exist");
+		}
 		else
-			$user = Permission::get_user();
+			$user = Permission::getUser();
 		
-		$new_user = $_POST['new_user'];
+		$newUser = $_POST['new_user'];
 		
-		if($this->check_userExists($new_user))
-			Output::error("Username '$new_user' already exists");
+		if(strlen($newUser) < 3)
+			throw new PageFlowException("Username needs to contain at least 3 characters");
+		else if($userStore->doesUserExist($newUser))
+			throw new PageFlowException("Username '$newUser' already exists");
 		
-		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
-		if($permissions) {
-			if(isset($permissions[$user])) {
-				$permissions[$new_user] = $permissions[$user];
-				unset($permissions[$user]);
-			}
-			
-			$this->write_file(Files::get_file_permissions(), serialize($permissions));
-		}
-		$this->removeAdd_in_loginsFile($user, function($user, $newPass) use($new_user) { return "$new_user:$newPass";});
+		$userStore->changeUsername($user, $newUser);
 		
-		$folder_token = Files::get_folder_token($user);
-		if(file_exists($folder_token))
-			rename($folder_token, Files::get_folder_token($new_user));
-		
-		if(Permission::get_user() == $user) {
-			$_SESSION['user'] = $new_user;
+		if(Permission::getUser() == $user) {
+			$_SESSION['user'] = $newUser;
 			if(isset($_COOKIE['user']))
-				Base::create_cookie('user', $_COOKIE['user'] = $new_user, time()+31536000);
+				Main::setCookie('user', $newUser, time()+31536000);
 		}
 		
-		Output::successObj();
+		return [];
 	}
 }

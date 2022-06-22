@@ -3,29 +3,19 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
-use backend\Files;
-use backend\Output;
+use backend\Configs;
+use backend\PageFlowException;
 
 class DeleteUser extends HasAdminPermission {
 	
-	function exec() {
+	function exec(): array {
 		if(!isset($_POST['user']))
-			Output::error('Unexpected data');
+			throw new PageFlowException('Missing data');
 		
 		$user = $_POST['user'];
 		
-		//remove permissions:
-		$permissions = unserialize(file_get_contents(Files::get_file_permissions()));
-		if($permissions) {
-			if(isset($permissions[$user])) {
-				unset($permissions[$user]);
-			}
-			
-			$this->write_file(Files::get_file_permissions(), serialize($permissions));
-		}
+		Configs::getDataStore()->getUserStore()->removeUser($user);
 		
-		$this->removeAdd_in_loginsFile($user);
-		
-		Output::successObj();
+		return [];
 	}
 }

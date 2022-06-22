@@ -3,34 +3,24 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
-use backend\Files;
-use backend\Output;
+use backend\Configs;
+use backend\dataClasses\ErrorReportInfo;
+use backend\PageFlowException;
 
 class ChangeError extends HasAdminPermission {
 	
-	function exec() {
+	function exec(): array {
 		if(!isset($_POST['timestamp']) || !isset($_POST['seen']) || !isset($_POST['note']))
-			Output::error('Faulty input');
+			throw new PageFlowException('Missing data');
 		
-		$timestamp = $_POST['timestamp'];
-		$seen = $_POST['seen'];
+		$timestamp = (int) $_POST['timestamp'];
+		$seen = (bool) $_POST['seen'];
 		$note = $_POST['note'];
 		
-		$filename = Files::get_file_errorReport($timestamp, $note, $seen);
+		$errorStore = Configs::getDataStore()->getErrorReportStore();
 		
-		if(!file_exists($filename))
-			Output::error('Error report does not exist!');
+		$errorStore->changeErrorReport(new ErrorReportInfo($timestamp, $note, $seen));
 		
-		if(isset($_POST['new_seen']))
-			$seen = $_POST['new_seen'];
-		if(isset($_POST['new_note']))
-			$note = $_POST['new_note'];
-		
-		$new_filename = Files::get_file_errorReport($timestamp, $note, $seen);
-		
-		if(rename($filename, $new_filename))
-			Output::successObj();
-		else
-			Output::error("Could not change $filename");
+		return [];
 	}
 }

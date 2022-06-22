@@ -21,7 +21,7 @@
 				</div>
 				<div data-bind="if: !$data.pending && $data.read">
 					<span data-bind="text: Lang.get('colon_confirmed')"></span>
-					<span data-bind="text: new Date(read*1000).toLocaleString()"></span>
+					<span data-bind="text: new Date(read).toLocaleString()"></span>
 				</div>
 			</div>
 		</div>

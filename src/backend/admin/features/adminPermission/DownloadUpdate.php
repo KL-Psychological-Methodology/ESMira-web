@@ -4,31 +4,28 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
-use backend\Files;
-use backend\Output;
+use backend\Paths;
+use backend\PageFlowException;
 
 class DownloadUpdate extends HasAdminPermission {
 	
-	function exec() {
+	function exec(): array {
 		$preRelease = (bool) $_GET['preRelease'];
 		$versionString = $_GET['version'];
 		
-		$pathUpdate = Files::get_file_serverUpdate();
+		$pathUpdate = Paths::FILE_SERVER_UPDATE;
 		if(file_exists($pathUpdate))
 			unlink($pathUpdate);
 		
-		if($preRelease)
-			$url = sprintf(Configs::get('url_update_preReleaseZip'), $versionString);
-		else
-			$url = sprintf(Configs::get('url_update_releaseZip'), $versionString);
+		$url = sprintf(Configs::get($preRelease ? 'url_update_preReleaseZip' : 'url_update_releaseZip'), $versionString);
 		
 		$res = fopen($url, 'r');
 		if(!$res)
-			Output::error('Downloading update failed. Nothing was changed');
+			throw new PageFlowException("Downloading update from $url failed. Nothing was changed");
 		
 		if(!file_put_contents($pathUpdate, $res))
-			Output::error('Saving update file failed. Nothing was changed');
+			throw new PageFlowException("Saving update file to $pathUpdate failed. Nothing was changed");
 		
-		Output::successObj();
+		return [];
 	}
 }

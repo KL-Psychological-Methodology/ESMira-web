@@ -3,73 +3,72 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
-use backend\Base;
+use backend\Main;
 use backend\Configs;
-use backend\Files;
-use backend\Output;
+use backend\FileSystemBasics;
+use backend\PageFlowException;
+use stdClass;
 
 class SaveServerConfigs extends HasAdminPermission {
-	
-	function exec() {
-		$settingsCollection_json = file_get_contents('php://input');
+	/**
+	 * @throws PageFlowException
+	 */
+	private function extractServerName(stdClass $obj): string {
+		$serverName = urldecode($obj->serverName);
+		$len = strlen($serverName);
+		if($len < 3 || $len > 30)
+			throw new PageFlowException("The server name '$serverName' needs to consist of 3 to 30 characters");
+		else if(!Main::strictCheckInput($serverName))
+			throw new PageFlowException("The server name '$serverName' has forbidden characters");
+		else
+			return $serverName;
+	}
+	function exec(): array {
+		$serverStore = Configs::getDataStore()->getServerStore();
 		
-		if(!($settingsCollection = json_decode($settingsCollection_json)))
-			Output::error('Unexpected data');
+		if(!($settingsCollection = json_decode(Main::getRawPostInput())))
+			throw new PageFlowException('Unexpected data');
 		
 		if(!isset($settingsCollection->_))
-			Output::error('No default settings');
+			throw new PageFlowException('No default settings');
 		
-		$old_langCodes = Configs::get('langCodes');
+		$oldLangCodes = Configs::get('langCodes');
 		
 		$serverNames = [];
 		$langCodes = [];
-		foreach($settingsCollection as $code => $s) {
+		foreach($settingsCollection as $code => $obj) {
 			if($code !== '_') {
 				array_push($langCodes, $code);
-				if (($k = array_search($code, $old_langCodes)) !== false)
-					unset($old_langCodes[$k]);
+				if(($k = array_search($code, $oldLangCodes)) !== false)
+					unset($oldLangCodes[$k]);
 			}
-			$serverName = urldecode($s->serverName);
-			$impressum = urldecode($s->impressum);
-			$privacyPolicy = urldecode($s->privacyPolicy);
 			
-			$len = strlen($serverName);
-			if($len < 3 || $len > 30)
-				Output::error('The server name needs to consist of 3 and 30 characters');
-			else if(!Base::check_input($serverName))
-				Output::error('The server name has forbidden characters');
-			else
-				$serverNames[$code] = $serverName;
+			$serverNames[$code] = $this->extractServerName($obj);
 			
-			$file_impressum = Files::get_file_langImpressum($code);
+			$impressum = urldecode($obj->impressum);
 			if(strlen($impressum))
-				$this->write_file($file_impressum, $impressum);
-			else if(file_exists($file_impressum))
-				unlink($file_impressum);
+				$serverStore->saveImpressum($impressum, $code);
+			else
+				$serverStore->deleteImpressum($code);
 			
-			$file_privacyPolicy = Files::get_file_langPrivacyPolicy($code);
+			$privacyPolicy = urldecode($obj->privacyPolicy);
 			if(strlen($privacyPolicy))
-				$this->write_file($file_privacyPolicy, $privacyPolicy);
-			else if(file_exists($file_privacyPolicy))
-				unlink($file_privacyPolicy);
+				$serverStore->savePrivacyPolicy($privacyPolicy, $code);
+			else
+				$serverStore->deletePrivacyPolicy($code);
 		}
 		
 		//if a language has been removed, we need to remove its files too:
-		foreach($old_langCodes as $code) {
-			$file_impressum = Files::get_file_langImpressum($code);
-			if(file_exists($file_impressum))
-				unlink($file_impressum);
-			
-			$file_privacyPolicy = Files::get_file_langPrivacyPolicy($code);
-			if(file_exists($file_privacyPolicy))
-				unlink($file_privacyPolicy);
+		foreach($oldLangCodes as $code) {
+			$serverStore->deleteImpressum($code);
+			$serverStore->deletePrivacyPolicy($code);
 		}
 		
-		$this->write_serverConfigs([
+		FileSystemBasics::writeServerConfigs([
 			'serverName' => $serverNames,
 			'langCodes' => $langCodes,
 		]);
 		
-		Output::successObj();
+		return [];
 	}
 }

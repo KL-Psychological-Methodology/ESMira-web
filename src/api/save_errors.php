@@ -1,18 +1,24 @@
 <?php
-require_once '../backend/autoload.php';
 
-use backend\Base;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\JsonOutput;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-$post_input = file_get_contents('php://input');
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
 
-if(strlen($post_input) == 0)
-	Output::error('Unexpected data');
+$postInput = Main::getRawPostInput();
 
-if(Base::report($post_input))
-	Output::successObj();
+if(strlen($postInput) == 0) {
+	echo JsonOutput::error('no data');
+	return;
+}
+
+if(Main::report($postInput))
+	echo JsonOutput::successObj();
 else
-	Output::error('Internal server error');
+	echo JsonOutput::error('Could not save report');

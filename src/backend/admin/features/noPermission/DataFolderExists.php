@@ -2,14 +2,18 @@
 
 namespace backend\admin\features\noPermission;
 
-use backend\Output;
+use backend\admin\NoPermission;
+use backend\Configs;
+use backend\PageFlowException;
 
-class DataFolderExists extends InitESMiraPrep {
+class DataFolderExists extends NoPermission {
 	
-	function exec() {
-		$dataFolder_path = $this->assemble_data_folderPath($_POST['data_location']);
+	function exec(): array {
+		if(Configs::getDataStore()->isInit())
+			throw new PageFlowException('Disabled');
+		else if(!isset($_POST['data_location']))
+			throw new PageFlowException('Missing data');
 		
-		$output = ['dataFolder_exists' => file_exists($dataFolder_path)];
-		Output::successObj($output);
+		return Configs::getDataStore()->getESMiraInitializer()->getInfoArray($_POST['data_location']);
 	}
 }

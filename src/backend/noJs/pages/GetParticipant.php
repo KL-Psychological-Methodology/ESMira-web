@@ -2,40 +2,24 @@
 
 namespace backend\noJs\pages;
 
+use backend\CriticalError;
+use backend\PageFlowException;
 use Exception;
-use backend\noJs\Extra;
+use backend\noJs\NoJsMain;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
+use stdClass;
 
 class GetParticipant implements Page {
-	private $study;
-	
-	/**
-	 * @throws ForwardingException
-	 * @throws Exception
-	 */
-	public function __construct() {
-		$studyData = Extra::get_studyData();
-		if(isset($studyData['notFound'])) {
-			if(isset($studyData['error']))
-				throw new Exception($studyData['error']);
-			throw new ForwardingException(new StudiesList());
-		}
-		$this->study = $studyData['study'];
-	}
-	
-	public function getTitle() {
+	public function getTitle(): string {
 		return Lang::get('user_id');
 	}
 	
-	/**
-	 * @inheritDoc
-	 */
-	public function getContent() {
-		return '<p>' .($this->study != null && isset($this->study->chooseUsernameInstructions)
-				? $this->study->chooseUsernameInstructions
-				: Lang::get('default_chooseUsernameInstructions')) .'</p>
+	public function getContent(): string {
+		$studyData = NoJsMain::getStudyData();
+		$study = $studyData->study;
+		return '<p>' .($study->chooseUsernameInstructions ?? Lang::get('default_chooseUsernameInstructions')) .'</p>
 	
 	<form method="post" action="" class="center">
 		<p>

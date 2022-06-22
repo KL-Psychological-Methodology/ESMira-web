@@ -1,93 +1,68 @@
 <?php
-require_once '../backend/autoload.php';
 
-use backend\Files;
-use backend\Output;
-use backend\Base;
+use backend\Configs;
+use backend\CriticalError;
+use backend\JsonOutput;
+use backend\Main;
 use backend\Permission;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-function list_fromIndex(&$studies_json, $key) {
-	$lang = Base::get_lang(false);
-	$key_index = unserialize(file_get_contents(Files::get_file_studyIndex()));
-	if(isset($key_index[$key])) {
-		$ids = $key_index[$key];
-		
-		foreach($ids as $id) {
-			if($lang) {
-				$path_lang = Files::get_file_langConfig($id, $lang);
-				if(file_exists($path_lang)) {
-					$studies_json[] = file_get_contents($path_lang);
-					continue;
-				}
-			}
-			$path = Files::get_file_studyConfig($id);
-			if(file_exists($path))
-				$studies_json[] = file_get_contents($path);
-		}
-	}
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
 }
 
 
-function get_specificStudyJson($id) {
-	$path = Files::get_file_studyConfig($id);
-	if(file_exists($path))
-		return file_get_contents($path);
-	else
-		return [];
-}
+$studiesJson = [];
+$studyStore = Configs::getDataStore()->getStudyStore();
 
-$studies_json = [];
-
-if(isset($_GET['is_loggedIn'])) {
-	if(Permission::is_loggedIn()) {
-		if(Permission::is_admin()) {
-			$h_folder = opendir(Files::get_folder_studies());
-			while($folder = readdir($h_folder)) {
-				if($folder[0] != '.' && $folder != Files::FILENAME_STUDY_INDEX) {
-					$s = file_get_contents(Files::get_file_studyConfig($folder));
-					$studies_json[] = $s;
-				}
+try {
+	if(isset($_GET['is_loggedIn']) && Permission::isLoggedIn()) {
+		if(Permission::isAdmin()) {
+			$studies = $studyStore->getStudyIdList();
+			foreach($studies as $studyId) {
+				$studiesJson[] = $studyStore->getStudyConfigAsJson($studyId);
 			}
-			closedir($h_folder);
 		}
 		else {
-			$notTwice_index = [];
-			$permissions = Permission::get_permissions();
+			$notTwiceIndex = [];
+			$permissions = Permission::getPermissions();
 			if(isset($permissions['read'])) {
-				foreach($permissions['read'] as $id) {
-					$notTwice_index[$id] = true;
-					$studies_json[] = get_specificStudyJson($id);
+				foreach($permissions['read'] as $studyId) {
+					$notTwiceIndex[$studyId] = true;
+					$studiesJson[] = $studyStore->getStudyConfigAsJson($studyId);
 				}
 			}
 			if(isset($permissions['msg'])) {
-				foreach($permissions['msg'] as $id) {
-					if(!isset($notTwice_index[$id])) {
-						$notTwice_index[$id] = true;
-						$studies_json[] = get_specificStudyJson($id);
+				foreach($permissions['msg'] as $studyId) {
+					if(!isset($notTwiceIndex[$studyId])) {
+						$notTwiceIndex[$studyId] = true;
+						$studiesJson[] = $studyStore->getStudyConfigAsJson($studyId);
 					}
 				}
 			}
 			if(isset($permissions['write'])) {
-				foreach($permissions['write'] as $id) {
-					if(!isset($notTwice_index[$id]))
-						$studies_json[] = get_specificStudyJson($id);
+				foreach($permissions['write'] as $studyId) {
+					if(!isset($notTwiceIndex[$studyId]))
+						$studiesJson[] = $studyStore->getStudyConfigAsJson($studyId);
 				}
 			}
 		}
 	}
-	else
-		Output::error('Not logged in.');
+	else {
+		$key = isset($_GET['access_key']) ? strtolower($_GET['access_key']) : '';
+		$lang = Main::getLang();
+		
+		$ids = Configs::getDataStore()->getStudyAccessIndexStore()->getStudyIds($key);
+		foreach($ids as $studyId) {
+			$studiesJson[] = $studyStore->getStudyLangConfigAsJson($studyId, $lang);
+		}
+	}
 }
-else if(isset($_GET['access_key']) && strlen($_GET['access_key'])) {
-	$key = strtolower($_GET['access_key']);
-	list_fromIndex($studies_json, $key);
+catch(Exception $e) {
+	echo JsonOutput::error($e->getMessage());
+	return;
 }
 
-else {
-	list_fromIndex($studies_json, '~open');
-}
-
-Output::successString('[' .implode($studies_json, ',') .']');
+echo JsonOutput::successString('[' .implode($studiesJson, ',') .']');

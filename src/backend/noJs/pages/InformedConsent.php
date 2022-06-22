@@ -2,25 +2,21 @@
 
 namespace backend\noJs\pages;
 
+use backend\CriticalError;
 use Exception;
-use backend\noJs\Extra;
+use backend\noJs\NoJsMain;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
 
 class InformedConsent implements Page {
-	public function getTitle() {
+	public function getTitle(): string {
 		return Lang::get('informed_consent');
 	}
 	
-	public function getContent() {
-		$studyData = Extra::get_studyData();
-		if(isset($studyData['notFound'])) {
-			if(isset($studyData['error']))
-				throw new Exception($studyData['error']);
-			throw new ForwardingException(new StudiesList());
-		}
-		$study = $studyData['study'];
+	public function getContent(): string {
+		$studyData = NoJsMain::getStudyData();
+		$study = $studyData->study;
 		
 		$output = '<p class="wrap">';
 		if($study != null && isset($study->informedConsentForm))

@@ -6,12 +6,11 @@ use backend\noJs\Lang;
 use backend\noJs\Page;
 
 class Home implements Page {
-	
-	public function getTitle() {
+	public function getTitle(): string {
 		return '';
 	}
 	
-	public function getContent() {
+	public function getContent(): string {
 		return '<div class="right">
 			<a href="?about" class="middle">' .Lang::get('what_is_esmira') .'</a>
 		</div>

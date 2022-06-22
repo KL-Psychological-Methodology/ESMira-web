@@ -14,9 +14,9 @@ export function ViewModel(page) {
 	this.token = ko.observableArray();
 	this.preInit = function(index, token) {
 		token.sort(function(a, b) {
-			if(a.last_used < b.last_used)
+			if(a.lastUsed < b.lastUsed)
 				return 1;
-			else if(a.last_used === b.last_used)
+			else if(a.lastUsed === b.lastUsed)
 				return 0;
 			else
 				return -1;
@@ -24,10 +24,10 @@ export function ViewModel(page) {
 		this.token(token);
 	};
 	
-	this.remove_token = function({hash}) {
+	this.remove_token = function({tokenId}) {
 		if(!confirm())
 			return;
-		page.loader.loadRequest(FILE_ADMIN+"?type=remove_token", false, "post", "token_id="+hash).then(function(token) {
+		page.loader.loadRequest(FILE_ADMIN+"?type=remove_token", false, "post", "token_id="+tokenId).then(function(token) {
 			self.token(token);
 		})
 	}

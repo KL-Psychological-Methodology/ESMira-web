@@ -1,7 +1,7 @@
 import html from "./server_statistics.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
-import {FILE_SERVER_STATISTICS} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_SERVER_STATISTICS} from "../js/variables/urls";
 import {SMALLEST_TIMED_DISTANCE} from "../js/variables/constants";
 import {
 	STATISTICS_CHARTTYPES_BARS,
@@ -19,12 +19,14 @@ import {Studies} from "../js/main_classes/studies";
 import {colors} from "../js/dynamic_imports/statistic_tools";
 
 export function ViewModel(page) {
+	let self = this;
 	this.html = html;
 	page.title(Lang.get("server_statistics"));
 	if(Admin.enable_adminFeatures)
 		this.promiseBundle = [
 			import("../js/dynamic_imports/chart_box.js"),
 			Requests.load(FILE_SERVER_STATISTICS),
+			Requests.load(FILE_ADMIN+"?type=get_last_activities"),
 			Studies.init(page),
 			Admin.init(page)
 		];
@@ -38,8 +40,17 @@ export function ViewModel(page) {
 	this.total_questionnaires = ko.observable(0);
 	this.total_users = ko.observable(0);
 	this.created = ko.observable(0);
+	this.lastActivities = ko.observableArray();
 	
-	this.postInit = function(index, {ChartBox}, serverStatistics) {
+	this.postInit = function(index, {ChartBox}, serverStatistics, lastActivities) {
+		if(lastActivities) {
+			for(let studyId in lastActivities) {
+				if(!lastActivities.hasOwnProperty(studyId))
+					continue;
+				
+				self.lastActivities.push({id: studyId, timestamp: lastActivities[studyId]});
+			}
+		}
 		let is_loggedIn = Admin.is_loggedIn();
 		this.total_studies(serverStatistics.total.studies);
 		this.total_questionnaires(serverStatistics.total.questionnaire);

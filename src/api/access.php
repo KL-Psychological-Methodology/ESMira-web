@@ -1,16 +1,28 @@
 <?php
 
-require_once '../backend/autoload.php';
+namespace api;
 
-use backend\Base;
-use backend\Output;
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+use backend\Configs;
+use backend\CreateDataSet;
+use backend\JsonOutput;
 
-if(!isset($_POST['study_id']) || !isset($_POST['page_name']))
-	Output::error('Missing values');
-$study_id = (int) $_POST['study_id'];
-$page_name = $_POST['page_name'];
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
 
-Output::successObj((bool) Base::save_webAccess($study_id, $page_name));
+if(!isset($_POST['study_id']) || !isset($_POST['page_name'])) {
+	echo JsonOutput::error('Missing data');
+	return;
+}
+$studyId = (int) $_POST['study_id'];
+$pageName = $_POST['page_name'];
+
+if(Configs::getDataStore()->getStudyStore()->isLocked($studyId)) {
+	echo JsonOutput::error("This study is locked");
+	return;
+}
+
+echo JsonOutput::successObj(CreateDataSet::saveWebAccess($studyId, $pageName));

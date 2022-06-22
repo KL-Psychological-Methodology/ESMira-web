@@ -3,14 +3,17 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once '../backend/autoload.php';
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-use backend\Output;
+use backend\CriticalError;
+use backend\JsonOutput;
+use backend\PageFlowException;
 
 
-
-if(!isset($_GET['type']))
-	Output::error('No data');
+if(!isset($_GET['type'])) {
+	echo JsonOutput::error('Missing data');
+	return;
+}
 
 $classIndex = [
 	//no permission:
@@ -22,7 +25,7 @@ $classIndex = [
 	'get_permissions' => 'backend\admin\features\noPermission\GetPermissions',
 	
 	//logged in:
-	'get_new_id' => 'backend\admin\features\loggedIn\GetNewId',
+	'get_new_id' => 'backend\admin\features\writePermission\GetNewId',
 	'change_password' => 'backend\admin\features\loggedIn\ChangePassword',
 	'change_username' => 'backend\admin\features\loggedIn\ChangeUsername',
 	'get_tokenList' => 'backend\admin\features\loggedIn\GetTokenList',
@@ -45,7 +48,7 @@ $classIndex = [
 	
 	//write
 	'is_frozen' => 'backend\admin\features\writePermission\IsFrozen',
-	'freeze_study' => 'backend\admin\features\writePermission\IsFrozen',
+	'freeze_study' => 'backend\admin\features\writePermission\FreezeStudy',
 	'empty_data' => 'backend\admin\features\writePermission\EmptyData',
 	'check_changed' => 'backend\admin\features\writePermission\CheckChanged',
 	'load_langs' => 'backend\admin\features\writePermission\LoadLangs',
@@ -54,6 +57,7 @@ $classIndex = [
 	'mark_study_as_updated' => 'backend\admin\features\writePermission\MarkStudyAsUpdated',
 	
 	//admin
+	'get_last_activities' => 'backend\admin\features\adminPermission\GetLastActivities',
 	'get_serverConfigs' => 'backend\admin\features\adminPermission\GetServerConfig',
 	'save_serverConfigs' => 'backend\admin\features\adminPermission\SaveServerConfigs',
 	'list_errors' => 'backend\admin\features\adminPermission\ListErrors',
@@ -70,12 +74,23 @@ $classIndex = [
 	'check_update' => 'backend\admin\features\adminPermission\CheckUpdate',
 	'download_update' => 'backend\admin\features\adminPermission\DownloadUpdate',
 	'do_update' => 'backend\admin\features\adminPermission\DoUpdate',
+	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
 ];
 
 $type = $_GET['type'];
 
-if(!isset($classIndex[$type]))
-	Output::error("Unexpected request");
-$className = $classIndex[$type];
-$c = new $className;
-$c->exec();
+if(!isset($classIndex[$type])) {
+	echo JsonOutput::error('Unexpected request');
+	return;
+}
+try {
+	$className = $classIndex[$type];
+	$c = new $className;
+	$c->execAndOutput();
+}
+catch(CriticalError $e) {
+	echo JsonOutput::error($e->getMessage());
+}
+catch(PageFlowException $e) {
+	echo JsonOutput::error($e->getMessage());
+}

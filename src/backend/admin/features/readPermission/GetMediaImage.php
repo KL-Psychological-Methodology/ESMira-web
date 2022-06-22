@@ -3,25 +3,22 @@
 namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
-use backend\Files;
+use backend\Configs;
+use backend\CriticalError;
+use backend\PageFlowException;
 
 class GetMediaImage extends HasReadPermission {
-	
-	function exec() {
+	public function execAndOutput() {
 		if(!isset($_GET['userId']) || !isset($_GET['entryId']) || !isset($_GET['key']))
-			return;
-		$user_id = $_GET['userId'];
+			throw new PageFlowException('Missing data');
+		$userId = $_GET['userId'];
 		$entryId = (int) $_GET['entryId'];
 		$key = $_GET['key'];
 		
-		$images_path = Files::get_file_image_fromData($this->study_id, $user_id, $entryId, $key);
-		
-		if(!file_exists($images_path))
-			return;
-		
-		header('Content-Type: image/png');
-		header('Content-Length: '.filesize($images_path));
-		
-		readfile($images_path);
+		Configs::getDataStore()->getResponsesStore()->outputImageFromResponses($this->studyId, $userId, $entryId, $key);
+	}
+	
+	function exec(): array {
+		throw new CriticalError('Internal error. GetMediaImage can only be used with execAndOutput()');
 	}
 }

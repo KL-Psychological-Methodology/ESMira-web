@@ -1,10 +1,13 @@
 <?php
 require_once '../../backend/autoload.php';
 
-use backend\Output;
-$output = [
-	'htaccess' => true,
-	'mod_rewrite' => true
-];
+use backend\Configs;
+use backend\JsonOutput;
 
-Output::successObj($output);
+if(Configs::getDataStore()->isInit())
+	echo JsonOutput::error('Disabled');
+else
+	echo JsonOutput::successObj( [
+		'htaccess' => true,
+		'mod_rewrite' => true
+	]);

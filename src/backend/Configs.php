@@ -1,44 +1,60 @@
 <?php
+declare(strict_types=1);
 
 namespace backend;
 
-use backend\Base;
 
 class Configs {
-	private static $configs = null;
+	static $configs = null;
+	private static $dataStore = null;
 	
-	static function get($key) {
+	static function getDataStore(): DataStoreInterface {
+		if(!self::$dataStore) {
+			$className = self::get('dataStore');
+			self::$dataStore = new $className();
+		}
+		
+		return self::$dataStore;
+	}
+	
+	static function get(string $key) {
 		$current = self::getAll();
 		if(isset($current[$key]))
 			return $current[$key];
 		else {
 			$default = self::getDefaultAll();
-			return isset($default[$key]) ? $default[$key] : null;
+			return $default[$key] ?? null;
 		}
 	}
-	static function getAll() {
+	static function getAll(): array {
 		if(self::$configs)
 			return self::$configs;
-		else if(file_exists(Files::FILE_CONFIG))
-			return self::$configs = require Files::FILE_CONFIG;
-		else
-			return self::getDefaultAll();
+		
+		return self::$configs = file_exists(Paths::FILE_CONFIG) ? require Paths::FILE_CONFIG : self::getDefaultAll();
 	}
-	static function getDefaultAll() {
-		if(file_exists(Files::FILE_DEFAULT_CONFIG))
-			return require Files::FILE_DEFAULT_CONFIG;
-		else
-			return [];
+	static function getDefaultAll(): array {
+		return file_exists(Paths::FILE_DEFAULT_CONFIG) ? require Paths::FILE_DEFAULT_CONFIG : [];
 	}
 	
-	static function get_serverName() {
-		$lang = Base::get_lang('_');
-		$serverName_array = self::get('serverName');
-		return isset($serverName_array[$lang]) ? $serverName_array[$lang] : (isset($serverName_array['_']) ? $serverName_array['_'] : '');
+	static function getServerName(): string {
+		$lang = Main::getLang();
+		$serverNameArray = self::get('serverName');
+		return $serverNameArray[$lang] ?? ($serverNameArray['_'] ?? '');
 	}
 	
-	static function reload() {
+	static function resetConfig() {
 		//we dont need to load data now. It will automatically be loaded as soon as we ask for some data
 		self::$configs = null;
+	}
+	static function resetAll() {
+		self::resetConfig();
+		self::$dataStore = null;
+	}
+	
+	static function injectConfig($path) { //for testing
+		self::$configs = require DIR_BASE ."test/testConfigs/$path";
+	}
+	static function injectDataStore(DataStoreInterface $dataStore) { //for testing
+		self::$dataStore = $dataStore;
 	}
 }

@@ -4,16 +4,21 @@ namespace backend\admin\features\loggedIn;
 
 use backend\admin\features\loggedIn\GetTokenList;
 use backend\admin\IsLoggedIn;
+use backend\Configs;
+use backend\PageFlowException;
 use backend\Permission;
 
 class RemoveToken extends IsLoggedIn {
 	
-	function exec() {
-		$user = Permission::get_user();
-		$token_id = $_POST['token_id'];
-		Permission::remove_token($user, $token_id);
+	function exec(): array {
+		if(!isset($_POST['token_id']))
+			throw new PageFlowException('Missing data');
+		
+		$user = Permission::getUser();
+		$tokenId = $_POST['token_id'];
+		Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($user, $tokenId);
 		
 		$c = new GetTokenList();
-		$c->exec();
+		return $c->exec();
 	}
 }

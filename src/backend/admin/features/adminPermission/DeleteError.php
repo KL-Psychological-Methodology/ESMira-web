@@ -3,24 +3,19 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
-use backend\Files;
-use backend\Output;
+use backend\Configs;
+use backend\PageFlowException;
 
 class DeleteError extends HasAdminPermission {
 	
-	function exec() {
-		if(!isset($_POST['timestamp']) || !isset($_POST['seen']) || !isset($_POST['note']))
-			Output::error('Faulty input');
+	function exec(): array {
+		if(!isset($_POST['timestamp']))
+			throw new PageFlowException('Missing data');
 		
-		$timestamp = $_POST['timestamp'];
-		$seen = $_POST['seen'];
-		$note = $_POST['note'];
+		$timestamp = (int) $_POST['timestamp'];
 		
-		$filename = Files::get_file_errorReport($timestamp, $note, $seen);
-		
-		if(file_exists($filename) && unlink($filename))
-			Output::successObj();
-		else
-			Output::error("Could not remove $filename");
+		$errorStore = Configs::getDataStore()->getErrorReportStore();
+		$errorStore->removeErrorReport($timestamp);
+		return [];
 	}
 }

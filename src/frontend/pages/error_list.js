@@ -71,7 +71,7 @@ export function ViewModel(page) {
 			FILE_ADMIN+"?type=change_error",
 			false,
 			"post",
-			"timestamp="+error.timestamp+"&note="+error.note+"&seen=0&new_seen=1"
+			"timestamp="+error.timestamp+"&note="+error.note+"&seen=1"
 		).then(load);
 	};
 	this.error_add_note = function({timestamp, note, seen}) {
@@ -83,7 +83,7 @@ export function ViewModel(page) {
 			FILE_ADMIN+"?type=change_error",
 			false,
 			"post",
-			"timestamp="+timestamp+"&note="+note+"&seen="+(!!seen ? 1 : 0)+"&new_note="+new_note
+			"timestamp="+timestamp+"&note="+new_note+"&seen="+(!!seen ? 1 : 0)
 		).then(load);
 	};
 }

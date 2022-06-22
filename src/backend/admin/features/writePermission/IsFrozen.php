@@ -3,12 +3,11 @@
 namespace backend\admin\features\writePermission;
 
 use backend\admin\HasWritePermission;
-use backend\Base;
-use backend\Output;
+use backend\Configs;
 
 class IsFrozen extends HasWritePermission {
 	
-	function exec() {
-		Output::successObj(Base::study_is_locked($this->study_id));
+	function exec(): array {
+		return [Configs::getDataStore()->getStudyStore()->isLocked($this->studyId)];
 	}
 }

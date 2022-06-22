@@ -1,57 +1,52 @@
 <?php
 require_once 'backend/autoload.php';
-//require_once 'backend/config/configs.php';
 
 use backend\Configs;
-use backend\Files;
-use backend\Base;
+use backend\Main;
 
-$lang = Base::get_lang('en');
+$lang = Main::getLang('en');
 
 //
 //Choose starting page:
 //
-if(Base::is_init()) {
+if(Configs::getDataStore()->isInit()) {
 	if(isset($_GET['qid'])) {
-		$questionnaire_index = (int)$_GET['qid'];
-		$js_key = "attend,qId:$questionnaire_index";
+		$questionnaireId = (int)$_GET['qid'];
+		$jsKey = "attend,qId:$questionnaireId";
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 	}
 	else if(isset($_GET['id'])) {
-		$study_id = (int)$_GET['id'];
-		$js_key = isset($_GET['app_install']) ? "appInstall,id:$study_id" : "sOverview,id:$study_id";
+		$studyId = (int)$_GET['id'];
+		$jsKey = isset($_GET['app_install']) ? "appInstall,id:$studyId" : "sOverview,id:$studyId";
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 	}
 	else if(isset($_GET['key']))
-		$js_key = isset($_GET['app_install']) ? 'appInstall' : 'sOverview';
+		$jsKey = isset($_GET['app_install']) ? 'appInstall' : 'sOverview';
 	else if(isset($_GET['impressum']))
-		$js_key = 'legal,impressum';
+		$jsKey = 'legal,impressum';
 	else if(isset($_GET['privacyPolicy']))
-		$js_key = 'legal,privacyPolicy';
+		$jsKey = 'legal,privacyPolicy';
 	else if(isset($_GET['about']))
-		$js_key = 'about';
+		$jsKey = 'about';
 	else if(isset($_GET['studies']))
-		$js_key = 'studies,attend';
+		$jsKey = 'studies,attend';
 	else if(isset($_GET['admin']))
-		$js_key = 'admin';
+		$jsKey = 'admin';
 	else
-		$js_key = "home";
+		$jsKey = "home";
 }
 else {
 	$servername = '';
-	$js_key = 'init_esmira';
+	$jsKey = 'init_esmira';
 }
 
-$access_key = Base::get_accessKey();
-$serverVersion = Base::SERVER_VERSION;
-$servername = Configs::get_serverName();
+$accessKey = Main::getAccessKey();
 
-$nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
-
+$noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 ?>
 
 
@@ -72,7 +67,9 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = 'grayscaleDark';
 		else
 			$type = '';
-		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("frontend/locales/$lang.json"); ?>
+		$serverVersion = Main::SERVER_VERSION;
+		$servername = Configs::getServerName();
+		echo "let a='$jsKey',b='$servername',c=$serverVersion,d='$accessKey',e='$lang',f='$type',g=".file_get_contents("locales/$lang.json"); ?>
 	</script>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -82,7 +79,7 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 <body onload="ESMira.init(a, b, c, d, e, f, g)">
 
 <div id="header">
-	<a href="#<?php echo $js_key; ?>">
+	<a href="#<?php echo $jsKey; ?>">
 		<img src="frontend/imgs/web_header.png" alt="ESMira"/>
 	</a>
 	<div class="title" id="header_serverName"></div>
@@ -96,9 +93,9 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			<noscript>
 				<div class="center highlight">
 					No JavaScript detected. if you are not redirected automatically, click
-					<a href="<?php echo $nojs_url; ?>">here</a>
+					<a href="<?php echo $noJsUrl; ?>">here</a>
 				</div>
-				<meta http-equiv="refresh" content="0; url=<?php echo $nojs_url; ?>"/>
+				<meta http-equiv="refresh" content="0; url=<?php echo $noJsUrl; ?>"/>
 			</noscript>
 		</div>
 	</div>

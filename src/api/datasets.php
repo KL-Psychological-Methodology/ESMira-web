@@ -2,29 +2,33 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once '../backend/autoload.php';
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-use backend\Base;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\CriticalError;
+use backend\JsonOutput;
 use backend\CreateDataSet;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
 
-$rest_json = file_get_contents('php://input');
-if(!($json = json_decode($rest_json)))
-	Output::error('Unexpected data format');
-
-if($_SERVER['REQUEST_METHOD'] !== 'POST')
-	Output::error('No Data');
+if(!($json = json_decode(Main::getRawPostInput()))) {
+	echo JsonOutput::error('Unexpected data format');
+	return;
+}
 
 try {
 	$dataSet = new CreateDataSet($json);
-	Output::successObj([
+	$dataSet->exec();
+	echo JsonOutput::successObj([
 		'states' => $dataSet->output,
-		'tokens' => $dataSet->userTokens->get_newStudyTokens()
+		'tokens' => $dataSet->userDataStore->getNewStudyTokens() ?: new stdClass() //stdClass makes sure it stays an object even when its empty
 	]);
 }
-catch(Exception $e) {
-	Output::error($e->getMessage());
+catch(CriticalError $e) {
+	echo JsonOutput::error($e->getMessage());
+	return;
 }

@@ -1,14 +1,13 @@
 <?php
-require_once '../backend/autoload.php';
 
-use backend\Files;
-use backend\Base;
-use backend\Output;
+use backend\Configs;
+use backend\JsonOutput;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-if(file_exists(Files::get_file_serverStatistics()))
-	Output::successString(file_get_contents(Files::get_file_serverStatistics()));
-else
-	Output::successObj(Base::get_fresh_serverStatistics());
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
+
+echo JsonOutput::successString(Configs::getDataStore()->getServerStatisticsStore()->getStatisticsAsJsonString());

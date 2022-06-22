@@ -3,24 +3,16 @@
 namespace backend\admin\features\writePermission;
 
 use backend\admin\HasWritePermission;
-use backend\Files;
-use backend\Output;
+use backend\Configs;
+use backend\CriticalError;
+use backend\JsonOutput;
 
 class LoadLangs extends HasWritePermission {
+	public function execAndOutput() {
+		echo JsonOutput::successString(Configs::getDataStore()->getStudyStore()->getAllLangConfigsAsJson($this->studyId));
+	}
 	
-	function exec() {
-		$folder_langs = Files::get_folder_langs($this->study_id);
-		$langBox = [];
-		if(file_exists($folder_langs)) {
-			$h_folder = opendir($folder_langs);
-			while($file = readdir($h_folder)) {
-				if($file[0] != '.') {
-					$s = file_get_contents($folder_langs .$file);
-					$langBox[] = '"' .explode('.', $file)[0] .'":' .$s;
-				}
-			}
-			closedir($h_folder);
-		}
-		Output::successString('{' .implode(',', $langBox) .'}');
+	function exec(): array {
+		throw new CriticalError('Internal error. LoadLangs can only be used with execAndOutput()');
 	}
 }

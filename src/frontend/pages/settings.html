@@ -38,7 +38,7 @@
 		<div class="spacing_top" data-bind="html: $root.changelog"></div>
 	</div>
 	<div class="center highlight" data-bind="if: !$root.hasUpdate()">
-		<div class="center highlight" data-bind="text: Lang.get('info_ESMira_is_up_to_date')"></div>
+		<div class="center highlight" data-bind="text: $root.noConnectionToUpdate() ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')"></div>
 	</div>
 </div>
 

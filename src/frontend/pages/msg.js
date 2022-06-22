@@ -52,6 +52,8 @@ export function ViewModel(page) {
 	
 	
 	let load_recipientMessages = function(recipient) {
+		if(!recipient)
+			return;
 		page.loader.loadRequest(FILE_ADMIN+"?type=list_messages&study_id="+Site.valueIndex.id+"&user="+recipient).then(function({archive, pending, unread}) {
 			self.currentArchive(archive);
 			self.currentPending(pending);

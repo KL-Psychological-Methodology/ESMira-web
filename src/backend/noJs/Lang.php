@@ -2,27 +2,25 @@
 
 namespace backend\noJs;
 
-use backend\Base;
+use backend\Main;
 
 class Lang {
 	private static $langCode;
 	private static $cache;
 	private static $initialized = false;
 	static function init() {
-		self::$langCode = Base::get_lang('en');
-		self::$cache = json_decode(file_get_contents(DIR_BASE .'frontend/locales/'.self::$langCode.'.json'));
+		self::$langCode = Main::getLang('en');
+		self::$cache = json_decode(file_get_contents(DIR_BASE .'locales/'.self::$langCode.'.json'));
 		self::$initialized = true;
 	}
 	
-	static function get($key) {
+	static function get($key, ... $arguments): string {
 		if(!self::$initialized)
 			self::init();
 		
-		return isset(self::$cache->{$key}) ? self::$cache->{$key} : $key;
-	}
-	static function getCode() {
-		if(!self::$initialized)
-			self::init();
-		return self::$langCode;
+		$value = self::$cache->{$key} ?? $key;
+		if($arguments)
+			$value = call_user_func_array('sprintf', array_merge([$value], $arguments));
+		return $value;
 	}
 }

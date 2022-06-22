@@ -2,15 +2,16 @@
 
 namespace backend\noJs;
 
-use Exception;
-use backend\noJs\ForwardingException;
+use backend\CriticalError;
+use backend\PageFlowException;
 
 interface Page {
-	public function getTitle();
+	public function getTitle(): string;
 	
 	/**
-	 * @throws Exception
 	 * @throws ForwardingException
+	 * @throws CriticalError
+	 * @throws PageFlowException
 	 */
-	public function getContent();
+	public function getContent(): string;
 }

@@ -1,11 +1,10 @@
 <?php
 
 require_once 'backend/autoload.php';
-//require_once 'backend/config/configs.php';
 
-use backend\Base;
 use backend\Configs;
-use backend\Files;
+use backend\CriticalError;
+use backend\Main;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
@@ -16,6 +15,7 @@ use backend\noJs\pages\Home;
 use backend\noJs\pages\Legal;
 use backend\noJs\pages\QuestionnaireAttend;
 use backend\noJs\pages\StudiesList;
+use backend\PageFlowException;
 
 ob_start();
 
@@ -23,55 +23,72 @@ ob_start();
 //
 //Choose starting page:
 //
-if(!Base::is_init())
-	exit('Enable JavaScript to initialize');
 
 if(!isset($_GET['key']))
 	$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 
 
-function drawPage_safe($page = null) {
-	try {
-		if($page === null) {
-			if(isset($_GET['app_install']))
-				$page = new AppInstall();
-			else if(isset($_GET['studies']))
-				$page = new StudiesList();
-			else if(isset($_GET['about']))
-				$page = new About();
-			else if(isset($_GET['legal']))
-				$page = new Legal();
-			else if(isset($_GET['change_lang']))
-				$page = new ChangeLang();
-			else if(isset($_GET['id']) || isset($_GET['qid']) || (isset($_GET['key']) && $_GET['key']))
-				//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
-				$page = new QuestionnaireAttend();
-			else
-				$page = new Home();
-		}
-		drawPage($page);
-	}
-	catch(ForwardingException $exception) {
-		drawPage_safe($exception->getPage());
-	}
-	catch(Exception $exception) {
-		echo '<div id="errorEl">' .$exception->getMessage() .'</div>';
-	}
-}
-
 /**
- * @throws Exception
  * @throws ForwardingException
+ * @throws PageFlowException
+ * @throws CriticalError
  */
-function drawPage(Page $page) {
+function getPageObj(): Page {
+	if(isset($_GET['app_install']))
+		return new AppInstall();
+	else if(isset($_GET['studies']))
+		return new StudiesList();
+	else if(isset($_GET['about']))
+		return new About();
+	else if(isset($_GET['legal']))
+		return new Legal();
+	else if(isset($_GET['change_lang']))
+		return new ChangeLang();
+	else if(isset($_GET['id']) || isset($_GET['qid']) || (isset($_GET['key']) && $_GET['key']))
+		//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
+		return new QuestionnaireAttend();
+	else
+		return new Home();
+}
+/**
+ * @throws ForwardingException
+ * @throws PageFlowException
+ * @throws CriticalError
+ */
+function pageToOutput(Page $page) {
 	echo '<div class="page_top page_title">'
 		.$page->getTitle()
 		.'</div><div class="page_content">' .$page->getContent() .'</div>';
 }
+
+function drawPage(Page $page = null) {
+	if(!Configs::getDataStore()->isInit())
+		echo "<div id=\"errorEl\">Enable JavaScript to initialize</div>";
+	
+	try {
+		if($page == null)
+			$page = getPageObj();
+		
+		pageToOutput($page);
+	}
+	catch(ForwardingException $exception) {
+		drawPage($exception->getPage());
+	}
+	catch(CriticalError $exception) {
+		echo "<div id=\"errorEl\">$exception->getMessage()</div>";
+	}
+	catch(PageFlowException $exception) {
+		echo "<div id=\"errorEl\">$exception->getMessage()</div>";
+	}
+	catch(Exception $exception) {
+		echo "<div id=\"errorEl\">Internal server error!</div>";
+	}
+}
+
 ?>
 
 <!DOCTYPE html>
-<html lang="<?php echo Lang::getCode(); ?>">
+<html lang="<?php echo Main::getLang('en'); ?>">
 <head>
 	<meta charset="UTF-8">
 	<title>ESMira</title>
@@ -99,7 +116,7 @@ function drawPage(Page $page) {
 		<a href="?">
 			<img src="frontend/imgs/web_header.png" alt="ESMira"/>
 		</a>
-		<div class="title"><?php echo Configs::get_serverName(); ?></div>
+		<div class="title"><?php echo Configs::getServerName(); ?></div>
 	</div>
 	<div id="no_js_info">
 		<img class="middle" src="frontend/imgs/warn.svg" alt=""/>
@@ -110,7 +127,7 @@ function drawPage(Page $page) {
 	
 	<div id="el_pages">
 		<div class="page has_title" style="opacity: 1">
-			<?php drawPage_safe(); ?>
+			<?php drawPage(); ?>
 		</div></div><!--Note: We cant have a whitespace here-->
 	
 	
@@ -118,7 +135,7 @@ function drawPage(Page $page) {
 	<div id="lang_chooser">
 		<a href="?change_lang">
 		<?php
-		switch(Lang::getCode()) {
+		switch(Main::getLang('en')) {
 			case 'en':
 				echo '&#127468;&#127463; English';
 				break;

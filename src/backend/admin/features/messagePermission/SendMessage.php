@@ -3,85 +3,63 @@
 namespace backend\admin\features\messagePermission;
 
 use backend\admin\HasMessagePermission;
-use backend\Base;
-use backend\Files;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\CriticalError;
+use backend\PageFlowException;
 use backend\Permission;
 
 class SendMessage extends HasMessagePermission {
-	private function send_message($study_id, $from, $user, $content) {
-		if(!strlen($user))
-			return false;
-		$msg = [
-			'from' => $from,
-			'content' => $content,
-			'sent' => Base::get_milliseconds(),
-			'pending' => true,
-			'delivered' => 0
-		];
+	/**
+	 * @throws CriticalError
+	 */
+	private function sendToAll(string $from, string $content, string $appType = null, string $appVersion = null) {
+		$dataStore = Configs::getDataStore();
+		$messageStore = $dataStore->getMessagesStore();
+		$checkUserdata = $appVersion || $appType;
 		
-		$file = Files::get_file_message_pending($study_id, $user);
-		
-		if(file_exists($file)) {
-			$messages = unserialize(file_get_contents($file));
-			array_push($messages, $msg);
+		$participants = Configs::getDataStore()->getStudyStore()->getStudyParticipants($this->studyId);
+		foreach($participants as $userId) {
+			if($checkUserdata) {
+				$userData = $dataStore->getUserDataStore($userId)->getUserData($this->studyId);
+				
+				if(($appVersion && $userData->appVersion != $appVersion) || ($appType &&$userData->appType != $appType))
+					continue;
+			}
+			$messageStore->sendMessage($this->studyId, $userId, $from, $content);
 		}
-		else
-			$messages = [$msg];
-		
-		return $this->write_file($file, serialize($messages));
 	}
 	
-	function exec() {
-		$json = json_decode(file_get_contents('php://input'));
+	function exec(): array {
+		$json = json_decode(Main::getRawPostInput());
 		
 		if(!$json)
-			Output::error('Input is faulty');
+			throw new PageFlowException('Faulty data');
+		else if(!isset($json->content))
+			throw new PageFlowException('Missing data');
 		
-		$from = Permission::get_user();
+		$from = Permission::getUser();
 		$content = $json->content;
 		$toAll = $json->toAll;
 		
-		
 		if(strlen($content) < 2)
-			Output::error("Message is too short");
+			throw new PageFlowException("Message is too short");
 		
 		if($toAll) {
-			$appVersion = $json->appVersion;
-			$appType = isset($json->appType) ? $json->appType : false;
-			$checkUserdata = $appVersion || $appType;
-			
-			
-			$usernames_folder = Files::get_folder_userData($this->study_id);
-			$count = 0;
-			if(file_exists($usernames_folder)) {
-				$h_folder = opendir($usernames_folder);
-				while($file = readdir($h_folder)) {
-					if($file[0] != '.') {
-						$user = Files::get_urlFriendly($file);
-						if($checkUserdata) {
-							$userdata = unserialize(file_get_contents($usernames_folder.$file));
-							if(($appVersion && $userdata['appVersion'] != $appVersion) || ($appType &&$userdata['appType'] != $appType))
-								continue;
-						}
-						++$count;
-						if(!$this->send_message($this->study_id, $from, $user, $content))
-							Output::error("Could not save message for $user. $count messages have already been sent. Aborting now...");
-					}
-				}
-				closedir($h_folder);
-			}
+			$appVersion = $json->appVersion ?? null;
+			$appType = $json->appType ?? null;
+			$this->sendToAll($from, $content, $appType, $appVersion);
+			return [];
 		}
 		else {
-			$user = $json->user;
-			if(!Base::check_input($user))
-				Output::error('Recipient is faulty');
+			$userId = $json->user;
+			if(!Main::strictCheckInput($userId))
+				throw new PageFlowException('Recipient is faulty');
 			
-			if(!$this->send_message($this->study_id, $from, $user, $content))
-				Output::error("Could not save message");
+			Configs::getDataStore()->getMessagesStore()->sendMessage($this->studyId, $userId, $from, $content);
+			
+			$c = new MessageSetRead();
+			return $c->exec();
 		}
-		
-		$c = new MessageSetRead();
-		$c->exec();
 	}
 }

@@ -311,22 +311,26 @@ export const AdminTools = {
 		return this.is_rootAdmin() || this.msg.indexOf(studyId) !== -1
 	},
 	
-	set_loginStatus: function({username, isLoggedIn, loginTime, lastActivities, permissions, new_messages, needsBackup_list, is_admin, has_errors}) {
+	set_loginStatus: function({username, isLoggedIn, loginTime, permissions, new_messages, is_admin, has_errors}) {
 		if(!isLoggedIn) {
 			this.is_rootAdmin(false);
 			Admin.is_loggedIn(false);
 		}
 		else {
 			this.has_newErrors(has_errors);
-			Studies.tools.newMessages(OwnMapping.fromJS(new_messages || {}));
+			if(new_messages) {
+				let a = {};
+				for(let i = new_messages.length; i >= 0; --i) {
+					let studyId = new_messages[i];
+					a[studyId] = ko.observable(true);
+				}
+				a.count = ko.observable(new_messages.length);
+				Studies.tools.newMessages(a);
+			}
+			else
+				Studies.tools.newMessages({count: ko.observable(0)});
 			
 			Admin.is_loggedIn(true);
-			Studies.tools.needsBackup(needsBackup_list || []);
-			
-			lastActivities = lastActivities.sort(function(a, b) {
-				return b[1] - a[1];
-			});
-			Studies.tools.lastActivities(lastActivities);
 			
 			this.loginTime = loginTime;
 			this.username(username);

@@ -4,27 +4,26 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
-use backend\Files;
-use backend\Output;
 
 class GetServerConfig extends HasAdminPermission {
 	
-	function exec() {
+	function exec(): array {
 		$serverSettings = Configs::getAll();
 		$serverSettings['impressum'] = [];
 		$serverSettings['privacyPolicy'] = [];
 		
 		$langCodes = Configs::get('langCodes');
-		array_push($langCodes, '_');
+		$langCodes[] = '_';
+		$serverStore = Configs::getDataStore()->getServerStore();
 		foreach($langCodes as $code) {
-			$file_impressum = Files::get_file_langImpressum($code);
-			if(file_exists($file_impressum))
-				$serverSettings['impressum'][$code] = file_get_contents($file_impressum);
+			$impressum = $serverStore->getImpressum($code);
+			if(!empty($impressum))
+				$serverSettings['impressum'][$code] = $impressum;
 			
-			$file_privacyPolicy = Files::get_file_langPrivacyPolicy($code);
-			if(file_exists($file_privacyPolicy))
-				$serverSettings['privacyPolicy'][$code] = file_get_contents($file_privacyPolicy);
+			$privacyPolicy = $serverStore->getPrivacyPolicy($code);
+			if(!empty($impressum))
+				$serverSettings['privacyPolicy'][$code] = $privacyPolicy;
 		}
-		Output::successObj($serverSettings);
+		return $serverSettings;
 	}
 }

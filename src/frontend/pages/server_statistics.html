@@ -3,12 +3,12 @@
 	<title-row params="title: Lang.get('last_activities')"></title-row>
 	<dash-row>
 		<div class="stretched scrollBox">
-			<table style="width: 100%" data-bind="foreach: {data: Studies.tools.lastActivities, as: 'activity'}">
-				<tr data-bind="with: Studies.list()[activity[0]]">
+			<table style="width: 100%" data-bind="foreach: {data: $root.lastActivities, as: 'activity'}">
+				<tr data-bind="with: Studies.list()[activity.id]">
 					<td data-bind="style: {opacity: published() ? 1 : 0.5}">
-						<a data-bind="navi: 'dataList,id:'+activity[0], text: title()"></a>
+						<a data-bind="navi: 'dataList,id:'+activity.id, text: title()"></a>
 					</td>
-					<td data-bind="text: new Date(activity[1]*1000).toLocaleString(), attr: {class: Date.now()/1000 - activity[1] > 60*60*24*14 ? '' : 'highlight'}"></td>
+					<td data-bind="text: new Date(activity.timestamp*1000).toLocaleString(), attr: {class: Date.now()/1000 - activity.timestamp > 60*60*24*14 ? '' : 'highlight'}"></td>
 				</tr>
 			</table>
 		</div>

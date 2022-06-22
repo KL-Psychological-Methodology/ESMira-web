@@ -21,8 +21,6 @@ function clone(obj) {
 export const Studies_tools = {
 	changed_state: {},
 	newMessages: ko.observable(),
-	needsBackup: ko.observableArray([]),
-	lastActivities: ko.observableArray([]),
 	lastChanged: {},
 	currentLang: ko.observable("_"),
 	
@@ -64,14 +62,13 @@ export const Studies_tools = {
 	
 	add_study: function(page, study) {
 		let self = this;
-		let study_id = study ? study.id() : 0;
 		
 		page.loader.showLoader(Lang.get("state_loading"),
 			Promise.all([
-				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id="+study_id),
+				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id=-1"),
 				Studies.init(page)
 			])
-			.then(function([id]) {
+			.then(function([[id]]) {
 				let new_study;
 				if(study)
 					new_study = OwnMapping.toJS(study);
@@ -173,11 +170,7 @@ export const Studies_tools = {
 		if(!confirm(Lang.get("confirm_backup", study.title())))
 			return;
 		
-		let needsBackup = this.needsBackup;
 		return page.loader.loadRequest(FILE_ADMIN+"?type=backup_study", false, "post", "study_id="+studyId).then(function() {
-			let index = needsBackup.indexOf(studyId);
-			if(index > -1)
-				needsBackup.splice(index, 1);
 			page.loader.info(Lang.get("info_successful"));
 		});
 	},

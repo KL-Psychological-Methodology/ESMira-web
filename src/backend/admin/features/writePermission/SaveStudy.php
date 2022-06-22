@@ -1,296 +1,506 @@
 <?php
+declare(strict_types=1);
 
 namespace backend\admin\features\writePermission;
 
 use backend\admin\HasWritePermission;
-use backend\Base;
+use backend\Main;
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\Files;
-use backend\Output;
+use backend\CriticalError;
+use backend\dataClasses\StatisticsJsonEntry;
+use backend\dataClasses\StudyStatisticsMetadataEntry;
+use backend\dataClasses\StudyStatisticsEntry;
+use backend\PageFlowException;
 use backend\Permission;
+use backend\ResponsesIndex;
+use backend\subStores\StatisticsStoreWriter;
+use backend\subStores\StudyAccessIndexStore;
+use backend\subStores\StudyStore;
 use stdClass;
 
 
 const ONE_DAY = 86400; //in seconds: 60*60*24
 
 class SaveStudy extends HasWritePermission {
-	private function check_axis(&$axisData, &$index, &$observed_variables, $storageType, $timeInterval) {
-		if(!isset($axisData))
-			return;
-		
-		$key = isset($axisData->variableName) ? $axisData->variableName : '';
+	/**
+	 * @var stdClass
+	 */
+	protected $mainStudy;
+	/**
+	 * @var stdClass
+	 */
+	private $studyCollection;
+	/**
+	 * @var StudyAccessIndexStore
+	 */
+	private $studyAccessIndexStore;
+	/**
+	 * @var StudyStore
+	 */
+	private $studyStore;
+	/**
+	 * @var stdClass
+	 */
+	private $publicObservedVariables;
+	private $publicObservedIndex = [];
+	private $uniqueInputNames = [];
+	private $identicalValueInAllLanguagesIndex = [
+		'version' => true,
+		'subVersion' => true,
+		'internalId' => true
+	];
+	
+	
+	public static function getConditionString(string $key, int $storageType, int $timeInterval, array $conditions): string {
+		$a = [];
+		foreach($conditions as $c) {
+			$a[] = $c->key . ($c->operator ?? CreateDataSet::CONDITION_OPERATOR_EQUAL) . $c->value;
+		}
+		sort($a);
+		return $key .$storageType .$timeInterval .implode('', $a);
+	}
+	
+	private function extractObservedEntryFromAxis(stdClass $axisData, array &$index, stdClass $observedVariables, int $storageType, int $timeInterval) {
+		$key = $axisData->variableName ?? '';
 		if(!strlen($key))
 			return;
 		
-		$conditionString = $this->get_conditionString($key, $storageType, $timeInterval, $axisData->conditions);
-		if(isset($index[$conditionString])) {
+		$conditionString = self::getConditionString($key, $storageType, $timeInterval, $axisData->conditions ?? []);
+		if(isset($index[$conditionString]))
 			$axisData->observedVariableIndex = $index[$conditionString];
-		}
 		else {
-			if(!isset($observed_variables->{$key})) {
-				$observed_variables->{$key} = [];
-			}
-			$keyBox = &$observed_variables->{$key};
-			$conditionType = isset($axisData->conditionType) ? $axisData->conditionType : CreateDataSet::CONDITION_TYPE_ALL;
-			$obj = (object)['conditions' => $axisData->conditions, 'conditionType' => $conditionType, 'storageType' => $storageType, 'timeInterval' => $timeInterval];
+			if(!isset($observedVariables->{$key}))
+				$observedVariables->{$key} = [];
 			
-			array_push($keyBox, $obj);
+			$keyBox = &$observedVariables->{$key};
+			$keyBox[] = new StudyStatisticsEntry(
+				$axisData->conditions ?? [],
+				$axisData->conditionType ?? CreateDataSet::CONDITION_TYPE_ALL,
+				$storageType,
+				$timeInterval
+			);
+			
 			$index[$conditionString] = $axisData->observedVariableIndex = sizeof($keyBox)-1;
 		}
 	}
-	private function set_observedVariables_from_axis(&$studyCollection, $configName, &$public_observed_variables=null, &$public_index=null) {
-		$langConfigs = [];
-		$defaultConfig = $studyCollection->_->{$configName};
-		foreach($studyCollection as $code => &$study) {
-			if($code !== '_')
-				$langConfigs[$code] = &$study->{$configName};
+	
+	private function extractObservedEntriesFromChart(stdClass $chart, stdClass $currentObservedVariables, array &$currentIndex) {
+		$dataType = isset($chart->dataType) ? (int) $chart->dataType : CreateDataSet::STATISTICS_DATATYPES_DAILY;
+		
+		switch($dataType) {
+			case CreateDataSet::STATISTICS_DATATYPES_SUM:
+			case CreateDataSet::STATISTICS_DATATYPES_DAILY:
+				$timeInterval = ONE_DAY;
+				$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
+				break;
+			case CreateDataSet::STATISTICS_DATATYPES_FREQ_DISTR:
+				$timeInterval = 0;
+				$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR;
+				break;
+			case CreateDataSet::STATISTICS_DATATYPES_XY:
+			default:
+				$timeInterval = Configs::get('smallest_timed_distance');
+				$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
+				break;
 		}
 		
-		$observedVariables = new stdClass; //new stdClass translates into an empty object (instead of array) in JSON
-		$index = [];
-		
-		
-		foreach($defaultConfig->charts as $chart_i => &$defaultChart) {
-			$dataType = isset($defaultChart->dataType) ? number_format($defaultChart->dataType) : CreateDataSet::STATISTICS_DATATYPES_DAILY;
-			switch($dataType) {
-				case CreateDataSet::STATISTICS_DATATYPES_SUM:
-				case CreateDataSet::STATISTICS_DATATYPES_DAILY:
-					$timeInterval = ONE_DAY;
-					$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
-					break;
-				case CreateDataSet::STATISTICS_DATATYPES_FREQ_DISTR:
-					$timeInterval = 0;
-					$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR;
-					break;
-				case CreateDataSet::STATISTICS_DATATYPES_XY:
-				default:
-					$timeInterval = Configs::get('smallest_timed_distance');
-					$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
-					break;
+		//main variables:
+		foreach($chart->axisContainer ?? [] as $axisContainer) {
+			$this->extractObservedEntryFromAxis(
+				$axisContainer->yAxis ?? new stdClass(), $currentIndex, $currentObservedVariables, $storageType, $timeInterval
+			);
+			
+			if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY) {
+				$this->extractObservedEntryFromAxis(
+					$axisContainer->xAxis ?? new stdClass(), $currentIndex, $currentObservedVariables, $storageType, $timeInterval
+				);
 			}
-			
-			
-			foreach($defaultChart->axisContainer as $axis_i => &$defaultAxisContainer) {
-				$this->check_axis($defaultAxisContainer->yAxis, $index, $observedVariables, $storageType, $timeInterval);
-				
-				if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY)
-					$this->check_axis($defaultAxisContainer->xAxis, $index, $observedVariables, $storageType, $timeInterval);
-				else
-					$defaultAxisContainer->xAxis->observedVariableIndex = -1;
-				
-				foreach($langConfigs as &$config) {
-					$langAxis = &$config->charts[$chart_i]->axisContainer[$axis_i];
-					$langAxis->yAxis->observedVariableIndex = $defaultAxisContainer->yAxis->observedVariableIndex;
-					$langAxis->xAxis->observedVariableIndex = $defaultAxisContainer->xAxis->observedVariableIndex;
-				}
-				unset($config);
-			}
-			
-			if(isset($defaultChart->displayPublicVariable) && $defaultChart->displayPublicVariable && $public_observed_variables) {
-				foreach($defaultChart->publicVariables as $axis) {
-					$this->check_axis($axis->yAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
-					if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY)
-						$this->check_axis($axis->xAxis, $public_index, $public_observed_variables, $storageType, $timeInterval);
+			else if(isset($axisContainer->xAxis))
+				$axisContainer->xAxis->observedVariableIndex = -1; //not really necessary but makes it easier to spot in debug if data is redundant
+		}
+		
+		//public variables
+		if(isset($chart->displayPublicVariable) && $chart->displayPublicVariable) {
+			foreach($chart->publicVariables as $axis) {
+				$this->extractObservedEntryFromAxis(
+					$axis->yAxis ?? new stdClass(), $this->publicObservedIndex, $this->publicObservedVariables, $storageType, $timeInterval
+				);
+				if($dataType == CreateDataSet::STATISTICS_DATATYPES_XY) {
+					$this->extractObservedEntryFromAxis(
+						$axis->xAxis ?? new stdClass(), $this->publicObservedIndex, $this->publicObservedVariables, $storageType, $timeInterval
+					);
 				}
 			}
-			
-			$defaultChart->storageType = $storageType;
 		}
 		
-		$defaultConfig->observedVariables = $observedVariables;
-		foreach($langConfigs as &$config) {
-			$config->observedVariables = $observedVariables;
+		$chart->storageType = $storageType;
+	}
+	private function createObservedVariable(bool $isPublic) {
+		$statisticsName = $isPublic ? 'publicStatistics' : 'personalStatistics';
+		$statistics = $this->mainStudy->{$statisticsName};
+		
+		
+		if($isPublic) {
+			$observedVariables = &$this->publicObservedVariables;
+			$index = &$this->publicObservedIndex;
+		}
+		else {
+			$observedVariables = new stdClass;
+			$index = [];
 		}
 		
-		return $index;
+		foreach($statistics->charts as $chart) {
+			$this->extractObservedEntriesFromChart($chart, $observedVariables, $index);
+		}
+		
+		$statistics->observedVariables = $observedVariables;
+		
 	}
 	
-	
-	function exec() {
-		$studyCollection_json = file_get_contents('php://input');
-		
-		if(!($studyCollection = json_decode($studyCollection_json)))
-			Output::error('Unexpected data');
-		
-		if(!isset($studyCollection->_))
-			Output::error('No default study');
-		
-		$study = $studyCollection->_;
-		
-		if(!isset($study->id) || $study->id != $this->study_id)
-			Output::error("Problem with study id! $this->study_id !=" .$study->id);
-		
-		$file_config = Files::get_file_studyConfig($this->study_id);
-		
-		if(isset($_GET['lastChanged']) && file_exists($file_config) && filemtime($file_config) > $_GET['lastChanged'])
-			Output::error('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
-		
-		
-		$study_index = file_exists(Files::get_file_studyIndex()) ? unserialize(file_get_contents(Files::get_file_studyIndex())) : [];
-		
-		//*****
-		//check and prepare questionnaires:
-		//*****
-		
-		$keys_questionnaire_array = $this->checkUnique_and_collectKeys($study, $study_index);
-		
-		
-		//*****
-		//create folders
-		//*****
-		
-		$this->create_folder(Files::get_folder_study($this->study_id));
-		$this->create_folder(Files::get_folder_langs($this->study_id));
-		$this->create_folder(Files::get_folder_userData($this->study_id));
-		$this->create_folder(Files::get_folder_statistics($this->study_id));
-		$this->create_folder(Files::get_folder_messages($this->study_id));
-		$this->create_folder(Files::get_folder_media($this->study_id));
-		$this->create_folder(Files::get_folder_pendingUploads($this->study_id));
-		$this->create_folder(Files::get_folder_images($this->study_id));
-		$this->create_folder(Files::get_folder_responses($this->study_id));
-		$this->create_folder(Files::get_folder_responsesIndex($this->study_id));
-		$this->create_folder(Files::get_folder_messages_archive($this->study_id));
-		$this->create_folder(Files::get_folder_messages_pending($this->study_id));
-		$this->create_folder(Files::get_folder_messages_unread($this->study_id));
-		
-		
-		//*****
-		//save questionnaire index (has to happen after folders are created)
-		//*****
-		
-		foreach($study->questionnaires as $i => $q) {
-			$this->write_indexAndResponses_files($study, $q->internalId, $keys_questionnaire_array[$i]);
+	private function syncConfigs(/*mixed*/ $original, /*mixed*/ $target) {
+		if(is_object($original)) {
+			$has = function(/*mixed*/ $parent, /*mixed*/ $key) {
+				return isset($parent->{$key});
+			};
+			$get = function(/*mixed*/ $parent, /*mixed*/ $key) {
+				return $parent->{$key};
+			};
+			$set = function(/*mixed*/ $parent, /*mixed*/ $key, /*mixed*/ $value) {
+				$parent->{$key} = $value;
+			};
 		}
-		
-		
-		//*****
-		//Creating observable variables and statistics
-		//*****
-		
-		
-		//publicStatistics:
-		$public_index = $this->set_observedVariables_from_axis($studyCollection, 'publicStatistics');
-		
-		//personalStatistics:
-		//Note: $public_index can still change when global variables are used in personal charts
-		// so we need this before we save the public statistics file
-		$this->set_observedVariables_from_axis($studyCollection, 'personalStatistics', $study->publicStatistics->observedVariables, $public_index);
-		
-		
-		//statistics files:
-		$this->write_statistics($study);
-		
-		
-		//*****
-		//saving files
-		//*****
-		
-		//
-		//publish / unpublish study
-		//
-		if($this->is_admin || Permission::has_permission($this->study_id, 'publish')) {
-			$removeCount = $this->remove_study_from_index($study_index, $this->study_id);
+		else {
+			$has = function(array $parent, /*mixed*/ $key) {
+				return isset($parent[$key]);
+			};
+			$get = function(array $parent, /*mixed*/ $key) {
+				return $parent[$key];
+			};
+			$set = function(array &$parent, /*mixed*/ $key, /*mixed*/ $value) {
+				$parent[$key] = $value;
+			};
+		}
+		foreach($original as $key => $originalChild) {
+			if(!$has($target, $key)) {
+				$set($target, $key, $originalChild);
+				continue;
+			}
+			else
+				$targetChild = $get($target, $key);
 			
-			if(isset($study->published) && $study->published) {
-				//entries for accessKeys:
-				if(isset($study->accessKeys) && count($study->accessKeys)) {
-					foreach($study->accessKeys as $key => $value) {
-						$value = strtolower($value);
-						foreach($studyCollection as &$langStudy) {
-							$langStudy->accessKeys[$key] = $value;
-						}
-						unset($langStudy);
-						
-						if(!Base::check_input($value))
-							Output::error("No special characters are allowed in access keys.\n'$value'");
-						else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
-							Output::error("Access keys need to start with a character.");
-						else if(!isset($study_index[$value]))
-							$study_index[$value] = [$this->study_id];
-						else if(!in_array($this->study_id, $study_index[$value]))
-							array_push($study_index[$value], $this->study_id);
-					}
+			if(is_object($originalChild) || is_array($originalChild))
+				$this->syncConfigs($originalChild, $targetChild);
+			else if(array_key_exists($key, $this->identicalValueInAllLanguagesIndex) && $originalChild != $targetChild)
+				$set($target, $key, $originalChild);
+		}
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	private function updateStudyIndex() {
+		if(!isset($this->mainStudy->accessKeys) || !count($this->mainStudy->accessKeys))
+			$this->studyAccessIndexStore->add($this->studyId);
+		else {
+			foreach($this->mainStudy->accessKeys as $key => $value) {
+				$value = strtolower($value);
+				foreach($this->studyCollection as $langStudy) {
+					$langStudy->accessKeys[$key] = $value;
 				}
-				else {
-					if(!isset($study_index['~open']))
-						$study_index['~open'] = [$this->study_id];
-					else
-						array_push($study_index['~open'], $this->study_id);
-				}
-				
-				//entries for questionnaire internalIds
-				foreach($study->questionnaires as $q) {
-					$key = '~'.$q->internalId;
-					
-					$study_index[$key] = [$this->study_id]; //this doesnt have to be an array. But we try to stay consistent with access key entries
-				}
+				if(empty($value))
+					throw new PageFlowException("Access key is empty");
+				else if(!Main::strictCheckInput($value))
+					throw new PageFlowException("No special characters are allowed in access keys:\n'$value'");
+				else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
+					throw new PageFlowException("Access keys need to start with a character.");
+				else
+					$this->studyAccessIndexStore->add($this->studyId, $value);
+			}
+		}
+	}
+	
+	/**
+	 * @throws CriticalError
+	 * @throws PageFlowException
+	 */
+	private function publishUnPublish() {
+		//
+		//publish / unPublish study
+		//
+		if($this->isAdmin || Permission::hasPermission($this->studyId, 'publish')) {
+			$wasRemoved = $this->studyAccessIndexStore->removeStudy($this->studyId);
+			
+			if($this->mainStudy->published ?? false) {
+				$this->updateStudyIndex();
+				$this->studyAccessIndexStore->addQuestionnaireKeys($this->mainStudy);
 				
 				//update server statistics:
-				if(!$removeCount) {
-					Base::update_serverStatistics(function(&$statistics) {
-						$statistics->total->studies += 1;
+				if(!$wasRemoved) {
+					Configs::getDataStore()->getServerStatisticsStore()->update(function(StatisticsStoreWriter $statistics) {
+						$statistics->incrementStudies();
 					});
 				}
 			}
-			else if($removeCount) {
-				Base::update_serverStatistics(function(&$statistics) {
-					$statistics->total->studies -= 1;
+			else if($wasRemoved) {
+				Configs::getDataStore()->getServerStatisticsStore()->update(function(StatisticsStoreWriter $statistics) {
+					$statistics->decrementStudies();
 				});
 			}
-			$this->write_file(Files::get_file_studyIndex(), serialize($study_index));
 		}
 		else {
-			$old_study = file_exists($file_config) ? json_decode(file_get_contents($file_config)) : [];
+			$oldStudy = $this->studyStore->getStudyConfig($this->studyId);
 			
-			foreach($studyCollection as &$langStudy) {
-				$langStudy->accessKeys = isset($old_study->accessKeys) ? $old_study->accessKeys : [];
-				$langStudy->published = isset($old_study->published) ? $old_study->published : false;
+			foreach($this->studyCollection as $langStudy) {
+				$langStudy->accessKeys = $oldStudy->accessKeys ?? [];
+				$langStudy->published = $oldStudy->published ?? false;
 			}
-			unset($langStudy);
+		}
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	private function uniqueNameOrThrow($name, $questionnaireTitle) {
+		if(!strlen($name))
+			throw new PageFlowException('Input name is empty!');
+		else if(!Main::strictCheckInput($name))
+			throw new PageFlowException("No special characters are allowed in variable names. \n'$name' detected in questionnaire: $questionnaireTitle");
+		else if(isset($this->uniqueInputNames[$name]))
+			throw new PageFlowException("Variable name exists more than once: '$name'. First detected in questionnaire: '" . $this->uniqueInputNames[$name] . "'. Detected again in questionnaire: '$questionnaireTitle'");
+		else if(in_array($name, KEYS_EVENT_RESPONSES) || in_array($name, KEYS_QUESTIONNAIRE_BASE_RESPONSES))
+			throw new PageFlowException("Protected variable name: $name \nPlease choose another variable name.\nDetected in questionnaire: $questionnaireTitle");
+	}
+	
+	
+	private function setNewInternalId($newInternalId, $questionnaire) {
+		$oldInternalId = $questionnaire->internalId;
+		$questionnaire->internalId = $newInternalId;
+		foreach($this->studyCollection as $langStudy) {
+			foreach($langStudy->questionnaires ?? [] as $q) {
+				foreach($q->actionTriggers ?? [] as $actionTrigger) {
+					foreach($actionTrigger->eventTriggers ?? [] as $eventTrigger) {
+						if($eventTrigger->specificQuestionnaireInternalId ?? -1 == $oldInternalId)
+							$eventTrigger->specificQuestionnaireInternalId = $newInternalId;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * @throws PageFlowException
+	 * @throws CriticalError
+	 */
+	private function correctInternalIds() {
+		//Note: When a questionnaire is deleted, its internalId will stay in the index until the study is unpublished or deleted.
+		//The only solution I can think of would be to loop through the complete index every time a study is saved.
+		//But since this case will rarely happen and probably wont ever be a problem and the loop can be an expensive operation, we just ignore this problem.
+		
+		$studyId = $this->mainStudy->id;
+		
+		$uniqueInternalIds = [];
+		
+		foreach($this->mainStudy->questionnaires as $questionnaire) {
+			//make sure internalIds are unique:
+			$studyIdForQuestionnaireId = $this->studyAccessIndexStore->getStudyIdForQuestionnaireId($questionnaire->internalId);
+			if(
+				!isset($questionnaire->internalId) ||
+				$questionnaire->internalId == -1 ||
+				isset($uniqueInternalIds[$questionnaire->internalId]) ||
+				($studyIdForQuestionnaireId != -1 && $studyIdForQuestionnaireId != $studyId)
+			) {
+				$idCreator = new GetNewId();
+				$newInternalId = $idCreator->createRandomId(true, $uniqueInternalIds);
+				$this->setNewInternalId($newInternalId, $questionnaire);
+			}
+			else
+				$uniqueInternalIds[$questionnaire->internalId] = true;
+			
+			//check questionnaire:
+			if(!isset($questionnaire->title) || !strlen($questionnaire->title))
+				throw new PageFlowException('Questionnaire title is empty!');
+		}
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	private function getQuestionnaireIndex(stdClass $questionnaire): ResponsesIndex {
+		$questionnaireIndex = new ResponsesIndex();
+		
+		foreach($questionnaire->pages ?? [] as $page) {
+			foreach($page->inputs ?? [] as $input) {
+				if(!isset($input->name))
+					continue;
+				$responseType = $input->responseType ?? 'text_input';
+				
+				if($responseType != 'text') {
+					$this->uniqueNameOrThrow($input->name, $questionnaire->title);
+					$this->uniqueInputNames[$input->name] = $questionnaire->title;
+					$questionnaireIndex->addInput($responseType, $input->name);
+				}
+			}
 		}
 		
+		foreach($questionnaire->sumScores ?? [] as $score) {
+			if(!isset($score->name))
+				continue;
+			
+			$this->uniqueNameOrThrow($score->name, $questionnaire->title);
+			$this->uniqueInputNames[$score->name] = $questionnaire->title;
+			$questionnaireIndex->addName($score->name);
+		}
+		return $questionnaireIndex;
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 */
+	protected function collectKeys(): array {
+		$keys = [];
+		foreach($this->mainStudy->questionnaires as $questionnaire) {
+			$keys[$questionnaire->internalId] = $this->getQuestionnaireIndex($questionnaire);
+		}
+		return $keys;
+	}
+	
+	/**
+	 * @throws PageFlowException
+	 * @throws CriticalError
+	 */
+	private function save() {
+		$this->studyStore->saveStudy($this->studyCollection, $this->collectKeys());
+		$this->studyAccessIndexStore->saveChanges();
+		$this->saveStatistics();
+	}
+	
+	private  function createNamedStructureFromStatistics(stdClass $statistics, array $metadata): array {
+		$index = [];
+		if(!empty($statistics) || !empty($metadata)) {
+			foreach($statistics as $value => $jsonKeyBox) {
+				foreach($jsonKeyBox as $i => $jsonEntry) {
+					$metadataEntry = $metadata[$value][$i];
+					$conditionString = SaveStudy::getConditionString($value, $jsonEntry->storageType, $metadataEntry->timeInterval, $metadataEntry->conditions);
+					$index[$conditionString] = $jsonEntry;
+				}
+			}
+		}
+		return $index;
+	}
+	
+	/**
+	 * @throws CriticalError
+	 */
+	protected function saveStatistics() {
+		$dataStore = Configs::getDataStore();
+		$metadataStore = $dataStore->getStudyStatisticsMetadataStore($this->mainStudy->id);
+		$studyStatisticsStore = $dataStore->getStudyStatisticsStore($this->mainStudy->id);
+		
+		if(isset($this->mainStudy->publicStatistics->observedVariables) && $this->mainStudy->publicStatistics->observedVariables != new stdClass()) {
+			//order of statistics might have changed. So we have to create an index with more information:
+			$existingIndex = $this->createNamedStructureFromStatistics(
+				$studyStatisticsStore->getStatistics(),
+				$metadataStore->loadMetadataCollection()
+			);
+			foreach($this->mainStudy->publicStatistics->observedVariables as $key => $observedVariableJsonArray) {
+				foreach($observedVariableJsonArray as $observedVariableJsonEntry) {
+					$metadataStore->addMetadataEntry($key, $observedVariableJsonEntry);
+					
+					$jsonEntry = new StatisticsJsonEntry($observedVariableJsonEntry);
+					
+					$conditionString = self::getConditionString($key, $observedVariableJsonEntry->storageType, $observedVariableJsonEntry->timeInterval, $observedVariableJsonEntry->conditions);
+					if(isset($existingIndex[$conditionString])) { //copy existing values over to new obj:
+						$oldEntry = $existingIndex[$conditionString];
+						$jsonEntry->data = $oldEntry->data;
+						$jsonEntry->entryCount = $oldEntry->entryCount;
+						$jsonEntry->timeInterval = $oldEntry->timeInterval;
+					}
+//						else {
+//							//TODO: extract statistics from already existing data
+//						}
+					
+					$studyStatisticsStore->addEntry($key, $jsonEntry);
+				}
+			}
+		}
+		$metadataStore->saveChanges();
+		$studyStatisticsStore->saveChanges();
+	}
+	
+	protected function initClass() {
+		$dataStore = Configs::getDataStore();
+		$this->studyAccessIndexStore = $dataStore->getStudyAccessIndexStore();
+		$this->studyStore = $dataStore->getStudyStore();
+	}
+	
+	function exec(): array {
+		if(!isset($_GET['lastChanged']))
+			throw new PageFlowException('Missing data');
+		$this->initClass();
+		$studyCollectionJson = Main::getRawPostInput();
+		$this->studyCollection = json_decode($studyCollectionJson);
+		if(!$this->studyCollection)
+			throw new PageFlowException('Unexpected data');
+		
+		if(!isset($this->studyCollection->_))
+			throw new PageFlowException('No default study');
+		
+		$study = $this->mainStudy = $this->studyCollection->_;
+		
+		if(!isset($study->id) || $study->id != $this->studyId)
+			throw new PageFlowException("Problem with study id! $this->studyId != $study->id");
+		
+		
+		if($this->studyStore->getStudyLastChanged($this->studyId) > (int) $_GET['lastChanged'])
+			throw new PageFlowException('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
+		
+		
 		//
-		//save study config
+		//Creating observable variables and statistics
+		//
+		$this->publicObservedVariables = new stdClass;
+		
+		$this->createObservedVariable(true);
+		$this->createObservedVariable(false);
+		
+		
+		//
+		//set study version
 		//
 		if(!isset($study->version) || $study->version === 0) {
-			foreach($studyCollection as &$langStudy) {
-				$langStudy->version = 1;
-				$langStudy->subVersion = 0;
-			}
-			unset($langStudy);
+			$study->version = 1;
+			$study->subVersion = 0;
 		}
 		else {
-			foreach($studyCollection as &$langStudy) {
-				$langStudy->new_changes = true;
-				$langStudy->subVersion += 1;
-			}
-		}
-		
-		//delete old language files
-		$this->empty_folder(Files::get_folder_langs($this->study_id));
-		
-		$studies_json = [];
-		foreach($studyCollection as $code => $s) {
-			$study_json = json_encode($s);
-			$this->write_file($code === '_' ? $file_config : Files::get_file_langConfig($this->study_id, $code), $study_json);
-			$studies_json[] = "\"$code\":$study_json";
+			$study->new_changes = true;
+			$study->subVersion += 1;
 		}
 		
 		
 		//
-		//create web_access and events file
+		//make sure study everything valid
 		//
-		$this->write_indexAndResponses_files($study, Files::FILENAME_EVENTS, ['keys' => self::KEYS_EVENT_RESPONSES, 'types' => []]);
-		$this->write_indexAndResponses_files($study, Files::FILENAME_WEB_ACCESS, ['keys' => self::KEYS_WEB_ACCESS, 'types' => []]);
+		$this->correctInternalIds();
+		foreach($this->studyCollection as $langCode => $langStudy) {
+			if($langCode != '_')
+				$this->syncConfigs($this->mainStudy, $langStudy);
+		}
+		
+		
+		
+		//
+		//publish / unPublish
+		//
+		$this->publishUnPublish();
 		
 		
 		//
-		//save index-files
+		//saving
 		//
-		$metadata = Base::get_newMetadata($study);
-		$this->write_file(Files::get_file_studyMetadata($this->study_id), serialize($metadata));
-		$sentChanged = time();
-		Output::successString("{\"lastChanged\":$sentChanged,\"json\":{" .implode(',', $studies_json) ."}}");
+		$this->save();
+		
+		return ['lastChanged' => time(), 'json' => $this->studyCollection];
 	}
 }

@@ -3,38 +3,44 @@
 namespace backend\noJs\pages;
 
 use backend\Configs;
+use backend\CreateDataSet;
+use backend\CriticalError;
+use backend\PageFlowException;
 use Exception;
-use backend\Base;
-use backend\noJs\Extra;
+use backend\Main;
+use backend\noJs\NoJsMain;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
+use stdClass;
 
 class AppInstall implements Page {
+	/**
+	 * @var stdClass
+	 */
 	private $study;
-	private $access_key;
+	/**
+	 * @var string
+	 */
+	private $accessKey;
 	
 	/**
-	 * @throws Exception
+	 * @throws CriticalError
+	 * @throws PageFlowException
 	 * @throws ForwardingException
 	 */
 	public function __construct() {
-		$studyData = Extra::get_studyData();
-		if(isset($studyData['notFound'])) {
-			if(isset($studyData['error']))
-				throw new Exception($studyData['error']);
-			throw new ForwardingException(new StudiesList());
-		}
-		$this->study = $studyData['study'];
-		$this->access_key = $studyData['accessKey'];
+		$studyData = NoJsMain::getStudyData();
+		$this->study = $studyData->study;
+		$this->accessKey = $studyData->accessKey;
+		CreateDataSet::saveWebAccess($studyData->study->id, 'app_install');
 	}
 	
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->study->title;
 	}
 	
-	public function getContent() {
-		$access_key = Base::get_accessKey();
+	public function getContent(): string {
 		$scriptName = substr($_SERVER['SCRIPT_NAME'], 0, -14); //NOTE: 14 is the length of "index_nojs.php"
 		
 		$output = '';
@@ -67,7 +73,7 @@ class AppInstall implements Page {
 		<br>
 		<p class="justify">' .Lang::get('studyTut_participate_description') .'</p>
 		
-		<h1>' .sprintf(Lang::get('studyTut_participate_method_x_header'), 1) .'</h1>
+		<h1>' .Lang::get('studyTut_participate_method_x_header', 1) .'</h1>
 		<h2>' .Lang::get('studyTut_participate_method_onPhone') .'</h2>
 		<ol>
 			<li><div>
@@ -75,14 +81,14 @@ class AppInstall implements Page {
 			</div></li>
 			<li>' .Lang::get('studyTut_participate_open_this_website') .'</li>
 			<li>
-				<a href="esmira://' .$_SERVER['HTTP_HOST'].$scriptName.$this->access_key.'+'.$this->study->id.'">"'.Lang::get('studyTut_participate_click_link').'</a>
+				<a href="esmira://' .$_SERVER['HTTP_HOST'].$scriptName.$this->study->id.($this->accessKey ? "-$this->accessKey" : '').'">'.Lang::get('studyTut_participate_click_link').'</a>
 			</li>
 			<li>' .Lang::get('studyTut_participate_opens_automatically') .'</li>
 		</ol>
 		
 		<h1 class="center">' .Lang::get('or') .'</h1>
 		
-		<h1>' .sprintf(Lang::get('studyTut_participate_method_x_header'), 2) .'</h1>
+		<h1>' .Lang::get('studyTut_participate_method_x_header', 2) .'</h1>
 		<h2>' .Lang::get('studyTut_participate_method_manual') .'</h2>
 		<ol>
 			<li><div>
@@ -99,27 +105,28 @@ class AppInstall implements Page {
 			</li>
 			
 			<li>
-				<div>' .sprintf(Lang::get('studyTut_participate_selectServer'), Configs::get_serverName()) .'</div>
+				<div>' .Lang::get('studyTut_participate_selectServer', Configs::getServerName()) .'</div>
 				<div class="screenshot_box">
 					<img alt="screenshot" src="' .Lang::get('screenshot_server_ask_android') .'"/>
 				</div>
 			</li>
 			
 			<li><div>'
-			.($access_key
-				? sprintf(Lang::get('studyTut_participate_selectAccessKeyYes'), $access_key)
-				: Lang::get('studyTut_participate_selectAccessKeyNo'))
+			.($this->accessKey
+				? Lang::get('studyTut_participate_selectAccessKeyYes', $this->accessKey)
+				: Lang::get('studyTut_participate_selectAccessKeyNo')
+			)
 			.'</div>
 			<div class="screenshot_box">
 				<img alt="screenshot" src="'
-			.(strlen($access_key) ? Lang::get('screenshot_accessKey_askYes_android') : Lang::get('screenshot_accessKey_askNo_android'))
+			.(strlen($this->accessKey) ? Lang::get('screenshot_accessKey_askYes_android') : Lang::get('screenshot_accessKey_askNo_android'))
 			.'"/>
 			</div></li>
 		</ol>';
 		
-		if(isset($study->informedConsentForm))
+		if(isset($this->study->informedConsentForm))
 			$output .= '<div class="title-row"><a id="informed_consent"></a>'.Lang::get('informed_consent').'</div>
-				<p class="justify">'.$study->informedConsentForm.'</p>';
+				<p class="justify">'.$this->study->informedConsentForm.'</p>';
 	
 		return $output;
 	}

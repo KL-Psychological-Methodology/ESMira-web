@@ -3,29 +3,33 @@
 namespace backend\admin\features\loggedIn;
 
 use backend\admin\IsLoggedIn;
-use backend\Output;
+use backend\Configs;
+use backend\PageFlowException;
 use backend\Permission;
 
 class ChangePassword extends IsLoggedIn {
 	
-	function exec() {
+	function exec(): array {
 		if(!isset($_POST['new_pass']))
-			Output::error('Unexpected data');
+			throw new PageFlowException('Missing data');
 		
+		$userStore = Configs::getDataStore()->getUserStore();
 		$pass = $_POST['new_pass'];
 		
-		if($this->is_admin && isset($_POST['user']))
+		if($this->isAdmin && isset($_POST['user'])) {
 			$user = $_POST['user'];
+			if(!$userStore->doesUserExist($user))
+				throw new PageFlowException("User $user does not exist");
+		}
 		else
-			$user = Permission::get_user();
+			$user = Permission::getUser();
 		
 		if(strlen($pass) < 12)
-			Output::error('The password needs to have at least 12 characters.');
+			throw new PageFlowException('The password needs to have at least 12 characters.');
 		
-		$passHash = Permission::get_hashed_pass($pass);
-		if($this->removeAdd_in_loginsFile($user, function($user) use ($passHash) { return "$user:$passHash";}))
-			Output::successObj();
-		else
-			Output::error('User does not exist.');
+		
+		$userStore->setUser($user, $pass);
+		
+		return [];
 	}
 }

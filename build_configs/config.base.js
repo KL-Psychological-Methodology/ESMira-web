@@ -81,7 +81,7 @@ module.exports = {
 					transform: function(content) {
 						return JSONMinifyPlugin(content.toString());
 					},
-					to: path.resolve(DIST, 'frontend', 'locales')
+					to: path.resolve(DIST, 'locales')
 				},
 				{
 					from: path.resolve(SRC, 'backend'),

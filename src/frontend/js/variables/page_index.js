@@ -5,7 +5,6 @@ export const PageIndex = {
 	alarms:				{filename: "alarms",			permissions: ["write"]},
 	appInstall:			{filename: "app_install",		permissions: false},
 	attend:				{filename: "attend",			permissions: false},
-	backups:			{filename: "backups",			permissions: ["write"]},
 	chart:				{filename: "chart",				permissions: ["write", "read"]},
 	charts:				{filename: "charts",			permissions: ["write"]},
 	chartEdit:			{filename: "chart_edit",		permissions: ["write", "read"]},

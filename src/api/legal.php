@@ -1,29 +1,20 @@
 <?php
-require_once '../backend/autoload.php';
 
-use backend\Base;
-use backend\Files;
-use backend\Output;
+use backend\Main;
+use backend\Configs;
+use backend\JsonOutput;
 
-if(!Base::is_init())
-	Output::error('ESMira is not ready!');
+require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-$legal = [];
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
 
-$lang = Base::get_lang('_');
+$lang = Main::getLang();
 
-$file_default_impressum = Files::get_file_langImpressum('_');
-$file_lang_impressum = Files::get_file_langImpressum($lang);
-if(file_exists($file_lang_impressum))
-	$legal['impressum'] = file_get_contents($file_lang_impressum);
-else if(file_exists($file_default_impressum))
-	$legal['impressum'] = file_get_contents($file_default_impressum);
-
-$file_default_privacyPolicy = Files::get_file_langPrivacyPolicy('_');
-$file_lang_privacyPolicy = Files::get_file_langPrivacyPolicy($lang);
-if(file_exists($file_lang_privacyPolicy))
-	$legal['privacyPolicy'] = file_get_contents($file_lang_privacyPolicy);
-else if(file_exists($file_default_privacyPolicy))
-	$legal['privacyPolicy'] = file_get_contents($file_default_privacyPolicy);
-
-Output::successObj($legal);
+$serverStore = Configs::getDataStore()->getServerStore();
+echo JsonOutput::successObj([
+	'impressum' => $serverStore->getImpressum($lang) ?: $serverStore->getImpressum('_'),
+	'privacyPolicy' => $serverStore->getPrivacyPolicy($lang) ?: $serverStore->getPrivacyPolicy('_')
+]);

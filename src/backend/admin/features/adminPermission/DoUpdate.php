@@ -2,114 +2,138 @@
 
 namespace backend\admin\features\adminPermission;
 
-use backend\admin\HasAdminPermission;
-use backend\Files;
-use backend\Output;
+use backend\CriticalError;
+use backend\Paths;
+use backend\FileSystemBasics;
+use backend\PageFlowException;
 use Exception;
 use ZipArchive;
 
 class DoUpdate extends CheckUpdate {
+	//we dont want to blindly copy everything over in case there are non ESMira-files in our main folder:
+	const NEEDS_BACKUP = ['api/', 'backend/', 'frontend/', 'locales/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
 	
-	function revertUpdate() {
-		$pathBackup = Files::get_folder_serverBackup();
-		$pathUpdate = Files::get_file_serverUpdate();
+	/**
+	 * @var string
+	 */
+	private $folderPathSource;
+	/**
+	 * @var string
+	 */
+	private $folderPathBackup;
+	/**
+	 * @var string
+	 */
+	private $fileUpdate;
+	
+	public function __construct(
+		string $folderPathSource = DIR_BASE,
+		string $folderPathBackup = Paths::FOLDER_SERVER_BACKUP,
+		string $fileUpdate = Paths::FILE_SERVER_UPDATE
+	) {
+		parent::__construct();
+		//we define them here so we can change the location for testing:
+		$this->folderPathSource = $folderPathSource;
+		$this->folderPathBackup = $folderPathBackup;
+		$this->fileUpdate = $fileUpdate;
+	}
+	
+	/**
+	 * @throws CriticalError
+	 * @throws PageFlowException
+	 */
+	private function revertUpdate($msg): PageFlowException {
+		if(file_exists($this->fileUpdate))
+			unlink($this->fileUpdate);
 		
-		if(file_exists($pathUpdate))
-			unlink($pathUpdate);
+		FileSystemBasics::emptyFolder($this->folderPathSource); //right now, this contains the file from the update. So remove them first
 		
-		$handle = opendir($pathBackup);
+		$revertFailedList = [];
+		
+		//now, copy everything back from the backup folder:
+		$handle = opendir($this->folderPathBackup);
 		while($file = readdir($handle)) {
 			if($file[0] != '.') {
-				$oldLocation = $pathBackup .$file;
-				$newLocation = DIR_BASE .$file;
+				$oldLocation = $this->folderPathBackup .$file;
+				$newLocation = $this->folderPathSource .$file;
 				
-				if(file_exists($newLocation)) {
-					if(is_dir($newLocation)) {
-						$this->empty_folder($newLocation);
-						rmdir($newLocation);
-					}
-					else
-						unlink($newLocation);
-				}
-				rename($oldLocation, $newLocation);
+				if(file_exists($newLocation) || !@rename($oldLocation, $newLocation))
+					$revertFailedList[] = $newLocation;
 			}
 		}
 		closedir($handle);
 		
-		rmdir($pathBackup);
+		if(count($revertFailedList))
+			throw new PageFlowException("Reverting update failed! The following files are still in the backup folder: $this->folderPathBackup\nReverting was caused by this error: \n$msg");
+		else
+			rmdir($this->folderPathBackup);
+		
+		return new PageFlowException($msg);
 	}
 	
-	function exec() {
-		$needsBackup = ['api/', 'backend/', 'frontend/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md', 'version.txt'];
-		$folderPathBackup = Files::get_folder_serverBackup();
-		$pathUpdate = Files::get_file_serverUpdate();
+	/**
+	 * @throws PageFlowException
+	 * @throws CriticalError
+	 */
+	private function moveEverythingToBackupLocation() {
+		if(!file_exists($this->folderPathBackup))
+			FileSystemBasics::createFolder($this->folderPathBackup);
 		
-		if(!file_exists($pathUpdate))
-			Output::error('Could not find update. Has it been downloaded yet?');
-		
-		if(!file_exists($folderPathBackup))
-			$this->create_folder($folderPathBackup);
-		
-		//moving current files to backup location:
-		foreach($needsBackup as $file) {
-			$oldLocation = DIR_BASE .$file;
-			$newLocation = $folderPathBackup .$file;
+		foreach(self::NEEDS_BACKUP as $file) {
+			$oldLocation = $this->folderPathSource .$file;
+			$newLocation = $this->folderPathBackup .$file;
 			
 			if(!file_exists($oldLocation))
 				continue;
-			if(file_exists($newLocation)) {
-				if(is_dir($newLocation)) {
-					$this->empty_folder($newLocation);
-					rmdir($newLocation);
-				}
-				else
-					unlink($newLocation);
-			}
+			if(file_exists($newLocation))
+				throw $this->revertUpdate("Critical error! $newLocation already exists. This should never happen. Please check the file structure manually");
 			
-			if(!rename($oldLocation, $newLocation)) {
-				$this->revertUpdate();
-				Output::error("Renaming $oldLocation to $newLocation failed. Reverting...");
-			}
+			if(!@rename($oldLocation, $newLocation))
+				throw $this->revertUpdate("Renaming $oldLocation to $newLocation failed. Reverting...");
 		}
+	}
+	
+	function exec(): array {
+		if(!isset($_GET['fromVersion']))
+			throw new PageFlowException('Missing data');
+		if(!file_exists($this->fileUpdate))
+			throw new PageFlowException('Could not find update. Has it been downloaded yet?');
+		if(file_exists($this->folderPathBackup))
+			throw new PageFlowException("A backup seems to already exist at: $this->folderPathBackup");
+		
+		
+		$this->moveEverythingToBackupLocation();
 		
 		
 		//unpacking update:
 		$zip = new ZipArchive;
-		if(!$zip->open($pathUpdate)) {
-			$this->revertUpdate();
-			Output::error("Could not open the the zipped update: $pathUpdate. Reverting...");
-		}
-		if(!$zip->extractTo(DIR_BASE)) {
-			$this->revertUpdate();
-			Output::error("Could not unzip update: $pathUpdate. Reverting...");
-		}
+		if(!@$zip->open($this->fileUpdate))
+			throw $this->revertUpdate("Could not open the the zipped update: $this->fileUpdate. Reverting...");
+		if(!@$zip->extractTo($this->folderPathSource))
+			throw $this->revertUpdate("Could not unzip update: $this->fileUpdate. Reverting...");
 		$zip->close();
 		
 		
 		//restore config file:
-		if(!copy($folderPathBackup .Files::PATH_CONFIG, Files::FILE_CONFIG) || !$this->write_serverConfigs([])) {
-			$this->revertUpdate();
-			Output::error('Could not restore settings. Reverting...');
-		}
+		if(!@copy($this->folderPathBackup .Paths::SUB_PATH_CONFIG, Paths::FILE_CONFIG))
+			throw $this->revertUpdate('Could not restore settings. Reverting...');
+		FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
+		
 		
 		//run update script
-		if(file_exists(Files::FILE_UPDATE_SCRIPT)) {
-			try {
-				require_once Files::FILE_UPDATE_SCRIPT;
-				$updater = new UpdateVersion();
-				$updater->exec();
-			}
-			catch(Exception $e) {
-				$this->revertUpdate();
-				Output::error("Error while running update script. Reverting... \n$e");
-			}
+		try {
+			$updater = new UpdateVersion();
+			$updater->exec();
+		}
+		catch(Exception $e) {
+			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
 		}
 		
 		
 		//cleaning up
-		if(!$this->empty_folder($folderPathBackup) || !rmdir($folderPathBackup) || !unlink($pathUpdate))
-			Output::error("Cleaning up backup failed. The update was successful. But please delete this folder and its contents manually: $folderPathBackup");
+		if(!FileSystemBasics::emptyFolder($this->folderPathBackup) || !@rmdir($this->folderPathBackup) || !@unlink($this->fileUpdate))
+			throw new PageFlowException("Failed to clean up backup. The update was successful. But please delete this folder and check its contents manually: $this->folderPathBackup");
 		
-		Output::successObj();
+		return [];
 	}
 }

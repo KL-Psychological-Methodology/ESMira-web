@@ -1,6 +1,0 @@
-<div data-bind="foreach: Studies.tools.needsBackup">
-	<div class="verticalPadding" data-bind="let: {study: $root.studies[$data]}">
-		<a data-bind="click: Studies.tools.backup_study.bind(Studies.tools, $root.page, study), text: study.title, style: {opacity: study.published() ? 1 : 0.5}"></a>
-		<a class="info_sticker" data-bind="navi: 'dataList,id:'+study.id(), text: Lang.get('show_data')"></a>
-	</div>
-</div>

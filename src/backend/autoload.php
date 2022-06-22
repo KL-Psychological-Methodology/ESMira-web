@@ -1,7 +1,8 @@
 <?php
-define('DIR_BASE', dirname(dirname(__FILE__)) .'/');
-function autoloader($class) {
+require_once 'exceptions.php';
+define('DIR_BASE', dirname(__FILE__, 2) .'/');
+spl_autoload_register(function($class) {
 	$class = str_replace('\\', '/', $class);
-	include DIR_BASE . "$class.php";
-}
-spl_autoload_register('autoloader');
+	if(file_exists(DIR_BASE . "$class.php"))
+		include DIR_BASE . "$class.php";
+});
