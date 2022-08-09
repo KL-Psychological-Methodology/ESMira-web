@@ -59,7 +59,7 @@
 		<tr data-bind="if: study.randomGroups() !== 0">
 			<td><span data-bind="text: Lang.get('colon_group_availability')"></span><widget-only params="android, ios"></widget-only></td>
 			<td>
-				<select data-bind="foreach: new Array(study.randomGroups()), indexValue: limitToGroup">
+				<select data-bind="foreach: new Array(study.randomGroups() + 1), indexValue: limitToGroup">
 					<option data-bind="text: !$index() ? Lang.get('in_all_groups') : $index()"></option>
 				</select>
 			</td>
