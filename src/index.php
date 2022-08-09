@@ -47,7 +47,8 @@ else {
 }
 
 $access_key = Base::get_accessKey();
-
+$serverVersion = Base::SERVER_VERSION;
+$servername = Configs::get_serverName();
 
 $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 
@@ -71,8 +72,6 @@ $nojs_url = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 			$type = 'grayscaleDark';
 		else
 			$type = '';
-		$serverVersion = Base::SERVER_VERSION;
-		$servername = Configs::get_serverName();
 		echo "let a='$js_key',b='$servername',c=$serverVersion,d='$access_key',e='$lang',f='$type',g=".file_get_contents("frontend/locales/$lang.json"); ?>
 	</script>
 	
