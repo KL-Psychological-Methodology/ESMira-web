@@ -1,7 +1,10 @@
 {
 	"name": "web",
-	"version": "1.5.1",
-	"description": "",
+	"version": "2.0.0",
+	"description": "This is the web server module for ESMira",
+	"keywords": ["open-source", "science", "server", "aa", "esm", "ema"],
+	"author": "JodliDev",
+	"license": "GNU AGPL 3.0",
 	"main": "index.js",
 	"dependencies": {
 		"@tiptap/core": "^2.0.0-beta.68",
@@ -52,8 +55,5 @@
 	"scripts": {
 		"dev": "webpack --config build_configs/config.development.js",
 		"prod": "webpack --config build_configs/config.production.js"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC"
+	}
 }
