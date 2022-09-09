@@ -22,6 +22,8 @@
 - Bugfix: Resolved issue when opening questionnaires via direct link (or qr code) in the web version.
 - Fixes in php fallback.
 - Web version adds entry in web_access.csv when user navigates to study questionnaire.  
+- Fixed error when saving studies with questionnaires without an internalId.
+- Improved error handling in various places.
 - Various other small bugfixes.
 
 ### 🗑️ Removed
