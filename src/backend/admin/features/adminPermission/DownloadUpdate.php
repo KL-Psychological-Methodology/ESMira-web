@@ -19,11 +19,11 @@ class DownloadUpdate extends HasAdminPermission {
 		
 		$url = sprintf(Configs::get($preRelease ? 'url_update_preReleaseZip' : 'url_update_releaseZip'), $versionString);
 		
-		$res = fopen($url, 'r');
+		$res = @fopen($url, 'r');
 		if(!$res)
 			throw new PageFlowException("Downloading update from $url failed. Nothing was changed");
 		
-		if(!file_put_contents($pathUpdate, $res))
+		if(!@file_put_contents($pathUpdate, $res))
 			throw new PageFlowException("Saving update file to $pathUpdate failed. Nothing was changed");
 		
 		return [];

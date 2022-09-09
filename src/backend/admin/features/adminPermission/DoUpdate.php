@@ -6,7 +6,7 @@ use backend\CriticalError;
 use backend\Paths;
 use backend\FileSystemBasics;
 use backend\PageFlowException;
-use Exception;
+use Throwable;
 use ZipArchive;
 
 class DoUpdate extends CheckUpdate {
@@ -125,7 +125,7 @@ class DoUpdate extends CheckUpdate {
 			$updater = new UpdateVersion();
 			$updater->exec();
 		}
-		catch(Exception $e) {
+		catch(Throwable $e) {
 			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
 		}
 		
