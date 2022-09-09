@@ -2,7 +2,19 @@
 
 namespace backend\dataClasses;
 
+use backend\Main;
+
 class UserData {
+	/**
+	 * @var int
+	 */
+	public $joinedTime;
+	
+	/**
+	 * @var int
+	 */
+	public $lastDataSetTime = -1;
+	
 	/**
 	 * @var int
 	 */
@@ -40,5 +52,6 @@ class UserData {
 		$this->group = $group;
 		$this->appType = $appType;
 		$this->appVersion = $appVersion;
+		$this->joinedTime = Main::getMilliseconds();
 	}
 }

@@ -53,6 +53,7 @@ abstract class UserDataStore {
 		$this->loadUserDataIntoClass($studyId, $group, $appType, $appVersion);
 		$userData = $this->userDataArray[$studyId];
 		++$userData->dataSetCount;
+		$userData->lastDataSetTime = Main::getMilliseconds();
 		
 		$currentToken = $userData->token;
 		
