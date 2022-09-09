@@ -44,12 +44,17 @@ export function ViewModel(page) {
 	
 	this.postInit = function(index, {ChartBox}, serverStatistics, lastActivities) {
 		if(lastActivities) {
+			let lastActivitiesContainer = [];
 			for(let studyId in lastActivities) {
 				if(!lastActivities.hasOwnProperty(studyId))
 					continue;
 				
-				self.lastActivities.push({id: studyId, timestamp: lastActivities[studyId]});
+				lastActivitiesContainer.push({id: studyId, timestamp: lastActivities[studyId]});
 			}
+			lastActivitiesContainer.sort(function(a, b) {
+				return b.timestamp - a.timestamp;
+			});
+			self.lastActivities(lastActivitiesContainer);
 		}
 		let is_loggedIn = Admin.is_loggedIn();
 		this.total_studies(serverStatistics.total.studies);
