@@ -274,7 +274,7 @@ class SaveStudy extends HasWritePermission {
 	
 	
 	private function setNewInternalId($newInternalId, $questionnaire) {
-		$oldInternalId = $questionnaire->internalId;
+		$oldInternalId = $questionnaire->internalId ?? 0;
 		$questionnaire->internalId = $newInternalId;
 		foreach($this->studyCollection as $langStudy) {
 			foreach($langStudy->questionnaires ?? [] as $q) {
@@ -304,7 +304,7 @@ class SaveStudy extends HasWritePermission {
 		
 		foreach($this->mainStudy->questionnaires as $questionnaire) {
 			//make sure internalIds are unique:
-			$studyIdForQuestionnaireId = $this->studyAccessIndexStore->getStudyIdForQuestionnaireId($questionnaire->internalId);
+			$studyIdForQuestionnaireId = $this->studyAccessIndexStore->getStudyIdForQuestionnaireId($questionnaire->internalId ?? -1);
 			if(
 				!isset($questionnaire->internalId) ||
 				$questionnaire->internalId == -1 ||
