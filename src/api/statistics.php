@@ -1,6 +1,7 @@
 <?php
 
 use backend\Configs;
+use backend\CriticalError;
 use backend\JsonOutput;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
@@ -25,15 +26,14 @@ try {
 		echo JsonOutput::error("Wrong accessKey: $_GET[access_key]");
 		return;
 	}
+	
+	echo JsonOutput::successObj(Configs::getDataStore()->getStudyStatisticsStore($studyId)->getStatistics());
 }
-catch(Exception $e) {
+catch(CriticalError $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }
-
-try {
-	echo JsonOutput::successObj(Configs::getDataStore()->getStudyStatisticsStore($studyId)->getStatistics());
-}
-catch(Exception $e) {
-	echo JsonOutput::error($e->getMessage());
+catch(Throwable $e) {
+	echo JsonOutput::error('Internal server error');
+	return;
 }

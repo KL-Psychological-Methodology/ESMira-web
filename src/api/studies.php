@@ -60,8 +60,12 @@ try {
 		}
 	}
 }
-catch(Exception $e) {
+catch(CriticalError $e) {
 	echo JsonOutput::error($e->getMessage());
+	return;
+}
+catch(Throwable $e) {
+	echo JsonOutput::error('Internal server error');
 	return;
 }
 

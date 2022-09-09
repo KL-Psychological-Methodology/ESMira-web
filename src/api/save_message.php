@@ -1,5 +1,6 @@
 <?php
 
+use backend\CriticalError;
 use backend\Main;
 use backend\Configs;
 use backend\JsonOutput;
@@ -48,8 +49,12 @@ else if(!Main::strictCheckInput($userId)) {
 try {
 	Configs::getDataStore()->getMessagesStore()->receiveMessage($studyId, $userId, $userId, $content);
 }
-catch(Exception $e) {
+catch(CriticalError $e) {
 	echo JsonOutput::error($e->getMessage());
+	return;
+}
+catch(Throwable $e) {
+	echo JsonOutput::error('Internal server error');
 	return;
 }
 echo JsonOutput::successObj();

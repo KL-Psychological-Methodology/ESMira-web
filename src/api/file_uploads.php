@@ -67,7 +67,7 @@ switch($dataType) {
 			if(!getimagesize($fileData['tmp_name']))
 				throw new CriticalError('getimagesize() failed');
 		}
-		catch(Exception $e) {
+		catch(Throwable $e) {
 			echo JsonOutput::error('Not an image');
 			return;
 		}
