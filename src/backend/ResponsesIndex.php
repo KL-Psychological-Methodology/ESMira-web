@@ -7,7 +7,7 @@ class ResponsesIndex {
 	public $keys;
 	public $types = [];
 	
-	public function __construct(array $keys = KEYS_QUESTIONNAIRE_BASE_RESPONSES, array $types = []) {
+	public function __construct(array $keys = [], array $types = []) {
 		$this->keys = $keys;
 		$this->types = $types;
 	}
