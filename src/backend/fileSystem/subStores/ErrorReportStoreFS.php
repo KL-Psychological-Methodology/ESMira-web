@@ -11,15 +11,27 @@ use backend\subStores\ErrorReportStore;
 
 class ErrorReportStoreFS implements ErrorReportStore {
 	public function hasErrorReports(): bool {
-		$handle = opendir(PathsFS::folderErrorReports());
+		$r = false;
+		$path = PathsFS::folderErrorReports();
+		$handle = opendir($path);
 		while($file = readdir($handle)) {
-			if($file[0] != '_' && $file[0] != '.') {
-				closedir($handle);
-				return true;
+			if($file[0] != '.') {
+				$infoPath = PathsFS::fileErrorReportInfo($file);
+				if(file_exists($infoPath)) {
+					$info = ErrorReportInfoLoader::importFile((int) $file);
+					if(!$info->seen) {
+						$r = true;
+						break;
+					}
+				}
+				else {
+					$r = true;
+					break;
+				}
 			}
 		}
 		closedir($handle);
-		return false;
+		return $r;
 	}
 	
 	public function getList(): array {
