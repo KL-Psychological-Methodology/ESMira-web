@@ -9,6 +9,7 @@ use backend\dataClasses\StatisticsJsonEntry;
 use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\Main;
+use backend\ResponsesIndex;
 use backend\subStores\ServerStatisticsStore;
 use backend\subStores\StatisticsStoreWriter;
 use backend\subStores\StudyAccessIndexStore;
@@ -19,6 +20,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Stub;
 use stdClass;
 use test\testConfigs\BaseWritePermissionTestSetup;
+use test\testConfigs\SkipArgument;
 use function PHPUnit\Framework\assertEquals;
 
 require_once __DIR__ . '/../../../../../backend/autoload.php';
@@ -134,6 +136,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 			$studyStore,
 			$observer
 		);
+		$this->addDataMock($studyStore, 'saveStudy');
 		
 		
 		$studyAccessStore = $this->createStub(StudyAccessIndexStore::class);
@@ -576,6 +579,36 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 			$this->createCollection(true, false, $adjustConfig),
 			$output['json']
 		);
+	}
+	function test_with_questionnaires() {
+		$this->getStudyIdForQuestionnaireIdReturn = $this->studyId;
+		$adjustConfig = function($study) {
+			$study->questionnaires = [(object) [
+				'internalId' => $this->internalId,
+				'title' => 'second',
+				'pages' => [
+					(object) [
+						'inputs' => [
+							(object) [
+								'name' => 'key1',
+								'responseType' => 'text_input'
+							]
+						]
+					]
+				]
+			]];
+		};
+		Main::$defaultPostInput = json_encode($this->createCollection(false, false, $adjustConfig));
+		
+		$obj = new SaveStudy();
+		$obj->exec();
+		
+		$responsesIndex = new ResponsesIndex();
+		$responsesIndex->addInput('text_input', 'key1');
+		$this->assertDataMock('saveStudy', [
+			new SkipArgument(),
+			[$this->internalId => $responsesIndex]
+		]);
 	}
 	
 	function test_with_empty_accessKey() {
