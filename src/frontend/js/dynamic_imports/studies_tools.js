@@ -68,7 +68,7 @@ export const Studies_tools = {
 				Requests.load(FILE_ADMIN+"?type=get_new_id&for=study&study_id=-1"),
 				Studies.init(page)
 			])
-			.then(function([[id]]) {
+			.then(function([id]) {
 				let new_study;
 				if(study)
 					new_study = OwnMapping.toJS(study);

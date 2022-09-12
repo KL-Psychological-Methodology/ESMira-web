@@ -4,6 +4,7 @@ namespace backend\admin\features\writePermission;
 
 
 use backend\admin\HasWritePermission;
+use backend\JsonOutput;
 use backend\Main;
 use backend\Configs;
 use backend\CriticalError;
@@ -32,13 +33,16 @@ class GetNewId extends HasWritePermission {
 		} while($studyStore->studyExists($id) || $accessIndexStore->getStudyIdForQuestionnaireId($id) != -1 || isset($filtered[$id]));
 		return $id;
 	}
-	
-	function exec(): array {
+
+	public function execAndOutput() {
 		$forQuestionnaire = isset($_GET['for']) && $_GET['for'] === 'questionnaire';
-		$id = $this->createRandomId(
+		echo JsonOutput::successObj($this->createRandomId(
 			$forQuestionnaire,
 			$forQuestionnaire ? json_decode(Main::getRawPostInput(), true) : []
-		);
-		return [$id];
+		));
+	}
+	
+	function exec(): array {
+		throw new CriticalError('Internal error. GetError can only be used with execAndOutput()');
 	}
 }
