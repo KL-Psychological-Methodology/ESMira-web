@@ -331,10 +331,11 @@ class StudyStoreFS implements StudyStore {
 		
 		$study = $this->getStudyConfig($studyId);
 		
-		
 		if(isset($study->questionnaires)) {
 			foreach($study->questionnaires as $q) {
-				$this->writeIndexAndResponsesFiles($study, (string)$q->internalId, $questionnaireKeys[$q->internalId]);
+				$index = $questionnaireKeys[$q->internalId];
+				$index->keys = array_merge(KEYS_QUESTIONNAIRE_BASE_RESPONSES, $index->keys);
+				$this->writeIndexAndResponsesFiles($study, (string)$q->internalId, $index);
 			}
 		}
 		$this->writeIndexAndResponsesFiles($study, PathsFS::FILENAME_EVENTS, new ResponsesIndex(KEYS_EVENT_RESPONSES));
