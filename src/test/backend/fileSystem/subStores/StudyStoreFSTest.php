@@ -222,7 +222,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$this->assertFalse($studyStore->questionnaireExists($this->studyId, 123453));
 	}
 	
-	function test_save() {
+	function test_createStudy() {
 		$questionnaireId = 11111;
 		$questionnaireKeys = ['key1', 'key2', 'key3'];
 		$config =  (object)[
@@ -242,7 +242,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$this->assertEquals($config, $studyStore->getStudyConfig($this->studyId));
 	}
 	
-	function test_save_with_randomGroups() {
+	function test_createStudy_with_randomGroups() {
 		$questionnaireId = 11111;
 		$questionnaireKeys = ['key1', 'key2', 'key3'];
 		$config =  (object)[
@@ -261,7 +261,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		);
 	}
 	
-	function test_save_with_updated_responses() {
+	function test_createStudy_with_updated_responses() {
 		$questionnaireId = 11111;
 		$config =  (object)[
 			'id' => $this->studyId,
@@ -284,7 +284,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		);
 	}
 	
-	function test_save_with_existing_data_and_updated_responses() {
+	function test_createStudy_with_existing_data_and_updated_responses() {
 		$questionnaireId = 11111;
 		$config =  (object)[
 			'id' => $this->studyId,
@@ -322,7 +322,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		);
 	}
 	
-	function test_save_with_updated_responses_where_filesize_is_too_big() {
+	function test_createStudy_with_updated_responses_where_filesize_is_too_big() {
 		$questionnaireId = 11111;
 		$config =  (object)[
 			'id' => $this->studyId,
@@ -375,14 +375,13 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$csvDelimiter = Configs::get('csv_delimiter');
 		$questionnaireId = 11111;
 		$questionnaireKeys = ['key1', 'key2', 'key3'];
-		$questionnaireIndex = [$questionnaireId => new ResponsesIndex(['key1', 'key2', 'key3'])];
 		$config =  (object)[
 			'id' => $this->studyId,
 			'questionnaires' => [
 				(object) ['internalId' => $questionnaireId]
 			]
 		];
-		$this->createStudy($config, $questionnaireIndex);
+		$this->createStudy($config, [$questionnaireId => new ResponsesIndex($questionnaireKeys)]);
 		
 		
 		//assign values:
@@ -437,7 +436,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		
 		//empty:
 		
-		$studyStore->emptyStudy($this->studyId, $questionnaireIndex);
+		$studyStore->emptyStudy($this->studyId, [$questionnaireId => new ResponsesIndex($questionnaireKeys)]);
 		
 		
 		//check if emptied:
