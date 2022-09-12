@@ -207,12 +207,12 @@ export function ViewModel(page) {
 				for(let addList_i=addList.length-1; addList_i>=0; --addList_i) {
 					let key = addList[addList_i]();
 					if(self.responses_cache.hasOwnProperty(key))
-						sum += parseInt(self.responses_cache[key]);
+						sum += parseInt(self.responses_cache[key]) || 0;
 				}
 				for(let subtractList_i=subtractList.length-1; subtractList_i>=0; --subtractList_i) {
 					let key = subtractList[subtractList_i]();
 					if(self.responses_cache.hasOwnProperty(key))
-						sum -= parseInt(self.responses_cache[key]);
+						sum -= parseInt(self.responses_cache[key]) || 0;
 				}
 				self.responses_cache[score.name()] = sum;
 			}
