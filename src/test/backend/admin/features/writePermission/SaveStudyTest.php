@@ -529,7 +529,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
 					$this->smallestDistance
 				),
-				7
+					7
 				)
 			],
 			'sumScore1' => [

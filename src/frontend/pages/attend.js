@@ -188,14 +188,14 @@ export function ViewModel(page) {
 		let pageNum = self.current_page();
 		if(viewModel_pages()[pageNum].has_missings())
 			return;
-
+		
 		let study_id = study.id();
-
+		
 		let participant_id = self.participant_id();
-
+		
 		if(!participant_id)
 			page.loader.error(Lang.get("error_unknown"));
-
+		
 		if(questionnaire.sumScores) {
 			let sumScores = questionnaire.sumScores();
 			for(let i=sumScores.length-1; i>=0; --i) {
@@ -203,7 +203,7 @@ export function ViewModel(page) {
 				let sum = 0;
 				let addList = score.addList();
 				let subtractList = score.subtractList();
-
+				
 				for(let addList_i=addList.length-1; addList_i>=0; --addList_i) {
 					let key = addList[addList_i]();
 					if(self.responses_cache.hasOwnProperty(key))
@@ -219,7 +219,7 @@ export function ViewModel(page) {
 		}
 		
 		self.responses_cache.formDuration = Date.now() - self.formStarted;
-
+		
 		Site.save_dataset(page, "questionnaire", participant_id, questionnaire, self.responses_cache).then(function({states}) {
 			let data_answer = states[0];
 			if(data_answer) {
@@ -228,7 +228,7 @@ export function ViewModel(page) {
 					return;
 				}
 				self.wasFinished(true);
-
+				
 				save_cookie(COOKIE_CURRENT_PAGE.replace("%1", study_id).replace("%2", questionnaire.internalId()), 0);
 				delete_cookie(COOKIE_RESPONSES_CACHE.replace("%1", study_id).replace("%2", questionnaire.internalId()));
 				save_cookie(COOKIE_LAST_COMPLETED.replace("%1", study_id).replace("%2", questionnaire.internalId()), Date.now() / 1000);
