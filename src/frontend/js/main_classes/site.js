@@ -45,7 +45,6 @@ export const Site = {
 		this.init_knockout();
 		
 		document.getElementById("header_serverName").innerText = serverName;
-		document.getElementById("legalLink").innerText = Lang.get("impressum");
 		
 		//clean el_pages:
 		this.el_pages.innerHTML = "";
@@ -102,6 +101,10 @@ export const Site = {
 			el.appendChild(box);
 			close_on_clickOutside(box);
 		}.bind(this));
+	},
+	
+	init_lang: function() {
+		document.getElementById("legalLink").innerText = Lang.get("impressum");
 	},
 	
 	init_knockout: function() {

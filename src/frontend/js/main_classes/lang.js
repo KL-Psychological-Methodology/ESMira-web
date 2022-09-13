@@ -1,9 +1,20 @@
+import {Requests} from "./requests";
+import {Site} from "./site";
+
 export const Lang = {
+	_promise: Promise.resolve(),
 	_vars: {},
 	code: "error",
-	init: function(obj, langCode) {
-		this._vars = obj;
+	init: function(langCode) {
+		let self = this;
 		this.code = langCode;
+		this._promise = Requests.load("locales/" + langCode + ".json", true).then(function(obj) {
+			self._vars = JSON.parse(obj);
+			Site.init_lang();
+		});
+	},
+	awaitPromise: function() {
+		return this._promise;
 	},
 	get: function(key, ... replacers) {
 		if(!Lang._vars.hasOwnProperty(key))

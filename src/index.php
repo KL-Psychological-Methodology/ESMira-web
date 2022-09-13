@@ -46,8 +46,18 @@ else {
 
 $accessKey = Main::getAccessKey();
 $servername = Configs::getServerName();
+$serverVersion = Main::SERVER_VERSION;
 
 $noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
+
+if(isset($_GET['minimal']))
+	$type = 'minimal ';
+if(isset($_GET['grayscaleLight']))
+	$type = 'grayscaleLight ';
+else if(isset($_GET['grayscaleDark']))
+	$type = 'grayscaleDark';
+else
+	$type = '';
 ?>
 
 
@@ -56,27 +66,11 @@ $noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 <head>
 	<meta charset="UTF-8">
 	<title>ESMira</title>
-	
-	<script type="text/javascript"><?php
-		//TODO: loading Lang here and serve it down to the Javascript modules saves us a request. But since it will be cached anyway, we should load it from javascript
-		
-		if(isset($_GET['minimal']))
-			$type = 'minimal ';
-		if(isset($_GET['grayscaleLight']))
-			$type = 'grayscaleLight ';
-		else if(isset($_GET['grayscaleDark']))
-			$type = 'grayscaleDark';
-		else
-			$type = '';
-		$serverVersion = Main::SERVER_VERSION;
-		echo "let a='$jsKey',b='$servername',c=$serverVersion,d='$accessKey',e='$lang',f='$type',g=".file_get_contents("locales/$lang.json"); ?>
-	</script>
-	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
 	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Mobile; Server; Open Source" />
 </head>
-<body onload="ESMira.init(a, b, c, d, e, f, g)">
+<body onload="ESMira.init(<?php echo "'$jsKey','$servername',$serverVersion,'$accessKey','$lang','$type'"; ?>)">
 
 <div id="header">
 	<a href="#<?php echo $jsKey; ?>">

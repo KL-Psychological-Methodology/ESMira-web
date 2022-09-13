@@ -6,7 +6,7 @@ import {isCompatible, toggleUrl} from "./helpers/compatible";
 //load variables so they are already available everywhere
 import * as Constants from "./variables/constants";
 
-export function init(startHash, serverName, serverVersion, server_accessKey, langCode, type, langObj) {
+export function init(startHash, serverName, serverVersion, server_accessKey, langCode, type) {
 	if(type)
 		document.body.classList.add(type);
 	if(process.env.NODE_ENV !== 'production') {
@@ -19,7 +19,7 @@ export function init(startHash, serverName, serverVersion, server_accessKey, lan
 		return;
 	}
 	
-	Lang.init(langObj, langCode);
+	Lang.init(langCode);
 	fillDefaults();
 	
 	Site.init(serverName, startHash, serverVersion, server_accessKey);

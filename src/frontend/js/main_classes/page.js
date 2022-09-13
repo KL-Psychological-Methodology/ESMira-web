@@ -133,7 +133,7 @@ export function Page(depth, code) {
 		
 		let promise;
 		if(pageInfo.permissions) {
-			promise = Admin.init(self).then(function(admin) {
+			promise = Promise.all([Admin.init(self), Lang.awaitPromise()]).then(function([admin]) {
 				if(!admin.esmira_isInit)
 					return PageIndex.init_esmira;
 				else if(!admin.is_loggedIn())
@@ -152,20 +152,18 @@ export function Page(depth, code) {
 						self.contentEl.innerHTML = "";
 						self.loader.error(Lang.get("error_no_permission"));
 						return PageIndex.login;
-						// throw Lang.get("error_no_permission");
 					}
 				}
-				// return admin.is_init ? (admin.is_loggedIn() ? pageInfo[0] : "login") : "init_esmira";
 			});
 		}
 		else {
-			promise = Promise.resolve(pageInfo);
+			promise = Lang.awaitPromise().then(function() {return pageInfo;});
 		}
 		
 		
 		return self.loader.showLoader(Lang.get("state_loading"), promise
-			.then(function(pageInfo) {
-				return import("../../pages/"+pageInfo.filename+".js");
+			.then(function(pageInfoToLoad) {
+				return import("../../pages/"+pageInfoToLoad.filename+".js");
 			})
 			.then(function({ViewModel}) {
 				viewModel = new ViewModel(self);
