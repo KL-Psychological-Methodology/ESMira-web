@@ -13,13 +13,12 @@ class ErrorReportStoreFS implements ErrorReportStore {
 	public function hasErrorReports(): bool {
 		$r = false;
 		$path = PathsFS::folderErrorReports();
+		$errorInfo = ErrorReportInfoLoader::importFile();
 		$handle = opendir($path);
 		while($file = readdir($handle)) {
 			if($file[0] != '.') {
-				$infoPath = PathsFS::fileErrorReportInfo($file);
-				if(file_exists($infoPath)) {
-					$info = ErrorReportInfoLoader::importFile((int) $file);
-					if(!$info->seen) {
+				if(isset($errorInfo[(int) $file])) {
+					if(!$errorInfo[(int) $file]->seen) {
 						$r = true;
 						break;
 					}
@@ -36,10 +35,11 @@ class ErrorReportStoreFS implements ErrorReportStore {
 	
 	public function getList(): array {
 		$list = [];
+		$errorInfo = ErrorReportInfoLoader::importFile();
 		$handle = opendir(PathsFS::folderErrorReports());
 		while($file = readdir($handle)) {
 			if($file[0] != '.') {
-				$list[] = ErrorReportInfoLoader::importFile((int) $file);
+				$list[] = $errorInfo[(int) $file] ?? new ErrorReportInfo((int) $file);
 			}
 		}
 		closedir($handle);
@@ -74,7 +74,9 @@ class ErrorReportStoreFS implements ErrorReportStore {
 		if(!file_exists(PathsFS::fileErrorReport($errorReportInfo->timestamp)))
 			throw new CriticalError('Error report does not exist!');
 		
-		ErrorReportInfoLoader::exportFile($errorReportInfo);
+		$errorInfo = ErrorReportInfoLoader::importFile();
+		$errorInfo[$errorReportInfo->timestamp] = $errorReportInfo;
+		ErrorReportInfoLoader::exportFile($errorInfo);
 	}
 	
 	public function removeErrorReport(int $timestamp) {
@@ -82,5 +84,10 @@ class ErrorReportStoreFS implements ErrorReportStore {
 		
 		if(!file_exists($path) || !unlink($path))
 			throw new CriticalError("Could not remove $path");
+		
+		$errorInfo = ErrorReportInfoLoader::importFile();
+		if(isset($errorInfo[$timestamp]))
+			unset($errorInfo[$timestamp]);
+		ErrorReportInfoLoader::exportFile($errorInfo);
 	}
 }

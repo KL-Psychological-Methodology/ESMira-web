@@ -86,29 +86,31 @@ class UpdateVersion extends CheckUpdate {
 			//Replace error report info format from info in filename to additional info file
 			//
 			
-			$folderErrorReports = PathsFS::folderErrorReports();
-			$handle = opendir($folderErrorReports);
-			while($filename = readdir($handle)) {
-				if($filename[0] == '.' || file_exists(PathsFS::fileErrorReportInfo((int) $filename))) //skip if data is already in new format
-					continue;
-				if(substr($filename, 0, 1) === '_') {
-					$seen = true;
-					$filenameForSplit = substr($filename, 1);
+			if(!file_exists(PathsFS::fileErrorReportInfo())) { //skip if data is already in new format
+				$folderErrorReports = PathsFS::folderErrorReports();
+				$handle = opendir($folderErrorReports);
+				$errorInfoArray = [];
+				while($filename = readdir($handle)) {
+					if($filename[0] == '.')
+						continue;
+					if(substr($filename, 0, 1) === '_') {
+						$seen = true;
+						$filenameForSplit = substr($filename, 1);
+					} else {
+						$seen = false;
+						$filenameForSplit = $filename;
+					}
+					$parts = explode('-', $filenameForSplit);
+					
+					$note = (count($parts) === 2) ? Paths::getFromUrlFriendly($parts[1]) : '';
+					$timestamp = (int)$parts[0];
+					
+					$errorInfoArray[$timestamp] = new ErrorReportInfo($timestamp, $note, $seen);
+					rename($folderErrorReports . $filename, PathsFS::fileErrorReport($timestamp));
 				}
-				else {
-					$seen = false;
-					$filenameForSplit = $filename;
-				}
-				$parts = explode('-', $filenameForSplit);
-				
-				$note =  (count($parts) === 2) ? Paths::getFromUrlFriendly($parts[1]) : '';
-				$timestamp =  (int) $parts[0];
-				
-				ErrorReportInfoLoader::exportFile(new ErrorReportInfo($timestamp, $note, $seen));
-				rename($folderErrorReports .$filename, PathsFS::fileErrorReport($timestamp));
+				ErrorReportInfoLoader::exportFile($errorInfoArray);
+				closedir($handle);
 			}
-			closedir($handle);
-			
 			
 			//php has still loaded the old Configs so we have to get our store class manually
 			$dataStore = new DataStoreFS();
@@ -230,14 +232,36 @@ class UpdateVersion extends CheckUpdate {
 							);
 						}
 						catch(Throwable $e) {
-							throw new PageFlowException("Failed updating messages for $userId", 0, $e);
+							throw new CriticalError("Failed updating messages for $userId", 0, $e);
 						}
 					}
 				}
 				catch(Throwable $e) {
-					throw new PageFlowException("Failed updating study $studyId\n$e", 0, $e);
+					throw new CriticalError("Failed updating study $studyId\n$e", 0, $e);
 				}
 			}
+		}
+		else if($fromVersion <= 204) { //these changes done directly in $fromVersion <= 200
+			$folderErrorReports = PathsFS::folderErrorReports();
+			$handle = opendir($folderErrorReports);
+			$errorInfoArray = ErrorReportInfoLoader::importFile(); //expected to be []; if data is already in new format we just resave everything
+			while($filename = readdir($handle)) {
+				if($filename[0] == '.') //skip if data is already in new format
+					continue;
+				
+				$timestamp = (int) $filename;
+				
+				$oldErrorInfoPath = "$folderErrorReports.$filename.info";
+				
+				if(file_exists($oldErrorInfoPath)) {
+					$errorInfoArray[$timestamp] = unserialize(file_get_contents($oldErrorInfoPath));
+					unlink($oldErrorInfoPath);
+				}
+				else
+					$errorInfoArray[$timestamp] = new ErrorReportInfo($timestamp);
+			}
+			ErrorReportInfoLoader::exportFile($errorInfoArray);
+			closedir($handle);
 		}
 	}
 	

@@ -93,8 +93,8 @@ class PathsFS {
 	static function fileErrorReport(int $timestamp): string {
 		return self::folderErrorReports() .$timestamp;
 	}
-	static function fileErrorReportInfo(int $timestamp): string {
-		return self::folderErrorReports() .".$timestamp.info";
+	static function fileErrorReportInfo(): string {
+		return self::folderErrorReports() .".error_info";
 	}
 	static function fileLangConfig(int $studyId, string $code): string {
 		return self::folderLangs($studyId)."/$code.json";
