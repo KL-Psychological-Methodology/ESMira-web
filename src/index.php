@@ -45,6 +45,7 @@ else {
 }
 
 $accessKey = Main::getAccessKey();
+$servername = Configs::getServerName();
 
 $noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 ?>
@@ -57,7 +58,7 @@ $noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 	<title>ESMira</title>
 	
 	<script type="text/javascript"><?php
-		//TODO: loading Lang here and serve it down to the Javascript modules as a global saves us a request but is kinda ugly. Ideas?
+		//TODO: loading Lang here and serve it down to the Javascript modules saves us a request. But since it will be cached anyway, we should load it from javascript
 		
 		if(isset($_GET['minimal']))
 			$type = 'minimal ';
@@ -68,7 +69,6 @@ $noJsUrl = "index_nojs.php?ref&$_SERVER[QUERY_STRING]";
 		else
 			$type = '';
 		$serverVersion = Main::SERVER_VERSION;
-		$servername = Configs::getServerName();
 		echo "let a='$jsKey',b='$servername',c=$serverVersion,d='$accessKey',e='$lang',f='$type',g=".file_get_contents("locales/$lang.json"); ?>
 	</script>
 	
