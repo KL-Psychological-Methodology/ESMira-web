@@ -1,42 +1,32 @@
 RewriteEngine On
-RewriteCond %{REQUEST_URI} \d$
 
 
 # to study				www.example.com/1234
-RewriteRule ^(\d+)$ index.php?id=$1 [NC,L]
+RewriteRule ^(\d+)$ index.php?id=$1 [NC,L,QSA]
 
 # to study				www.example.com/KEY
-RewriteRule ^([a-zA-Z][a-zA-Z0-9]+)$ index.php?key=$1 [NC,L]
+RewriteRule ^([a-zA-Z][a-zA-Z0-9]+)$ index.php?key=$1 [NC,L,QSA]
 
 # to study				www.example.com/1234-KEY
-RewriteRule ^(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?id=$1&key=$2 [NC,L]
+RewriteRule ^(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?id=$1&key=$2 [NC,L,QSA]
 
 
 # to app instructions	www.example.com/app-1234
-RewriteRule ^app-(\d+)$ index.php?id=$1&app_install [NC,L]
+RewriteRule ^app-(\d+)$ index.php?id=$1&app_install [NC,L,QSA]
 
 # to app instructions	www.example.com/app-KEY
-RewriteRule ^app-([a-zA-Z][a-zA-Z0-9]+)$ index.php?key=$1&app_install [NC,L]
+RewriteRule ^app-([a-zA-Z][a-zA-Z0-9]+)$ index.php?key=$1&app_install [NC,L,QSA]
 
 # to app instructions	www.example.com/app-1234-KEY
-RewriteRule ^app-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?id=$1&key=$2&app_install [NC,L]
+RewriteRule ^app-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?id=$1&key=$2&app_install [NC,L,QSA]
 
 
 # to questionnaire		www.example.com/survey-12345
-RewriteRule ^survey-(\d+)$ index.php?qid=$1 [NC,L]
+RewriteRule ^survey-(\d+)$ index.php?qid=$1 [NC,L,QSA]
 
 # to questionnaire		www.example.com/survey-12345-KEY
-RewriteRule ^survey-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?qid=$1&key=$2 [NC,L]
+RewriteRule ^survey-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?qid=$1&key=$2 [NC,L,QSA]
 
 
 # Fallback in case we ever want to replace the php backend:
-RewriteRule ^api/([^.]+)$ api/$1.php [NC,L]
-
-# Remove when all have version 2.4.3
-RewriteRule ^studies.php$ api/studies.php [NC,L]
-RewriteRule ^datasets.php$ api/datasets.php [NC,L]
-RewriteRule ^save_errors.php$ api/save_errors.php [NC,L]
-RewriteRule ^save_messages.php$ api/save_messages.php [NC,L]
-RewriteRule ^statistics.php$ api/statistics.php [NC,L]
-RewriteRule ^update.php$ api/update.php [NC,L]
-RewriteRule ^server_statistics.php$ api/server_statistics.php [NC,L]
+RewriteRule ^api/([^.]+)$ api/$1.php [NC,L,QSA]

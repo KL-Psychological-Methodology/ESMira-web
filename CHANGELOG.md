@@ -19,11 +19,12 @@
 - Added abstraction layer to have the option of connecting a database in the future.
 - Simplified code and data structure.
 - Improved error handling in backend.
-- Bugfix: Resolved issue when opening questionnaires via direct link (or qr code) in the web version.
-- Fixes in php fallback.
 - Web version adds entry in web_access.csv when user navigates to study questionnaire.  
-- Fixed error when saving studies with questionnaires without an internalId.
 - Improved error handling in various places.
+- Bugfix: Error when saving studies with questionnaires without an internalId.
+- Bugfix: Resolved issue when opening questionnaires via direct link (or qr code) in the web version.
+- Bugfix: Changing language was ignored when using a short link to a study.
+- Various bugfixes in php fallback.
 - Various other small bugfixes.
 
 ### 🗑️ Removed
