@@ -35,7 +35,8 @@ use backend\fileSystem\subStores\StudyStatisticsStoreFS;
 
 class DataStoreFS implements DataStoreInterface {
 	public function isInit(): bool {
-		return file_exists(Configs::get('dataFolder_path'));
+		$path = Configs::get('dataFolder_path');
+		return $path && file_exists($path);
 	}
 	
 	public function getESMiraInitializer(): ESMiraInitializer {
