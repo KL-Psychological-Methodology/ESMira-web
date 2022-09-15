@@ -40,7 +40,7 @@ class MessagesStoreFS implements MessagesStore {
 			if($studyId[0] === '.' || $studyId === PathsFS::FILENAME_STUDY_INDEX)
 				continue;
 			
-			if(($isAdmin || in_array($studyId, $msgPermissions)) && $this->hasMessages($studyId)) {
+			if(($isAdmin || in_array($studyId, $msgPermissions)) && $this->hasMessages((int) $studyId)) {
 				$ids[] = $studyId;
 			}
 		}

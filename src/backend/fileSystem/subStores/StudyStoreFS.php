@@ -180,8 +180,9 @@ class StudyStoreFS implements StudyStore {
 	public function getStudyIdList(): array {
 		$studies = [];
 		$handle = opendir(PathsFS::folderStudies());
-		while($studyId = readdir($handle)) {
-			if($studyId[0] != '.' && $studyId != PathsFS::FILENAME_STUDY_INDEX) {
+		while($folderName = readdir($handle)) {
+			$studyId = (int) $folderName;
+			if($studyId != 0) {
 				$studies[] = $studyId;
 			}
 		}
