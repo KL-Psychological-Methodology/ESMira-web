@@ -14,8 +14,7 @@ import {
 	STATISTICS_STORAGE_TYPE_TIMED
 } from "../variables/statistics";
 import {ONE_DAY, SMALLEST_TIMED_DISTANCE} from "../variables/constants";
-import {Defaults, fillDefaults} from "../variables/defaults";
-import {FILE_IMAGE} from "../variables/urls";
+import {Defaults} from "../variables/defaults";
 
 const EMPTY_DATA_SYMBOL = "-";
 
@@ -211,7 +210,7 @@ const CsvData = {
 					visible_column_index[column_value].push(cell);
 				}
 			}
-			columnCells.push(cell); //we need to use push because of skipped_index, i can be wrong
+			columnCells.push(cell); //we need to use push because of skipped_index, I can be wrong
 			++column_i;
 		}
 		this.rowsIndex.push(row_data);
@@ -628,7 +627,7 @@ const CsvData = {
 	filter_rowsByResponseTime: function(visible, newestTimestamp) {
 		let columnIndex = this.get_columnNum("responseTime");
 		
-		if(!visible && this.filteredRowsIndex.hasOwnProperty(columnIndex)) //we dont want to filter the same row twice
+		if(!visible && this.filteredRowsIndex.hasOwnProperty(columnIndex)) //we don't want to filter the same row twice
 			return;
 		
 		let rows = this.visible_rowsIndex;
@@ -655,7 +654,6 @@ const CsvData = {
 	}
 };
 
-fillDefaults();
 onmessage = function(event) {
 	let data = event.data;
 	let id = data.id;

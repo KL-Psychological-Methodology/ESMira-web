@@ -254,9 +254,10 @@ class QuestionnaireAttend implements Page {
 		}
 		else if($this->successSaving) {
 			return '<p class="center">'
-				.((isset($this->study->webQuestionnaireCompletedInstructions) && strlen($this->study->webQuestionnaireCompletedInstructions))
-					? $this->study->webQuestionnaireCompletedInstructions
-					: Lang::get('default_webQuestionnaireCompletedInstructions'))
+				.($this->study->webQuestionnaireCompletedInstructions
+					?? Lang::get('default_webQuestionnaireCompletedInstructions')
+					?: Lang::get('default_webQuestionnaireCompletedInstructions')
+				)
 				.'</p></div>';
 		}
 		else if($this->dataMissing) {

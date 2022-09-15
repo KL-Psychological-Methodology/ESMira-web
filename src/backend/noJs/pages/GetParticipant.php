@@ -19,7 +19,12 @@ class GetParticipant implements Page {
 	public function getContent(): string {
 		$studyData = NoJsMain::getStudyData();
 		$study = $studyData->study;
-		return '<p>' .($study->chooseUsernameInstructions ?? Lang::get('default_chooseUsernameInstructions')) .'</p>
+		return '<p>'
+			.($study->chooseUsernameInstructions
+				?? Lang::get('default_chooseUsernameInstructions')
+				?: Lang::get('default_chooseUsernameInstructions')
+			)
+			.'</p>
 	
 	<form method="post" action="" class="center">
 		<p>

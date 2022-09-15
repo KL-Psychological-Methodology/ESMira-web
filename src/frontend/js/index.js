@@ -1,6 +1,5 @@
 import {Site} from './main_classes/site.js';
 import {Lang} from "./main_classes/lang";
-import {fillDefaults} from "./variables/defaults";
 import {isCompatible, toggleUrl} from "./helpers/compatible";
 
 //load variables so they are already available everywhere
@@ -20,7 +19,6 @@ export function init(startHash, serverName, serverVersion, server_accessKey, lan
 	}
 	
 	Lang.init(langCode);
-	fillDefaults();
 	
 	Site.init(serverName, startHash, serverVersion, server_accessKey);
 	document.body.classList.add("is_init");

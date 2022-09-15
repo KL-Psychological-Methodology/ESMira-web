@@ -1,4 +1,4 @@
-<p data-bind="html: chooseUsernameInstructions"></p>
+<p data-bind="html: chooseUsernameInstructions() ? chooseUsernameInstructions() : Lang.get('default_chooseUsernameInstructions')"></p>
 
 <form method="post" action="" class="center" data-bind="event: {submit: $root.create_participant}">
 	<p>
