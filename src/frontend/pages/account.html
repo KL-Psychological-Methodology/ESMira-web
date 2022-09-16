@@ -1,7 +1,7 @@
-<p data-bind="click: $root.change_username, text: Lang.get('change_username')"></p>
-<change-user params="username: Admin.tools.username(), finish: $root.change_password">
+<p data-bind="click: $root.change_accountName, text: Lang.get('change_username')"></p>
+<change-account params="accountName: Admin.tools.accountName(), finish: $root.change_password">
 	<p data-bind=" text: Lang.get('change_password')"></p>
-</change-user>
+</change-account>
 
 <a data-bind="navi: 'dataView,fMode:2', text: Lang.get('login_history')"></a>
 

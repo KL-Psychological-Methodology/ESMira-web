@@ -11,16 +11,16 @@ use test\testConfigs\BaseAdminPermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class ChangePasswordTest extends BaseAdminPermissionTestSetup {
-	private $existingUser = 'existingUser';
+	private $existingAccountName = 'existingUser';
 	private $password = '123456789012';
-	protected function setUpUserStoreObserver(): Stub {
-		$observer = parent::setUpUserStoreObserver();
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer = parent::setUpAccountStoreObserver();
 		
-		$this->addDataMock($observer, 'setUser');
+		$this->addDataMock($observer, 'setAccount');
 		$observer
-			->method('doesUserExist')
-			->willReturnCallback(function(string $username) {
-				return $username == $this->existingUser;
+			->method('doesAccountExist')
+			->willReturnCallback(function(string $accountName) {
+				return $accountName == $this->existingAccountName;
 			});
 		return $observer;
 	}
@@ -32,30 +32,30 @@ class ChangePasswordTest extends BaseAdminPermissionTestSetup {
 			'new_pass' => $this->password
 		]);
 		$obj->exec();
-		$this->assertDataMock('setUser', array_values([Permission::getUser(), $this->password]));
+		$this->assertDataMock('setAccount', array_values([Permission::getAccountName(), $this->password]));
 	}
 	function test_asAdmin() {
 		$this->setPost([
 			'new_pass' => $this->password,
-			'user' => $this->existingUser
+			'accountName' => $this->existingAccountName
 		]);
 		
-		//without admin, only own username should be used:
+		//without admin, only own accountName should be used:
 		$this->isAdmin = false;
 		$obj = new ChangePassword();
 		$obj->exec();
-		$this->assertDataMock('setUser', array_values([Permission::getUser(), $this->password]));
+		$this->assertDataMock('setAccount', array_values([Permission::getAccountName(), $this->password]));
 		
 		//with admin:
 		$this->isAdmin = true;
 		$obj = new ChangePassword();
 		
 		$obj->exec();
-		$this->assertDataMock('setUser', array_values([$this->existingUser, $this->password]));
+		$this->assertDataMock('setAccount', array_values([$this->existingAccountName, $this->password]));
 		
 		$this->setPost([
 			'new_pass' => $this->password,
-			'user' => 'notExisting'
+			'accountName' => 'notExisting'
 		]);
 		$this->expectException(PageFlowException::class);
 		$obj->exec();

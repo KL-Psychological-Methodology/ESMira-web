@@ -13,22 +13,22 @@ class ChangePassword extends IsLoggedIn {
 		if(!isset($_POST['new_pass']))
 			throw new PageFlowException('Missing data');
 		
-		$userStore = Configs::getDataStore()->getUserStore();
+		$accountStore = Configs::getDataStore()->getAccountStore();
 		$pass = $_POST['new_pass'];
 		
-		if($this->isAdmin && isset($_POST['user'])) {
-			$user = $_POST['user'];
-			if(!$userStore->doesUserExist($user))
-				throw new PageFlowException("User $user does not exist");
+		if($this->isAdmin && isset($_POST['accountName'])) {
+			$accountName = $_POST['accountName'];
+			if(!$accountStore->doesAccountExist($accountName))
+				throw new PageFlowException("Account $accountName does not exist");
 		}
 		else
-			$user = Permission::getUser();
+			$accountName = Permission::getAccountName();
 		
 		if(strlen($pass) < 12)
 			throw new PageFlowException('The password needs to have at least 12 characters.');
 		
 		
-		$userStore->setUser($user, $pass);
+		$accountStore->setAccount($accountName, $pass);
 		
 		return [];
 	}

@@ -454,7 +454,7 @@ class SaveStudy extends HasWritePermission {
 		
 		
 		if($this->studyStore->getStudyLastChanged($this->studyId) > (int) $_GET['lastChanged'])
-			throw new PageFlowException('The study configuration was changed (by another user?) since you last loaded it. You can not save your changes. Please reload the page.');
+			throw new PageFlowException('The study configuration was changed (by another account?) since you last loaded it. You can not save your changes. Please reload the page.');
 		
 		
 		//

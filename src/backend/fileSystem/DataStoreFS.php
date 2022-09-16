@@ -24,8 +24,8 @@ use backend\subStores\StudyStore;
 use backend\subStores\StudyStatisticsMetadataStore;
 use backend\subStores\StudyStatisticsStore;
 use backend\subStores\UserDataStore;
-use backend\subStores\UserStore;
-use backend\fileSystem\subStores\UserStoreFS;
+use backend\subStores\AccountStore;
+use backend\fileSystem\subStores\AccountStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
 use backend\fileSystem\subStores\UserDataStoreFS;
@@ -43,8 +43,8 @@ class DataStoreFS implements DataStoreInterface {
 		return new ESMiraInitializerFS();
 	}
 	
-	public function getUserStore(): UserStore {
-		return new UserStoreFS();
+	public function getAccountStore(): AccountStore {
+		return new AccountStoreFS();
 	}
 	public function getLoginTokenStore(): LoginTokenStore {
 		return new LoginTokenStoreFS();

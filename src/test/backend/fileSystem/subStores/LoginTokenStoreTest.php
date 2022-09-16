@@ -11,29 +11,29 @@ require_once __DIR__ .'/../../../../backend/autoload.php';
 
 class LoginTokenStoreTest extends BaseDataFolderTestSetup {
 	protected function tearDown(): void {
-		$userStore = Configs::getDataStore()->getUserStore();
-		$userStore->removeUser(self::$username);
+		$accountStore = Configs::getDataStore()->getAccountStore();
+		$accountStore->removeAccount(self::$accountName);
 	}
 	
 	function test_save_and_remove_loginToken() {
-		$username = self::$username;
+		$accountName = self::$accountName;
 		$hash = 'hash';
 		$tokenId = 'tokenId';
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
 		
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, $tokenId));
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, $tokenId));
 		
-		$loginTokenStore->saveLoginToken($username, $hash, $tokenId);
-		$this->assertTrue($loginTokenStore->loginTokenExists($username, $tokenId));
-		$this->assertEquals($hash, $loginTokenStore->getLoginToken($username, $tokenId));
+		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId);
+		$this->assertTrue($loginTokenStore->loginTokenExists($accountName, $tokenId));
+		$this->assertEquals($hash, $loginTokenStore->getLoginToken($accountName, $tokenId));
 		
 		
-		$loginTokenStore->removeLoginToken($username, $tokenId);
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, $tokenId));
+		$loginTokenStore->removeLoginToken($accountName, $tokenId);
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, $tokenId));
 	}
 	
 	function test_getLoginTokenList() {
-		$username = self::$username;
+		$accountName = self::$accountName;
 		$hash = 'hash';
 		$tokenId1 = 'tokenId1';
 		$tokenId2 = 'tokenId2';
@@ -42,35 +42,35 @@ class LoginTokenStoreTest extends BaseDataFolderTestSetup {
 		Main::setCookie('tokenId', $tokenId2);
 		
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
-		$loginTokenStore->saveLoginToken($username, $hash, $tokenId1);
-		$loginTokenStore->saveLoginToken($username, $hash, $tokenId2);
-		$loginTokenStore->saveLoginToken($username, $hash, $tokenId3);
+		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId1);
+		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId2);
+		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId3);
 		
 		$this->assertEquals([
 			new TokenInfo($tokenId1, time(), false),
 			new TokenInfo($tokenId2, time(), true),
 			new TokenInfo($tokenId3, time(), false)
-		], $loginTokenStore->getLoginTokenList($username));
+		], $loginTokenStore->getLoginTokenList($accountName));
 	}
 	
 	function test_clearAllLoginToken() {
-		$username = self::$username;
+		$accountName = self::$accountName;
 		$hash = 'hash';
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
 		
-		$loginTokenStore->saveLoginToken($username, $hash, 'id1');
-		$loginTokenStore->saveLoginToken($username, $hash, 'id2');
-		$loginTokenStore->saveLoginToken($username, $hash, 'id3');
+		$loginTokenStore->saveLoginToken($accountName, $hash, 'id1');
+		$loginTokenStore->saveLoginToken($accountName, $hash, 'id2');
+		$loginTokenStore->saveLoginToken($accountName, $hash, 'id3');
 		
-		$this->assertTrue($loginTokenStore->loginTokenExists($username, 'id1'));
-		$this->assertTrue($loginTokenStore->loginTokenExists($username, 'id2'));
-		$this->assertTrue($loginTokenStore->loginTokenExists($username, 'id3'));
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, 'other'));
+		$this->assertTrue($loginTokenStore->loginTokenExists($accountName, 'id1'));
+		$this->assertTrue($loginTokenStore->loginTokenExists($accountName, 'id2'));
+		$this->assertTrue($loginTokenStore->loginTokenExists($accountName, 'id3'));
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, 'other'));
 		$this->assertFalse($loginTokenStore->loginTokenExists('other', 'id1'));
 		
-		$loginTokenStore->clearAllLoginToken($username);
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, 'id1'));
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, 'id2'));
-		$this->assertFalse($loginTokenStore->loginTokenExists($username, 'id3'));
+		$loginTokenStore->clearAllLoginToken($accountName);
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, 'id1'));
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, 'id2'));
+		$this->assertFalse($loginTokenStore->loginTokenExists($accountName, 'id3'));
 	}
 }

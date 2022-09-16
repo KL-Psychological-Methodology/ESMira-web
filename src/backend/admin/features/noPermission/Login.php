@@ -9,15 +9,15 @@ use backend\Permission;
 class Login extends NoPermission {
 	
 	function exec(): array {
-		if(!isset($_POST['user']) || !isset($_POST['pass']))
+		if(!isset($_POST['accountName']) || !isset($_POST['pass']))
 			throw new PageFlowException('Missing data');
 		
-		$user = $_POST['user'];
+		$accountName = $_POST['accountName'];
 		$pass = $_POST['pass'];
-		Permission::login($user, $pass);
+		Permission::login($accountName, $pass);
 		
 		if(Permission::isLoggedIn() && isset($_POST['rememberMe'])) {
-			Permission::createNewLoginToken($user);
+			Permission::createNewLoginToken($accountName);
 		}
 		
 		$c = new GetPermissions();

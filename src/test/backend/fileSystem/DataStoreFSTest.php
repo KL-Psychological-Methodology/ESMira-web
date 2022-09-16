@@ -13,7 +13,7 @@ use backend\fileSystem\subStores\StudyStatisticsMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
 use backend\fileSystem\subStores\UserDataStoreFS;
-use backend\fileSystem\subStores\UserStoreFS;
+use backend\fileSystem\subStores\AccountStoreFS;
 use backend\subStores\ServerStatisticsStore;
 use test\testConfigs\BaseDataFolderTestSetup;
 
@@ -33,8 +33,8 @@ class DataStoreFSTest extends BaseDataFolderTestSetup {
 		$this->assertInstanceOf(ESMiraInitializerFS::class, Configs::getDataStore()->getESMiraInitializer());
 	}
 	
-	function test_getUserStore() {
-		$this->assertInstanceOf(UserStoreFS::class, Configs::getDataStore()->getUserStore());
+	function test_getAccountStore() {
+		$this->assertInstanceOf(AccountStoreFS::class, Configs::getDataStore()->getAccountStore());
 	}
 	function test_getAccessIndexStore() {
 		$this->assertInstanceOf(StudyAccessIndexStoreFS::class, Configs::getDataStore()->getStudyAccessIndexStore());

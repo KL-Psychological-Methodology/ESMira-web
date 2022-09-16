@@ -177,8 +177,7 @@ export function create_loaderForNeededFiles(page, study, charts) {
 	return groupLoaders;
 }
 
-// export function load_statisticsFromFiles(page, study, charts, username) {
-export function load_statisticsFromFiles(loaderList, study, charts, username, dontLoadPublicStatistics) {
+export function load_statisticsFromFiles(loaderList, study, charts, userId, dontLoadPublicStatistics) {
 	let statistics = {},
 		needsPublicStatistics = false,
 		promise = Promise.resolve();
@@ -208,9 +207,9 @@ export function load_statisticsFromFiles(loaderList, study, charts, username, do
 				return loader.waitUntilReady();
 			})
 			.then(function() {
-				if(username) {
+				if(userId) {
 					loader.filter_column(false, "userId");
-					loader.filter(true, "userId", username);
+					loader.filter(true, "userId", userId);
 				}
 
 				get_statistics(loader);

@@ -248,15 +248,15 @@ dash-el widget-only {
 	position: absolute;
 }
 
-change-user .element {
+change-account .element {
 	display: inline-block;
 	vertical-align: top;
 }
 
-change-user.verticalSorted .element {
+change-account.verticalSorted .element {
 	display: block;
 }
-change-user.verticalSorted .element.btn {
+change-account.verticalSorted .element.btn {
 	text-align: center;
 }
 

@@ -49,9 +49,11 @@ class GetNewIdTest extends BaseWritePermissionTestSetup {
 		$usedIndex = [];
 		for($i=100; $i>=0; --$i) {
 			Main::$defaultPostInput = json_encode($usedIndex);
-			$id = $obj->exec()[0];
+			$obj->execAndOutput();
+			$id = json_decode(ob_get_contents())->dataset;
 			$this->assertArrayNotHasKey($id, $usedIndex);
 			$usedIndex[$id] = true;
+			ob_clean();
 		}
 	}
 	function test_when_study_exists() {
@@ -59,13 +61,13 @@ class GetNewIdTest extends BaseWritePermissionTestSetup {
 		$obj = new GetNewId();
 		
 		$this->expectErrorMessage('Could not find an unused id');
-		$obj->exec()[0];
+		$obj->execAndOutput();
 	}
 	function test_when_questionnaireId_exists() {
 		$this->getStudyIdForQuestionnaireIdReturn = $this->studyId;
 		$obj = new GetNewId();
 		
 		$this->expectErrorMessage('Could not find an unused id');
-		$obj->exec()[0];
+		$obj->execAndOutput();
 	}
 }

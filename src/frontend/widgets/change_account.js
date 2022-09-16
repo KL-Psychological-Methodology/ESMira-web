@@ -4,7 +4,7 @@ import {close_on_clickOutside} from "../js/helpers/basics";
 
 const PASSWORD_MIN_LENGTH = 12;
 
-export function ChangeUser_viewModel(page, rootEl, params) {
+export function ChangeAccount_viewModel(page, rootEl, params) {
 	let self = this;
 	
 	this.stayOpen = params.stayOpen || false;
@@ -12,9 +12,9 @@ export function ChangeUser_viewModel(page, rootEl, params) {
 	this.isOpen = ko.observable(false);
 	this.password = ko.observable('');
 	this.passwordRepeat = ko.observable('');
-	//knockout wraps the username in an observable not matter what - I dont really understand why...
-	this.username = ko.observable(typeof params.username === "function" ? params.username() : params.username);
-	this.needsUsername = !this.username();
+	//knockout wraps the accountName in an observable not matter what - I dont really understand why...
+	this.accountName = ko.observable(typeof params.accountName === "function" ? params.accountName() : params.accountName);
+	this.needsAccountName = !this.accountName();
 	this.enableForm = ko.pureComputed(function() {
 		return self.password().length >= PASSWORD_MIN_LENGTH && self.password() === self.passwordRepeat();
 	});
@@ -26,12 +26,12 @@ export function ChangeUser_viewModel(page, rootEl, params) {
 	}
 	
 	this.save = function() {
-		if(self.needsUsername && self.username().length < 3)
+		if(self.needsAccountName && self.accountName().length < 3)
 			page.loader.error(Lang.get('error_short_username'));
 		else if(self.password() < PASSWORD_MIN_LENGTH)
 			page.loader.error(Lang.get('error_bad_password'));
 		else {
-			let promise = params.finish(self.username(), self.password());
+			let promise = params.finish(self.accountName(), self.password());
 			if(promise) {
 				promise.then(function() {
 					self.password('');

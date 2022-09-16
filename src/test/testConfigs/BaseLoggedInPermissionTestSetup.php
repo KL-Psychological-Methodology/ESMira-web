@@ -2,7 +2,7 @@
 
 namespace test\testConfigs;
 
-use backend\admin\features\adminPermission\AddUserPermission;
+use backend\admin\features\adminPermission\AddAccountPermission;
 use test\testConfigs\BaseNoPermissionTestSetup;
 use backend\admin\features\noPermission\Login;
 use backend\admin\NoPermission;
@@ -11,7 +11,7 @@ use backend\CriticalError;
 use backend\DataStoreInterface;
 use backend\PageFlowException;
 use backend\Permission;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -20,27 +20,27 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../../backend/autoload.php';
 
 abstract class BaseLoggedInPermissionTestSetup extends BaseNoPermissionTestSetup {
-	private $username = 'loginUser';
+	private $accountName = 'loginUser';
 	protected $studyId = 123;
 	
 	function setUp(): void {
 		parent::setUp();
-		Permission::setLoggedIn($this->username);
+		Permission::setLoggedIn($this->accountName);
 		$this->setPost(['study_id' => $this->studyId]);
 	}
 	
-	protected function setUpUserStoreObserver(): Stub {
-		$userStore = $this->createMock(UserStore::class);
+	protected function setUpAccountStoreObserver(): Stub {
+		$accountStore = $this->createMock(AccountStore::class);
 		
-		$userStore->expects($this->any())
-			->method('checkUserLogin')
+		$accountStore->expects($this->any())
+			->method('checkAccountLogin')
 			->willReturn(true);
-		return $userStore;
+		return $accountStore;
 	}
 	
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
-		$this->createStoreMock('getUserStore', $this->setUpUserStoreObserver(), $observer);
+		$this->createStoreMock('getAccountStore', $this->setUpAccountStoreObserver(), $observer);
 		return $observer;
 	}
 }

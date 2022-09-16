@@ -26,7 +26,7 @@ class MessagesStoreFSTest extends BaseDataFolderTestSetup {
 	}
 	
 	function test_getStudiesWithUnreadMessagesForPermission_as_admin() {
-		$username = self::$username;
+		$accountName = self::$accountName;
 		
 		self::createEmptyStudy(123);
 		self::createEmptyStudy(234);
@@ -37,12 +37,12 @@ class MessagesStoreFSTest extends BaseDataFolderTestSetup {
 		MessagesUnreadLoader::exportFile(123, 'userId', $messages);
 		MessagesUnreadLoader::exportFile(345, 'userId', $messages);
 		
-		$this->login($username);
+		$this->login($accountName);
 		$this->assertEquals([123, 345], Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission());
 	}
 	function test_getStudiesWithUnreadMessagesForPermission_as_user() {
 		$studyId = 123;
-		$username = 'otherUser';
+		$accountName = 'otherUser';
 
 		self::createEmptyStudy($studyId);
 		self::createEmptyStudy(234);
@@ -53,8 +53,8 @@ class MessagesStoreFSTest extends BaseDataFolderTestSetup {
 		MessagesUnreadLoader::exportFile($studyId, 'userId', $messages);
 		MessagesUnreadLoader::exportFile(345, 'userId', $messages);
 		
-		$this->login($username);
-		$this->addPermission('msg', $studyId, $username);
+		$this->login($accountName);
+		$this->addPermission('msg', $studyId, $accountName);
 		$this->assertEquals([$studyId], Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission());
 	}
 	

@@ -51,7 +51,7 @@ class IsLoggedInTest extends BaseLoggedInPermissionTestSetup {
 		$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
 		$_SERVER['HTTP_USER_AGENT'] = 'UnitTester';
 		$this->setPost([
-			'user' => 123456,
+			'accountName' => 123456,
 			'pass' => 123456
 		]);
 		$obj = $this->createObj();

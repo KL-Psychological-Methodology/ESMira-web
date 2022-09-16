@@ -11,8 +11,8 @@ import rich_text from '../../widgets/rich_text.html';
 import show_hide from '../../widgets/show_hide.html';
 import {Admin} from "../main_classes/admin";
 import {Lang} from "../main_classes/lang";
-import {ChangeUser_viewModel} from "../../widgets/change_user";
-import changeUser from '../../widgets/change_user.html';
+import {ChangeAccount_viewModel} from "../../widgets/change_account";
+import changeAccount from '../../widgets/change_account.html';
 import only_icon from '../../widgets/only_icon.html';
 import {RichText} from "../../widgets/rich_text";
 import {Studies} from "../main_classes/studies";
@@ -68,7 +68,7 @@ function ListTools(page) {
 }
 
 export const AdminTools = {
-	username: ko.observable(),
+	accountName: ko.observable(),
 	is_rootAdmin: ko.observable(false),
 	publish: ko.observableArray(),
 	write: ko.observableArray(),
@@ -260,13 +260,13 @@ export const AdminTools = {
 			},
 			template: only_icon
 		});
-		ko.components.register('change-user', {
+		ko.components.register('change-account', {
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
-					return new ChangeUser_viewModel(ko.contextFor(componentInfo.element).$root.page, componentInfo.element, params);
+					return new ChangeAccount_viewModel(ko.contextFor(componentInfo.element).$root.page, componentInfo.element, params);
 				}
 			},
-			template: changeUser
+			template: changeAccount
 		});
 		ko.components.register('rich-text', {
 			viewModel: {
@@ -311,7 +311,7 @@ export const AdminTools = {
 		return this.is_rootAdmin() || this.msg.indexOf(studyId) !== -1
 	},
 	
-	set_loginStatus: function({username, isLoggedIn, loginTime, permissions, new_messages, is_admin, has_errors}) {
+	set_loginStatus: function({accountName, isLoggedIn, loginTime, permissions, new_messages, is_admin, has_errors}) {
 		if(!isLoggedIn) {
 			this.is_rootAdmin(false);
 			Admin.is_loggedIn(false);
@@ -333,7 +333,7 @@ export const AdminTools = {
 			Admin.is_loggedIn(true);
 			
 			this.loginTime = loginTime;
-			this.username(username);
+			this.accountName(accountName);
 			
 			if(is_admin)
 				this.is_rootAdmin(true);
@@ -350,33 +350,33 @@ export const AdminTools = {
 		Studies.set_initAgain();
 	},
 	
-	change_password: function(page, username, password) {
+	change_password: function(page, accountName, password) {
 		let self = this;
 		return page.loader.loadRequest(
 			FILE_ADMIN + "?type=change_password",
 			false,
 			"post",
-			"user="+username + "&new_pass="+password
+			"accountName="+accountName + "&new_pass="+password
 		).then(function() {
 			page.loader.info(Lang.get("info_successful"));
 		});
 	},
-	change_username : function(page, username) {
-		let newUsername = prompt(Lang.get("prompt_newUsername"), username);
-		if(!newUsername)
+	change_accountName : function(page, accountName) {
+		let newAccountName = prompt(Lang.get("prompt_newUsername"), accountName);
+		if(!newAccountName)
 			return Promise.reject("Canceled");
 		
 		return page.loader.loadRequest(
-			FILE_ADMIN + "?type=change_username",
+			FILE_ADMIN + "?type=change_accountName",
 			false,
 			"post",
-			"user="+username + "&new_user="+newUsername
+			"accountName="+accountName + "&new_account="+newAccountName
 		).then(function() {
-			if(username === Admin.tools.username())
-				Admin.tools.username(newUsername);
+			if(accountName === Admin.tools.accountName())
+				Admin.tools.accountName(newAccountName);
 			
 			page.loader.info(Lang.get("info_successful"));
-			return newUsername;
+			return newAccountName;
 		});
 	},
 	

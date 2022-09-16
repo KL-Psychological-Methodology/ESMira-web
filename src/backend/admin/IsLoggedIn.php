@@ -11,10 +11,10 @@ abstract class IsLoggedIn extends NoPermission {
 	
 	function __construct() {
 		parent::__construct();
-		if(isset($_POST['user']) && isset($_POST['pass'])) {
-			$user = $_POST['user'];
+		if(isset($_POST['accountName']) && isset($_POST['pass'])) {
+			$accountName = $_POST['accountName'];
 			$pass = $_POST['pass'];
-			Permission::login($user, $pass);
+			Permission::login($accountName, $pass);
 		}
 		if(!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
 			throw new PageFlowException('No permission');

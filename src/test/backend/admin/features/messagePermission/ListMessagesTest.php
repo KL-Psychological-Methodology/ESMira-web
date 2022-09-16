@@ -10,7 +10,7 @@ use test\testConfigs\BaseMessagePermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class ListMessagesTest extends BaseMessagePermissionTestSetup {
-	private $username = 'user';
+	private $accountName = 'user';
 	private $messagesListContent = ['entry1', 'entry2'];
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
@@ -25,10 +25,10 @@ class ListMessagesTest extends BaseMessagePermissionTestSetup {
 	}
 	
 	function test() {
-		$this->setGet(['study_id' => $this->studyId, 'user' => $this->username]);
+		$this->setGet(['study_id' => $this->studyId, 'user' => $this->accountName]);
 		$obj = new ListMessages();
 		$obj->exec();
-		$this->assertDataMock('getMessagesList', [$this->studyId, $this->username]);
+		$this->assertDataMock('getMessagesList', [$this->studyId, $this->accountName]);
 	}
 	
 	function test_with_missing_data() {

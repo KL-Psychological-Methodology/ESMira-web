@@ -97,18 +97,18 @@ jsoneditor
 
 
 /**********
-userList
+accountList
 **********/
 
-#userList th {
+#accountList th {
 	text-align: center;
 	padding-right: 10px;
 }
-#userList td {
+#accountList td {
 	vertical-align: top;
 	text-align: center;
 }
-#userList .username {
+#accountList .accountName {
 	text-align: left;
 }
 

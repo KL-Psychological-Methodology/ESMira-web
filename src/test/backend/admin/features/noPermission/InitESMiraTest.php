@@ -45,7 +45,7 @@ class InitESMiraTest extends BaseNoPermissionTestSetup {
 		$pass = 'pass1';
 		
 		$this->setPost([
-			'new_user' => $user,
+			'new_account' => $user,
 			'pass' => $pass
 		]);
 		$obj = new InitESMira();
@@ -65,7 +65,7 @@ class InitESMiraTest extends BaseNoPermissionTestSetup {
 	function test_with_missing_data() {
 		$this->isInit = false;
 		$this->assertMissingDataForFeatureObj(InitESMira::class, [
-			'new_user' => 'new_user',
+			'new_account' => 'new_account',
 			'pass' => 'pass',
 		]);
 	}

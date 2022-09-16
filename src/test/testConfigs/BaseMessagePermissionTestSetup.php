@@ -2,7 +2,7 @@
 
 namespace test\testConfigs;
 
-use backend\admin\features\adminPermission\AddUserPermission;
+use backend\admin\features\adminPermission\AddAccountPermission;
 use backend\admin\features\noPermission\Login;
 use backend\admin\NoPermission;
 use backend\Configs;
@@ -10,7 +10,7 @@ use backend\CriticalError;
 use backend\DataStoreInterface;
 use backend\PageFlowException;
 use backend\Permission;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -26,8 +26,8 @@ abstract class BaseMessagePermissionTestSetup extends BaseLoggedInPermissionTest
 		$this->setPost(['study_id' => $this->studyId]);
 	}
 	
-	protected function setUpUserStoreObserver(): Stub {
-		$observer =  parent::setUpUserStoreObserver();
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer =  parent::setUpAccountStoreObserver();
 		
 		$observer
 			->method('getPermissions')

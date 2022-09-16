@@ -6,15 +6,15 @@ use backend\admin\HasAdminPermission;
 use backend\Configs;
 use backend\PageFlowException;
 
-class DeleteUser extends HasAdminPermission {
+class DeleteAccount extends HasAdminPermission {
 	
 	function exec(): array {
-		if(!isset($_POST['user']))
+		if(!isset($_POST['accountName']))
 			throw new PageFlowException('Missing data');
 		
-		$user = $_POST['user'];
+		$accountName = $_POST['accountName'];
 		
-		Configs::getDataStore()->getUserStore()->removeUser($user);
+		Configs::getDataStore()->getAccountStore()->removeAccount($accountName);
 		
 		return [];
 	}

@@ -1,24 +1,24 @@
-import html from "./user_view.html"
+import html from "./account_view.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
 import {bindEvent, close_on_clickOutside, createElement, save_cookie} from "../js/helpers/basics";
 import {Admin} from "../js/main_classes/admin";
 import {FILE_ADMIN} from "../js/variables/urls";
 import {Studies} from "../js/main_classes/studies";
-import {load_userData} from "../js/shared/user_functions";
+import {load_accountData} from "../js/shared/account_functions";
 
 export function ViewModel(page) {
 	let self = this;
 	this.html = html;
-	this.promiseBundle = [Admin.init(page), Studies.init(page), load_userData()];
+	this.promiseBundle = [Admin.init(page), Studies.init(page), load_accountData()];
 	
 	this.userData = null;
 	
-	this.preInit = function({user}, admin, studies, userList) {
-		self.userData = userList[user];
+	this.preInit = function({accountI}, admin, studies, accountList) {
+		self.userData = accountList[accountI];
 		self.dataObj = self.userData;
 		if(self.userData)
-			page.title(self.userData.username);
+			page.title(self.userData.accountName);
 		else
 			throw new Error(Lang.get("error_unknown"));
 	};
@@ -26,7 +26,7 @@ export function ViewModel(page) {
 	
 	this.user_toggle_admin = function() {
 		let admin = self.userData.admin();
-		if(self.userData.username() === Admin.tools.username()) {
+		if(self.userData.accountName() === Admin.tools.accountName()) {
 			self.userData.admin(!admin);
 			Admin.tools.is_rootAdmin(!admin);
 			return;
@@ -35,7 +35,7 @@ export function ViewModel(page) {
 			FILE_ADMIN + "?type=toggle_admin",
 			false,
 			"post",
-			"user="+self.userData.username() + (admin ? "&admin" : "")
+			"accountName="+self.userData.accountName() + (admin ? "&admin" : "")
 		).then(function() {
 			page.loader.info(Lang.get("info_successful"));
 		});
@@ -58,10 +58,10 @@ export function ViewModel(page) {
 			let line = createElement("div", false, {innerText: studies[i].title(), className: "clickable"});
 			bindEvent(line, "click", function() {
 				page.loader.loadRequest(
-					FILE_ADMIN + "?type=add_userPermission",
+					FILE_ADMIN + "?type=add_accountPermission",
 					false,
 					"post",
-					"user="+self.userData.username() + "&permission="+permission + "&study_id="+study_id
+					"accountName="+self.userData.accountName() + "&permission="+permission + "&study_id="+study_id
 				).then(function() {
 					if(self.userData.hasOwnProperty(permission))
 						self.userData[permission].push(ko.observable(study_id));
@@ -81,10 +81,10 @@ export function ViewModel(page) {
 	}
 	this.remove_permission = function(index, study_id, permission) {
 		page.loader.loadRequest(
-			FILE_ADMIN + "?type=delete_userPermission",
+			FILE_ADMIN + "?type=delete_accountPermission",
 			false,
 			"post",
-			"user="+self.userData.username() + "&permission="+permission + "&study_id="+study_id
+			"accountName="+self.userData.accountName() + "&permission="+permission + "&study_id="+study_id
 		).then(function() {
 			if(self.userData.hasOwnProperty(permission))
 				self.userData[permission].splice(index, 1);
@@ -92,12 +92,12 @@ export function ViewModel(page) {
 		});
 	};
 	
-	this.change_username = function() {
-		return Admin.tools.change_username(page, self.userData.username()).then(function(newUsername) {
-			self.userData.username(newUsername);
-		}, function() {/*not needed*/});
+	this.change_accountName = function() {
+		return Admin.tools.change_accountName(page, self.userData.accountName()).then(function(newAccountName) {
+			self.userData.accountName(newAccountName);
+		});
 	};
-	this.change_password = function(username, password) {
-		return Admin.tools.change_password(page, username, password);
+	this.change_password = function(accountName, password) {
+		return Admin.tools.change_password(page, accountName, password);
 	};
 }

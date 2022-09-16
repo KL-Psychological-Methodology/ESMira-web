@@ -9,7 +9,7 @@ use backend\Permission;
 class GetTokenList extends IsLoggedIn {
 	
 	function exec(): array {
-		$username = Permission::getUser();
-		return Configs::getDataStore()->getLoginTokenStore()->getLoginTokenList($username);
+		$accountName = Permission::getAccountName();
+		return Configs::getDataStore()->getLoginTokenStore()->getLoginTokenList($accountName);
 	}
 }

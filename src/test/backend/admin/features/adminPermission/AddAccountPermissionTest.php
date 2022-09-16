@@ -2,39 +2,39 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\AddUserPermission;
+use backend\admin\features\adminPermission\AddAccountPermission;
 use test\testConfigs\BaseAdminPermissionTestSetup;
 use backend\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
-class AddUserPermissionTest extends BaseAdminPermissionTestSetup {
-	private $username = 'user1';
-	protected function setUpUserStoreObserver(): Stub {
-		$observer = parent::setUpUserStoreObserver();
+class AddAccountPermissionTest extends BaseAdminPermissionTestSetup {
+	private $accountName = 'user1';
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer = parent::setUpAccountStoreObserver();
 		
 		$this->addDataMock($observer, 'addStudyPermission');
 		return $observer;
 	}
 	
 	function test() {
-		$obj = new AddUserPermission();
+		$obj = new AddAccountPermission();
 		
 		$this->assertDataMockFromPost($obj, 'addStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'read'
 		]);
 		
 		$this->assertDataMockFromPost($obj, 'addStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'write'
 		]);
 		
 		$this->assertDataMockFromPost($obj, 'addStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'msg'
 		]);
@@ -42,8 +42,8 @@ class AddUserPermissionTest extends BaseAdminPermissionTestSetup {
 		$_POST['permission'] = 'publish';
 		$obj->exec();
 		$this->assertDataMock('addStudyPermission',
-			[$this->username, $this->studyId, 'publish'],
-			[$this->username, $this->studyId, 'write']
+			[$this->accountName, $this->studyId, 'publish'],
+			[$this->accountName, $this->studyId, 'write']
 		);
 		
 		$_POST['permission'] = 'faulty';
@@ -53,8 +53,8 @@ class AddUserPermissionTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(AddUserPermission::class, [
-			'user' => 'user',
+		$this->assertMissingDataForFeatureObj(AddAccountPermission::class, [
+			'accountName' => 'accountName',
 			'permission' => 'write',
 			'studyId' => 123
 		]);

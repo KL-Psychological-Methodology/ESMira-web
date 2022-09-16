@@ -35,17 +35,17 @@ export function ViewModel(page) {
 	}
 	this.server_name = ko.observable("");
 	
-	this.create = function(username, password) {
+	this.create = function(accountName, password) {
 		let server_name = self.data_location();
 		
 		return page.loader.loadRequest(
 			FILE_ADMIN + "?type=init_esmira",
 			false,
 			"post",
-			"new_user=" + username + "&pass=" + password + "&data_location=" + self.data_location() + "&reuseFolder=" + self.reuseFolder()
+			"new_account=" + accountName + "&pass=" + password + "&data_location=" + self.data_location() + "&reuseFolder=" + self.reuseFolder()
 		).then(function(data) {
 			Admin.esmira_isInit = true;
-			Admin.tools.username(username);
+			Admin.tools.accountName(accountName);
 			console.log(Admin);
 			Admin.tools.set_loginStatus(data);
 		});

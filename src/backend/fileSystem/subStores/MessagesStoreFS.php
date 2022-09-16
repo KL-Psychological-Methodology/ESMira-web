@@ -74,15 +74,15 @@ class MessagesStoreFS implements MessagesStore {
 				if($file[0] == '.')
 					continue;
 				
-				$username = Paths::getFromUrlFriendly($file);
-				if(!isset($index[$username])) {
-					$msgInfo = new MessageParticipantInfo($username, filemtime($path .$file) * 1000);
+				$userId = Paths::getFromUrlFriendly($file);
+				if(!isset($index[$userId])) {
+					$msgInfo = new MessageParticipantInfo($userId, filemtime($path .$file) * 1000);
 					
 					$list[] = $msgInfo;
-					$index[$username] = $msgInfo;
+					$index[$userId] = $msgInfo;
 				}
 				else
-					$msgInfo = $index[$username];
+					$msgInfo = $index[$userId];
 				
 				if($attr)
 					$msgInfo->{$attr} = true;

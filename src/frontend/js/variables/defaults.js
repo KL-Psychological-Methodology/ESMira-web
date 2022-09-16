@@ -250,8 +250,8 @@ Defaults.messages = {
 	appType: "",
 	distributedSince: -1
 };
-Defaults.user = {
-	username: "Error",
+Defaults.account = {
+	accountName: "Error",
 	admin: false,
 	read: [],
 	msg: [],

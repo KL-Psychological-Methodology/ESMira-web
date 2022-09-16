@@ -11,9 +11,9 @@ use test\testConfigs\BaseAdminPermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class ToggleAdminTest extends BaseAdminPermissionTestSetup {
-	private $username = 'user1';
-	protected function setUpUserStoreObserver(): Stub {
-		$observer = parent::setUpUserStoreObserver();
+	private $accountName = 'user1';
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer = parent::setUpAccountStoreObserver();
 		
 		$this->addDataMock($observer, 'setAdminPermission');
 		return $observer;
@@ -23,16 +23,16 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 		$obj = new ToggleAdmin();
 		
 		$this->assertDataMockFromPost($obj, 'setAdminPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'admin' => true
 		]);
 		
 		
 		$this->setPost([
-			'user' => $this->username
+			'accountName' => $this->accountName
 		]);
 		$obj->exec();
-		$this->assertDataMock('setAdminPermission', [$this->username, false]);
+		$this->assertDataMock('setAdminPermission', [$this->accountName, false]);
 	}
 	
 	function test_remove_own_admin_permission() {
@@ -40,14 +40,14 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 		
 		$this->expectException(PageFlowException::class);
 		$this->assertDataMockFromPost($obj, 'setAdminPermission', [
-			'user' => Permission::getUser()
+			'accountName' => Permission::getAccountName()
 		]);
 	}
 	
 	
 	function test_with_missing_data() {
 		$this->assertMissingDataForFeatureObj(ToggleAdmin::class, [
-			'user' => 'user',
+			'accountName' => 'accountName',
 		]);
 	}
 }

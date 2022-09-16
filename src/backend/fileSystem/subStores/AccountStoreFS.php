@@ -9,12 +9,12 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\fileSystem\loader\PermissionsLoader;
 use backend\Permission;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 
-class UserStoreFS implements UserStore {
-	public function getLoginHistoryCsv(string $username): string {
-		$pathHistory1 = PathsFS::fileTokenHistory($username, 1);
-		$pathHistory2 = PathsFS::fileTokenHistory($username, 2);
+class AccountStoreFS implements AccountStore {
+	public function getLoginHistoryCsv(string $accountName): string {
+		$pathHistory1 = PathsFS::fileTokenHistory($accountName, 1);
+		$pathHistory2 = PathsFS::fileTokenHistory($accountName, 2);
 		$exists1 = file_exists($pathHistory1);
 		$exists2 = file_exists($pathHistory2);
 		
@@ -34,13 +34,13 @@ class UserStoreFS implements UserStore {
 			return $header;
 	}
 	
-	public function addToLoginHistoryEntry(string $username, array $data, int $maxAge = 60 * 60 * 24 * 60) {
-		$pathToken = PathsFS::folderToken($username);
+	public function addToLoginHistoryEntry(string $accountName, array $data, int $maxAge = 60 * 60 * 24 * 60) {
+		$pathToken = PathsFS::folderToken($accountName);
 		if(!file_exists($pathToken))
 			FileSystemBasics::createFolder($pathToken);
 		
-		$pathTokenHistory1 = PathsFS::fileTokenHistory($username, 1);
-		$pathTokenHistory2 = PathsFS::fileTokenHistory($username, 2);
+		$pathTokenHistory1 = PathsFS::fileTokenHistory($accountName, 1);
+		$pathTokenHistory2 = PathsFS::fileTokenHistory($accountName, 2);
 		
 		if(!file_exists($pathTokenHistory1)) { //The very first entry is saved in $pathTokenHistory1
 			$targetPath = $pathTokenHistory1;
@@ -69,62 +69,62 @@ class UserStoreFS implements UserStore {
 	}
 	
 	
-	public function getPermissions(string $username): array {
+	public function getPermissions(string $accountName): array {
 		$permissions = PermissionsLoader::importFile();
-		return $permissions[$username] ?? [];
+		return $permissions[$accountName] ?? [];
 	}
 	
-	public function addStudyPermission(string $username, int $studyId, string $permCode) {
+	public function addStudyPermission(string $accountName, int $studyId, string $permCode) {
 		$permissions = PermissionsLoader::importFile();
 		
-		if(!isset($permissions[$username]))
-			$permissions[$username] = [$permCode => [$studyId]];
-		else if(!isset($permissions[$username][$permCode]))
-			$permissions[$username][$permCode] = [$studyId];
-		else if(!in_array($studyId, $permissions[$username][$permCode]))
-			$permissions[$username][$permCode][] = $studyId;
+		if(!isset($permissions[$accountName]))
+			$permissions[$accountName] = [$permCode => [$studyId]];
+		else if(!isset($permissions[$accountName][$permCode]))
+			$permissions[$accountName][$permCode] = [$studyId];
+		else if(!in_array($studyId, $permissions[$accountName][$permCode]))
+			$permissions[$accountName][$permCode][] = $studyId;
 		
 		PermissionsLoader::exportFile($permissions);
 	}
-	public function removeStudyPermission(string $username, int $studyId, string $permCode) {
+	public function removeStudyPermission(string $accountName, int $studyId, string $permCode) {
 		$permissions = PermissionsLoader::importFile();
-		if(!isset($permissions[$username]) || !isset($permissions[$username][$permCode]))
+		if(!isset($permissions[$accountName]) || !isset($permissions[$accountName][$permCode]))
 			return;
 		
-		$value = array_search($studyId, $permissions[$username][$permCode]);
+		$value = array_search($studyId, $permissions[$accountName][$permCode]);
 		if($value !== false) {
-			array_splice($permissions[$username][$permCode], $value, 1);
-			if(empty($permissions[$username][$permCode])) {
-				unset($permissions[$username][$permCode]);
-				if(empty($permissions[$username])) {
-					unset($permissions[$username]);
+			array_splice($permissions[$accountName][$permCode], $value, 1);
+			if(empty($permissions[$accountName][$permCode])) {
+				unset($permissions[$accountName][$permCode]);
+				if(empty($permissions[$accountName])) {
+					unset($permissions[$accountName]);
 				}
 			}
 			PermissionsLoader::exportFile($permissions);
 		}
 	}
-	public function setAdminPermission(string $username, bool $isAdmin) {
+	public function setAdminPermission(string $accountName, bool $isAdmin) {
 		$permissions = PermissionsLoader::importFile();
 		
-		if(!isset($permissions[$username]))
-			$permissions[$username] = ['admin' => $isAdmin];
+		if(!isset($permissions[$accountName]))
+			$permissions[$accountName] = ['admin' => $isAdmin];
 		else
-			$permissions[$username]['admin'] = $isAdmin;
+			$permissions[$accountName]['admin'] = $isAdmin;
 		
 		PermissionsLoader::exportFile($permissions);
 	}
 	
-	public function removeBlocking(string $username) {
-		$path = PathsFS::fileBlockLogin($username);
+	public function removeBlocking(string $accountName) {
+		$path = PathsFS::fileBlockLogin($accountName);
 		if(file_exists($path))
 			unlink($path);
 	}
-	public function createBlocking($username) {
-		$pathToken = PathsFS::folderToken($username);
+	public function createBlocking($accountName) {
+		$pathToken = PathsFS::folderToken($accountName);
 		if(!file_exists($pathToken))
 			FileSystemBasics::createFolder($pathToken);
 		
-		$pathBlocking = PathsFS::fileBlockLogin($username);
+		$pathBlocking = PathsFS::fileBlockLogin($accountName);
 		if(!file_exists($pathBlocking))
 			file_put_contents($pathBlocking, 1);
 		else {
@@ -132,8 +132,8 @@ class UserStoreFS implements UserStore {
 			file_put_contents($pathBlocking, min($num * 2, Configs::get('max_blocked_seconds_for_login')));
 		}
 	}
-	public function getUserBlockedTime(string $username): int {
-		$file_blocking = PathsFS::fileBlockLogin($username);
+	public function getAccountBlockedTime(string $accountName): int {
+		$file_blocking = PathsFS::fileBlockLogin($accountName);
 		$has_blockingFile = file_exists($file_blocking);
 		if($has_blockingFile) {
 			$diff = (filemtime($file_blocking) + (int)file_get_contents($file_blocking)) - time();
@@ -143,7 +143,7 @@ class UserStoreFS implements UserStore {
 		return 0;
 	}
 	
-	public function getUserList(): array {
+	public function getAccountList(): array {
 		$path = PathsFS::fileLogins();
 		if(!file_exists($path))
 			return [];
@@ -157,13 +157,13 @@ class UserStoreFS implements UserStore {
 			if($line == '')
 				continue;
 			$data = explode(':', $line);
-			$username = $data[0];
+			$accountName = $data[0];
 			
-			$userList[] = $username;
+			$userList[] = $accountName;
 		}
 		return $userList;
 	}
-	public function checkUserLogin(string $username, string $password): bool {
+	public function checkAccountLogin(string $accountName, string $password): bool {
 		$path = PathsFS::fileLogins();
 		if(!file_exists($path))
 			return false;
@@ -177,7 +177,7 @@ class UserStoreFS implements UserStore {
 				continue;
 			$data =  explode(':', $line);
 			
-			if($data && $data[0] == $username) {
+			if($data && $data[0] == $accountName) {
 				fclose($h);
 				return password_verify($password, $data[1]);
 			}
@@ -185,7 +185,7 @@ class UserStoreFS implements UserStore {
 		fclose($h);
 		return false;
 	}
-	public function doesUserExist($username): bool {
+	public function doesAccountExist($accountName): bool {
 		$path = PathsFS::fileLogins();
 		if(!file_exists($path) || !($h = fopen($path, 'r')))
 			return false;
@@ -198,7 +198,7 @@ class UserStoreFS implements UserStore {
 			if(!$data || empty($data))
 				continue;
 			
-			if($data[0] == $username) {
+			if($data[0] == $accountName) {
 				fclose($h);
 				return true;
 			}
@@ -206,17 +206,17 @@ class UserStoreFS implements UserStore {
 		fclose($h);
 		return false;
 	}
-	public function setUser($username, $password) {
-		$this->removeUser($username);
+	public function setAccount($accountName, $password) {
+		$this->removeAccount($accountName);
 		$pathLogins = PathsFS::fileLogins();
 		$password = Permission::getHashedPass($password);
 		
-		file_put_contents($pathLogins, "$username:$password\n", FILE_APPEND | LOCK_EX);
+		file_put_contents($pathLogins, "$accountName:$password\n", FILE_APPEND | LOCK_EX);
 	}
 	
-	public function changeUsername(string $oldUsername, string $newUsername) {
-		if($this->doesUserExist($newUsername))
-			throw new CriticalError("$newUsername already exists!");
+	public function changeAccountName(string $oldAccountName, string $newAccountName) {
+		if($this->doesAccountExist($newAccountName))
+			throw new CriticalError("$newAccountName already exists!");
 		$password = null;
 		$pathLogins = PathsFS::fileLogins();
 		if(!($h = fopen($pathLogins, 'r')))
@@ -225,25 +225,25 @@ class UserStoreFS implements UserStore {
 			$line = fgets($h);
 			$data = explode(':', $line);
 			
-			if(!empty($data) && $data[0] == $oldUsername) {
+			if(!empty($data) && $data[0] == $oldAccountName) {
 				$password = $data[1];
 				break;
 			}
 		}
 		fclose($h);
 		if($password == null)
-			throw new CriticalError("$oldUsername does not exist!");
+			throw new CriticalError("$oldAccountName does not exist!");
 		
-		$pathToken = PathsFS::folderToken($oldUsername);
+		$pathToken = PathsFS::folderToken($oldAccountName);
 		if(file_exists($pathToken))
-			rename($pathToken, PathsFS::folderToken($newUsername)); //needs to be done before user is removed
+			rename($pathToken, PathsFS::folderToken($newAccountName)); //needs to be done before account is removed
 		
-		$this->removeUser($oldUsername);
-		file_put_contents($pathLogins, "$newUsername:$password\n", FILE_APPEND | LOCK_EX);
+		$this->removeAccount($oldAccountName);
+		file_put_contents($pathLogins, "$newAccountName:$password\n", FILE_APPEND | LOCK_EX);
 	}
 	
-	public function removeUser($username) {
-		$pathToken = PathsFS::folderToken($username);
+	public function removeAccount($accountName) {
+		$pathToken = PathsFS::folderToken($accountName);
 		if(file_exists($pathToken)) {
 			FileSystemBasics::emptyFolder($pathToken);
 			rmdir($pathToken);
@@ -265,7 +265,7 @@ class UserStoreFS implements UserStore {
 			if(empty($data))
 				continue;
 			
-			if($data[0] == $username)
+			if($data[0] == $accountName)
 				$userRemoved = true;
 			else
 				$export .= $line;

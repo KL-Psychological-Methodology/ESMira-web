@@ -79,16 +79,16 @@ class PathsFS {
 	static function folderStudy(int $studyId): string {
 		return self::folderStudies() ."$studyId/";
 	}
-	static function folderToken(string $username): string {
-		return self::folderTokenRoot() . Paths::makeUrlFriendly($username) .'/';
+	static function folderToken(string $accountName): string {
+		return self::folderTokenRoot() . Paths::makeUrlFriendly($accountName) .'/';
 	}
 	static function folderUserData(int $studyId): string {
 		return self::folderStudies() ."$studyId/.userdata/";
 	}
 	
 	
-	static function fileBlockLogin(string $username): string {
-		return self::folderToken($username) .".blocking";
+	static function fileBlockLogin(string $accountName): string {
+		return self::folderToken($accountName) .".blocking";
 	}
 	static function fileErrorReport(int $timestamp): string {
 		return self::folderErrorReports() .$timestamp;
@@ -175,11 +175,11 @@ class PathsFS {
 	static function fileStudyMetadata(int $studyId): string {
 		return self::folderStudies()."$studyId/.metadata";
 	}
-	static function fileToken(string $username, string $hash): string {
-		return self::folderToken($username) .$hash;
+	static function fileToken(string $accountName, string $hash): string {
+		return self::folderToken($accountName) .$hash;
 	}
-	static function fileTokenHistory(string $username, int $num): string {
-		return self::folderToken($username) .'.history' .$num;
+	static function fileTokenHistory(string $accountName, int $num): string {
+		return self::folderToken($accountName) .'.history' .$num;
 	}
 	static function fileUserData(int $studyId, string $userId): string {
 		return self::folderUserData($studyId) . Paths::makeUrlFriendly($userId);

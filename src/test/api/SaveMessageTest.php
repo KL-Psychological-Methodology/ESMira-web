@@ -66,7 +66,7 @@ class SaveMessageTest extends BaseApiTestSetup {
 		$this->expectOutputString(JsonOutput::error('Unit test exception'));
 	}
 	
-	function test_with_faulty_username() {
+	function test_with_faulty_userId() {
 		$this->userid = 'user%Id';
 		$this->doPreparations();
 		require DIR_BASE .'/api/save_message.php';

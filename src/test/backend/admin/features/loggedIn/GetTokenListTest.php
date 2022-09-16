@@ -28,6 +28,6 @@ class GetTokenListTest extends BaseLoggedInPermissionTestSetup {
 	function test() {
 		$obj = new GetTokenList();
 		$obj->exec();
-		$this->assertDataMock('getLoginTokenList', [Permission::getUser()]);
+		$this->assertDataMock('getLoginTokenList', [Permission::getAccountName()]);
 	}
 }

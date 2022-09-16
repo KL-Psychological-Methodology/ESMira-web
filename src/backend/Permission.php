@@ -11,24 +11,24 @@ class Permission {
 	 * @throws PageFlowException
 	 * @throws CriticalError
 	 */
-	static function login(string $user, string $password) {
-		$userStore = Configs::getDataStore()->getUserStore();
-		$blockTime = $userStore->getUserBlockedTime($user);
+	static function login(string $accountName, string $password) {
+		$accountStore = Configs::getDataStore()->getAccountStore();
+		$blockTime = $accountStore->getAccountBlockedTime($accountName);
 		if($blockTime != 0)
 			throw new PageFlowException("Please wait for $blockTime seconds.");
 		
-		if(!$userStore->checkUserLogin($user, $password)) {
+		if(!$accountStore->checkAccountLogin($accountName, $password)) {
 			usleep(rand(0, 1000000)); //to prevent Timing Leaks
 			
 			//block next login for a while because of failed attempt:
-			$userStore->createBlocking($user);
-			self::addToLoginHistoryEntry($user, 'Failed login attempt');
+			$accountStore->createBlocking($accountName);
+			self::addToLoginHistoryEntry($accountName, 'Failed login attempt');
 			throw new PageFlowException('Wrong password');
 		}
 		
-		$userStore->removeBlocking($user);
-		self::setLoggedIn($user);
-		self::addToLoginHistoryEntry($user, 'Login form');
+		$accountStore->removeBlocking($accountName);
+		self::setLoggedIn($accountName);
+		self::addToLoginHistoryEntry($accountName, 'Login form');
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class Permission {
 	 */
 	static function setLoggedIn(string $user) {
 		Main::sessionStart();
-		$_SESSION['user'] = $user;
+		$_SESSION['account'] = $user;
 		$_SESSION['is_loggedIn'] = true;
 	}
 	
@@ -47,12 +47,12 @@ class Permission {
 		Main::sessionStart();
 		
 		$_SESSION['is_loggedIn'] = false;
-		$_SESSION['user'] = null;
+		$_SESSION['account'] = null;
 		
-		if(isset($_COOKIE['tokenId']) && isset($_COOKIE['user']))
-			Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($_COOKIE['user'], $_COOKIE['tokenId']);
+		if(isset($_COOKIE['tokenId']) && isset($_COOKIE['account']))
+			Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($_COOKIE['account'], $_COOKIE['tokenId']);
 		
-		Main::deleteCookie('user');
+		Main::deleteCookie('account');
 		Main::deleteCookie('tokenId');
 		Main::deleteCookie('token');
 	}
@@ -65,47 +65,47 @@ class Permission {
 		if(isset($_SESSION['is_loggedIn']) && $_SESSION['is_loggedIn'])
 			return true;
 		
-		if(!isset($_COOKIE['user']) || !isset($_COOKIE['tokenId']) || !isset($_COOKIE['token']))
+		if(!isset($_COOKIE['account']) || !isset($_COOKIE['tokenId']) || !isset($_COOKIE['token']))
 			return false;
 		
 		usleep(rand(0, 1000000)); //to prevent Timing Leaks
 		
-		$user = $_COOKIE['user'];
+		$accountName = $_COOKIE['account'];
 		$tokenId = $_COOKIE['tokenId'];
 		$token = $_COOKIE['token'];
 		
 		
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
-		if(!$loginTokenStore->loginTokenExists($user, $tokenId)) { //can happen when a login was removed; also the tokenId cookie is not critical
+		if(!$loginTokenStore->loginTokenExists($accountName, $tokenId)) { //can happen when a login was removed; also the tokenId cookie is not critical
 			self::setLoggedOut();
 			return false;
 		}
-		else if(self::getHashedToken($token) !== $loginTokenStore->getLoginToken($user, $tokenId)) { //Something fishy is going on
+		else if(self::getHashedToken($token) !== $loginTokenStore->getLoginToken($accountName, $tokenId)) { //Something fishy is going on
 			$ip = $_SERVER['REMOTE_ADDR'];
 			$userAgent = $_SERVER['HTTP_USER_AGENT'];
-			Main::report("Somebody tried to log in with a broken token. All token for that user have been deleted for security reasons.\nUser: $user,\nIp: $ip,\ntokenId: $tokenId,\ntokenHash: $token,\nUserAgent: $userAgent");
+			Main::report("Somebody tried to log in with a broken token. All token for that account have been deleted for security reasons.\nAccount: $accountName,\nIp: $ip,\ntokenId: $tokenId,\ntokenHash: $token,\nUserAgent: $userAgent");
 			
-			$loginTokenStore->clearAllLoginToken($user);
+			$loginTokenStore->clearAllLoginToken($accountName);
 			self::setLoggedOut();
 			return false;
 		}
-		self::addToLoginHistoryEntry($user, $tokenId);
+		self::addToLoginHistoryEntry($accountName, $tokenId);
 		
 		//Note: Should we renew the token every time? I am not sure.
 		// - On the one hand it is good to renew the token to make sure every token can only be used (in the long term) on one device.
-		//     This makes it easier to spot if a token has been stolen (because the user gets logged out and there will be another active entry in the token list).
+		//     This makes it easier to spot if a token has been stolen (because the account gets logged out and there will be another active entry in the token list).
 		// - On the other hand, if two token login requests are done at the same time (with the same cookies):
 		//     RequestA will change the token_hash which will make RequestB fail and trigger a report because its cookie still has the old token_hash.
 		//     Though unlikely, it might happen for example when a browser restores multiple tabs from an old session.
-		self::createNewLoginToken($user, $tokenId);
+		self::createNewLoginToken($accountName, $tokenId);
 		
-		self::setLoggedIn($user);
+		self::setLoggedIn($accountName);
 		
 		return true;
 	}
 	
-	static function getUser() {
-		return $_SESSION['user'];
+	static function getAccountName() {
+		return $_SESSION['account'] ?? '';
 	}
 	
 	static function getCurrentLoginTokenId() {
@@ -121,11 +121,11 @@ class Permission {
 		return isset($permissions[$permCode]) && in_array($studyId, $permissions[$permCode]);
 	}
 	static function getPermissions(): array {
-		return Configs::getDataStore()->getUserStore()->getPermissions(self::getUser());
+		return Configs::getDataStore()->getAccountStore()->getPermissions(self::getAccountName());
 	}
 	
 	private static function addToLoginHistoryEntry(string $user, string $state) {
-		Configs::getDataStore()->getUserStore()->addToLoginHistoryEntry($user, [
+		Configs::getDataStore()->getAccountStore()->addToLoginHistoryEntry($user, [
 			time(),
 			$state,
 			$_SERVER['REMOTE_ADDR'],
@@ -155,21 +155,21 @@ class Permission {
 	/**
 	 * @throws CriticalError
 	 */
-	static function createNewLoginToken(string $user, string $tokenId = null) {
+	static function createNewLoginToken(string $accountName, string $tokenId = null) {
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
 		$token = self::calcRandomToken(32);
 		
 		if($tokenId === null) {
 			do {
 				$tokenId = Permission::calcRandomToken(16);
-			} while ($loginTokenStore->loginTokenExists($user, $tokenId));
+			} while ($loginTokenStore->loginTokenExists($accountName, $tokenId));
 		}
 		
-		$loginTokenStore->saveLoginToken($user, Permission::getHashedToken($token), $tokenId);
+		$loginTokenStore->saveLoginToken($accountName, Permission::getHashedToken($token), $tokenId);
 		
 		//save cookies:
 		$expire = time()+31536000; //60*60*24*365
-		Main::setCookie('user', $user, $expire);
+		Main::setCookie('account', $accountName, $expire);
 		Main::setCookie('tokenId', $tokenId, $expire);
 		Main::setCookie('token', $token, $expire);
 	}

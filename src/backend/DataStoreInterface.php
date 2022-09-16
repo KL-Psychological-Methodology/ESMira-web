@@ -15,14 +15,14 @@ use backend\subStores\StudyStatisticsMetadataStore;
 use backend\subStores\StudyStatisticsStore;
 use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 
 interface DataStoreInterface {
 	public function isInit(): bool;
 	
 	public function getESMiraInitializer(): ESMiraInitializer;
 	
-	public function getUserStore(): UserStore;
+	public function getAccountStore(): AccountStore;
 	public function getLoginTokenStore(): LoginTokenStore;
 	public function getMessagesStore(): MessagesStore;
 	public function getStudyAccessIndexStore(): StudyAccessIndexStore;

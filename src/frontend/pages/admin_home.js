@@ -24,7 +24,7 @@ export function ViewModel(page) {
 		});
 	};
 	
-	this.change_password = function(username, password) {
-		return Admin.tools.change_password(page, username, password);
+	this.change_password = function(accountName, password) {
+		return Admin.tools.change_password(page, accountName, password);
 	};
 }

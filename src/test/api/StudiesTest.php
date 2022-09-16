@@ -8,7 +8,7 @@ use backend\Permission;
 use backend\subStores\StudyAccessIndexStore;
 use backend\subStores\StudyMetadataStore;
 use backend\subStores\StudyStore;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseApiTestSetup;
 
@@ -87,8 +87,8 @@ class StudiesTest extends BaseApiTestSetup {
 		$this->createStoreMock('getStudyAccessIndexStore', $studyAccessIndexStore, $observer);
 		
 		
-		$userStore = $this->createStub(UserStore::class);
-		$userStore
+		$accountStore = $this->createStub(AccountStore::class);
+		$accountStore
 			->method('getPermissions')
 			->willReturnCallback(function(): array {
 				return [
@@ -98,7 +98,7 @@ class StudiesTest extends BaseApiTestSetup {
 					'msg' => $this->msgPermissionStudies
 				];
 			});
-		$this->createStoreMock('getUserStore', $userStore, $observer);
+		$this->createStoreMock('getAccountStore', $accountStore, $observer);
 		
 		return $observer;
 	}

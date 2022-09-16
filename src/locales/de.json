@@ -122,7 +122,7 @@
     "conditionTypeOr": "Mindestens eine Bedingung trifft zu (Oder)",
     "confirm_again": "Bitte tippen Sie zur Bestätigung \"ok\" ein.",
     "confirm_backup": "Soll ein Backup aller Daten für die Studie %s durchgeführt werden?",
-    "confirm_delete_user": "Soll der User '%s' wirklich gelöscht werden?",
+    "confirm_delete_account": "Soll der User '%s' wirklich gelöscht werden?",
     "confirm_delete_data": "Sollen die Daten von '%s' wirklich gelöscht werden?\nSie können NICHT wiederhergestellt werden!",
     "confirm_delete_study": "Soll die Studie '%s' wirklich gelöscht werden?\n\nSÄMTLICHE STUDIEN-DATEN WERDEN EBENFALLS GELÖSCHT!",
     "confirm_distribute_message": "Folgende Nachricht wird versendet:\n\n%s",

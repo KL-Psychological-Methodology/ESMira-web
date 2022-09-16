@@ -7,7 +7,7 @@ use backend\DataStoreInterface;
 use backend\PageFlowException;
 use backend\Permission;
 use backend\subStores\LoginTokenStore;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 use PHPUnit\Framework\MockObject\MockObject;
 use test\testConfigs\BaseTestSetup;
 
@@ -33,16 +33,16 @@ class PermissionTest extends BaseTestSetup {
 		$_SESSION = [];
 	}
 	
-	private function setUpUserStore(callable $callback) {
-		$userStore = $this->createMock(UserStore::class);
+	private function setUpAccountStore(callable $callback) {
+		$accountStore = $this->createMock(AccountStore::class);
 		$loginTokenStore = $this->createMock(LoginTokenStore::class);
-		$callback($userStore, $loginTokenStore);
+		$callback($accountStore, $loginTokenStore);
 		
 		
 		$this->dataStoreObserver->expects($this->any())
-			->method('getUserStore')
-			->willReturnCallback(function() use ($userStore): UserStore {
-				return $userStore;
+			->method('getAccountStore')
+			->willReturnCallback(function() use ($accountStore): AccountStore {
+				return $accountStore;
 			});
 		
 		$this->dataStoreObserver->expects($this->any())
@@ -54,79 +54,79 @@ class PermissionTest extends BaseTestSetup {
 	}
 	
 	function test_login_with_blocked_time() {
-		$username = 'test';
+		$accountName = 'test';
 		
 		$_SERVER['REMOTE_ADDR'] = ''; // is undefined in test environment
 		$_SERVER['HTTP_USER_AGENT'] = ''; // is undefined in test environment
 		
-		$this->setUpUserStore(function(MockObject $userStore) use ($username) {
-			$userStore->expects($this->once())
-				->method('getUserBlockedTime')
+		$this->setUpAccountStore(function(MockObject $accountStore) use ($accountName) {
+			$accountStore->expects($this->once())
+				->method('getAccountBlockedTime')
 				->with(
-					$this->equalTo($username)
+					$this->equalTo($accountName)
 				)
 				->willReturn(10);
 		});
 		
 		$this->expectException(PageFlowException::class);
 		
-		Permission::login($username, 'pass');
+		Permission::login($accountName, 'pass');
 		$this->assertFalse(Permission::isLoggedIn());
 	}
 	
 	function test_login_with_wrong_password() {
-		$username = 'test';
+		$accountName = 'test';
 		
 		$_SERVER['REMOTE_ADDR'] = ''; // is undefined in test environment
 		$_SERVER['HTTP_USER_AGENT'] = ''; // is undefined in test environment
 		
-		$this->setUpUserStore(function(MockObject $userStore) use ($username) {
-			$userStore->expects($this->once())
-				->method('checkUserLogin')
+		$this->setUpAccountStore(function(MockObject $accountStore) use ($accountName) {
+			$accountStore->expects($this->once())
+				->method('checkAccountLogin')
 				->willReturn(false);
 			
-			$userStore->expects($this->once())
+			$accountStore->expects($this->once())
 				->method('createBlocking');
 			
-			$userStore->expects($this->once())
+			$accountStore->expects($this->once())
 				->method('addToLoginHistoryEntry')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->anything()
 				);
 		});
 		
 		$this->expectException(PageFlowException::class);
 		
-		Permission::login($username, 'pass');
+		Permission::login($accountName, 'pass');
 		$this->assertFalse(Permission::isLoggedIn());
 	}
 	
 	function test_login_with_correct_password() {
-		$username = 'test';
+		$accountName = 'test';
 		
-		$this->setUpUserStore(function(MockObject $userStore) use ($username) {
-			$userStore->expects($this->once())
-				->method('checkUserLogin')
+		$this->setUpAccountStore(function(MockObject $accountStore) use ($accountName) {
+			$accountStore->expects($this->once())
+				->method('checkAccountLogin')
 				->willReturn(true);
 			
-			$userStore->expects($this->once())
+			$accountStore->expects($this->once())
 				->method('removeBlocking')
 				->with(
-					$this->equalTo($username)
+					$this->equalTo($accountName)
 				);
 			
-			$userStore->expects($this->once())
+			$accountStore->expects($this->once())
 				->method('addToLoginHistoryEntry')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->anything()
 				);
 		});
 		
-		Permission::login($username, 'pass');
+		Permission::login($accountName, 'pass');
 		$this->assertTrue(Permission::isLoggedIn());
-		$this->assertEquals($username, Permission::getUser());
+		$this->assertEquals($accountName, Permission::getAccountName());
 	}
 	
 	function test_setLogginIn_and_setLoggedOut() {
@@ -140,15 +140,15 @@ class PermissionTest extends BaseTestSetup {
 	}
 	
 	function test_isLoggedIn_with_tokenCookie() {
-		$username = 'username';
+		$accountName = 'accountName';
 		$tokenId = 'tokenId';
 		$token = 'token';
 		
-		$this->setUpUserStore(function(MockObject $userStore, MockObject $loginTokenStore) use ($username, $tokenId, $token) {
+		$this->setUpAccountStore(function(MockObject $accountStore, MockObject $loginTokenStore) use ($accountName, $tokenId, $token) {
 			$loginTokenStore->expects($this->once())
 				->method('loginTokenExists')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->equalTo($tokenId)
 				)
 				->willReturn(true);
@@ -156,7 +156,7 @@ class PermissionTest extends BaseTestSetup {
 			$loginTokenStore->expects($this->once())
 				->method('getLoginToken')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->equalTo($tokenId)
 				)
 				->willReturn(Permission::getHashedToken($token));
@@ -164,7 +164,7 @@ class PermissionTest extends BaseTestSetup {
 		
 		$this->assertFalse(Permission::isLoggedIn());
 		
-		$_COOKIE['user'] = $username;
+		$_COOKIE['account'] = $accountName;
 		$_COOKIE['tokenId'] = $tokenId;
 		$_COOKIE['token'] = $token;
 		$this->assertTrue(Permission::isLoggedIn());
@@ -172,40 +172,40 @@ class PermissionTest extends BaseTestSetup {
 	}
 	
 	function test_isLoggedIn_with_not_existing_tokenCookie() {
-		$username = 'username';
+		$accountName = 'accountName';
 		$tokenId = 'tokenId';
 		$token = 'token';
 		
-		$this->setUpUserStore(function(MockObject $userStore, MockObject $loginTokenStore) use ($username, $tokenId, $token) {
+		$this->setUpAccountStore(function(MockObject $accountStore, MockObject $loginTokenStore) use ($accountName, $tokenId, $token) {
 			$loginTokenStore->expects($this->once())
 				->method('loginTokenExists')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->equalTo($tokenId)
 				)
 				->willReturn(false);
 		});
 		Configs::injectDataStore($this->dataStoreObserver);
 		
-		$_COOKIE['user'] = $username;
+		$_COOKIE['account'] = $accountName;
 		$_COOKIE['tokenId'] = $tokenId;
 		$_COOKIE['token'] = $token;
 		$this->assertFalse(Permission::isLoggedIn());
 	}
 	
 	function test_isLoggedIn_with_broken_tokenCookie() {
-		$username = 'username';
+		$accountName = 'accountName';
 		$tokenId = 'tokenId';
 		$token = 'token';
 		
-		$this->setUpUserStore(function(MockObject $userStore, MockObject $loginTokenStore) use ($username, $tokenId, $token) {
+		$this->setUpAccountStore(function(MockObject $accountStore, MockObject $loginTokenStore) use ($accountName, $tokenId, $token) {
 			$loginTokenStore->expects($this->once())
 				->method('clearAllLoginToken');
 			
 			$loginTokenStore->expects($this->once())
 				->method('loginTokenExists')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->equalTo($tokenId)
 				)
 				->willReturn(true);
@@ -213,7 +213,7 @@ class PermissionTest extends BaseTestSetup {
 			$loginTokenStore->expects($this->once())
 				->method('getLoginToken')
 				->with(
-					$this->equalTo($username),
+					$this->equalTo($accountName),
 					$this->equalTo($tokenId)
 				)
 				->willReturn('something else');
@@ -222,49 +222,49 @@ class PermissionTest extends BaseTestSetup {
 		
 		$this->assertFalse(Permission::isLoggedIn());
 		
-		$_COOKIE['user'] = $username;
+		$_COOKIE['account'] = $accountName;
 		$_COOKIE['tokenId'] = $tokenId;
 		$_COOKIE['token'] = $token;
 		$this->assertFalse(Permission::isLoggedIn());
 	}
 	
 	function test_isAdmin() {
-		$username = 'username';
-		$this->setUpUserStore(function(MockObject $userStore) use ($username) {
-			$userStore->expects($this->any())
+		$accountName = 'accountName';
+		$this->setUpAccountStore(function(MockObject $accountStore) use ($accountName) {
+			$accountStore->expects($this->any())
 				->method('getPermissions')
 				->with(
 					$this->anything()
 				)
-				->willReturnCallback(function($user) use($username) {
-					return $user == $username
+				->willReturnCallback(function($user) use($accountName) {
+					return $user == $accountName
 						? ['admin' => true]
 						: [];
 				});
 		});
 		
-		$_SESSION['user'] = $username;
+		$_SESSION['account'] = $accountName;
 		$this->assertTrue(Permission::isAdmin());
 		
-		$_SESSION['user'] = 'other';
+		$_SESSION['account'] = 'other';
 		$this->assertFalse(Permission::isAdmin());
 	}
 	function test_hasPermission() {
-		$username = 'username';
+		$accountName = 'accountName';
 		$studyId = 123;
 		$permCode = 'write';
-		$this->setUpUserStore(function(MockObject $userStore) use ($username, $studyId, $permCode) {
-			$userStore->expects($this->any())
+		$this->setUpAccountStore(function(MockObject $accountStore) use ($accountName, $studyId, $permCode) {
+			$accountStore->expects($this->any())
 				->method('getPermissions')
 				->with(
-					$this->equalTo($username)
+					$this->equalTo($accountName)
 				)
 				->willReturn([
 					$permCode => [456, 789, $studyId, 147, 258]
 				]);
 		});
 		
-		$_SESSION['user'] = $username;
+		$_SESSION['account'] = $accountName;
 		
 		$this->assertTrue(Permission::hasPermission($studyId, $permCode));
 		$this->assertFalse(Permission::hasPermission(369, $permCode));

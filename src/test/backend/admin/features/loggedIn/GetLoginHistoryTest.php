@@ -11,8 +11,8 @@ require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class GetLoginHistoryTest extends BaseLoggedInPermissionTestSetup {
 	private $loginHistoryContent = 'content';
-	protected function setUpUserStoreObserver(): Stub {
-		$observer = parent::setUpUserStoreObserver();
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer = parent::setUpAccountStoreObserver();
 		$this->addDataMock($observer, 'getLoginHistoryCsv', $this->loginHistoryContent);
 		return $observer;
 	}
@@ -21,6 +21,6 @@ class GetLoginHistoryTest extends BaseLoggedInPermissionTestSetup {
 		$obj = new GetLoginHistory();
 		$obj->execAndOutput();
 		$this->expectOutputString($this->loginHistoryContent);
-		$this->assertDataMock('getLoginHistoryCsv', [Permission::getUser()]);
+		$this->assertDataMock('getLoginHistoryCsv', [Permission::getAccountName()]);
 	}
 }

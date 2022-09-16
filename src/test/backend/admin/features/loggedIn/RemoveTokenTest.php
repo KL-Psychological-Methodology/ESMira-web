@@ -30,7 +30,7 @@ class RemoveTokenTest extends BaseLoggedInPermissionTestSetup {
 		$this->setPost(['token_id' => $this->tokenId]);
 		$obj = new RemoveToken();
 		$obj->exec();
-		$this->assertDataMock('removeLoginToken', [Permission::getUser(), $this->tokenId]);
+		$this->assertDataMock('removeLoginToken', [Permission::getAccountName(), $this->tokenId]);
 	}
 	
 	function test_with_missing_data() {

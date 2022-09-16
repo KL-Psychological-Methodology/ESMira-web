@@ -22,7 +22,7 @@ class GetPermissions extends NoPermission {
 			}
 			else
 				$obj = ['permissions' => Permission::getPermissions()];
-			$obj['username'] = Permission::getUser();
+			$obj['accountName'] = Permission::getAccountName();
 			$obj['isLoggedIn'] = true;
 			$obj['loginTime'] = time();
 			$obj['new_messages'] = Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission();

@@ -67,26 +67,26 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	
 	
 	
-	public function create($username, $password) {
+	public function create($accountName, $password) {
 		$pathDataFolder = Configs::get('dataFolder_path');
 		
 		$this->moveExistingDataFolder($pathDataFolder);
 		$this->createDataFolder($pathDataFolder);
 		
 		//create login:
-		Configs::getDataStore()->getUserStore()->setUser($username, $password);
+		Configs::getDataStore()->getAccountStore()->setAccount($accountName, $password);
 		
 		//create permissions file:
 		if(file_exists(PathsFS::filePermissions())) {
 			$permissions = PermissionsLoader::importFile();
 			
-			if(!isset($permissions[$username]))
-				$permissions[$username] = ['admin' => true];
+			if(!isset($permissions[$accountName]))
+				$permissions[$accountName] = ['admin' => true];
 			else
-				$permissions[$username]['admin'] = true;
+				$permissions[$accountName]['admin'] = true;
 		}
 		else
-			$permissions = [$username => ['admin' => true]];
+			$permissions = [$accountName => ['admin' => true]];
 		
 		PermissionsLoader::exportFile($permissions);
 	}

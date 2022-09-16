@@ -38,7 +38,7 @@ class SendMessage extends HasMessagePermission {
 		else if(!isset($json->content))
 			throw new PageFlowException('Missing data');
 		
-		$from = Permission::getUser();
+		$from = Permission::getAccountName();
 		$content = $json->content;
 		$toAll = $json->toAll;
 		

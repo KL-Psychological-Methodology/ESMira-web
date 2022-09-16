@@ -13,8 +13,8 @@ class HasWritePermissionTest extends BaseLoggedInPermissionTestSetup {
 	protected $writePermissions = [];
 	protected $isAdmin = true;
 	
-	protected function setUpUserStoreObserver(): Stub {
-		$observer =  parent::setUpUserStoreObserver();
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer =  parent::setUpAccountStoreObserver();
 		
 		$observer
 			->method('getPermissions')

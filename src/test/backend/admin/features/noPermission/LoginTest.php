@@ -5,7 +5,7 @@ namespace test\backend\admin\features\noPermission;
 use backend\admin\features\noPermission\Login;
 use backend\Permission;
 use backend\subStores\LoginTokenStore;
-use backend\subStores\UserStore;
+use backend\subStores\AccountStore;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseNoPermissionTestSetup;
@@ -13,7 +13,7 @@ use test\testConfigs\BaseNoPermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class LoginTest extends BaseNoPermissionTestSetup {
-	private $username = 'user1';
+	private $accountName = 'user1';
 	private $password = 'pass1';
 	private $infoContent = ['entry1', 'entry2'];
 	
@@ -29,9 +29,9 @@ class LoginTest extends BaseNoPermissionTestSetup {
 		$loginTokenStore = $this->createMock(LoginTokenStore::class);
 		$loginTokenStore->expects($this->any())
 			->method('saveLoginToken')
-			->willReturnCallback(function($username) {
-				if($username != $this->username)
-					throw new ExpectationFailedException("Used wrong username (\"$username\") for saveLoginToken()");
+			->willReturnCallback(function($accountName) {
+				if($accountName != $this->accountName)
+					throw new ExpectationFailedException("Used wrong accountName (\"$accountName\") for saveLoginToken()");
 			});
 		$this->createStoreMock(
 			'getLoginTokenStore',
@@ -40,15 +40,15 @@ class LoginTest extends BaseNoPermissionTestSetup {
 		);
 		
 		
-		$userStore = $this->createMock(UserStore::class);
-		$userStore->expects($this->any())
-			->method('checkUserLogin')
-			->willReturnCallback(function($username, $password) {
-				return $username == $this->username && $password == $this->password;
+		$accountStore = $this->createMock(AccountStore::class);
+		$accountStore->expects($this->any())
+			->method('checkAccountLogin')
+			->willReturnCallback(function($accountName, $password) {
+				return $accountName == $this->accountName && $password == $this->password;
 			});
 		$this->createStoreMock(
-			'getUserStore',
-			$userStore,
+			'getAccountStore',
+			$accountStore,
 			$observer
 		);
 		
@@ -57,7 +57,7 @@ class LoginTest extends BaseNoPermissionTestSetup {
 	
 	function test_correctLogin() {
 		$this->setPost([
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'pass' => $this->password,
 		]);
 		$obj = new Login();
@@ -66,20 +66,20 @@ class LoginTest extends BaseNoPermissionTestSetup {
 	}
 	function test_with_rememberMe() {
 		$this->setPost([
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'pass' => $this->password,
 			'rememberMe' => true
 		]);
 		$obj = new Login();
 		$output = $obj->exec();
 		$this->assertTrue($output['isLoggedIn']);
-		$this->assertDataMock('saveLoginToken', [$this->username, Permission::getHashedToken($_COOKIE['token']), $_COOKIE['tokenId']]);
+		$this->assertDataMock('saveLoginToken', [$this->accountName, Permission::getHashedToken($_COOKIE['token']), $_COOKIE['tokenId']]);
 	}
 	
 	function test_with_missing_data() {
 		$this->isInit = false;
 		$this->assertMissingDataForFeatureObj(Login::class, [
-			'user' => 'user',
+			'accountName' => 'accountName',
 			'pass' => 'pass',
 		]);
 	}

@@ -9,17 +9,17 @@ export function ViewModel(page) {
 	this.html = html;
 	page.title(Lang.get("login"));
 	
-	this.username = ko.observable("");
+	this.accountName = ko.observable("");
 	this.password = ko.observable("");
 	this.rememberMe = ko.observable(false);
 	
 	this.login = function() {
-		let username = self.username();
+		let accountName = self.accountName();
 		let password = self.password();
 		let rememberMe = self.rememberMe() ? "&rememberMe" : "";
 		
-		page.loader.loadRequest(FILE_ADMIN+"?type=login", false, "post", "user="+username+"&pass="+password+rememberMe).then(function(data) {
-			Admin.tools.username(username);
+		page.loader.loadRequest(FILE_ADMIN+"?type=login", false, "post", "accountName="+accountName+"&pass="+password+rememberMe).then(function(data) {
+			Admin.tools.accountName(accountName);
 			Admin.tools.set_loginStatus(data);
 			// page.reload();
 		}).catch(function() {

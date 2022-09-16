@@ -9,14 +9,14 @@ use backend\Permission;
 use backend\subStores\LoginTokenStore;
 
 class LoginTokenStoreFS implements LoginTokenStore {
-	public function loginTokenExists(string $username, string $tokenId): bool {
-		return file_exists(PathsFS::fileToken($username, $tokenId));
+	public function loginTokenExists(string $accountName, string $tokenId): bool {
+		return file_exists(PathsFS::fileToken($accountName, $tokenId));
 	}
-	public function getLoginToken(string $username, string $tokenId): string {
-		return file_get_contents(PathsFS::fileToken($username, $tokenId));
+	public function getLoginToken(string $accountName, string $tokenId): string {
+		return file_get_contents(PathsFS::fileToken($accountName, $tokenId));
 	}
-	public function getLoginTokenList($username): array {
-		$pathToken = PathsFS::folderToken($username);
+	public function getLoginTokenList($accountName): array {
+		$pathToken = PathsFS::folderToken($accountName);
 		$currentToken = Permission::getCurrentLoginTokenId();
 		
 		$obj = [];
@@ -31,20 +31,20 @@ class LoginTokenStoreFS implements LoginTokenStore {
 		return $obj;
 	}
 	
-	public function saveLoginToken(string $username, string $tokenHash, string $tokenId) {
-		$path = PathsFS::folderToken($username);
+	public function saveLoginToken(string $accountName, string $tokenHash, string $tokenId) {
+		$path = PathsFS::folderToken($accountName);
 		if(!file_exists($path))
 			FileSystemBasics::createFolder($path);
 		
-		file_put_contents(PathsFS::fileToken($username, $tokenId), $tokenHash, LOCK_EX);
+		file_put_contents(PathsFS::fileToken($accountName, $tokenId), $tokenHash, LOCK_EX);
 	}
-	public function removeLoginToken(string $username, string $tokenId) {
-		$path = PathsFS::fileToken($username, $tokenId);
+	public function removeLoginToken(string $accountName, string $tokenId) {
+		$path = PathsFS::fileToken($accountName, $tokenId);
 		if(file_exists($path))
 			unlink($path);
 	}
-	public function clearAllLoginToken(string $username) {
-		$path = PathsFS::folderToken($username);
+	public function clearAllLoginToken(string $accountName) {
+		$path = PathsFS::folderToken($accountName);
 		$handle = opendir($path);
 		while($file = readdir($handle)) {
 			if($file[0] != '.')

@@ -15,5 +15,5 @@ interface ESMiraInitializer {
 	/**
 	 * @throws CriticalError
 	 */
-	public function create($username, $password);
+	public function create($accountName, $password);
 }

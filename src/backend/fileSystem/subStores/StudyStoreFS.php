@@ -142,14 +142,14 @@ class StudyStoreFS implements StudyStore {
 	 * @throws CriticalError
 	 */
 	private function removeStudyFromPermissions($studyId) {
-		$userStore = Configs::getDataStore()->getUserStore();
+		$accountStore = Configs::getDataStore()->getAccountStore();
 		
-		$userList = $userStore->getUserList();
-		foreach($userList as $username) {
-			$userStore->removeStudyPermission($username, $studyId, 'write');
-			$userStore->removeStudyPermission($username, $studyId, 'read');
-			$userStore->removeStudyPermission($username, $studyId, 'msg');
-			$userStore->removeStudyPermission($username, $studyId, 'publish');
+		$userList = $accountStore->getAccountList();
+		foreach($userList as $accountName) {
+			$accountStore->removeStudyPermission($accountName, $studyId, 'write');
+			$accountStore->removeStudyPermission($accountName, $studyId, 'read');
+			$accountStore->removeStudyPermission($accountName, $studyId, 'msg');
+			$accountStore->removeStudyPermission($accountName, $studyId, 'publish');
 		}
 	}
 	
@@ -224,17 +224,17 @@ class StudyStoreFS implements StudyStore {
 	}
 	public function getStudyParticipants(int $studyId): array {
 		$path = PathsFS::folderUserData($studyId);
-		$usernames = [];
+		$userIds = [];
 		if(file_exists($path)) {
 			$handle = opendir($path);
 			while($file = readdir($handle)) {
 				if($file[0] != '.') {
-					$usernames[] = Paths::getFromUrlFriendly($file);
+					$userIds[] = Paths::getFromUrlFriendly($file);
 				}
 			}
 			closedir($handle);
 		}
-		return $usernames;
+		return $userIds;
 	}
 	
 	public function getEventIndex(int $studyId): ResponsesIndex {

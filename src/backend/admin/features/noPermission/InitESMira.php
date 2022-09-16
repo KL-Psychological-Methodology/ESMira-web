@@ -13,10 +13,10 @@ class InitESMira extends NoPermission {
 	function exec(): array {
 		if(Configs::getDataStore()->isInit())
 			throw new PageFlowException('Disabled');
-		else if(!isset($_POST['new_user']) || !isset($_POST['pass']))
+		else if(!isset($_POST['new_account']) || !isset($_POST['pass']))
 			throw new PageFlowException('Missing data');
 		
-		$user = $_POST['new_user'];
+		$user = $_POST['new_account'];
 		$pass = $_POST['pass'];
 		$initializer = Configs::getDataStore()->getESMiraInitializer();
 		

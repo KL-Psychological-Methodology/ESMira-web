@@ -2,39 +2,39 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\DeleteUserPermission;
+use backend\admin\features\adminPermission\DeleteAccountPermission;
 use backend\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;
 
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
-class DeleteUserPermissionTest extends BaseAdminPermissionTestSetup {
-	private $username = 'user1';
-	protected function setUpUserStoreObserver(): Stub {
-		$observer = parent::setUpUserStoreObserver();
+class DeleteAccountPermissionTest extends BaseAdminPermissionTestSetup {
+	private $accountName = 'user1';
+	protected function setUpAccountStoreObserver(): Stub {
+		$observer = parent::setUpAccountStoreObserver();
 		
 		$this->addDataMock($observer, 'removeStudyPermission');
 		return $observer;
 	}
 	
 	function test() {
-		$obj = new DeleteUserPermission();
+		$obj = new DeleteAccountPermission();
 		
 		$this->assertDataMockFromPost($obj, 'removeStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'read'
 		]);
 		
 		$this->assertDataMockFromPost($obj, 'removeStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'publish'
 		]);
 		
 		$this->assertDataMockFromPost($obj, 'removeStudyPermission', [
-			'user' => $this->username,
+			'accountName' => $this->accountName,
 			'study_id' => $this->studyId,
 			'permission' => 'msg'
 		]);
@@ -42,8 +42,8 @@ class DeleteUserPermissionTest extends BaseAdminPermissionTestSetup {
 		$_POST['permission'] = 'write';
 		$obj->exec();
 		$this->assertDataMock('removeStudyPermission',
-			[$this->username, $this->studyId, 'write'],
-			[$this->username, $this->studyId, 'publish']
+			[$this->accountName, $this->studyId, 'write'],
+			[$this->accountName, $this->studyId, 'publish']
 		);
 		
 		$_POST['permission'] = 'faulty';
@@ -53,8 +53,8 @@ class DeleteUserPermissionTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(DeleteUserPermission::class, [
-			'user' => 'user',
+		$this->assertMissingDataForFeatureObj(DeleteAccountPermission::class, [
+			'accountName' => 'accountName',
 			'permission' => 'write',
 			'studyId' => 123
 		]);

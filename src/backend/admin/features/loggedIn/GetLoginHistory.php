@@ -11,9 +11,9 @@ use backend\Permission;
 class GetLoginHistory extends IsLoggedIn {
 	
 	public function execAndOutput() {
-		$user = Permission::getUser();
+		$accountName = Permission::getAccountName();
 		Main::setHeader('Content-Type: text/csv');
-		echo Configs::getDataStore()->getUserStore()->getLoginHistoryCsv($user);
+		echo Configs::getDataStore()->getAccountStore()->getLoginHistoryCsv($accountName);
 	}
 	
 	function exec(): array {

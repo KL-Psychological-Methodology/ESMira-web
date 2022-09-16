@@ -43,6 +43,6 @@ export const PageIndex = {
 	sOverview:			{filename: "study_overview",	permissions: false},
 	trigger:			{filename: "trigger",			permissions: ["write"]},
 	home:				{filename: "home",				permissions: false},
-	userList:			{filename: "user_list",			permissions: []},
-	userView:			{filename: "user_view",			permissions: []}
+	accountList:		{filename: "account_list",		permissions: []},
+	accountView:		{filename: "account_view",		permissions: []}
 };

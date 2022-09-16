@@ -12,7 +12,7 @@ use test\testConfigs\BaseMessagePermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class MessageSetReadTest extends BaseMessagePermissionTestSetup {
-	private $username = 'user1';
+	private $accountName = 'user1';
 	private $timestamps = [123, 234, 345];
 	private $messagesListContent = ['entry1', 'entry2'];
 	
@@ -30,17 +30,17 @@ class MessageSetReadTest extends BaseMessagePermissionTestSetup {
 	
 	function test() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->username,
+			'user' => $this->accountName,
 			'timestamps' => $this->timestamps
 		]);
 		$obj = new MessageSetRead();
 		$obj->exec();
-		$this->assertDataMock('setMessagesAsRead', [$this->studyId, $this->username, $this->timestamps]);
+		$this->assertDataMock('setMessagesAsRead', [$this->studyId, $this->accountName, $this->timestamps]);
 	}
 	
 	function test_with_missing_data() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->username
+			'user' => $this->accountName
 		]);
 		$obj = new MessageSetRead();
 		$this->expectException(PageFlowException::class);

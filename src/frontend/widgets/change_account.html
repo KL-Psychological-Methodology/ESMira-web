@@ -3,9 +3,9 @@
 		event: {submit: $component.save}
 	">
 	<div class="element">
-		<label data-bind="if: $component.needsUsername">
+		<label data-bind="if: $component.needsAccountName">
 			<small data-bind="text: Lang.get('username')"></small>
-			<input type="text" data-bind="value: $component.username"/>
+			<input type="text" data-bind="value: $component.accountName"/>
 		</label>
 	</div>
 	<div class="element">

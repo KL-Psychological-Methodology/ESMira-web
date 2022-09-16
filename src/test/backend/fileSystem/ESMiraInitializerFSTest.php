@@ -43,41 +43,41 @@ class ESMiraInitializerFSTest extends BaseTestSetup {
 	}
 	
 	function test_create() {
-		$username = 'user1';
+		$accountName = 'user1';
 		$password = 'pass1';
-		BaseDataFolderTestSetup::createEsmiraFolder($username, $password);
+		BaseDataFolderTestSetup::createEsmiraFolder($accountName, $password);
 		
-		$userStore = Configs::getDataStore()->getUserStore();
-		$this->assertTrue($userStore->doesUserExist($username));
-		$this->assertTrue($userStore->checkUserLogin($username, $password));
+		$accountStore = Configs::getDataStore()->getAccountStore();
+		$this->assertTrue($accountStore->doesAccountExist($accountName));
+		$this->assertTrue($accountStore->checkAccountLogin($accountName, $password));
 	}
 	
 	function test_create_and_reuse_existing_data_folder() {
-		$username1 = 'user1';
+		$accountName1 = 'user1';
 		$password1 = 'pass1';
-		$username2 = 'user2';
+		$accountName2 = 'user2';
 		$password2 = 'pass2';
 		
-		BaseDataFolderTestSetup::createEsmiraFolder($username1, $password1);
-		BaseDataFolderTestSetup::createEsmiraFolder($username2, $password2);
+		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password1);
+		BaseDataFolderTestSetup::createEsmiraFolder($accountName2, $password2);
 		
-		$userStore = Configs::getDataStore()->getUserStore();
+		$accountStore = Configs::getDataStore()->getAccountStore();
 		
-		$this->assertTrue($userStore->doesUserExist($username1));
-		$this->assertTrue($userStore->doesUserExist($username2));
+		$this->assertTrue($accountStore->doesAccountExist($accountName1));
+		$this->assertTrue($accountStore->doesAccountExist($accountName2));
 	}
 	function test_create_and_move_existing_data_folder() {
-		$username1 = 'user1';
+		$accountName1 = 'user1';
 		$password1 = 'pass1';
-		$username2 = 'user2';
+		$accountName2 = 'user2';
 		$password2 = 'pass2';
-		BaseDataFolderTestSetup::createEsmiraFolder($username1, $password1);
+		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password1);
 		
 		$_POST['reuseFolder'] = true;
-		BaseDataFolderTestSetup::createEsmiraFolder($username1, $password2);
+		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password2);
 		
-		$userStore = Configs::getDataStore()->getUserStore();
-		$this->assertTrue($userStore->doesUserExist($username1));
-		$this->assertFalse($userStore->doesUserExist($username2));
+		$accountStore = Configs::getDataStore()->getAccountStore();
+		$this->assertTrue($accountStore->doesAccountExist($accountName1));
+		$this->assertFalse($accountStore->doesAccountExist($accountName2));
 	}
 }

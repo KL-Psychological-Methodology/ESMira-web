@@ -14,9 +14,9 @@ class RemoveToken extends IsLoggedIn {
 		if(!isset($_POST['token_id']))
 			throw new PageFlowException('Missing data');
 		
-		$user = Permission::getUser();
+		$accountName = Permission::getAccountName();
 		$tokenId = $_POST['token_id'];
-		Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($user, $tokenId);
+		Configs::getDataStore()->getLoginTokenStore()->removeLoginToken($accountName, $tokenId);
 		
 		$c = new GetTokenList();
 		return $c->exec();

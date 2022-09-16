@@ -71,9 +71,9 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 		$obj = new SendMessage();
 		$obj->exec();
 		$this->assertDataMock('sendMessage',
-			[$this->studyId, $this->participants[0], Permission::getUser(), $this->msgContent],
-			[$this->studyId, $this->participants[1], Permission::getUser(), $this->msgContent],
-			[$this->studyId, $this->participants[2], Permission::getUser(), $this->msgContent]
+			[$this->studyId, $this->participants[0], Permission::getAccountName(), $this->msgContent],
+			[$this->studyId, $this->participants[1], Permission::getAccountName(), $this->msgContent],
+			[$this->studyId, $this->participants[2], Permission::getAccountName(), $this->msgContent]
 		);
 	}
 	
@@ -86,8 +86,8 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 		$obj = new SendMessage();
 		$obj->exec();
 		$this->assertDataMock('sendMessage',
-			[$this->studyId, $this->participants[0], Permission::getUser(), $this->msgContent],
-			[$this->studyId, $this->participants[1], Permission::getUser(), $this->msgContent]
+			[$this->studyId, $this->participants[0], Permission::getAccountName(), $this->msgContent],
+			[$this->studyId, $this->participants[1], Permission::getAccountName(), $this->msgContent]
 		);
 	}
 	
@@ -100,7 +100,7 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 		$obj = new SendMessage();
 		$obj->exec();
 		$this->assertDataMock('sendMessage',
-			[$this->studyId, $this->participants[0], Permission::getUser(), $this->msgContent]
+			[$this->studyId, $this->participants[0], Permission::getAccountName(), $this->msgContent]
 		);
 	}
 	
@@ -113,7 +113,7 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 		]);
 		$obj = new SendMessage();
 		$obj->exec();
-		$this->assertDataMock('sendMessage', [$this->studyId, $this->userId, Permission::getUser(), $this->msgContent]);
+		$this->assertDataMock('sendMessage', [$this->studyId, $this->userId, Permission::getAccountName(), $this->msgContent]);
 	}
 	
 	function test_with_short_content() {

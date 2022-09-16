@@ -19,9 +19,9 @@ export function ViewModel(page) {
 	};
 	this.postInit = function({id}) {
 		if(!recipient.length) {
-			page.loader.loadRequest(FILE_ADMIN + "?type=list_participants&study_id=" + id).then(function(user) {
-				user.sort();
-				self.userList(user);
+			page.loader.loadRequest(FILE_ADMIN + "?type=list_participants&study_id=" + id).then(function(participants) {
+				participants.sort();
+				self.participantList(participants);
 			});
 		}
 	};
@@ -39,7 +39,7 @@ export function ViewModel(page) {
 	this.appVersion = ko.observable("");
 	this.appType = ko.observable();
 	this.content = ko.observable("");
-	this.userList = ko.observableArray();
+	this.participantList = ko.observableArray();
 	
 	this.currentArchive = ko.observableArray([]);
 	this.currentPending = ko.observableArray([]);
