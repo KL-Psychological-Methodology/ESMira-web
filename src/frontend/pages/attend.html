@@ -7,7 +7,7 @@
 
 <p class="center" data-bind="if: !$root.active()">
 	<span data-bind="if:$root.wasFinished()">
-		<span data-bind="html: $root.study.webQuestionnaireCompletedInstructions"></span>
+		<span data-bind="html: $root.study.webQuestionnaireCompletedInstructions() ? $root.study.webQuestionnaireCompletedInstructions() : Lang.get('default_webQuestionnaireCompletedInstructions')"></span>
 	</span>
 	
 	<span data-bind="ifnot:$root.wasFinished()">
