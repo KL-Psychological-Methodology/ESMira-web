@@ -244,7 +244,7 @@ class UpdateVersion extends CheckUpdate {
 		else if($fromVersion <= 204) { //these changes done directly in $fromVersion <= 200
 			$folderErrorReports = PathsFS::folderErrorReports();
 			$handle = opendir($folderErrorReports);
-			$path = PathsFS::folderErrorReports() .".error_info"; //we cannot use ErrorReportInfoLoader::importFile because we are still using the old version of PathFS
+			$path = $folderErrorReports .".error_info"; //we cannot use ErrorReportInfoLoader::importFile because we are still using the old version of PathFS
 			$errorInfoArray = file_exists($path) ? unserialize(file_get_contents($path)) : []; //expected to be []; if data is already in new format we just resave everything
 			while($filename = readdir($handle)) {
 				if($filename[0] == '.') //skip if data is already in new format
@@ -261,7 +261,7 @@ class UpdateVersion extends CheckUpdate {
 				else
 					$errorInfoArray[$timestamp] = new ErrorReportInfo($timestamp);
 			}
-			ErrorReportInfoLoader::exportFile($errorInfoArray);
+			FileSystemBasics::writeFile($path, serialize($errorInfoArray));
 			closedir($handle);
 		}
 	}
