@@ -48,8 +48,9 @@ class DoUpdate extends CheckUpdate {
 		if(file_exists($this->fileUpdate))
 			unlink($this->fileUpdate);
 		
+		//source contains the files from the update. So remove them first
 		$handle = opendir($this->folderPathSource);
-		while($file = readdir($handle)) { //right now, this contains the file from the update. So remove them first
+		while($file = readdir($handle)) {
 			if(in_array($file, $this->filesToRetain))
 				continue;
 			
@@ -66,17 +67,19 @@ class DoUpdate extends CheckUpdate {
 		$revertFailedList = [];
 		
 		//now, copy everything back from the backup folder:
-		$handle = opendir($this->folderPathBackup);
-		while($file = readdir($handle)) {
-			if($file[0] != '.') {
-				$oldLocation = $this->folderPathBackup .$file;
-				$newLocation = $this->folderPathSource .$file;
-				
-				if(file_exists($newLocation) || !@rename($oldLocation, $newLocation))
-					$revertFailedList[] = $newLocation;
+		if(file_exists($this->folderPathBackup)) {
+			$handle = opendir($this->folderPathBackup);
+			while($file = readdir($handle)) {
+				if($file[0] != '.') {
+					$oldLocation = $this->folderPathBackup . $file;
+					$newLocation = $this->folderPathSource . $file;
+					
+					if(file_exists($newLocation) || !@rename($oldLocation, $newLocation))
+						$revertFailedList[] = $newLocation;
+				}
 			}
+			closedir($handle);
 		}
-		closedir($handle);
 		
 		if(count($revertFailedList))
 			throw new PageFlowException("Reverting update failed! The following files are still in the backup folder: $this->folderPathBackup\nReverting was caused by this error: \n$msg");
