@@ -9,6 +9,8 @@
   - participant data cache
 - Existing data should be reformatted automatically, but we advise to back up the data folder before updating in case we missed something.
 - Existing study responses will not be affected. In case the response variables for a study are not reformatted correctly (which should not be possible), new study data might not be saved properly. Should that happen, freeze the study in the study settings (to make sure all data uploads are halted) and contact us asap.
+- All admin accounts (except for the one doing the update) will be logged out automatically.
+
 
 ### 🚀 Added
 
@@ -16,6 +18,7 @@
 
 ### ✏️ Changed
 - Complete refactoring of backend code.
+- Improved update process to prevent breaking errors.
 - Added abstraction layer to have the option of connecting a database in the future.
 - Simplified code and data structure.
 - Improved error handling in backend.
