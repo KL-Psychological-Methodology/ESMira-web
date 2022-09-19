@@ -26,6 +26,8 @@ class DoUpdate extends CheckUpdate {
 	 */
 	private $fileUpdate;
 	
+	private $filesToRetain = [];
+	
 	public function __construct(
 		string $folderPathSource = DIR_BASE,
 		string $folderPathBackup = Paths::FOLDER_SERVER_BACKUP,
@@ -46,7 +48,20 @@ class DoUpdate extends CheckUpdate {
 		if(file_exists($this->fileUpdate))
 			unlink($this->fileUpdate);
 		
-		FileSystemBasics::emptyFolder($this->folderPathSource); //right now, this contains the file from the update. So remove them first
+		$handle = opendir($this->folderPathSource);
+		while($file = readdir($handle)) { //right now, this contains the file from the update. So remove them first
+			if(in_array($file, $this->filesToRetain))
+				continue;
+			
+			$path = $this->folderPathSource .$file;
+			if(is_file($path))
+				unlink($path);
+			else {
+				FileSystemBasics::emptyFolder($path);
+				rmdir($path);
+			}
+		}
+		closedir($handle);
 		
 		$revertFailedList = [];
 		
@@ -91,6 +106,13 @@ class DoUpdate extends CheckUpdate {
 			if(!@rename($oldLocation, $newLocation))
 				throw $this->revertUpdate("Renaming $oldLocation to $newLocation failed. Reverting...");
 		}
+		
+		//remember non-ESMira files we want to keep in case we need to revert
+		$handle = opendir($this->folderPathSource);
+		while($file = readdir($handle)) {
+			$this->filesToRetain[] = $file;
+		}
+		closedir($handle);
 	}
 	
 	function exec(): array {
