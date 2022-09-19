@@ -36,7 +36,7 @@ class FileSystemBasics {
 			if($file == '.' || $file == '..')
 				continue;
 			
-			$filename = $path . $file;
+			$filename = "$path/$file";
 			if(is_dir($filename)) {
 				if(!self::emptyFolder($filename . '/') || !@rmdir($filename)) {
 					closedir($handle);
