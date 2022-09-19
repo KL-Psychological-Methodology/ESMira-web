@@ -43,6 +43,7 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		if(!file_exists($this->folderPathSource))
 			mkdir($this->folderPathSource);
 		file_put_contents($this->folderPathSource .'index.php', 'content');
+		file_put_contents($this->folderPathSource .'nonEsmiraFile', 'content');
 		
 		if(!file_exists($this->folderPathSource .'backend/'))
 			mkdir($this->folderPathSource .'backend/');
@@ -88,6 +89,7 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		catch(PageFlowException $e) {
 			$this->assertFileDoesNotExist($this->folderPathSource .'new File');
 			$this->assertFileExists($this->folderPathSource .'index.php');
+			$this->assertFileExists($this->folderPathSource .'nonEsmiraFile');
 			$this->assertFileDoesNotExist($this->folderPathBackup);
 			$this->assertFileDoesNotExist($this->fileUpdate);
 			return;
