@@ -34,12 +34,19 @@ class UpdateVersion extends CheckUpdate {
 	function runUpdateScript(int $fromVersion) {
 		if($fromVersion <= 150) {
 			$default = Configs::getDefaultAll();
-			FileSystemBasics::writeServerConfigs([
+			
+			$newValues = [
 				'url_update_packageInfo' => $default['url_update_packageInfo'],
 				'url_update_changelog' => $default['url_update_changelog'],
 				'url_update_releaseZip' => $default['url_update_releaseZip'],
 				'url_update_preReleaseZip' => $default['url_update_preReleaseZip']
-			]);
+			];
+			$saveValues = array_merge($default, Configs::getAll(), $newValues);
+			FileSystemBasics::writeFile(Paths::FILE_CONFIG, '<?php return ' . var_export($saveValues, true) . ';');
+			if(method_exists('backend\Configs', 'resetConfig'))
+				Configs::resetConfig();
+			if(method_exists('backend\Configs', 'reload'))
+				Configs::reload();
 		}
 		if($fromVersion <= 200) {
 			require_once DIR_BASE .'backend/exceptions.php';
