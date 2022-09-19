@@ -8,6 +8,7 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\subStores\StudyMetadataStore;
 
+//this class is mainly there to be compatible with a database were we would not load all metadata all at once
 class StudyMetadataStoreFS implements StudyMetadataStore {
 	/**
 	 * @var array
@@ -48,21 +49,21 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	
 	public function getVersion(): int {
 		$this->loadMetadata();
-		return $this->metadata['version'];
+		return $this->metadata['version'] ?? '0.0';
 	}
 	
 	public function isPublished(): bool {
 		$this->loadMetadata();
-		return $this->metadata['published'];
+		return $this->metadata['published'] ?? false;
 	}
 	
 	public function getAccessKeys(): array {
 		$this->loadMetadata();
-		return $this->metadata['accessKeys'];
+		return $this->metadata['accessKeys'] ?? [];
 	}
 	
 	public function getLastBackup(): int {
 		$this->loadMetadata();
-		return $this->metadata['lastBackup'];
+		return $this->metadata['lastBackup'] ?? 0;
 	}
 }
