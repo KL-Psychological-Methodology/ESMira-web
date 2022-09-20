@@ -6,7 +6,7 @@ namespace test\backend\fileSystem\subStores;
 require_once __DIR__ . '/../../../../backend/autoload.php';
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Main;
 use test\testConfigs\BaseDataFolderTestSetup;
 
@@ -194,7 +194,7 @@ class AccountStoreFSTest extends BaseDataFolderTestSetup {
 		
 		
 		//change account that does not exist
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$accountStore->changeAccountName('notExisting', 'newUser2');
 	}
 	
@@ -205,7 +205,7 @@ class AccountStoreFSTest extends BaseDataFolderTestSetup {
 		
 		
 		//change account into already existing accountName
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$accountStore->changeAccountName('user1', 'user2');
 	}
 	

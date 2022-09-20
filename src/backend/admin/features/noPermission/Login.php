@@ -3,7 +3,7 @@
 namespace backend\admin\features\noPermission;
 
 use backend\admin\NoPermission;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class Login extends NoPermission {

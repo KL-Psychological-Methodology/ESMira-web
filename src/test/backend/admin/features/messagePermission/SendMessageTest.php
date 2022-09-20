@@ -5,7 +5,7 @@ namespace test\backend\admin\features\messagePermission;
 use backend\admin\features\messagePermission\SendMessage;
 use backend\dataClasses\UserData;
 use backend\Main;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use backend\subStores\MessagesStore;
 use backend\subStores\StudyStore;

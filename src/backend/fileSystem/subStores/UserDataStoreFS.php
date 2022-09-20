@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace backend\fileSystem\subStores;
 
 use backend\Main;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\UserData;
 use backend\fileSystem\PathsFS;
 use backend\fileSystem\loader\UserDataLoader;
@@ -38,7 +38,7 @@ class UserDataStoreFS extends UserDataStore {
 			}
 			else {
 				Main::report("Could not open token for user \"$this->userId\" in study $studyId");
-				throw new CriticalError('Internal token error');
+				throw new CriticalException('Internal token error');
 			}
 		}
 		else {

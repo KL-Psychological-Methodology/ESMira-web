@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace test\backend\fileSystem;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\ESMiraInitializerFS;
 use backend\fileSystem\subStores\ServerStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
@@ -26,7 +26,7 @@ class DataStoreFSTest extends BaseDataFolderTestSetup {
 		try {
 			Configs::getDataStore()->getStudyStore()->delete($this->studyId);
 		}
-		catch(CriticalError $e) {}
+		catch(CriticalException $e) {}
 	}
 	
 	function test_getESMiraInitializer() {

@@ -3,7 +3,7 @@
 namespace test\backend\fileSystem\subStores;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\ErrorReportInfo;
 use test\testConfigs\BaseDataFolderTestSetup;
 
@@ -62,17 +62,17 @@ class ErrorReportStoreFSTest extends BaseDataFolderTestSetup {
 	
 	function test_get_not_existing_errorReport() {
 		$errorStore = Configs::getDataStore()->getErrorReportStore();
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$errorStore->getErrorReport(123);
 	}
 	function test_change_not_existing_errorReport() {
 		$errorStore = Configs::getDataStore()->getErrorReportStore();
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$errorStore->changeErrorReport(new ErrorReportInfo(123, '234', true));
 	}
 	function test_remove_not_existing_errorReport() {
 		$errorStore = Configs::getDataStore()->getErrorReportStore();
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$errorStore->removeErrorReport(123);
 	}
 }

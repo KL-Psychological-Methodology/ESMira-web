@@ -4,7 +4,7 @@ namespace backend\admin\features\writePermission;
 
 use backend\admin\HasWritePermission;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 
 class LoadLangs extends HasWritePermission {
@@ -13,6 +13,6 @@ class LoadLangs extends HasWritePermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. LoadLangs can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. LoadLangs can only be used with execAndOutput()');
 	}
 }

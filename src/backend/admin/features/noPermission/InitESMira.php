@@ -6,7 +6,7 @@ namespace backend\admin\features\noPermission;
 use backend\admin\NoPermission;
 use backend\Configs;
 use backend\FileSystemBasics;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class InitESMira extends NoPermission {

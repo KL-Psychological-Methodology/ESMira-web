@@ -4,7 +4,7 @@ namespace test\testConfigs;
 
 use backend\admin\NoPermission;
 use test\testConfigs\BaseMockedTestSetup;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Stub;
 

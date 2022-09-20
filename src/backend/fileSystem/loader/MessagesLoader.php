@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
 
 trait MessagesLoader {
@@ -14,7 +14,7 @@ trait MessagesLoader {
 	protected abstract static function getPath(int $studyId, string $userId): string;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public static function importFile(int $studyId, string $userId, bool $keepOpen = false): array {
 		$path = static::getPath($studyId, $userId);
@@ -23,14 +23,14 @@ trait MessagesLoader {
 			if(file_exists($path)) {
 				static::$handle = fopen($path, 'r+');
 				if(!static::$handle)
-					throw new CriticalError("Could not open $path");
+					throw new CriticalException("Could not open $path");
 				flock(static::$handle, LOCK_EX);
 				$content = fread(static::$handle, filesize($path));
 			}
 			else {
 				static::$handle = fopen($path, 'w');
 				if(!static::$handle)
-					throw new CriticalError("Could not open $path");
+					throw new CriticalException("Could not open $path");
 				flock(static::$handle, LOCK_EX);
 				return [];
 			}
@@ -45,7 +45,7 @@ trait MessagesLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public static function exportFile(int $studyId, string $userId, array $messages) {
 		$path = static::getPath($studyId, $userId);
@@ -55,11 +55,11 @@ trait MessagesLoader {
 				fseek(static::$handle, 0);
 				if(!ftruncate(static::$handle, 0)) {
 					self::close();
-					throw new CriticalError("Could not empty $path");
+					throw new CriticalException("Could not empty $path");
 				}
 				else if(!fwrite(static::$handle, serialize($messages))) {
 					self::close();
-					throw new CriticalError("Could not write to $path");
+					throw new CriticalException("Could not write to $path");
 				}
 			}
 			else
@@ -67,7 +67,7 @@ trait MessagesLoader {
 		}
 		else if(file_exists($path) && !unlink($path)) {
 			self::close();
-			throw new CriticalError("Could not delete $path");
+			throw new CriticalException("Could not delete $path");
 		}
 		
 		self::close();

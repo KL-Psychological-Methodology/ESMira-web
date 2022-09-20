@@ -4,7 +4,7 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 class DeleteAccount extends HasAdminPermission {
 	

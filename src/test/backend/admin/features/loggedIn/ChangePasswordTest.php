@@ -3,7 +3,7 @@
 namespace test\backend\admin\features\loggedIn;
 
 use backend\admin\features\loggedIn\ChangePassword;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;

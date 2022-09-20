@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\ErrorReportInfo;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -14,7 +14,7 @@ class ErrorReportInfoLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public static function exportFile(array $errorReportInfo) {
 		FileSystemBasics::writeFile(PathsFS::fileErrorReportInfo(), serialize($errorReportInfo));

@@ -3,9 +3,9 @@
 namespace backend\noJs;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\noJs\pages\StudiesList;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use Exception;
 use backend\Main;
 use backend\CreateDataSet;
@@ -30,8 +30,8 @@ class NoJsMain {
 	
 	
 	/**
-	 * @throws CriticalError
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\CriticalException
+	 * @throws \backend\exceptions\PageFlowException
 	 * @throws ForwardingException
 	 */
 	static function getStudyData(): StudyData {
@@ -81,7 +81,7 @@ class NoJsMain {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	static function saveDataset(string $type, string $userId, stdClass $study, stdClass $questionnaire=null, array $datasetResponses=null) {
 		$accessKey = Main::getAccessKey();
@@ -117,8 +117,8 @@ class NoJsMain {
 		$dataSet = new CreateDataSet($json);
 		$dataSet->exec();
 		if(empty($dataSet->output))
-			throw new CriticalError('No response data');
+			throw new CriticalException('No response data');
 		else if(!$dataSet->output[0]['success'])
-			throw new CriticalError($dataSet->output[0]['error']);
+			throw new CriticalException($dataSet->output[0]['error']);
 	}
 }

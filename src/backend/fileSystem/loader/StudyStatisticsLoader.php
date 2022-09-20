@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use stdClass;
@@ -14,7 +14,7 @@ class StudyStatisticsLoader {
 	private static $handle = null;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	static function importFile(int $studyId, bool $keepOpen = false): stdClass {
 		$pathJson = PathsFS::fileStatisticsJson($studyId);
@@ -23,14 +23,14 @@ class StudyStatisticsLoader {
 			if(file_exists($pathJson)) {
 				static::$handle = fopen($pathJson, 'r+');
 				if(!static::$handle)
-					throw new CriticalError("Could not open $pathJson");
+					throw new CriticalException("Could not open $pathJson");
 				flock(static::$handle, LOCK_EX);
 				$content = fread(static::$handle, filesize($pathJson));
 			}
 			else {
 				static::$handle = fopen($pathJson, 'w');
 				if(!static::$handle)
-					throw new CriticalError("Could not open $pathJson");
+					throw new CriticalException("Could not open $pathJson");
 				flock(static::$handle, LOCK_EX);
 				return new stdClass();
 			}
@@ -45,7 +45,7 @@ class StudyStatisticsLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	static function exportFile(int $studyId, stdClass $json) {
 		$pathJson = PathsFS::fileStatisticsJson($studyId);
@@ -54,11 +54,11 @@ class StudyStatisticsLoader {
 			fseek(static::$handle, 0);
 			if(!ftruncate(static::$handle, 0)) {
 				self::close();
-				throw new CriticalError("Could not empty $pathJson");
+				throw new CriticalException("Could not empty $pathJson");
 			}
 			else if(!fwrite(static::$handle, json_encode($json))) {
 				self::close();
-				throw new CriticalError("Could not write to $pathJson");
+				throw new CriticalException("Could not write to $pathJson");
 			}
 		}
 		else

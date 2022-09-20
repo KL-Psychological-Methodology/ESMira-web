@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../../../backend/autoload.php';
 
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\DataSetCache;
 use backend\DataSetCacheStatisticsEntry;
 use backend\fileSystem\loader\StudyAccessKeyIndexLoader;
@@ -32,7 +32,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 			if($studyStore->studyExists($this->studyId))
 				$studyStore->delete($this->studyId);
 		}
-		catch(CriticalError $e) {}
+		catch(CriticalException $e) {}
 	}
 //	protected function setUp(): void {
 //		parent::setUp();
@@ -505,7 +505,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 	function test_delete_non_existing_study() {
 		$store = new StudyStoreFS();
 		
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$store->delete($this->studyId);
 	}
 	

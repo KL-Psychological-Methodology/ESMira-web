@@ -3,7 +3,7 @@
 namespace backend\fileSystem\subStores;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\Message;
 use backend\dataClasses\MessageParticipantInfo;
 use backend\dataClasses\MessagesList;
@@ -112,7 +112,7 @@ class MessagesStoreFS implements MessagesStore {
 		if(empty($newPendingMessages)) {
 			$path = PathsFS::fileMessagePending($studyId, $userId);
 			if(!unlink($path))
-				throw new CriticalError('Could not update messages');
+				throw new CriticalException('Could not update messages');
 		}
 		else
 			MessagesPendingLoader::exportFile($studyId, $userId, $newPendingMessages);
@@ -167,7 +167,7 @@ class MessagesStoreFS implements MessagesStore {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function receiveMessage(int $studyId, string $userId, string $from, string $content): int {
 		$messages = MessagesUnreadLoader::importFile($studyId, $userId, true);

@@ -7,7 +7,7 @@ require_once __DIR__ .'/../../../backend/autoload.php';
 require_once __DIR__ .'/../../testConfigs/variables.php';
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use test\testConfigs\BaseDataFolderTestSetup;
@@ -35,7 +35,7 @@ class ESMiraInitializerFSTest extends BaseTestSetup {
 	}
 	
 	function test_getConfigAdditions_with_faulty_path() {
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$initializer = Configs::getDataStore()->getESMiraInitializer();
 		
 		$_POST['data_location'] = 'path/does/not/exist';

@@ -5,13 +5,13 @@ namespace backend\admin\features\messagePermission;
 use backend\admin\HasMessagePermission;
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class SendMessage extends HasMessagePermission {
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function sendToAll(string $from, string $content, string $appType = null, string $appVersion = null) {
 		$dataStore = Configs::getDataStore();

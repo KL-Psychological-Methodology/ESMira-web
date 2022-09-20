@@ -2,6 +2,8 @@
 
 namespace backend;
 
+use backend\exceptions\CriticalException;
+
 const IS_TEST_INSTANCE = PHP_SAPI == 'cli';
 
 class Main {
@@ -10,7 +12,7 @@ class Main {
 	public static $defaultPostInput = ''; //only used for testing
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function sessionStart() {
 		switch(session_status()) {
@@ -22,7 +24,7 @@ class Main {
 				break;
 			case PHP_SESSION_DISABLED:
 			default:
-				throw new CriticalError('This server does not support sessions!');
+				throw new CriticalException('This server does not support sessions!');
 		}
 	}
 	

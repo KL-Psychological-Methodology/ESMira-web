@@ -2,7 +2,7 @@
 
 namespace test\api;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 use backend\Permission;
 use backend\subStores\StudyAccessIndexStore;
@@ -59,13 +59,13 @@ class StudiesTest extends BaseApiTestSetup {
 		$studyStore->method('getStudyConfigAsJson')
 			->willReturnCallback(function(int $studyId): string {
 				if($this->hasException)
-					throw new CriticalError('Unit test exception');
+					throw new CriticalException('Unit test exception');
 				return $this->allJsons[$studyId];
 			});
 		$studyStore->method('getStudyLangConfigAsJson')
 			->willReturnCallback(function(int $studyId): string {
 				if($this->hasException)
-					throw new CriticalError('Unit test exception');
+					throw new CriticalException('Unit test exception');
 				return $this->allLangJsons[$studyId];
 			});
 		$this->createStoreMock('getStudyStore', $studyStore, $observer);

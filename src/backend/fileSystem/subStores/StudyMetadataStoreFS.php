@@ -3,7 +3,7 @@
 namespace backend\fileSystem\subStores;
 
 use backend\Main;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\subStores\StudyMetadataStore;
@@ -21,14 +21,14 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	private $studyId;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function loadMetadata() {
 		if($this->metadata)
 			return;
 		$metadataPath = PathsFS::fileStudyMetadata($this->studyId);
 		if(!file_exists($metadataPath))
-			throw new CriticalError('Study does not exist');
+			throw new CriticalException('Study does not exist');
 		
 		$this->metadata = unserialize(file_get_contents($metadataPath));
 	}

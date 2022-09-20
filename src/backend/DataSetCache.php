@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace backend;
 
+use backend\exceptions\CriticalException;
+
 class DataSetCache {
 	/**
 	 * @var DataSetCacheContainer[]
@@ -53,7 +55,7 @@ class DataSetCache {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getEventIndex(int $studyId): ResponsesIndex {
 		return $this->eventIndexCache[$studyId]
@@ -61,7 +63,7 @@ class DataSetCache {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getQuestionnaireIndex(int $studyId, int $questionnaireId): ResponsesIndex {
 		return $this->questionnaireIndexCache[$studyId .$questionnaireId]

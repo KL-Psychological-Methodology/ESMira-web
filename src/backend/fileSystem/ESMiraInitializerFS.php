@@ -3,7 +3,7 @@
 namespace backend\fileSystem;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\ESMiraInitializer;
 use backend\Paths;
 use backend\fileSystem\PathsFS;
@@ -13,7 +13,7 @@ use backend\FileSystemBasics;
 
 class ESMiraInitializerFS implements ESMiraInitializer {
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	private function assembleDataFolderPath(string $dataLocation): string {
 		$last_char = substr($dataLocation, -1);
@@ -21,13 +21,13 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 			$dataLocation .= '/';
 		
 		if(!file_exists($dataLocation))
-			throw new CriticalError("The path $dataLocation does not exist on the server");
+			throw new CriticalException("The path $dataLocation does not exist on the server");
 		
 		return $dataLocation .PathsFS::FILENAME_DATA .'/';
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function moveExistingDataFolder($pathDataFolder) {
 		$reuseFolder = isset($_POST['reuseFolder']) && $_POST['reuseFolder'];
@@ -39,7 +39,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 				$newPath = substr($pathDataFolder, 0, -1) .$count;
 				
 				if(++$count > 100)
-					throw new CriticalError('Too many copies of ' . Paths::FILE_CONFIG .' exist');
+					throw new CriticalException('Too many copies of ' . Paths::FILE_CONFIG .' exist');
 			}
 			while(file_exists($newPath));
 			
@@ -48,7 +48,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	private function createDataFolder($pathDataFolder) {
 		FileSystemBasics::createFolder($pathDataFolder);

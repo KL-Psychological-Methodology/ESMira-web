@@ -5,8 +5,8 @@ namespace backend\admin\features\adminPermission;
 use backend\admin\HasAdminPermission;
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 
 class GetError extends HasAdminPermission {
 	public function execAndOutput() {
@@ -20,6 +20,6 @@ class GetError extends HasAdminPermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. GetError can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. GetError can only be used with execAndOutput()');
 	}
 }

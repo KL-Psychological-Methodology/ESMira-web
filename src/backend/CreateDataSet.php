@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace backend;
 
 use backend\dataClasses\StudyStatisticsEntry;
+use backend\exceptions\CriticalException;
+use backend\exceptions\DataSetException;
 use backend\fileSystem\PathsFS;
 use backend\subStores\ServerStatisticsStore;
 use backend\subStores\StatisticsStoreWriter;
@@ -100,7 +102,7 @@ class CreateDataSet {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	function __construct(stdClass $json) {
 		$this->cache = new DataSetCache();
@@ -202,7 +204,7 @@ class CreateDataSet {
 	}
 	
 	/**
-	 * @throws DataSetErrorException
+	 * @throws DataSetException
 	 */
 	private function handleQuestionnaireDataSet(stdClass $dataSet) {
 		$responses = $dataSet->responses;
@@ -212,7 +214,7 @@ class CreateDataSet {
 		
 		$questionnaireId = (int) ($dataSet->questionnaireInternalId ?? -1);
 		if(!Configs::getDataStore()->getStudyStore()->questionnaireExists($studyId, $questionnaireId))
-			throw new DataSetErrorException("Questionnaire '$questionnaireName' (id=$questionnaireId) does not exist");
+			throw new DataSetException("Questionnaire '$questionnaireName' (id=$questionnaireId) does not exist");
 		
 		
 		$statisticsMetadata = $this->statisticMetadataIndex[$studyId]
@@ -225,9 +227,9 @@ class CreateDataSet {
 		try {
 			$questionnaireIndex = $this->cache->getQuestionnaireIndex($studyId, $questionnaireId);
 		}
-		catch(CriticalError $e) {
+		catch(CriticalException $e) {
 			Main::report("Study $studyId seems to be broken. getQuestionnaireIndex() threw:\n".$e->getMessage());
-			throw new DataSetErrorException("Study $studyId seems to be broken");
+			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		$types = $questionnaireIndex->types;
 		$questionnaireData = [];
@@ -259,7 +261,7 @@ class CreateDataSet {
 	}
 	
 	/**
-	 * @throws DataSetErrorException
+	 * @throws DataSetException
 	 */
 	private function handleEventDataSet(stdClass $dataSet) {
 		$studyId = $this->getStudyId($dataSet);
@@ -267,14 +269,14 @@ class CreateDataSet {
 		try {
 			$eventIndex = $this->cache->getEventIndex($studyId);
 		}
-		catch(CriticalError $e) {
+		catch(CriticalException $e) {
 			Main::report("Study $studyId seems to be broken. getEventIndex() threw:\n" .$e->getMessage());
-			throw new DataSetErrorException("Study $studyId seems to be broken");
+			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		
 		if($eventIndex == null) {
 			Main::report("Study $studyId seems to be broken. EventIndex does not exist");
-			throw new DataSetErrorException("Study $studyId seems to be broken");
+			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		$eventsWrite = [];
 		foreach($eventIndex->keys as $key) {
@@ -285,7 +287,7 @@ class CreateDataSet {
 	}
 	
 	/**
-	 * @throws DataSetErrorException
+	 * @throws DataSetException
 	 */
 	private function shouldWriteDataSet(stdClass $dataSet): bool {
 		$studyId = $this->getStudyId($dataSet);
@@ -301,12 +303,12 @@ class CreateDataSet {
 				?? ($this->metadataIndex[$studyId] = Configs::getDataStore()->getStudyMetadataStore($studyId));
 			$accessKeys = $metadata->getAccessKeys();
 		}
-		catch(CriticalError $e) {
-			throw new DataSetErrorException($e->getMessage());
+		catch(CriticalException $e) {
+			throw new DataSetException($e->getMessage());
 		}
 		
 		if(sizeof($accessKeys) && (!isset($dataSet->accessKey) || !in_array(strtolower($dataSet->accessKey), $accessKeys)))
-			throw new DataSetErrorException('Wrong accessKey: ' .($dataSet->accessKey ?? ''));
+			throw new DataSetException('Wrong accessKey: ' .($dataSet->accessKey ?? ''));
 		
 		
 		//*****
@@ -314,10 +316,10 @@ class CreateDataSet {
 		//*****
 		try {
 			if(!$this->userDataStore->addDataSetForSaving($studyId, $dataSet->group ?? 0, $this->appType, $this->appVersion))
-				throw new DataSetErrorException('Too many requests in succession');
+				throw new DataSetException('Too many requests in succession');
 		}
-		catch(CriticalError $e) {
-			throw new DataSetErrorException($e->getMessage());
+		catch(CriticalException $e) {
+			throw new DataSetException($e->getMessage());
 		}
 		
 		if(isset($dataSet->token) && $this->userDataStore->isOutdated($studyId, (int) $dataSet->token, isset($dataSet->reupload) && $dataSet->reupload)) {
@@ -336,13 +338,13 @@ class CreateDataSet {
 		$dataSetQuestionnaireName = $dataSet->questionnaireName ?? '';
 		
 		if((!Main::strictCheckInput($dataSetQuestionnaireName)) || !Main::strictCheckInput($eventType))
-			throw new DataSetErrorException("Unexpected input! Questionnaire: $dataSetQuestionnaireName; Event-Type: $eventType");
+			throw new DataSetException("Unexpected input! Questionnaire: $dataSetQuestionnaireName; Event-Type: $eventType");
 		
 		return true;
 	}
 	
 	/**
-	 * @throws DataSetErrorException
+	 * @throws DataSetException
 	 */
 	private function handleDataSet(stdClass $dataSet, string $uploaded) {
 		$responses = $dataSet->responses;
@@ -367,7 +369,7 @@ class CreateDataSet {
 		$studyStore = Configs::getDataStore()->getStudyStore();
 		
 		if($studyStore->isLocked($studyId))
-			throw new DataSetErrorException('Study is locked');
+			throw new DataSetException('Study is locked');
 		
 		
 		if($this->shouldWriteDataSet($dataSet)) {
@@ -419,15 +421,15 @@ class CreateDataSet {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	function prepare(stdClass $json) {
 		if(!isset($json->userId) || !isset($json->appVersion) || !isset($json->appType) || !isset($json->dataset) || !isset($json->serverVersion))
-			throw new CriticalError('Unexpected data');
+			throw new CriticalException('Unexpected data');
 		if($json->serverVersion < Main::ACCEPTED_SERVER_VERSION)
-			throw new CriticalError('This app is outdated. Aborting');
+			throw new CriticalException('This app is outdated. Aborting');
 		if(!Main::strictCheckInput($json->userId) || !Main::strictCheckInput($json->appType) || !Main::strictCheckInput($json->appVersion))
-			throw new CriticalError('Input data not valid');
+			throw new CriticalException('Input data not valid');
 		
 		$uploaded = (string) Main::getMilliseconds();
 		$this->userId = $json->userId;
@@ -441,7 +443,7 @@ class CreateDataSet {
 			try {
 				$this->handleDataSet($dataSet, $uploaded);
 			}
-			catch(DataSetErrorException $e) {
+			catch(DataSetException $e) {
 				$this->lineOutputError($this->getDataSetId($dataSet), $e->getMessage());
 			}
 		}

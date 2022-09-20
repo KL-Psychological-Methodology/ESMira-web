@@ -2,7 +2,7 @@
 
 namespace test\api;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\Message;
 use backend\JsonOutput;
 use backend\Main;
@@ -41,7 +41,7 @@ class UpdateTest extends BaseApiTestSetup {
 		$studyStore->method('getStudyConfig')
 			->willReturnCallback(function(int $studyId): stdClass {
 				if($studyId == $this->exceptionStudyId)
-					throw new CriticalError('Unit test exception');
+					throw new CriticalException('Unit test exception');
 				return (object) $this->studyConfig;
 			});
 		$this->createStoreMock('getStudyStore', $studyStore, $observer);

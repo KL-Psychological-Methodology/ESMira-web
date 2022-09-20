@@ -2,7 +2,7 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\StudyStatisticsEntry;
 use stdClass;
 
@@ -12,7 +12,7 @@ interface StudyStatisticsMetadataStore {
 	public function addMetadataEntry(string $key, StudyStatisticsEntry $entry);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function saveChanges();
 }

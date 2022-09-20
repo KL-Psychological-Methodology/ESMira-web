@@ -2,55 +2,55 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 
 interface AccountStore {
 	public function getLoginHistoryCsv(string $accountName): string;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function addToLoginHistoryEntry(string $accountName, array $data);
 	
 	
 	public function getPermissions(string $accountName): array;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function addStudyPermission(string $accountName, int $studyId, string $permCode);
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function removeStudyPermission(string $accountName, int $studyId, string $permCode);
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function setAdminPermission(string $accountName, bool $isAdmin);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function createBlocking($accountName);
 	public function removeBlocking(string $accountName);
 	public function getAccountBlockedTime(string $accountName): int;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getAccountList(): array;
 	public function checkAccountLogin(string $accountName, string $password): bool;
 	public function doesAccountExist($accountName): bool;
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function setAccount($accountName, $password);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	function changeAccountName(string $oldAccountName, string $newAccountName);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function removeAccount($accountName);
 }

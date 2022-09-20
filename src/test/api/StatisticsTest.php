@@ -2,7 +2,7 @@
 
 namespace test\api;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 use backend\subStores\StudyMetadataStore;
 use backend\subStores\StudyStatisticsStore;
@@ -32,7 +32,7 @@ class StatisticsTest extends BaseApiTestSetup {
 		$statisticsStore->method('getAccessKeys')
 			->willReturnCallback(function() {
 				if($this->studyMetadataStoreError)
-					throw new CriticalError('StudyMetadataStore error');
+					throw new CriticalException('StudyMetadataStore error');
 				return $this->accessKeys;
 			});
 		$this->createStoreMock('getStudyMetadataStore', $statisticsStore, $observer);
@@ -42,7 +42,7 @@ class StatisticsTest extends BaseApiTestSetup {
 		$statisticsStore->method('getStatistics')
 			->willReturnCallback(function() {
 				if($this->studyStatisticsStoreError)
-					throw new CriticalError('StudyStatisticsStore error');
+					throw new CriticalException('StudyStatisticsStore error');
 				return $this->statisticsContent;
 			});
 		$this->createStoreMock('getStudyStatisticsStore', $statisticsStore, $observer);

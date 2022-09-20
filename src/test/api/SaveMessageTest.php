@@ -2,7 +2,7 @@
 
 namespace test\api;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 use backend\Main;
 use backend\subStores\MessagesStore;
@@ -35,7 +35,7 @@ class SaveMessageTest extends BaseApiTestSetup {
 		
 		$messagesStore = $this->createDataMock(MessagesStore::class, 'receiveMessage', function() {
 			if($this->hasException)
-				throw new CriticalError('Unit test exception');
+				throw new CriticalException('Unit test exception');
 			return 123456789;
 		});
 		$this->createStoreMock('getMessagesStore', $messagesStore, $observer);

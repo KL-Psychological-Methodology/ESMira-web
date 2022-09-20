@@ -4,8 +4,8 @@ namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
 use backend\Configs;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 
 class GetData extends HasReadPermission {
 	public function execAndOutput() {
@@ -15,6 +15,6 @@ class GetData extends HasReadPermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. GetData can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. GetData can only be used with execAndOutput()');
 	}
 }

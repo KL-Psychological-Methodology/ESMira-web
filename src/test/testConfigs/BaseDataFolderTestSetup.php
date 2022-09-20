@@ -5,10 +5,10 @@ namespace test\testConfigs;
 use backend\admin\features\adminPermission\AddAccountPermission;
 use backend\admin\features\noPermission\Login;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\ESMiraInitializerFS;
 use backend\FileSystemBasics;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -49,8 +49,8 @@ abstract class BaseDataFolderTestSetup extends BaseTestSetup {
 	}
 	
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	protected function login($accountName = null, $password = null) {
 		Permission::setLoggedIn($accountName ?? self::$accountName);

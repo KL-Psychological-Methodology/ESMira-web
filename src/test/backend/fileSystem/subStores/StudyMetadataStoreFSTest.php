@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace test\backend\fileSystem\subStores;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\subStores\StudyMetadataStoreFS;
 use test\testConfigs\BaseDataFolderTestSetup;
 
@@ -17,7 +17,7 @@ class StudyMetadataStoreFSTest extends BaseDataFolderTestSetup {
 		try {
 			Configs::getDataStore()->getStudyStore()->delete($this->studyId);
 		}
-		catch(CriticalError $e) {}
+		catch(CriticalException $e) {}
 	}
 	
 	function test_metadata() {
@@ -39,7 +39,7 @@ class StudyMetadataStoreFSTest extends BaseDataFolderTestSetup {
 	}
 	
 	function test_metadata_for_non_existing_study() {
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		$metadata = new StudyMetadataStoreFS($this->studyId);
 		$metadata->getVersion();
 	}

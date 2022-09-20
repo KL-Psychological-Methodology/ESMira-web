@@ -2,29 +2,29 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 
 interface StudyMetadataStore {
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function updateMetadata($study);
 	
 	public function __construct($studyId);
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getVersion(): int;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function isPublished(): bool;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getAccessKeys(): array;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getLastBackup(): int;
 }

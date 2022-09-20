@@ -2,7 +2,7 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use stdClass;
 
 interface StatisticsStoreWriter {

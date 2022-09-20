@@ -4,7 +4,7 @@ namespace backend\admin\features\loggedIn;
 
 use backend\admin\IsLoggedIn;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class ChangePassword extends IsLoggedIn {

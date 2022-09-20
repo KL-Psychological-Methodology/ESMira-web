@@ -4,9 +4,9 @@ namespace test\backend\admin\features\adminPermission;
 
 use backend\admin\features\adminPermission\DownloadUpdate;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Paths;
 use Exception;
 use test\testConfigs\BaseAdminPermissionTestSetup;
@@ -56,8 +56,8 @@ class DownloadUpdateTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws \backend\exceptions\CriticalException
 	 * @throws Exception
 	 */
 	private function doTest(bool $preRelease) {

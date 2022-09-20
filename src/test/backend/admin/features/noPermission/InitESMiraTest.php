@@ -5,7 +5,7 @@ namespace test\backend\admin\features\noPermission;
 use backend\admin\features\noPermission\InitESMira;
 use backend\Configs;
 use backend\ESMiraInitializer;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Paths;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseNoPermissionTestSetup;

@@ -3,7 +3,7 @@
 namespace test\backend\admin\features\adminPermission;
 
 use backend\admin\features\adminPermission\CreateAccount;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;
 

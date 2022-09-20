@@ -1,7 +1,7 @@
 <?php
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 use backend\Main;
 use backend\Permission;
@@ -60,7 +60,7 @@ try {
 		}
 	}
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

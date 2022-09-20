@@ -1,7 +1,7 @@
 <?php
 namespace backend\admin;
 
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 abstract class HasMessagePermission extends IsLoggedIn {

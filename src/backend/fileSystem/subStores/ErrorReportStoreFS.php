@@ -5,7 +5,7 @@ namespace backend\fileSystem\subStores;
 use backend\dataClasses\ErrorReportInfo;
 use backend\fileSystem\loader\ErrorReportInfoLoader;
 use backend\Main;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\subStores\ErrorReportStore;
 
@@ -52,7 +52,7 @@ class ErrorReportStoreFS implements ErrorReportStore {
 			return file_get_contents($path);
 		}
 		else
-			throw new CriticalError('Not found');
+			throw new CriticalException('Not found');
 	}
 	public function saveErrorReport(string $msg): bool {
 		$time = Main::getMilliseconds();
@@ -68,11 +68,11 @@ class ErrorReportStoreFS implements ErrorReportStore {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function changeErrorReport(ErrorReportInfo $errorReportInfo) {
 		if(!file_exists(PathsFS::fileErrorReport($errorReportInfo->timestamp)))
-			throw new CriticalError('Error report does not exist!');
+			throw new CriticalException('Error report does not exist!');
 		
 		$errorInfo = ErrorReportInfoLoader::importFile();
 		$errorInfo[$errorReportInfo->timestamp] = $errorReportInfo;
@@ -83,7 +83,7 @@ class ErrorReportStoreFS implements ErrorReportStore {
 		$path = PathsFS::fileErrorReport($timestamp);
 		
 		if(!file_exists($path) || !unlink($path))
-			throw new CriticalError("Could not remove $path");
+			throw new CriticalException("Could not remove $path");
 		
 		$errorInfo = ErrorReportInfoLoader::importFile();
 		if(isset($errorInfo[$timestamp]))

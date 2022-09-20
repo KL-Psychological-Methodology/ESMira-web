@@ -2,7 +2,7 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 
 interface LoginTokenStore {
 	public function loginTokenExists(string $accountName, string $tokenId): bool;
@@ -10,7 +10,7 @@ interface LoginTokenStore {
 	public function getLoginTokenList($accountName): array;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function saveLoginToken(string $accountName, string $tokenHash, string $tokenId);
 	public function removeLoginToken(string $accountName, string $tokenId);

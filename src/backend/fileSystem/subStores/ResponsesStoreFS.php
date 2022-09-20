@@ -4,7 +4,7 @@ namespace backend\fileSystem\subStores;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\DataSetCache;
 use backend\DataSetCacheContainer;
 use backend\Paths;
@@ -105,17 +105,17 @@ class ResponsesStoreFS implements ResponsesStore {
 	public function uploadFile(int $studyId, string $userId, int $identifier, FileUploader $fileUploader) {
 		$waitingPath = PathsFS::filePendingUploads($studyId, $userId, $identifier);
 		if(!file_exists($waitingPath))
-			throw new CriticalError('Not allowed');
+			throw new CriticalException('Not allowed');
 		
 		$targetPath = file_get_contents($waitingPath);
 		if(!$targetPath)
-			throw new CriticalError('Internal server error');
+			throw new CriticalException('Internal server error');
 		
 		if(file_exists($targetPath))
-			throw new CriticalError('File already exists');
+			throw new CriticalException('File already exists');
 		
 		if(!$fileUploader->upload($targetPath) || !unlink($waitingPath))
-			throw new CriticalError('Uploading failed');
+			throw new CriticalException('Uploading failed');
 		
 		$mediaZipPath = Paths::fileMediaZip($studyId);
 		if(file_exists($mediaZipPath))
@@ -153,7 +153,7 @@ class ResponsesStoreFS implements ResponsesStore {
 	public function outputResponsesFile(int $studyId, string $identifier) {
 		$path = PathsFS::fileResponses($studyId, $identifier);
 		if(!file_exists($path))
-			throw new CriticalError("$path does not exist");
+			throw new CriticalException("$path does not exist");
 		
 		Main::setHeader('Content-Type: text/csv');
 		readfile($path);
@@ -161,7 +161,7 @@ class ResponsesStoreFS implements ResponsesStore {
 	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
 		$path = Paths::fileImageFromData($studyId, $userId, $entryId, $key);
 		if(!file_exists($path))
-			throw new CriticalError("$path does not exist");
+			throw new CriticalException("$path does not exist");
 		
 		Main::setHeader('Content-Type: image/png');
 		Main::setHeader('Content-Length: '.filesize($path));

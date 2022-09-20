@@ -2,10 +2,10 @@
 
 namespace backend\admin\features\adminPermission;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Paths;
 use backend\FileSystemBasics;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use Throwable;
 use ZipArchive;
 
@@ -41,7 +41,7 @@ class DoUpdate extends CheckUpdate {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 * @throws PageFlowException
 	 */
 	private function revertUpdate($msg): PageFlowException {
@@ -90,8 +90,8 @@ class DoUpdate extends CheckUpdate {
 	}
 	
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function moveEverythingToBackupLocation() {
 		if(!file_exists($this->folderPathBackup))

@@ -3,7 +3,7 @@
 namespace test\backend\admin\features\adminPermission;
 
 use backend\admin\features\adminPermission\ToggleAdmin;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;

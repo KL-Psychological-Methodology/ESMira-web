@@ -2,18 +2,18 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\StatisticsJsonEntry;
 use stdClass;
 
 interface StudyStatisticsStore {
 	function addEntry(string $key, StatisticsJsonEntry $jsonEntry);
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getStatistics(): stdClass;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function saveChanges();
 }

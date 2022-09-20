@@ -1,7 +1,7 @@
 <?php
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
@@ -29,7 +29,7 @@ try {
 	
 	echo JsonOutput::successObj(Configs::getDataStore()->getStudyStatisticsStore($studyId)->getStatistics());
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

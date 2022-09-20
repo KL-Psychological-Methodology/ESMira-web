@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\ResponsesIndex;
 use stdClass;
 
@@ -16,57 +16,57 @@ interface StudyStore {
 	
 	public function getStudyIdList(): array;
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getStudyLangConfigAsJson(int $studyId, string $lang);
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getStudyConfigAsJson(int $studyId): string;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getStudyLangConfig(int $studyId, string $lang): stdClass;
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function getStudyConfig(int $studyId): stdClass;
 	public function getAllLangConfigsAsJson(int $studyId): string;
 	public function getStudyParticipants(int $studyId): array;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getEventIndex(int $studyId): ResponsesIndex;
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getQuestionnaireIndex(int $studyId, int $questionnaireId): ResponsesIndex;
 	
 	public function questionnaireExists(int $studyId, int $questionnaireId): bool;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function saveStudy(stdClass $studyCollection, array $questionnaireKeys);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function backupStudy(int $studyId);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function emptyStudy(int $studyId, array $questionnaireKeys);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function markStudyAsUpdated(int $studyId);
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function delete(int $studyId);
 }

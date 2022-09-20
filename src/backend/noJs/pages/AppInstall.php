@@ -4,8 +4,8 @@ namespace backend\noJs\pages;
 
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 use Exception;
 use backend\Main;
 use backend\noJs\NoJsMain;
@@ -25,7 +25,7 @@ class AppInstall implements Page {
 	private $accessKey;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 * @throws PageFlowException
 	 * @throws ForwardingException
 	 */

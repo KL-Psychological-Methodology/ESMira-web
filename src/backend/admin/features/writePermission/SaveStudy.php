@@ -7,11 +7,11 @@ use backend\admin\HasWritePermission;
 use backend\Main;
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\StatisticsJsonEntry;
 use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use backend\ResponsesIndex;
 use backend\subStores\StatisticsStoreWriter;
@@ -197,7 +197,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	private function updateStudyIndex() {
 		if(!isset($this->mainStudy->accessKeys) || !count($this->mainStudy->accessKeys))
@@ -221,8 +221,8 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws CriticalError
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\CriticalException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	private function publishUnPublish() {
 		//
@@ -259,7 +259,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	private function uniqueNameOrThrow($name, $questionnaireTitle) {
 		if(!strlen($name))
@@ -291,7 +291,7 @@ class SaveStudy extends HasWritePermission {
 	
 	/**
 	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	private function correctInternalIds() {
 		//Note: When a questionnaire is deleted, its internalId will stay in the index until the study is unpublished or deleted.
@@ -325,7 +325,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	private function getQuestionnaireIndex(stdClass $questionnaire): ResponsesIndex {
 		$questionnaireIndex = new ResponsesIndex();
@@ -356,7 +356,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	protected function collectKeys(): array {
 		$keys = [];
@@ -367,8 +367,8 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function save() {
 		$this->studyStore->saveStudy($this->studyCollection, $this->collectKeys());
@@ -391,7 +391,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	protected function saveStatistics() {
 		$dataStore = Configs::getDataStore();

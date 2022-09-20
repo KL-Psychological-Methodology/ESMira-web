@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace backend;
 
+use backend\exceptions\CriticalException;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
@@ -30,7 +31,7 @@ interface DataStoreInterface {
 	public function getResponsesStore(): ResponsesStore;
 	public function getUserDataStore(string $userId): UserDataStore;
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function getStudyMetadataStore(int $studyId): StudyMetadataStore;
 	public function getStudyStatisticsMetadataStore(int $studyId): StudyStatisticsMetadataStore;

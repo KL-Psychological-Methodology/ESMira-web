@@ -2,7 +2,7 @@
 
 namespace backend\noJs\pages;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use Exception;
 use backend\noJs\NoJsMain;
 use backend\noJs\ForwardingException;

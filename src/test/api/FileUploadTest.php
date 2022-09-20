@@ -3,7 +3,7 @@
 namespace test\api;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
 use backend\FileUploader;
 use backend\JsonOutput;
@@ -41,7 +41,7 @@ class FileUploadTest extends BaseApiTestSetup {
 		
 		$responsesStore = $this->createDataMock(ResponsesStore::class, 'uploadFile', function() {
 			if($this->hasUploadException)
-				throw new CriticalError('Unit test exception');
+				throw new CriticalException('Unit test exception');
 		});
 		$this->createStoreMock('getResponsesStore', $responsesStore, $observer);
 		

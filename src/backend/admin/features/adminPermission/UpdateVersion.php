@@ -3,7 +3,7 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\ErrorReportInfo;
 use backend\dataClasses\Message;
 use backend\dataClasses\StudyStatisticsEntry;
@@ -20,7 +20,7 @@ use backend\fileSystem\loader\UserDataLoader;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\Main;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Paths;
 use backend\ResponsesIndex;
 use stdClass;
@@ -29,7 +29,7 @@ use Throwable;
 class UpdateVersion extends CheckUpdate {
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	function runUpdateScript(int $fromVersion) {
 		if($fromVersion <= 150) {
@@ -49,11 +49,10 @@ class UpdateVersion extends CheckUpdate {
 				Configs::reload();
 		}
 		if($fromVersion <= 200) {
-			require_once DIR_BASE .'backend/exceptions.php';
 			$changeResponsesIndex = function(int $studyId, string $identifier) {
 				$values = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, $identifier)));
 				if(!$values)
-					throw new CriticalError("Could not unserialize responsesIndex $identifier for study $studyId");
+					throw new CriticalException("Could not unserialize responsesIndex $identifier for study $studyId");
 				if(!is_array($values)) //skip if data is already in new format
 					return;
 				if(!isset($values['keys']))
@@ -196,7 +195,7 @@ class UpdateVersion extends CheckUpdate {
 							$array = unserialize(file_get_contents($path));
 							
 							if(!$array)
-								throw new CriticalError("Could not unserialize userdata $userId for study $studyId");
+								throw new CriticalException("Could not unserialize userdata $userId for study $studyId");
 							if(!is_array($array))//skip if data is already in new format
 								continue;
 							
@@ -240,12 +239,12 @@ class UpdateVersion extends CheckUpdate {
 							);
 						}
 						catch(Throwable $e) {
-							throw new CriticalError("Failed updating messages for $userId", 0, $e);
+							throw new CriticalException("Failed updating messages for $userId", 0, $e);
 						}
 					}
 				}
 				catch(Throwable $e) {
-					throw new CriticalError("Failed updating study $studyId\n$e", 0, $e);
+					throw new CriticalException("Failed updating study $studyId\n$e", 0, $e);
 				}
 			}
 		}
@@ -288,8 +287,8 @@ class UpdateVersion extends CheckUpdate {
 	}
 	
 	/**
-	 * @throws CriticalError
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\CriticalException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	function exec(): array {
 		if(!isset($_GET['fromVersion']))

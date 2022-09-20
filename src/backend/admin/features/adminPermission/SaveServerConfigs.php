@@ -6,7 +6,7 @@ use backend\admin\HasAdminPermission;
 use backend\Main;
 use backend\Configs;
 use backend\FileSystemBasics;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use stdClass;
 
 class SaveServerConfigs extends HasAdminPermission {

@@ -4,7 +4,7 @@ namespace backend\noJs\pages;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
 use stdClass;
@@ -22,7 +22,7 @@ class StudiesList implements Page {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	static function listFromIndex(string $accessKey): string {
 		$output = '';

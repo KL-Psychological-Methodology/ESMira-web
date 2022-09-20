@@ -5,7 +5,7 @@ namespace test\backend;
 
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\DataSetCache;
@@ -63,7 +63,7 @@ class CreateDataSetTest extends BaseTestSetup {
 			->method('getStudyMetadataStore')
 			->willReturnCallback(function($studyId): StudyMetadataStore {
 				if($studyId != $this->studyId)
-					throw new CriticalError("Study $studyId does not exist");
+					throw new \backend\exceptions\CriticalException("Study $studyId does not exist");
 				$metadata = $this->createStub(StudyMetadataStore::class);
 				$metadata->expects($this->once())
 					->method('getAccessKeys')

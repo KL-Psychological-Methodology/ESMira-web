@@ -1,28 +1,28 @@
 <?php
 namespace backend\admin;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 abstract class NoPermission {
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
 	 */
 	function __construct() {}
 	
 	/**
-	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
 	 */
 	function execAndOutput() {
 		echo JsonOutput::successObj($this->exec());
 	}
 	
 	/**
-	 * @throws CriticalError
-	 * @throws PageFlowException
+	 * @throws \backend\exceptions\CriticalException
+	 * @throws \backend\exceptions\PageFlowException
 	 */
 	abstract function exec(): array;
 }

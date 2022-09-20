@@ -4,7 +4,7 @@ namespace backend\fileSystem;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Paths;
 
 class PathsFS {
@@ -139,7 +139,7 @@ class PathsFS {
 		return self::folderResponses($studyId) ."$filename.csv";
 	}
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function fileResponsesBackup(int $studyId, string $questionnaire_identifier): string {
 		$date = date('o-m-d');
@@ -152,7 +152,7 @@ class PathsFS {
 		while(file_exists($file)) {
 			$file = "$folder{$date}_{$count}_$questionnaire_identifier.csv";
 			if(++$count > Configs::get('max_possible_backups_per_day'))
-				throw new CriticalError('Could not rename old datafile. There are too many copies. Aborting... Check your datafiles before trying again.');
+				throw new CriticalException('Could not rename old datafile. There are too many copies. Aborting... Check your datafiles before trying again.');
 		}
 		
 		return $file;

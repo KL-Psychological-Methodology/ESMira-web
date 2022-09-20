@@ -1,6 +1,6 @@
 <?php
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Main;
 use backend\Configs;
 use backend\JsonOutput;
@@ -49,7 +49,7 @@ else if(!Main::strictCheckInput($userId)) {
 try {
 	Configs::getDataStore()->getMessagesStore()->receiveMessage($studyId, $userId, $userId, $content);
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

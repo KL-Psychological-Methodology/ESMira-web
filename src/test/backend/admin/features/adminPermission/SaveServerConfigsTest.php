@@ -5,7 +5,7 @@ namespace test\backend\admin\features\adminPermission;
 use backend\admin\features\adminPermission\SaveServerConfigs;
 use backend\Configs;
 use backend\Main;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Paths;
 use backend\subStores\ServerStore;
 use PHPUnit\Framework\MockObject\Stub;

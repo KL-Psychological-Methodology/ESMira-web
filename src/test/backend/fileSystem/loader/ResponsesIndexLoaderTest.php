@@ -2,7 +2,7 @@
 
 namespace test\backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\fileSystem\PathsFS;
 use backend\ResponsesIndex;
@@ -26,7 +26,7 @@ class ResponsesIndexLoaderTest extends BaseDataFolderTestSetup {
 	}
 	
 	function test_broken_import() {
-		$this->expectException(CriticalError::class);
+		$this->expectException(CriticalException::class);
 		ResponsesIndexLoader::importFile(567, PathsFS::FILENAME_EVENTS);
 	}
 }

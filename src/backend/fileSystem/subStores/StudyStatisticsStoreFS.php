@@ -6,7 +6,7 @@ use backend\dataClasses\StatisticsJsonEntry;
 use backend\Main;
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\DataSetCacheStatisticsEntry;
 use backend\fileSystem\PathsFS;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;

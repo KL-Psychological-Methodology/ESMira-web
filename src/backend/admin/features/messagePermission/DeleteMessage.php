@@ -4,7 +4,7 @@ namespace backend\admin\features\messagePermission;
 
 use backend\admin\HasMessagePermission;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 class DeleteMessage extends HasMessagePermission {
 	function exec(): array {

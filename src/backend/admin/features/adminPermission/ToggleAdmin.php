@@ -4,7 +4,7 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class ToggleAdmin extends HasAdminPermission {

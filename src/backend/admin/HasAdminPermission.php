@@ -1,7 +1,7 @@
 <?php
 namespace backend\admin;
 
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 abstract class HasAdminPermission extends IsLoggedIn {
 	function __construct() {

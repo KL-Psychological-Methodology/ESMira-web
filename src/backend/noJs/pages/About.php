@@ -4,7 +4,7 @@ namespace backend\noJs\pages;
 
 use backend\Configs;
 use backend\Main;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use Exception;
 use backend\noJs\Page;
 use backend\noJs\Lang;

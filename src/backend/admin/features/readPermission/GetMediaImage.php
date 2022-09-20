@@ -4,8 +4,8 @@ namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
 use backend\Configs;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 
 class GetMediaImage extends HasReadPermission {
 	public function execAndOutput() {
@@ -19,6 +19,6 @@ class GetMediaImage extends HasReadPermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. GetMediaImage can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. GetMediaImage can only be used with execAndOutput()');
 	}
 }

@@ -6,7 +6,7 @@ require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
 use backend\CreateDataSet;
 
@@ -28,7 +28,7 @@ try {
 		'tokens' => $dataSet->userDataStore->getNewStudyTokens() ?: new stdClass() //stdClass makes sure it stays an object even when its empty
 	]);
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

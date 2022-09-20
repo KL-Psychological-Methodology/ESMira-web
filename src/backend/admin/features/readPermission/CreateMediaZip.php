@@ -5,7 +5,7 @@ namespace backend\admin\features\readPermission;
 use backend\admin\HasReadPermission;
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Paths;
 
 class CreateMediaZip extends HasReadPermission {
@@ -25,6 +25,6 @@ class CreateMediaZip extends HasReadPermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. CreateMediaZip can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. CreateMediaZip can only be used with execAndOutput()');
 	}
 }

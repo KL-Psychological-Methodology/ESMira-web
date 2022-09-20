@@ -4,7 +4,7 @@ namespace test\backend\admin\features\noPermission;
 
 use backend\admin\features\noPermission\DataFolderExists;
 use backend\ESMiraInitializer;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseNoPermissionTestSetup;
 

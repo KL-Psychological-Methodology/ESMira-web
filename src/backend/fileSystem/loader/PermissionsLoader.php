@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 
@@ -19,7 +19,7 @@ class PermissionsLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public static function exportFile(array $permissions) {
 		$path = PathsFS::filePermissions();

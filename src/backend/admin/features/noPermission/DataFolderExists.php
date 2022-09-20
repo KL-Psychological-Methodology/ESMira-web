@@ -4,7 +4,7 @@ namespace backend\admin\features\noPermission;
 
 use backend\admin\NoPermission;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 class DataFolderExists extends NoPermission {
 	

@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\subStores\ServerStore;
@@ -24,7 +24,7 @@ class ServerStoreFS implements ServerStore {
 		if(!file_exists($path))
 			return;
 		if(!unlink($path))
-			throw new CriticalError("Could not delete $path");
+			throw new CriticalException("Could not delete $path");
 	}
 	
 	public function getPrivacyPolicy(string $langCode): string {
@@ -44,7 +44,7 @@ class ServerStoreFS implements ServerStore {
 		if(!file_exists($path))
 			return;
 		if(!unlink($path))
-			throw new CriticalError("Could not delete $path");
+			throw new CriticalException("Could not delete $path");
 	}
 	
 	public function getMediaFolderPath(int $studyId): string {

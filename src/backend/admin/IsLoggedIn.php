@@ -2,7 +2,7 @@
 namespace backend\admin;
 
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 abstract class IsLoggedIn extends NoPermission {

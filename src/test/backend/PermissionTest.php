@@ -4,7 +4,7 @@ namespace test\backend;
 
 use backend\Configs;
 use backend\DataStoreInterface;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\AccountStore;
@@ -68,7 +68,7 @@ class PermissionTest extends BaseTestSetup {
 				->willReturn(10);
 		});
 		
-		$this->expectException(PageFlowException::class);
+		$this->expectException(\backend\exceptions\PageFlowException::class);
 		
 		Permission::login($accountName, 'pass');
 		$this->assertFalse(Permission::isLoggedIn());
@@ -96,7 +96,7 @@ class PermissionTest extends BaseTestSetup {
 				);
 		});
 		
-		$this->expectException(PageFlowException::class);
+		$this->expectException(\backend\exceptions\PageFlowException::class);
 		
 		Permission::login($accountName, 'pass');
 		$this->assertFalse(Permission::isLoggedIn());

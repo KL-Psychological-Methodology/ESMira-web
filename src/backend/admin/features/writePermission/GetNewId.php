@@ -7,7 +7,7 @@ use backend\admin\HasWritePermission;
 use backend\JsonOutput;
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 
 class GetNewId extends HasWritePermission {
 	private function getRandomStudyId(): int {
@@ -18,7 +18,7 @@ class GetNewId extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 * @internal also used in SaveStudy
 	 */
 	function createRandomId(bool $forQuestionnaire, array $filtered): int {
@@ -29,7 +29,7 @@ class GetNewId extends HasWritePermission {
 			$id = $forQuestionnaire ? $this->getRandomQuestionnaireId() : $this->getRandomStudyId();
 			
 			if(++$i > 100)
-				throw new CriticalError('Could not find an unused id...');
+				throw new CriticalException('Could not find an unused id...');
 		} while($studyStore->studyExists($id) || $accessIndexStore->getStudyIdForQuestionnaireId($id) != -1 || isset($filtered[$id]));
 		return $id;
 	}
@@ -43,6 +43,6 @@ class GetNewId extends HasWritePermission {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. GetError can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. GetError can only be used with execAndOutput()');
 	}
 }

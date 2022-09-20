@@ -4,7 +4,7 @@ namespace test\backend\admin\features\messagePermission;
 
 use backend\admin\features\messagePermission\MessageSetRead;
 use backend\Main;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\subStores\MessagesStore;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseMessagePermissionTestSetup;

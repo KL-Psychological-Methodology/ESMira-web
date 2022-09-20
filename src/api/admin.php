@@ -5,9 +5,9 @@ set_time_limit(0);
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\JsonOutput;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 
 if(!isset($_GET['type'])) {
@@ -88,7 +88,7 @@ try {
 	$c = new $className;
 	$c->execAndOutput();
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 }
 catch(PageFlowException $e) {

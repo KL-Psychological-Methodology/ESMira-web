@@ -4,7 +4,7 @@ set_time_limit(0);
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\FileUploader;
 use backend\JsonOutput;
 use backend\Configs;
@@ -65,7 +65,7 @@ switch($dataType) {
 	case 'Image':
 		try {
 			if(!getimagesize($fileData['tmp_name']))
-				throw new CriticalError('getimagesize() failed');
+				throw new CriticalException('getimagesize() failed');
 		}
 		catch(Throwable $e) {
 			echo JsonOutput::error('Not an image');
@@ -81,7 +81,7 @@ switch($dataType) {
 try {
 	Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $userId, $identifier, new FileUploader($fileData));
 }
-catch(CriticalError $e) {
+catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

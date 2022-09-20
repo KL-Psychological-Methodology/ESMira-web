@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use stdClass;
@@ -17,7 +17,7 @@ class StudyStatisticsMetadataLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function exportFile(int $studyId, array $metadata) {
 		$pathMetadata = PathsFS::fileStudyStatisticsMetadata($studyId);

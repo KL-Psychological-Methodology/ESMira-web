@@ -2,6 +2,9 @@
 
 namespace backend;
 
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
+
 class Permission {
 	static function getHashedPass(string $pass) {
 		return password_hash($pass,  PASSWORD_DEFAULT);
@@ -9,7 +12,7 @@ class Permission {
 	
 	/**
 	 * @throws PageFlowException
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function login(string $accountName, string $password) {
 		$accountStore = Configs::getDataStore()->getAccountStore();
@@ -32,7 +35,7 @@ class Permission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function setLoggedIn(string $user) {
 		Main::sessionStart();
@@ -41,7 +44,7 @@ class Permission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function setLoggedOut() {
 		Main::sessionStart();
@@ -58,7 +61,7 @@ class Permission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function isLoggedIn(): bool {
 		Main::sessionStart();
@@ -134,7 +137,7 @@ class Permission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function calcRandomToken(int $length): string {
 		//Thanks to: https://www.php.net/manual/en/function.random-bytes.php#118932
@@ -145,7 +148,7 @@ class Permission {
 		else if(function_exists('openssl_random_pseudo_bytes'))
 			return bin2hex(openssl_random_pseudo_bytes($length));
 		else
-			throw new CriticalError('This server does not support random_bytes(), mcrypt_create_iv() or openssl_random_pseudo_bytes()');
+			throw new CriticalException('This server does not support random_bytes(), mcrypt_create_iv() or openssl_random_pseudo_bytes()');
 	}
 	static function getHashedToken(string $tokenHash) {
 		//simple hashing is enough. If somebody has access to our data, they dont need the random token anymore
@@ -153,7 +156,7 @@ class Permission {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	static function createNewLoginToken(string $accountName, string $tokenId = null) {
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();

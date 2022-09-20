@@ -4,7 +4,7 @@ namespace test\backend\admin\features\adminPermission;
 
 use backend\admin\features\adminPermission\AddAccountPermission;
 use test\testConfigs\BaseAdminPermissionTestSetup;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 
 require_once __DIR__ . '/../../../../../backend/autoload.php';

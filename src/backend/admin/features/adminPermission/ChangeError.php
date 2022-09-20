@@ -5,7 +5,7 @@ namespace backend\admin\features\adminPermission;
 use backend\admin\HasAdminPermission;
 use backend\Configs;
 use backend\dataClasses\ErrorReportInfo;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 class ChangeError extends HasAdminPermission {
 	

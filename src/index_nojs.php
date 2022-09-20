@@ -3,7 +3,7 @@
 require_once 'backend/autoload.php';
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Main;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
@@ -15,7 +15,7 @@ use backend\noJs\pages\Home;
 use backend\noJs\pages\Legal;
 use backend\noJs\pages\QuestionnaireAttend;
 use backend\noJs\pages\StudiesList;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 ob_start();
 
@@ -31,7 +31,7 @@ if(!isset($_GET['key']))
 /**
  * @throws ForwardingException
  * @throws PageFlowException
- * @throws CriticalError
+ * @throws \backend\exceptions\CriticalException
  */
 function getPageObj(): Page {
 	if(isset($_GET['app_install']))
@@ -53,7 +53,7 @@ function getPageObj(): Page {
 /**
  * @throws ForwardingException
  * @throws PageFlowException
- * @throws CriticalError
+ * @throws CriticalException
  */
 function pageToOutput(Page $page) {
 	echo '<div class="page_top page_title">'
@@ -74,7 +74,7 @@ function drawPage(Page $page = null) {
 	catch(ForwardingException $exception) {
 		drawPage($exception->getPage());
 	}
-	catch(CriticalError $exception) {
+	catch(CriticalException $exception) {
 		echo "<div id=\"errorEl\">$exception->getMessage()</div>";
 	}
 	catch(PageFlowException $exception) {

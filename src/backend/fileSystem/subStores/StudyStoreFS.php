@@ -5,7 +5,7 @@ namespace backend\fileSystem\subStores;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Paths;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -18,18 +18,18 @@ require_once DIR_BASE . 'backend/responseFileKeys.php';
 
 class StudyStoreFS implements StudyStore {
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	private function copyResponseFile(int $studyId, string $identifier) {
 		$file_name = PathsFS::fileResponses($studyId, $identifier);
 		$file_backupName = PathsFS::fileResponsesBackup($studyId, $identifier);
 		
 		if(!copy($file_name, $file_backupName))
-			throw new CriticalError("Copying $file_name to $file_backupName failed");
+			throw new CriticalException("Copying $file_name to $file_backupName failed");
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function correctResponseFile(
 		array          $newValuesIndex,
@@ -47,7 +47,7 @@ class StudyStoreFS implements StudyStore {
 		$handleBackup = fopen($pathResponsesBackup, 'r');
 		
 		if(!$handleNewResponses || !$handleBackup)
-			throw new CriticalError("Could not open $pathResponses or $pathResponsesBackup");
+			throw new CriticalException("Could not open $pathResponses or $pathResponsesBackup");
 		
 		flock($handleNewResponses, LOCK_EX);
 		
@@ -84,7 +84,7 @@ class StudyStoreFS implements StudyStore {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	private function writeIndexAndResponsesFiles(stdClass $study, string $identifier, ResponsesIndex $questionnaireIndex) {
 		//Note: When there is already data:
@@ -126,7 +126,7 @@ class StudyStoreFS implements StudyStore {
 		if(rename($pathResponses, $pathResponsesBackup))
 			chmod($pathResponsesBackup, 0666);
 		else
-			throw new CriticalError("Could not rename $pathResponses to $pathResponsesBackup");
+			throw new CriticalException("Could not rename $pathResponses to $pathResponsesBackup");
 		
 		//if the file is too big to be changed on the fly, we just create a new file and that's it:
 		if(filesize($pathResponsesBackup) > Configs::get('max_filesize_for_changes')) {
@@ -139,7 +139,7 @@ class StudyStoreFS implements StudyStore {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	private function removeStudyFromPermissions($studyId) {
 		$accountStore = Configs::getDataStore()->getAccountStore();
@@ -197,7 +197,7 @@ class StudyStoreFS implements StudyStore {
 	public function getStudyConfigAsJson(int $studyId): string {
 		$path = PathsFS::fileStudyConfig($studyId);
 		if(!file_exists($path))
-			throw new CriticalError("Study $studyId does not exist");
+			throw new CriticalException("Study $studyId does not exist");
 		return file_get_contents($path);
 	}
 	public function getStudyConfig(int $studyId): stdClass {
@@ -361,10 +361,10 @@ class StudyStoreFS implements StudyStore {
 		if(file_exists($folder_study)) {
 			FileSystemBasics::emptyFolder($folder_study);
 			if(!rmdir($folder_study))
-				throw new CriticalError("Could not remove $folder_study");
+				throw new CriticalException("Could not remove $folder_study");
 		}
 		else
-			throw new CriticalError("$folder_study does not exist!");
+			throw new CriticalException("$folder_study does not exist!");
 		
 		$accessKeyStore = Configs::getDataStore()->getStudyAccessIndexStore();
 		$accessKeyStore->removeStudy($studyId);

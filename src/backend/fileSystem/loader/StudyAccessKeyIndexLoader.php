@@ -2,7 +2,7 @@
 
 namespace backend\fileSystem\loader;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 
@@ -13,7 +13,7 @@ class StudyAccessKeyIndexLoader {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public static function exportFile(array $studyIndex) {
 		FileSystemBasics::writeFile(PathsFS::fileStudyIndex(), serialize($studyIndex));

@@ -3,8 +3,8 @@
 namespace backend\noJs\pages;
 
 use backend\CreateDataSet;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 use Exception;
 use backend\Main;
 use backend\noJs\ForwardingException;
@@ -56,7 +56,7 @@ class QuestionnaireAttend implements Page {
 	
 	/**
 	 * @throws ForwardingException
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 * @throws PageFlowException
 	 */
 	public function __construct() {
@@ -77,7 +77,7 @@ class QuestionnaireAttend implements Page {
 			try {
 				NoJsMain::saveDataset(CreateDataSet::DATASET_TYPE_QUIT, $_POST['participant'], $this->study);
 			}
-			catch(CriticalError $e) {
+			catch(CriticalException $e) {
 				$this->errorMsg = $e->getMessage();
 			}
 			Main::deleteCookie('participant'.$this->study->id);
@@ -101,7 +101,7 @@ class QuestionnaireAttend implements Page {
 			try {
 				NoJsMain::saveDataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, $this->study);
 			}
-			catch(CriticalError $e) {
+			catch(CriticalException $e) {
 				$this->errorMsg = $e->getMessage();
 			}
 		}
@@ -200,7 +200,7 @@ class QuestionnaireAttend implements Page {
 				
 				$this->successSaving = true;
 			}
-			catch(CriticalError $e) {
+			catch(CriticalException $e) {
 				$this->successSaving = false;
 				$this->errorMsg = $e->getMessage();
 			}

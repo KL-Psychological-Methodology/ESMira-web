@@ -1,7 +1,7 @@
 <?php
 
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\Message;
 use backend\JsonOutput;
 use backend\Main;
@@ -89,7 +89,7 @@ foreach($data as $studyId => $line) {
 		if(!empty($line))
 			$output->{$studyId} = $line;
 	}
-	catch(CriticalError $e) {
+	catch(CriticalException $e) {
 		echo JsonOutput::error($e->getMessage());
 		return;
 	}

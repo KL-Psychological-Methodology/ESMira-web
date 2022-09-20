@@ -3,8 +3,8 @@
 namespace backend\noJs\pages;
 
 use backend\CreateDataSet;
-use backend\CriticalError;
-use backend\PageFlowException;
+use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 use Exception;
 use backend\Main;
 use backend\noJs\ForwardingException;
@@ -26,7 +26,7 @@ class StudyOverview implements Page {
 	/**
 	 * @throws PageFlowException
 	 * @throws ForwardingException
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function __construct() {
 		$studyData = NoJsMain::getStudyData();

@@ -5,7 +5,7 @@ namespace backend\admin\features\messagePermission;
 use backend\admin\HasMessagePermission;
 use backend\Main;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 
 class MessageSetRead extends HasMessagePermission {
 	

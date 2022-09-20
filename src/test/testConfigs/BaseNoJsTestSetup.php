@@ -2,7 +2,7 @@
 
 namespace test\testConfigs;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Main;
 use backend\subStores\StudyAccessIndexStore;
 use backend\subStores\StudyStore;

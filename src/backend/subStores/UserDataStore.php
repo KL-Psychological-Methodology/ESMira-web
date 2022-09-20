@@ -5,7 +5,7 @@ namespace backend\subStores;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\dataClasses\UserData;
 use stdClass;
 
@@ -47,7 +47,7 @@ abstract class UserDataStore {
 	}
 	
 	/**
-	 * @throws CriticalError
+	 * @throws \backend\exceptions\CriticalException
 	 */
 	public function addDataSetForSaving(int $studyId, int $group, string $appType, string $appVersion): bool {
 		$this->loadUserDataIntoClass($studyId, $group, $appType, $appVersion);
@@ -94,7 +94,7 @@ abstract class UserDataStore {
 	abstract protected function createNewUserIdInteger(int $studyId): int;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	abstract protected function loadUserDataIntoClass(int $studyId, int $group, string $appType, string $appVersion);
 }

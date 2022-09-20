@@ -4,7 +4,7 @@ namespace backend\fileSystem\subStores;
 
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\fileSystem\loader\PermissionsLoader;
@@ -148,7 +148,7 @@ class AccountStoreFS implements AccountStore {
 		if(!file_exists($path))
 			return [];
 		if(!($h = fopen($path, 'r')))
-			throw new CriticalError('Could not open logins file');
+			throw new CriticalException('Could not open logins file');
 		
 		$userList = [];
 		
@@ -216,11 +216,11 @@ class AccountStoreFS implements AccountStore {
 	
 	public function changeAccountName(string $oldAccountName, string $newAccountName) {
 		if($this->doesAccountExist($newAccountName))
-			throw new CriticalError("$newAccountName already exists!");
+			throw new CriticalException("$newAccountName already exists!");
 		$password = null;
 		$pathLogins = PathsFS::fileLogins();
 		if(!($h = fopen($pathLogins, 'r')))
-			throw new CriticalError("Could not open $pathLogins");
+			throw new CriticalException("Could not open $pathLogins");
 		while(!feof($h)) {
 			$line = fgets($h);
 			$data = explode(':', $line);
@@ -232,7 +232,7 @@ class AccountStoreFS implements AccountStore {
 		}
 		fclose($h);
 		if($password == null)
-			throw new CriticalError("$oldAccountName does not exist!");
+			throw new CriticalException("$oldAccountName does not exist!");
 		
 		$pathToken = PathsFS::folderToken($oldAccountName);
 		if(file_exists($pathToken))
@@ -254,7 +254,7 @@ class AccountStoreFS implements AccountStore {
 			return;
 		$export = '';
 		if(!($handle = fopen($path, 'r')))
-			throw new CriticalError("Could not open $path");
+			throw new CriticalException("Could not open $path");
 		$userRemoved = false;
 		while(!feof($handle)) {
 			$line = fgets($handle);

@@ -5,7 +5,7 @@ namespace backend\admin\features\loggedIn;
 use backend\admin\IsLoggedIn;
 use backend\Main;
 use backend\Configs;
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use backend\Permission;
 
 class GetLoginHistory extends IsLoggedIn {
@@ -17,6 +17,6 @@ class GetLoginHistory extends IsLoggedIn {
 	}
 	
 	function exec(): array {
-		throw new CriticalError('Internal error. GetLoginHistory can only be used with execAndOutput()');
+		throw new CriticalException('Internal error. GetLoginHistory can only be used with execAndOutput()');
 	}
 }

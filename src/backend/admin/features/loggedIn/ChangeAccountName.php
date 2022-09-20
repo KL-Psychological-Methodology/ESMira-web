@@ -5,7 +5,7 @@ namespace backend\admin\features\loggedIn;
 use backend\admin\IsLoggedIn;
 use backend\Main;
 use backend\Configs;
-use backend\PageFlowException;
+use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 class ChangeAccountName extends IsLoggedIn {

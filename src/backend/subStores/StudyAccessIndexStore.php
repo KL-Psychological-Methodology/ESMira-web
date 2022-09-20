@@ -2,7 +2,7 @@
 
 namespace backend\subStores;
 
-use backend\CriticalError;
+use backend\exceptions\CriticalException;
 use stdClass;
 
 interface StudyAccessIndexStore {
@@ -15,7 +15,7 @@ interface StudyAccessIndexStore {
 	public function removeStudy(int $studyId): bool;
 	
 	/**
-	 * @throws CriticalError
+	 * @throws CriticalException
 	 */
 	public function saveChanges();
 }
