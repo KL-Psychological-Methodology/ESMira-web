@@ -26,6 +26,7 @@ export const PageIndex = {
 	participant:		{filename: "participant",		permissions: false},
 	publish:			{filename: "publish",			permissions: ["write"]},
 	qEdit:				{filename: "questionnaire_edit",permissions: ["write"]},
+	rewardCode:			{filename: "reward_code", 		permissions: ["read"]},
 	settings:			{filename: "settings",			permissions: false},
 	screenshots:		{filename: "screenshots",		permissions: false},
 	serverStatistics:	{filename: "server_statistics",	permissions: false},

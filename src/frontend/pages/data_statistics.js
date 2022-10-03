@@ -9,5 +9,6 @@ export function ViewModel(page) {
 	
 	this.preInit = function({id}, studies) {
 		page.title(studies[id].title);
+		this.dataObj = studies[id];
 	};
 }

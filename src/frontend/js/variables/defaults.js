@@ -191,7 +191,8 @@ Defaults.questionnaires = {
 	completableAtSpecificTime: false,
 	completableAtSpecificTimeStart: -1,
 	completableAtSpecificTimeEnd: -1,
-	limitToGroup: 0
+	limitToGroup: 0,
+	minDataSetsForReward: 0
 };
 Defaults.eventUploadSettings = {
 	actions_executed: false,
@@ -205,7 +206,7 @@ Defaults.eventUploadSettings = {
 	statistic_viewed: false,
 	study_message: false,
 	study_updated: false
-}
+};
 Defaults.studies = {
 	$: {
 		children: {
@@ -239,7 +240,9 @@ Defaults.studies = {
 	accessKeys: [],
 	langCodes: [],
 	eventUploadSettings: Defaults.eventUploadSettings,
-	randomGroups: 0
+	randomGroups: 0,
+	enableRewardSystem: false,
+	rewardVisibleAfterDays: 0
 };
 
 

@@ -328,7 +328,6 @@ export const Site = {
 		
 		responses = responses || {};
 		responses["model"] = navigator.userAgent;
-		
 		let output = {
 			userId: participant,
 			appType: "Web",

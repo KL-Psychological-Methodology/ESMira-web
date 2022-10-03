@@ -8,6 +8,7 @@ use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
 use backend\subStores\ResponsesStore;
+use backend\subStores\RewardCodeStore;
 use backend\subStores\ServerStore;
 use backend\subStores\ServerStatisticsStore;
 use backend\subStores\StudyAccessIndexStore;
@@ -39,4 +40,5 @@ interface DataStoreInterface {
 	public function getServerStatisticsStore(): ServerStatisticsStore;
 	public function getErrorReportStore(): ErrorReportStore;
 	public function getServerStore(): ServerStore;
+	public function getRewardCodeStore(): RewardCodeStore;
 }

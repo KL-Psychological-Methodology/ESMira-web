@@ -14,6 +14,32 @@
 	<small data-bind="text: Lang.get('desc_freeze_study')"></small>
 </label>
 
+
+<title-row params="title: Lang.get('reward_system')"></title-row>
+<label class="vertical no_title">
+	<input type="checkbox" data-bind="checked: enableRewardSystem"/>
+	<span data-bind="text: Lang.get('enable_reward_system')"></span>
+	<small data-bind="text: Lang.get('desc_reward_system')"></small>
+</label>
+<div data-bind="if: enableRewardSystem">
+	<h3 data-bind="text: Lang.get('colon_visible_after')"></h3>
+	<label>
+		<input type="number" data-bind="numericValue: rewardVisibleAfterDays"/>
+		<span data-bind="text: Lang.get('days')"></span>
+	</label>
+	<br/>
+	<h3 data-bind="text: Lang.get('colon_minimal_number_of_entries_required')"></h3>
+	<div class="list_parent">
+		<div class="list_child" data-bind="foreach: questionnaires">
+			<label>
+				<small data-bind="text: title"></small>
+				<input type="number" data-bind="numericValue: minDataSetsForReward"/>
+			</label>
+			<br/>
+		</div>
+	</div>
+</div>
+
 <title-row params="title: Lang.get('inform_server_about_events')"></title-row>
 <div data-bind="with: eventUploadSettings">
 	
