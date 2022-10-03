@@ -29,10 +29,20 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 	
 	public function setUp(): void {
 		parent::setUp();
+		$userData1 = new UserData(1, 111, 0);
+		$userData1->appType = $this->appType1;
+		$userData1->appVersion = $this->appVersion1;
+		$userData2 = new UserData(1, 111, 0);
+		$userData2->appType = $this->appType1;
+		$userData2->appVersion = '1.1';
+		$userData3 = new UserData(1, 111, 0);
+		$userData3->appType = 'Type2';
+		$userData3->appVersion = '1.1';
+		
 		$this->userData = [
-			'recipient1' => new UserData(1, 111, 0, -1, $this->appType1, $this->appVersion1),
-			'recipient2' => new UserData(2, 111, 0, -1, $this->appType1, '1.1'),
-			'recipient3' => new UserData(3, 111, 0, -1, 'Type2', '1.1')
+			'recipient1' => $userData1,
+			'recipient2' => $userData2,
+			'recipient3' => $userData3
 		];
 	}
 	
