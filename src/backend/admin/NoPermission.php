@@ -7,13 +7,13 @@ use backend\exceptions\PageFlowException;
 
 abstract class NoPermission {
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 * @throws CriticalException
 	 */
 	function __construct() {}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 * @throws CriticalException
 	 */
 	function execAndOutput() {
@@ -21,8 +21,8 @@ abstract class NoPermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	abstract function exec(): array;
 }

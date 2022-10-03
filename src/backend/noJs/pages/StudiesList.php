@@ -22,7 +22,7 @@ class StudiesList implements Page {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	static function listFromIndex(string $accessKey): string {
 		$output = '';

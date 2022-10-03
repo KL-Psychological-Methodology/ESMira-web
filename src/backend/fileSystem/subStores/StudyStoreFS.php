@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace backend\fileSystem\subStores;
 
+use backend\dataClasses\RewardCodeData;
+use backend\exceptions\NoRewardCodeException;
+use backend\fileSystem\loader\RewardCodeDataLoader;
 use backend\Main;
 use backend\Configs;
 use backend\exceptions\CriticalException;
@@ -29,7 +32,7 @@ class StudyStoreFS implements StudyStore {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	private function correctResponseFile(
 		array          $newValuesIndex,
@@ -139,7 +142,7 @@ class StudyStoreFS implements StudyStore {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	private function removeStudyFromPermissions($studyId) {
 		$accountStore = Configs::getDataStore()->getAccountStore();

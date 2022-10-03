@@ -287,8 +287,8 @@ class UpdateVersion extends CheckUpdate {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	function exec(): array {
 		if(!isset($_GET['fromVersion']))

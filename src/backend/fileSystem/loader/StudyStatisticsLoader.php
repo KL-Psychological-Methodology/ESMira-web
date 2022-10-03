@@ -14,7 +14,7 @@ class StudyStatisticsLoader {
 	private static $handle = null;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	static function importFile(int $studyId, bool $keepOpen = false): stdClass {
 		$pathJson = PathsFS::fileStatisticsJson($studyId);
@@ -45,7 +45,7 @@ class StudyStatisticsLoader {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	static function exportFile(int $studyId, stdClass $json) {
 		$pathJson = PathsFS::fileStatisticsJson($studyId);

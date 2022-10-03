@@ -31,7 +31,7 @@ if(!isset($_GET['key']))
 /**
  * @throws ForwardingException
  * @throws PageFlowException
- * @throws \backend\exceptions\CriticalException
+ * @throws CriticalException
  */
 function getPageObj(): Page {
 	if(isset($_GET['app_install']))

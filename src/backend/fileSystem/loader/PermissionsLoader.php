@@ -19,7 +19,7 @@ class PermissionsLoader {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public static function exportFile(array $permissions) {
 		$path = PathsFS::filePermissions();

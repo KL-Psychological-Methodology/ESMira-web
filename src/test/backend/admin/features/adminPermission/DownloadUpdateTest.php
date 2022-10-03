@@ -56,8 +56,8 @@ class DownloadUpdateTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws PageFlowException
+	 * @throws CriticalException
 	 * @throws Exception
 	 */
 	private function doTest(bool $preRelease) {

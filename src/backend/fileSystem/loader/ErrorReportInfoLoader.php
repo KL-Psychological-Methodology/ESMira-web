@@ -14,7 +14,7 @@ class ErrorReportInfoLoader {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public static function exportFile(array $errorReportInfo) {
 		FileSystemBasics::writeFile(PathsFS::fileErrorReportInfo(), serialize($errorReportInfo));

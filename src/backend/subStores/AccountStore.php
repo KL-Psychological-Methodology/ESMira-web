@@ -7,14 +7,14 @@ use backend\exceptions\CriticalException;
 interface AccountStore {
 	public function getLoginHistoryCsv(string $accountName): string;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function addToLoginHistoryEntry(string $accountName, array $data);
 	
 	
 	public function getPermissions(string $accountName): array;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function addStudyPermission(string $accountName, int $studyId, string $permCode);
 	/**
@@ -22,12 +22,12 @@ interface AccountStore {
 	 */
 	public function removeStudyPermission(string $accountName, int $studyId, string $permCode);
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function setAdminPermission(string $accountName, bool $isAdmin);
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function createBlocking($accountName);
 	public function removeBlocking(string $accountName);
