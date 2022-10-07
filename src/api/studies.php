@@ -69,4 +69,4 @@ catch(Throwable $e) {
 	return;
 }
 
-echo JsonOutput::successString('[' .implode($studiesJson, ',') .']');
+echo JsonOutput::successString('[' .implode(',', $studiesJson) .']');
