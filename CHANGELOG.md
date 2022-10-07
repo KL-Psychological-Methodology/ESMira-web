@@ -1,4 +1,44 @@
 # Changelog
+## Version 2.0.7 (2022-10-07)
+### ✏️ Changed
+- Fix: Study list produced error in PHP 8
+
+
+## Version 2.0.6 (2022-09-19)
+### ✏️ Changed
+- Improved update process to prevent breaking errors.
+- Fix: Resolved errors when updating from 2.0.4 to 2.0.5.
+
+
+## Version 2.0.5 (2022-09-16)
+### ✏️ Changed
+- Fix: Added missing images in english app instructions of version.
+- Fix Changing language was not working.
+
+
+## Version 2.0.4 (2022-09-12)
+### ✏️ Changed
+- Fix: Emptying a study generated faulty questionnaire files.
+
+
+## Version 2.0.3 (2022-09-12)
+### ✏️ Changed
+- Fix: Faulty questionnaire files were generated in new studies 
+
+
+## Version 2.0.2 (2022-09-12)
+### ✏️ Changed
+- Sort entries in internal server statistics.
+- Fix: Error when creating new questionnaire.
+- Fix: UI always claimed that there were new error reports.
+
+
+## Version 2.0.1 (2022-09-09)
+### ✏️ Changed
+- Fix: Error when saving studies with questionnaires without an internalId.
+
+
+## Version 2.0.0 (2022-09-08)
 ### ⚠️ Breaking
 - ESMira data is reformatted when updating from a version before 2.0.0
   - Existing data should be reformatted automatically, but we advise to back up the data folder before updating to prevent existing studies from breaking in case we missed something.
@@ -14,22 +54,18 @@
 
 
 ### 🚀 Added
-
 - Added tests for backend.
 
 ### ✏️ Changed
 - Complete refactoring of backend code.
-- Improved update process to prevent breaking errors.
 - Added abstraction layer to have the option of connecting a database in the future.
 - Simplified code and data structure.
 - Improved error handling in backend.
 - Web version adds entry in web_access.csv when user navigates to study questionnaire.  
 - Improved error handling in various places.
-- Bugfix: Error when saving studies with questionnaires without an internalId.
-- Bugfix: Resolved issue when opening questionnaires via direct link (or qr code) in the web version.
-- Bugfix: Changing language was ignored when using a short link to a study.
-- Various bugfixes in php fallback.
-- Various other small bugfixes.
+- Fix: Resolved issue when opening questionnaires via direct link (or qr code) in the web version.
+- Fix: Various bugfixes in php fallback.
+- Fix: Various other small bugfixes.
 
 ### 🗑️ Removed
 - Removed missing backups warning on the admin page
