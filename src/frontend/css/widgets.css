@@ -236,11 +236,10 @@ widget-only > span {
 	font-size: 9pt;
 	color: #dc4e9d;
 }
-widget-only > .icon {
+widget-only .deviceInfo {
 	display: inline;
-	vertical-align: middle;
 }
-widget-only > .icon > svg {
+widget-only .deviceInfo svg {
 	fill: #dc4e9d;
 }
 dash-el widget-only {
