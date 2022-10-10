@@ -23,7 +23,7 @@ class ResponsesIndexLoader {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public static function exportFile(int $studyId, string $identifier, ResponsesIndex $responsesIndex) {
 		FileSystemBasics::writeFile(PathsFS::fileResponsesIndex($studyId, $identifier), serialize($responsesIndex));

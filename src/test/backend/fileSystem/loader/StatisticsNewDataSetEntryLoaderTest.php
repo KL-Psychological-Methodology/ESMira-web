@@ -8,7 +8,7 @@ use backend\DataSetCacheStatisticsEntry;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;
 use test\testConfigs\BaseTestSetup;
 
-class DataSetCacheStatisticsEntryLoaderTest extends BaseTestSetup {
+class StatisticsNewDataSetEntryLoaderTest extends BaseTestSetup {
 	function test_import_and_export() {
 		$source = new DataSetCacheStatisticsEntry('key', 5, 123, 'answer');
 		$exported = StatisticsNewDataSetEntryLoader::import(StatisticsNewDataSetEntryLoader::export($source));

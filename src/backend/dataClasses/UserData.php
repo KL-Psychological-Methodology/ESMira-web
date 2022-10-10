@@ -30,28 +30,18 @@ class UserData {
 	 */
 	public $dataSetCount;
 	
-	/**
-	 * @var int
-	 */
-	public $group;
+	public $group = 0;
+	public $appType = '';
+	public $appVersion = '';
 	
-	/**
-	 * @var string
-	 */
-	public $appType;
+	public $questionnaireDataSetCount = [];
 	
-	/**
-	 * @var string
-	 */
-	public $appVersion;
+	public $generatedRewardCode = false;
 	
-	public function __construct(int $userIdInteger, int $token, int $dataSetCount, int $group, string $appType, string $appVersion) {
+	public function __construct(int $userIdInteger, int $token, int $dataSetCount) {
 		$this->userIdInteger = $userIdInteger;
 		$this->token = $token;
 		$this->dataSetCount = $dataSetCount;
-		$this->group = $group;
-		$this->appType = $appType;
-		$this->appVersion = $appVersion;
 		$this->joinedTime = Main::getMilliseconds();
 	}
 }

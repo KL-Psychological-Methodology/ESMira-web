@@ -20,10 +20,12 @@ export function ViewModel(page) {
 	page.title(Lang.get("study_settings"));
 	this.locked_enabled = ko.observable(false);
 	
+	
 	let study;
 	this.preInit = function({id}, studies) {
 		study = studies[id];
 		this.dataObj = study;
+		
 		this.add_lang = add_lang.bind(this, study, Defaults.studies);
 		load_langConfigs(study, page);
 		

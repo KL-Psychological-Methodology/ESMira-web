@@ -90,8 +90,8 @@ class DoUpdate extends CheckUpdate {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws PageFlowException
+	 * @throws CriticalException
 	 */
 	private function moveEverythingToBackupLocation() {
 		if(!file_exists($this->folderPathBackup))

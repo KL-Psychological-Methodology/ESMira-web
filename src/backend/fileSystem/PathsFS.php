@@ -85,6 +85,9 @@ class PathsFS {
 	static function folderUserData(int $studyId): string {
 		return self::folderStudies() ."$studyId/.userdata/";
 	}
+	static function folderRewardCodes(int $studyId): string {
+		return self::folderStudies() ."$studyId/.reward_codes/";
+	}
 	
 	
 	static function fileBlockLogin(string $accountName): string {
@@ -182,6 +185,9 @@ class PathsFS {
 		return self::folderToken($accountName) .'.history' .$num;
 	}
 	static function fileUserData(int $studyId, string $userId): string {
-		return self::folderUserData($studyId) . Paths::makeUrlFriendly($userId);
+		return self::folderUserData($studyId) .Paths::makeUrlFriendly($userId);
+	}
+	static function fileRewardCode(int $studyId, string $code): string {
+		return self::folderRewardCodes($studyId) .Paths::makeUrlFriendly($code);
 	}
 }

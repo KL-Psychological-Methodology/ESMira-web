@@ -315,7 +315,7 @@ class CreateDataSet {
 		//check token:
 		//*****
 		try {
-			if(!$this->userDataStore->addDataSetForSaving($studyId, $dataSet->group ?? 0, $this->appType, $this->appVersion))
+			if(!$this->userDataStore->addDataSetForSaving($studyId, $dataSet, $this->appType, $this->appVersion))
 				throw new DataSetException('Too many requests in succession');
 		}
 		catch(CriticalException $e) {

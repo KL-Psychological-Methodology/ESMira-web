@@ -11,7 +11,7 @@ require_once __DIR__ .'/../../backend/autoload.php';
 class JsonOutputTest extends BaseTestSetup {
 	function test_error() {
 		$this->assertEquals(
-			'{"success":false,"serverVersion":'.Main::SERVER_VERSION.',"error":"testString"}',
+			'{"success":false,"serverVersion":'.Main::SERVER_VERSION.',"error":"testString","errorCode":0}',
 			JsonOutput::error('testString')
 		);
 	}

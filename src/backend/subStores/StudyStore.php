@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace backend\subStores;
 
+use backend\dataClasses\RewardCodeData;
 use backend\exceptions\CriticalException;
+use backend\exceptions\NoRewardCodeException;
 use backend\ResponsesIndex;
 use stdClass;
 
@@ -24,11 +26,11 @@ interface StudyStore {
 	 */
 	public function getStudyConfigAsJson(int $studyId): string;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function getStudyLangConfig(int $studyId, string $lang): stdClass;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function getStudyConfig(int $studyId): stdClass;
 	public function getAllLangConfigsAsJson(int $studyId): string;
@@ -46,7 +48,7 @@ interface StudyStore {
 	public function questionnaireExists(int $studyId, int $questionnaireId): bool;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function saveStudy(stdClass $studyCollection, array $questionnaireKeys);
 	

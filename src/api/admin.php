@@ -41,6 +41,7 @@ $classIndex = [
 	'delete_message' => 'backend\admin\features\messagePermission\DeleteMessage',
 	
 	//read:
+	'validate_reward_code' => 'backend\admin\features\readPermission\ValidateRewardCode',
 	'list_data' => 'backend\admin\features\readPermission\ListData',
 	'get_data' => 'backend\admin\features\readPermission\GetData',
 	'create_mediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',

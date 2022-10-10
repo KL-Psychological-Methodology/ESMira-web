@@ -11,7 +11,7 @@ use backend\Permission;
 
 class SendMessage extends HasMessagePermission {
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	private function sendToAll(string $from, string $content, string $appType = null, string $appVersion = null) {
 		$dataStore = Configs::getDataStore();

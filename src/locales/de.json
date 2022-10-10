@@ -538,5 +538,17 @@
     "stable": "Stabil",
     "unstable": "Instabil",
     "update_version": "Update Version",
-    "confirm_prerelease_update": "Die Instabile Version von ESMira wurde noch nicht vollständig getestet und könnte grobe Fehler enthalten. Fortfahren?"
+    "confirm_prerelease_update": "Die Instabile Version von ESMira wurde noch nicht vollständig getestet und könnte grobe Fehler enthalten. Fortfahren?",
+    "reward_system": "Belohnungssystem",
+    "reward_code": "Belohnungscode",
+    "enable_reward_system": "Aktiviere Belohnungssystem",
+    "desc_reward_system": "Wenn das Belohnungssystem aktiviert ist, haben Teilnehmer in der App die Möglichkeit sich einen zufällen Belohnungscode zu generieren, welcher an die Studienleitung gesendet werden kann (um die Anonymität nicht brechen ist es wichtig, dass dafür ein Kommunikationsweg außerhalb von ESMira verwendet wird, weil es in der Regel notwendig ist, dass Teilnehmer ihre Bankdaten oder Adresse bekannt geben).",
+    "colon_visible_after": "Sichtbar nach:",
+    "colon_minimal_number_of_entries_required": "Mindestens notwendige Einträge:",
+    "validate_reward_code": "Überprüfe Belohnungscode",
+    "colon_creation_date": "Erzeugungsdatum:",
+    "code_does_not_exist": "Code does not exist",
+    "colon_entries_at_creation_time": "Einträge zum Generierungszeitpunkt:",
+    "email_content": "Email Inhalt",
+    "info_reward_email_content": "Muss [[CODE]] beinhalten, was durch den tatsächlichen Belohnungscode ersetzt wird."
 }

@@ -8,17 +8,17 @@ class JsonOutput {
 		Main::setHeader('Content-Type: application/json;charset=UTF-8');
 		Main::setHeader('Cache-Control: no-cache, must-revalidate');
 	}
-	static function error($string): string {
+	static function error(string $string, int $errorCode = 0): string {
 		self::doHeaders();
-		return json_encode(['success' => false, 'serverVersion' => Main::SERVER_VERSION, 'error' => $string]);
+		return json_encode(['success' => false, 'serverVersion' => Main::SERVER_VERSION, 'error' => $string, 'errorCode' => $errorCode]);
 	}
 	
-	static function successString($s = 1) {
+	static function successString(string $s = '1'): string {
 		self::doHeaders();
 		return '{"success":true,"serverVersion":'.Main::SERVER_VERSION.',"dataset":'.$s.'}';
 	}
 	
-	static function successObj($obj = true) {
+	static function successObj(/*mixed*/ $obj = true): string {
 		self::doHeaders();
 		return json_encode(['success' => true, 'serverVersion' => Main::SERVER_VERSION, 'dataset' => $obj]);
 	}

@@ -30,8 +30,8 @@ class NoJsMain {
 	
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
+	 * @throws PageFlowException
 	 * @throws ForwardingException
 	 */
 	static function getStudyData(): StudyData {
@@ -81,7 +81,7 @@ class NoJsMain {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	static function saveDataset(string $type, string $userId, stdClass $study, stdClass $questionnaire=null, array $datasetResponses=null) {
 		$accessKey = Main::getAccessKey();
