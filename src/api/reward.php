@@ -4,6 +4,7 @@ use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\exceptions\NoRewardCodeException;
 use backend\JsonOutput;
+use backend\Main;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
@@ -12,13 +13,14 @@ if(!Configs::getDataStore()->isInit()) {
 	return;
 }
 
-if(!isset($_POST['studyId']) || !isset($_POST['userId'])) {
+$jsonString = Main::getRawPostInput();
+if(!($json = json_decode($jsonString)) || !isset($json->studyId) || !isset($json->userId) || !isset($json->serverVersion)) {
 	echo JsonOutput::error('Missing data');
 	return;
 }
 
-$studyId = (int) $_POST['studyId'];
-$userId = $_POST['userId'];
+$studyId = (int) $json->studyId;
+$userId = $json->userId;
 
 $dataStore = Configs::getDataStore();
 $studyStore = $dataStore->getStudyStore();
@@ -37,7 +39,11 @@ try {
 	$code = $userDataStore->generateRewardCode($studyId);
 }
 catch(NoRewardCodeException $e) {
-	echo JsonOutput::error($e->getMessage(), $e->getCode());
+	echo JsonOutput::successObj([
+		'errorCode' => $e->getCode(),
+		'errorMessage' => $e->getMessage(),
+		'fulFilledQuestionnaires' => $e->getFulfilledQuestionnaires()
+	]);
 	return;
 }
 catch(CriticalException $e) {
@@ -47,4 +53,4 @@ catch(CriticalException $e) {
 
 
 
-echo JsonOutput::successObj($code);
+echo JsonOutput::successObj(['errorCode' => 0, 'code' => $code]);

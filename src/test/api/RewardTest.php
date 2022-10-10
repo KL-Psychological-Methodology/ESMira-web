@@ -5,6 +5,7 @@ namespace test\api;
 use backend\exceptions\CriticalException;
 use backend\exceptions\NoRewardCodeException;
 use backend\JsonOutput;
+use backend\Main;
 use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
 use PHPUnit\Framework\MockObject\Stub;
@@ -55,49 +56,45 @@ class RewardTest extends BaseApiTestSetup {
 		return $observer;
 	}
 	
-	function test() {
-		$this->setPost([
-			'studyId' => $this->studyId,
-			'userId' => 'userId'
+	function doTest(int $studyId) {
+		Main::$defaultPostInput = json_encode([
+			'serverVersion' => Main::ACCEPTED_SERVER_VERSION,
+			'userId' => 'userId',
+			'studyId' => $studyId
 		]);
 		require DIR_BASE .'/api/reward.php';
+	}
+	
+	function test() {
+		$this->doTest($this->studyId);
 		$this->expectOutputString(JsonOutput::successObj($this->code));
 	}
 	
 	function test_with_no_reward_code() {
-		$this->setPost([
-			'studyId' => $this->studyIdWithNoRewardCodeException,
-			'userId' => 'userId'
-		]);
-		require DIR_BASE .'/api/reward.php';
+		$this->doTest($this->studyIdWithNoRewardCodeException);
 		$this->expectOutputString(JsonOutput::error('Test error', 999));
 	}
 	
 	function test_with_critical_error() {
-		$this->setPost([
-			'studyId' => $this->studyIdWithCriticalExceptiom,
-			'userId' => 'userId'
-		]);
-		require DIR_BASE .'/api/reward.php';
+		$this->doTest($this->studyIdWithCriticalExceptiom);
 		$this->expectOutputString(JsonOutput::error('Test error'));
 	}
 	
 	function test_with_locked_study() {
-		$this->setPost([
-			'studyId' => $this->lockedStudyId,
-			'userId' => 'userId'
-		]);
-		require DIR_BASE .'/api/reward.php';
+		$this->doTest($this->lockedStudyId);
 		$this->expectOutputString(JsonOutput::error('This study is locked'));
 	}
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForApi(
-			[
-				'studyId' => $this->studyId,
-				'userId' => 'userId'
-			],
-			'reward'
+		$this->assertMissingData(
+			['studyId', 'userId'],
+			function($a) {
+				Main::$defaultPostInput = json_encode($a);
+				require DIR_BASE .'/api/reward.php';
+				$this->assertEquals(JsonOutput::error('Missing data'), ob_get_contents());
+				ob_clean();
+				return true;
+			}
 		);
 	}
 }
