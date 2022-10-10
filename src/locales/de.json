@@ -548,5 +548,7 @@
     "validate_reward_code": "Überprüfe Belohnungscode",
     "colon_creation_date": "Erzeugungsdatum:",
     "code_does_not_exist": "Code does not exist",
-    "colon_entries_at_creation_time": "Einträge zum Generierungszeitpunkt:"
+    "colon_entries_at_creation_time": "Einträge zum Generierungszeitpunkt:",
+    "email_content": "Email Inhalt",
+    "info_reward_email_content": "Muss [[CODE]] beinhalten, was durch den tatsächlichen Belohnungscode ersetzt wird."
 }

@@ -19,6 +19,7 @@
 	</div>
 	<br/>
 	<br/>
+	
 	<title-row params="title: Lang.get('colon_minimal_number_of_entries_required')"></title-row>
 	<div class="list_parent">
 		<div class="list_child" data-bind="foreach: questionnaires">
@@ -29,4 +30,12 @@
 			<br/>
 		</div>
 	</div>
+	
+	
+	<title-row params="title: Lang.get('email_content')"></title-row>
+	<label class="spacing_top line">
+		<textarea data-bind="value: $root.rewardEmailContentCopy"></textarea>
+		<small data-bind="text: Lang.get('info_reward_email_content'), css: {highlight: $root.faultyEmailContent()}"></small>
+		<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: $root.faultyEmailContent()"/>
+	</label>
 </div>

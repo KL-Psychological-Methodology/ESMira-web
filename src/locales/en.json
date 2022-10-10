@@ -548,5 +548,7 @@
     "validate_reward_code": "Validate reward code",
     "colon_creation_date": "Creation date:",
     "code_does_not_exist": "Code does not exist",
-    "colon_entries_at_creation_time": "Entries at creation time:"
+    "colon_entries_at_creation_time": "Entries at creation time:",
+    "email_content": "Email content",
+    "info_reward_email_content": "Must contain [[CODE]] which will be replaced by the actual reward code."
 }
