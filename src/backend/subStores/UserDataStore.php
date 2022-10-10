@@ -123,13 +123,22 @@ abstract class UserDataStore {
 			throw new NoRewardCodeException('Rewards are not accessible yet', NoRewardCodeException::UNFULFILLED_REWARD_CONDITIONS);
 		}
 		
+		$unfulfilledQuestionnaires = false;
+		$fulfilledQuestionnaires = [];
 		foreach($study->questionnaires as $questionnaire) {
 			$qId = $questionnaire->internalId;
 			$min = $questionnaire->minDataSetsForReward ?? 0;
 			if($min != 0 && ($userdata->questionnaireDataSetCount[$qId] ?? 0) < $min) {
-				$this->close();
-				throw new NoRewardCodeException('Not all conditions are fulfilled', NoRewardCodeException::UNFULFILLED_REWARD_CONDITIONS);
+				$unfulfilledQuestionnaires = true;
+				$fulfilledQuestionnaires[$qId] = false;
 			}
+			else
+				$fulfilledQuestionnaires[$qId] = true;
+		}
+		
+		if($unfulfilledQuestionnaires) {
+			$this->close();
+			throw new NoRewardCodeException('Not all conditions are fulfilled', NoRewardCodeException::UNFULFILLED_REWARD_CONDITIONS, $fulfilledQuestionnaires);
 		}
 		
 		$rewardCodeStore = Configs::getDataStore()->getRewardCodeStore();
