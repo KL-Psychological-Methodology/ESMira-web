@@ -76,7 +76,6 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		$this->assertFileExists($this->folderPathSource .'new File');
 		$this->assertFileDoesNotExist($this->folderPathSource .'index.php');
 		$this->assertFileExists($this->folderPathSource .'backend/config/configs.default.php');
-		$this->assertFileDoesNotExist($this->folderPathBackup);
 		$this->assertFileDoesNotExist($this->fileUpdate);
 	}
 	
@@ -123,11 +122,5 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		$this->expectErrorMessage('Could not restore settings');
 		$obj = new DoUpdate($this->folderPathSource, $this->folderPathBackup, $this->fileUpdate);
 		$obj->exec();
-	}
-	
-	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(DoUpdate::class, [
-			'fromVersion' => PHP_INT_MAX .'.0.0',
-		], true);
 	}
 }

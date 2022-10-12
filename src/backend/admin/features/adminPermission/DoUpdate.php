@@ -2,29 +2,29 @@
 
 namespace backend\admin\features\adminPermission;
 
+use backend\admin\HasAdminPermission;
 use backend\exceptions\CriticalException;
 use backend\Paths;
 use backend\FileSystemBasics;
 use backend\exceptions\PageFlowException;
-use Throwable;
 use ZipArchive;
 
-class DoUpdate extends CheckUpdate {
+class DoUpdate extends HasAdminPermission {
 	//we dont want to blindly copy everything over in case there are non ESMira-files in our main folder:
 	const NEEDS_BACKUP = ['api/', 'backend/', 'frontend/', 'locales/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
 	
 	/**
 	 * @var string
 	 */
-	private $folderPathSource;
+	protected $folderPathSource;
 	/**
 	 * @var string
 	 */
-	private $folderPathBackup;
+	protected $folderPathBackup;
 	/**
 	 * @var string
 	 */
-	private $fileUpdate;
+	protected $fileUpdate;
 	
 	private $filesToRetain = [];
 	
@@ -44,7 +44,7 @@ class DoUpdate extends CheckUpdate {
 	 * @throws CriticalException
 	 * @throws PageFlowException
 	 */
-	private function revertUpdate($msg): PageFlowException {
+	protected function revertUpdate($msg): PageFlowException {
 		if(file_exists($this->fileUpdate))
 			unlink($this->fileUpdate);
 		
@@ -119,8 +119,6 @@ class DoUpdate extends CheckUpdate {
 	}
 	
 	function exec(): array {
-		if(!isset($_GET['fromVersion']))
-			throw new PageFlowException('Missing data');
 		if(!file_exists($this->fileUpdate))
 			throw new PageFlowException('Could not find update. Has it been downloaded yet?');
 		if(file_exists($this->folderPathBackup))
@@ -137,27 +135,12 @@ class DoUpdate extends CheckUpdate {
 		if(!@$zip->extractTo($this->folderPathSource))
 			throw $this->revertUpdate("Could not unzip update: $this->fileUpdate. Reverting...");
 		$zip->close();
-		
+		@unlink($this->fileUpdate);
 		
 		//restore config file:
 		if(!@copy($this->folderPathBackup .Paths::SUB_PATH_CONFIG, Paths::FILE_CONFIG))
 			throw $this->revertUpdate('Could not restore settings. Reverting...');
 		FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
-		
-		
-		//run update script
-		try {
-			$updater = new UpdateVersion();
-			$updater->exec();
-		}
-		catch(Throwable $e) {
-			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
-		}
-		
-		
-		//cleaning up
-		if(!FileSystemBasics::emptyFolder($this->folderPathBackup) || !@rmdir($this->folderPathBackup) || !@unlink($this->fileUpdate))
-			throw new PageFlowException("Failed to clean up backup. The update was successful. But please delete this folder and check its contents manually: $this->folderPathBackup");
 		
 		return [];
 	}

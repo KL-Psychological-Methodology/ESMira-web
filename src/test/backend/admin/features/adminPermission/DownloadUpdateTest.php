@@ -31,52 +31,15 @@ class DownloadUpdateTest extends BaseAdminPermissionTestSetup {
 			unlink($pathUpdate);
 	}
 	
-	/**
-	 * @throws Exception
-	 */
-	private function createFakeZip(bool $preRelease, string $versionString) {
-		parent::setUpBeforeClass();
-		
-		Configs::injectConfig('configs.downloadUpdate.injected.php');
-		
-		$path = sprintf(Configs::get($preRelease ? 'url_update_preReleaseZip' : 'url_update_releaseZip'), $versionString);
+	function test() {
+		$path = TEST_DATA_FOLDER .'release.zip';
 		file_put_contents($path, $this->zipFileContent);
-	}
-	
-	/**
-	 * @throws Exception
-	 */
-	private function getVersionString(): string {
-		$versionArray = [
-			random_int(0, 9),
-			random_int(0, 9),
-			random_int(0, 9)
-		];
-		return implode('.', $versionArray);
-	}
-	
-	/**
-	 * @throws PageFlowException
-	 * @throws CriticalException
-	 * @throws Exception
-	 */
-	private function doTest(bool $preRelease) {
-		$versionString = $this->getVersionString();
-		$this->createFakeZip($preRelease, $versionString);
 		
-		$this->setGet([
-			'version' => $versionString,
-			'preRelease' => $preRelease
+		$this->setPost([
+			'url' => $path
 		]);
 		$obj = new DownloadUpdate();
 		$obj->exec();
 		$this->assertEquals($this->zipFileContent, file_get_contents(Paths::FILE_SERVER_UPDATE));
-	}
-	
-	function test_release() {
-		$this->doTest(false);
-	}
-	function test_preRelease() {
-		$this->doTest(true);
 	}
 }

@@ -72,7 +72,6 @@ $classIndex = [
 	'add_accountPermission' => 'backend\admin\features\adminPermission\AddAccountPermission',
 	'delete_accountPermission' => 'backend\admin\features\adminPermission\DeleteAccountPermission',
 	'toggle_admin' => 'backend\admin\features\adminPermission\ToggleAdmin',
-	'check_update' => 'backend\admin\features\adminPermission\CheckUpdate',
 	'download_update' => 'backend\admin\features\adminPermission\DownloadUpdate',
 	'do_update' => 'backend\admin\features\adminPermission\DoUpdate',
 	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
