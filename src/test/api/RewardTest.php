@@ -9,6 +9,7 @@ use backend\Main;
 use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
 use PHPUnit\Framework\MockObject\Stub;
+use stdClass;
 use test\testConfigs\BaseApiTestSetup;
 
 require_once __DIR__ .'/../../backend/autoload.php';
@@ -67,12 +68,12 @@ class RewardTest extends BaseApiTestSetup {
 	
 	function test() {
 		$this->doTest($this->studyId);
-		$this->expectOutputString(JsonOutput::successObj($this->code));
+		$this->expectOutputString(JsonOutput::successObj(['errorCode' => 0, 'code' => $this->code]));
 	}
 	
 	function test_with_no_reward_code() {
 		$this->doTest($this->studyIdWithNoRewardCodeException);
-		$this->expectOutputString(JsonOutput::error('Test error', 999));
+		$this->expectOutputString(JsonOutput::successObj(['errorCode' => 999, 'errorMessage' => 'Test error', 'fulFilledQuestionnaires' => new stdClass()]));
 	}
 	
 	function test_with_critical_error() {
