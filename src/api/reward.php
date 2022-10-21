@@ -39,11 +39,11 @@ try {
 	$code = $userDataStore->generateRewardCode($studyId);
 }
 catch(NoRewardCodeException $e) {
-	$fulFilledQuestionnaires = $e->getFulfilledQuestionnaires();
+	$fulfilledQuestionnaires = $e->getFulfilledQuestionnaires();
 	echo JsonOutput::successObj([
 		'errorCode' => $e->getCode(),
 		'errorMessage' => $e->getMessage(),
-		'fulFilledQuestionnaires' => empty($fulFilledQuestionnaires) ? new stdClass() : $e->getFulfilledQuestionnaires()
+		'fulfilledQuestionnaires' => empty($fulfilledQuestionnaires) ? new stdClass() : $e->getFulfilledQuestionnaires()
 	]);
 	return;
 }
