@@ -221,7 +221,8 @@ Defaults.studies = {
 			webQuestionnaireCompletedInstructions: "",
 			webInstallInstructions: '',
 			contactEmail: '',
-			rewardEmailContent: ""
+			rewardEmailContent: "",
+			rewardInstructions: ""
 		}
 	},
 	publicStatistics: Defaults.statistics,

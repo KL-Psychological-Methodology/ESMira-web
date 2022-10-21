@@ -551,5 +551,6 @@
     "colon_entries_at_creation_time": "Einträge zum Generierungszeitpunkt:",
     "email_content": "Email Inhalt",
     "info_reward_email_content": "Muss [[CODE]] beinhalten, was durch den tatsächlichen Belohnungscode ersetzt wird.",
-    "state_installing": "Installation abschließen…"
+    "state_installing": "Installation abschließen…",
+    "reward_code_instructions": "Belohnungscode-Instruktionen"
 }
