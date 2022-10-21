@@ -73,9 +73,6 @@ export function ViewModel(page) {
 					unstableReleases.push(data);
 				else
 					stableReleases.push(data);
-				
-				console.log(stableReleases)
-				console.log(unstableReleases)
 			}
 			return [stableReleases, unstableReleases];
 		}).then(function([stableReleases, unstableReleases]) {
