@@ -58,7 +58,7 @@ abstract class UserDataStore {
 		$userData->appVersion = $appVersion;
 		
 		++$userData->dataSetCount;
-		if($dataSet->eventType ?? '' == 'questionnaire' && isset($dataSet->questionnaireInternalId)) {
+		if(($dataSet->eventType ?? '') == 'questionnaire' && ($dataSet->questionnaireInternalId ?? -1) != -1) {
 			if(!isset($userData->questionnaireDataSetCount[$dataSet->questionnaireInternalId]))
 				$userData->questionnaireDataSetCount[$dataSet->questionnaireInternalId] = 1;
 			else
@@ -130,10 +130,10 @@ abstract class UserDataStore {
 			$min = $questionnaire->minDataSetsForReward ?? 0;
 			if($min != 0 && ($userdata->questionnaireDataSetCount[$qId] ?? 0) < $min) {
 				$unfulfilledQuestionnaires = true;
-				$fulfilledQuestionnaires[$qId] = false;
+				$fulfilledQuestionnaires[] = [$qId, false];
 			}
 			else
-				$fulfilledQuestionnaires[$qId] = true;
+				$fulfilledQuestionnaires[] = [$qId, true];
 		}
 		
 		if($unfulfilledQuestionnaires) {
