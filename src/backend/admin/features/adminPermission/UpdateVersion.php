@@ -28,8 +28,13 @@ use stdClass;
 use Throwable;
 
 class UpdateVersion extends DoUpdate {
+	/**
+	 * @var string
+	 */
+	private $fromVersion;
 	
-	protected function versionIsHigher($oldVersionString, $newVersionString): bool {
+	protected function versionIsBelow(string $newVersionString): bool {
+		$oldVersionString = $this->fromVersion;
 		$matchOld = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $oldVersionString, $integersOld);
 		$matchNew = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $newVersionString, $integersNew);
 		
@@ -57,8 +62,8 @@ class UpdateVersion extends DoUpdate {
 	/**
 	 * @throws CriticalException
 	 */
-	function runUpdateScript(string $fromVersion) {
-		if($this->versionIsHigher($fromVersion, '2.0.0')) {
+	function runUpdateScript() {
+		if($this->versionIsBelow('2.0.0')) {
 			$changeResponsesIndex = function(int $studyId, string $identifier) {
 				$values = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, $identifier)));
 				if(!$values)
@@ -258,7 +263,7 @@ class UpdateVersion extends DoUpdate {
 				}
 			}
 		}
-		else if($this->versionIsHigher($fromVersion, '2.0.4')) { //these changes done directly in $fromVersion <= 200
+		else if($this->versionIsBelow('2.0.4')) { //these changes done directly in $fromVersion <= 200
 			$folderErrorReports = PathsFS::folderErrorReports();
 			$handle = opendir($folderErrorReports);
 			$path = $folderErrorReports .".error_info"; //we cannot use ErrorReportInfoLoader::importFile because we are still using the old version of PathFS
@@ -284,7 +289,7 @@ class UpdateVersion extends DoUpdate {
 			closedir($handle);
 		}
 		
-		if($this->versionIsHigher($fromVersion, '2.0.4')) {
+		if($this->versionIsBelow('2.0.4')) {
 			//prevent automatic logout:
 			
 			if(isset($_COOKIE['user'])) {
@@ -294,7 +299,7 @@ class UpdateVersion extends DoUpdate {
 			if(isset($_SESSION['user']))
 				$_SESSION['account'] = $_SESSION['user'];
 		}
-		if($this->versionIsHigher($fromVersion, '2.1.0-alpha.2')) {
+		if($this->versionIsBelow('2.1.0-alpha.2')) {
 			//index numbers in ~open array got messed up. We have to fix them:
 			$studyIndex = StudyAccessKeyIndexLoader::importFile();
 			$newArray = [];
@@ -314,9 +319,9 @@ class UpdateVersion extends DoUpdate {
 		if(!isset($_GET['fromVersion']))
 			throw new PageFlowException('Missing data');
 		
-		
+		$this->fromVersion = $_GET['fromVersion'];
 		try {
-			$this->runUpdateScript($_GET['fromVersion']);
+			$this->runUpdateScript();
 		}
 		catch(Throwable $e) {
 			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
