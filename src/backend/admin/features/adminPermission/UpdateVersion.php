@@ -333,4 +333,11 @@ class UpdateVersion extends DoUpdate {
 			throw new PageFlowException("Failed to clean up backup. The update was successful. But please delete this folder and check its contents manually: $this->folderPathBackup");
 		return [];
 	}
+	
+	
+	//only for testing:
+	function testVersionCheck(string $fromVersion, string $checkVersion): bool {
+		$this->fromVersion = $fromVersion;
+		return $this->versionIsBelow($checkVersion);
+	}
 }
