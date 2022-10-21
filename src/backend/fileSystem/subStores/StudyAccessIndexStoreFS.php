@@ -60,8 +60,8 @@ class StudyAccessIndexStoreFS implements StudyAccessIndexStore {
 		$this->wasChanged = true;
 		$wasRemoved = false;
 		foreach($this->studyIndex as $key => $subList) {
-			if(($list_index = array_search($studyId, $subList)) !== false) {
-				unset($this->studyIndex[$key][$list_index]);
+			if(($listIndex = array_search($studyId, $subList)) !== false) {
+				array_splice($this->studyIndex[$key], $listIndex, 1);
 				$wasRemoved = true;
 			}
 			if(!count($this->studyIndex[$key]))

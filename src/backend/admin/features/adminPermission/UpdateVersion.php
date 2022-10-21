@@ -16,6 +16,7 @@ use backend\fileSystem\loader\MessagesPendingLoader;
 use backend\fileSystem\loader\MessagesUnreadLoader;
 use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;
+use backend\fileSystem\loader\StudyAccessKeyIndexLoader;
 use backend\fileSystem\loader\UserDataLoader;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -292,6 +293,16 @@ class UpdateVersion extends DoUpdate {
 			}
 			if(isset($_SESSION['user']))
 				$_SESSION['account'] = $_SESSION['user'];
+		}
+		if($this->versionIsHigher($fromVersion, '2.1.0-alpha.2')) {
+			//index numbers in ~open array got messed up. We have to fix them:
+			$studyIndex = StudyAccessKeyIndexLoader::importFile();
+			$newArray = [];
+			foreach($studyIndex['~open'] as $studyId) {
+				$newArray[] = $studyId;
+			}
+			$studyIndex['~open'] = $newArray;
+			StudyAccessKeyIndexLoader::exportFile($studyIndex);
 		}
 	}
 	
