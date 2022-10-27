@@ -73,7 +73,7 @@ class RewardTest extends BaseApiTestSetup {
 	
 	function test_with_no_reward_code() {
 		$this->doTest($this->studyIdWithNoRewardCodeException);
-		$this->expectOutputString(JsonOutput::successObj(['errorCode' => 999, 'errorMessage' => 'Test error', 'fulFilledQuestionnaires' => new stdClass()]));
+		$this->expectOutputString(JsonOutput::successObj(['errorCode' => 999, 'errorMessage' => 'Test error', 'fulfilledQuestionnaires' => new stdClass()]));
 	}
 	
 	function test_with_critical_error() {

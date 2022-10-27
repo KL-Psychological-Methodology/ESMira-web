@@ -130,10 +130,10 @@ abstract class UserDataStore {
 			$min = $questionnaire->minDataSetsForReward ?? 0;
 			if($min != 0 && ($userdata->questionnaireDataSetCount[$qId] ?? 0) < $min) {
 				$unfulfilledQuestionnaires = true;
-				$fulfilledQuestionnaires[] = [$qId, false];
+				$fulfilledQuestionnaires[$qId] = false;
 			}
 			else
-				$fulfilledQuestionnaires[] = [$qId, true];
+				$fulfilledQuestionnaires[$qId] = true;
 		}
 		
 		if($unfulfilledQuestionnaires) {
