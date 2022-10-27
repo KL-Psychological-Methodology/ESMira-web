@@ -185,7 +185,7 @@ export function ViewModel(page) {
 					return Requests.load(FILE_ADMIN + "?type=update_version&fromVersion="+PACKAGE_VERSION);
 				})
 				.then(function() {
-					alert(Lang.get("info_update_complete"));
+					alert(Lang.get("info_web_update_complete"));
 					return window.location.reload();
 				})
 		)
