@@ -25,7 +25,7 @@ class AppInstall implements Page {
 	private $accessKey;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 * @throws PageFlowException
 	 * @throws ForwardingException
 	 */

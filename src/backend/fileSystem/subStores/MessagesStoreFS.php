@@ -167,7 +167,7 @@ class MessagesStoreFS implements MessagesStore {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function receiveMessage(int $studyId, string $userId, string $from, string $content): int {
 		$messages = MessagesUnreadLoader::importFile($studyId, $userId, true);

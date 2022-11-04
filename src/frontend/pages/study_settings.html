@@ -14,6 +14,7 @@
 	<small data-bind="text: Lang.get('desc_freeze_study')"></small>
 </label>
 
+
 <title-row params="title: Lang.get('inform_server_about_events')"></title-row>
 <div data-bind="with: eventUploadSettings">
 	
@@ -90,3 +91,9 @@
 		<small data-bind="text: Lang.get('desc_study_updated')"></small>
 	</label>
 </div>
+
+
+<title-row params="title: Lang.get('delete_study')"></title-row>
+<a class="highlight" data-bind="click: Studies.tools.delete_study.bind(Studies.tools, $root.page)">
+	<dash-el params="title: Lang.get('delete_study')"></dash-el>
+</a>

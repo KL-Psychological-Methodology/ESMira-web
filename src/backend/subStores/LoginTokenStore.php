@@ -10,7 +10,7 @@ interface LoginTokenStore {
 	public function getLoginTokenList($accountName): array;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function saveLoginToken(string $accountName, string $tokenHash, string $tokenId);
 	public function removeLoginToken(string $accountName, string $tokenId);

@@ -9,11 +9,11 @@ use stdClass;
 interface StudyStatisticsStore {
 	function addEntry(string $key, StatisticsJsonEntry $jsonEntry);
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function getStatistics(): stdClass;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function saveChanges();
 }

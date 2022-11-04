@@ -10,12 +10,14 @@ use backend\fileSystem\subStores\ErrorReportStoreFS;
 use backend\fileSystem\subStores\LoginTokenStoreFS;
 use backend\fileSystem\subStores\MessagesStoreFS;
 use backend\fileSystem\subStores\ResponsesStoreFS;
+use backend\fileSystem\subStores\RewardCodeStoreFS;
 use backend\fileSystem\subStores\ServerStoreFS;
 use backend\fileSystem\subStores\ServerServerStatisticsStoreFS;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
 use backend\subStores\ResponsesStore;
+use backend\subStores\RewardCodeStore;
 use backend\subStores\ServerStore;
 use backend\subStores\ServerStatisticsStore;
 use backend\subStores\StudyAccessIndexStore;
@@ -81,5 +83,8 @@ class DataStoreFS implements DataStoreInterface {
 	}
 	public function getServerStore(): ServerStore {
 		return new ServerStoreFS();
+	}
+	public function getRewardCodeStore(): RewardCodeStore {
+		return new RewardCodeStoreFS();
 	}
 }

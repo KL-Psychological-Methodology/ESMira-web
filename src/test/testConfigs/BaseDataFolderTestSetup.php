@@ -49,8 +49,7 @@ abstract class BaseDataFolderTestSetup extends BaseTestSetup {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	protected function login($accountName = null, $password = null) {
 		Permission::setLoggedIn($accountName ?? self::$accountName);

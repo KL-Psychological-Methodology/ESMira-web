@@ -10,7 +10,7 @@ interface Page {
 	
 	/**
 	 * @throws ForwardingException
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 * @throws PageFlowException
 	 */
 	public function getContent(): string;

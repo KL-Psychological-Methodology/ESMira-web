@@ -18,7 +18,7 @@ export function Page(depth, code) {
 	this.index = [];
 	this.viewModel = null;
 	this.loader = null;
-	this.title = ko.observable(Lang.isInit ? Lang.get("state_loading") : "Loading...");
+	this.title = ko.observable(Lang.get("state_loading"));
 	this.printTitle = ko.computed(function() {
 		let s = self.title();
 		return typeof s === "function" ? s() : s;

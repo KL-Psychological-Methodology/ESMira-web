@@ -2,7 +2,7 @@ import html from "./settings.html"
 import {Lang} from "../js/main_classes/lang";
 import ko from "knockout";
 import MarkdownIt from "markdown-it";
-import {FILE_ADMIN} from "../js/variables/urls";
+import {FILE_ADMIN, URL_RELEASES_LIST} from "../js/variables/urls";
 import {check_string} from "../js/helpers/basics";
 import {Admin} from "../js/main_classes/admin";
 import {OwnMapping} from "../js/helpers/knockout_own_mapping";
@@ -48,28 +48,48 @@ export function ViewModel(page) {
 	this.dataObj = OwnMapping.fromJS(Defaults.serverSettings, Defaults.serverSettings);
 	this.defaults = Defaults.serverSettings;
 	
-	this.branch = ko.observable(0);
+	this.isPreRelease = ko.observable(0);
+	this.releases = ko.observableArray();
+	this.downloadUrl = null
+	this.markdownRenderer = new MarkdownIt();
 	
 	let checkForUpdate = function() {
-		page.loader.loadRequest(
-			FILE_ADMIN + "?type=check_update&version="+PACKAGE_VERSION+"&preRelease="+self.branch()
-		).then(function({has_update, newVersion, changelog, no_connection}) {
-			if(has_update) {
-				self.hasUpdate(true);
-				self.newVersion(newVersion);
-				let md = new MarkdownIt();
-				self.changelog(md.render(changelog));
-			}
-			else {
-				if(no_connection)
-					self.noConnectionToUpdate(true);
+		page.loader.showLoader(Lang.get("state_loading"), PromiseCache.loadText(URL_RELEASES_LIST, function(jsonString) {
+			let releases = JSON.parse(jsonString);
+			let stableReleases = [];
+			let unstableReleases = [];
+			
+			let searchingForRelease = true;
+			for(let i=releases.length-1; i>=0; --i) {
+				let {tag_name, prerelease, body, published_at, assets} = releases[i];
+				if(searchingForRelease) {
+					if(tag_name.match(PACKAGE_VERSION+"$"))
+						searchingForRelease = false;
+					continue;
+				}
+				
+				let data = {version: tag_name, date: new Date(published_at), changeLog: body, downloadUrl: assets[0].browser_download_url};
+				if(prerelease)
+					unstableReleases.push(data);
 				else
-					self.hasUpdate(false);
+					stableReleases.push(data);
 			}
-		});
+			return [stableReleases, unstableReleases];
+		}).then(function([stableReleases, unstableReleases]) {
+			let releases = self.isPreRelease() ? unstableReleases : stableReleases;
+			self.releases(releases);
+			self.releases.valueHasMutated();
+			
+			self.hasUpdate(!!releases.length);
+			if(releases.length) {
+				let release = releases[releases.length-1];
+				self.newVersion(release.version);
+				self.downloadUrl = release.downloadUrl;
+			}
+		}));
 	};
 	
-	this.branch.subscribe(checkForUpdate);
+	this.isPreRelease.subscribe(checkForUpdate);
 	
 	this.preInit = function(index, admin, [serverSettings, detector]) {
 		this.dataObj = serverSettings;
@@ -144,19 +164,28 @@ export function ViewModel(page) {
 	this.switchBranch = checkForUpdate;
 	
 	this.updateNow = function() {
-		if(self.branch() === 1) {
+		if(self.isPreRelease()) {
 			if(!confirm(Lang.get("confirm_prerelease_update")))
 				return;
 		}
 		page.loader.showLoader(
 			Lang.get("state_downloading"),
-			Requests.load(FILE_ADMIN + "?type=download_update&version="+self.newVersion()+"&preRelease="+self.branch())
+			Requests.load(
+				FILE_ADMIN + "?type=download_update",
+				false,
+				"post",
+				"url="+self.downloadUrl
+			)
 				.then(function() {
 					page.loader.update(Lang.get("state_installing"))
-					return Requests.load(FILE_ADMIN + "?type=do_update&fromVersion="+PACKAGE_VERSION);
+					return Requests.load(FILE_ADMIN + "?type=do_update");
 				})
 				.then(function() {
-					alert(Lang.get("info_update_complete"));
+					page.loader.update(Lang.get("state_installing"))
+					return Requests.load(FILE_ADMIN + "?type=update_version&fromVersion="+PACKAGE_VERSION);
+				})
+				.then(function() {
+					alert(Lang.get("info_web_update_complete"));
 					return window.location.reload();
 				})
 		)

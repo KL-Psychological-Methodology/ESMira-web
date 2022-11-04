@@ -4,12 +4,15 @@ import {Site} from "./site";
 export const Lang = {
 	_promise: Promise.resolve(),
 	_vars: {},
+	_fallback: {
+		state_loading: "Loading…"
+	},
 	code: "error",
 	isInit: false,
 	init: function(langCode) {
 		let self = this;
 		this.code = langCode;
-		this._promise = Requests.load("locales/" + langCode + ".json", true).then(function(obj) {
+		this._promise = Requests.load("locales/" + langCode + ".json?v="+PACKAGE_VERSION, true).then(function(obj) {
 			self._vars = JSON.parse(obj);
 			Site.init_lang();
 			self.isInit = true;
@@ -19,8 +22,9 @@ export const Lang = {
 		return this._promise;
 	},
 	get: function(key, ... replacers) {
-		if(!Lang._vars.hasOwnProperty(key))
-			return key;
+		if(!Lang._vars.hasOwnProperty(key)) {
+			 return Lang._fallback.hasOwnProperty(key) ? Lang._fallback[key] : key;
+		}
 		
 		let s = Lang._vars[key];
 		if(replacers.length) {

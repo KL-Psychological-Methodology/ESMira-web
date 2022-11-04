@@ -137,7 +137,8 @@ a.internal_link {
 	text-decoration: none;
 }
 *:not(dash-row):not(.multipleChildren) > a.internal_link:not(.no_arrow):after {
-	content: "\2794"
+	content: "\2794";
+	line-height: 1;
 }
 
 [data-bind^="click"] svg, a svg, .clickable svg {

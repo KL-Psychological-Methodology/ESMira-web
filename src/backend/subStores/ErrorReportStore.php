@@ -11,18 +11,18 @@ interface ErrorReportStore {
 	
 	public function getList(): array;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function getErrorReport(int $timestamp): string;
 	public function saveErrorReport(string $msg): bool;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function changeErrorReport(ErrorReportInfo $errorReportInfo);
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function removeErrorReport(int $timestamp);
 }

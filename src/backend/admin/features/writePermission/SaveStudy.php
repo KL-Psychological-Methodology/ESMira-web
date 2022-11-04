@@ -197,7 +197,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 */
 	private function updateStudyIndex() {
 		if(!isset($this->mainStudy->accessKeys) || !count($this->mainStudy->accessKeys))
@@ -221,8 +221,8 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	private function publishUnPublish() {
 		//
@@ -259,7 +259,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 */
 	private function uniqueNameOrThrow($name, $questionnaireTitle) {
 		if(!strlen($name))
@@ -325,7 +325,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 */
 	private function getQuestionnaireIndex(stdClass $questionnaire): ResponsesIndex {
 		$questionnaireIndex = new ResponsesIndex();
@@ -356,7 +356,7 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws PageFlowException
 	 */
 	protected function collectKeys(): array {
 		$keys = [];
@@ -367,8 +367,8 @@ class SaveStudy extends HasWritePermission {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\PageFlowException
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws PageFlowException
+	 * @throws CriticalException
 	 */
 	private function save() {
 		$this->studyStore->saveStudy($this->studyCollection, $this->collectKeys());

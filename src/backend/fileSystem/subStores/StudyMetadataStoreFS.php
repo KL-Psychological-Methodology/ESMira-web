@@ -21,7 +21,7 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	private $studyId;
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	private function loadMetadata() {
 		if($this->metadata)

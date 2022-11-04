@@ -27,7 +27,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	private function moveExistingDataFolder($pathDataFolder) {
 		$reuseFolder = isset($_POST['reuseFolder']) && $_POST['reuseFolder'];

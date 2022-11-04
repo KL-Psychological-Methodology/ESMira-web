@@ -16,6 +16,7 @@ use backend\fileSystem\loader\MessagesPendingLoader;
 use backend\fileSystem\loader\MessagesUnreadLoader;
 use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;
+use backend\fileSystem\loader\StudyAccessKeyIndexLoader;
 use backend\fileSystem\loader\UserDataLoader;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -26,29 +27,43 @@ use backend\ResponsesIndex;
 use stdClass;
 use Throwable;
 
-class UpdateVersion extends CheckUpdate {
+class UpdateVersion extends DoUpdate {
+	/**
+	 * @var string
+	 */
+	private $fromVersion;
+	
+	protected function versionIsBelow(string $newVersionString): bool {
+		$oldVersionString = $this->fromVersion;
+		$matchOld = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $oldVersionString, $integersOld);
+		$matchNew = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $newVersionString, $integersNew);
+		
+		return $matchOld && $matchNew &&
+			(
+				$integersNew[1] > $integersOld[1]
+				|| (
+					$integersNew[1] === $integersOld[1]
+					&& (
+						$integersNew[2] > $integersOld[2]
+						|| (
+							$integersNew[2] === $integersOld[2]
+							&& (
+								$integersNew[3] > $integersOld[3]
+								|| (
+									$integersNew[3] === $integersOld[3] && $integersNew[4] && $integersNew[4] > $integersOld[4]
+								)
+							)
+						)
+					)
+				)
+			);
+	}
 	
 	/**
 	 * @throws CriticalException
 	 */
-	function runUpdateScript(int $fromVersion) {
-		if($fromVersion <= 150) {
-			$default = Configs::getDefaultAll();
-			
-			$newValues = [
-				'url_update_packageInfo' => $default['url_update_packageInfo'],
-				'url_update_changelog' => $default['url_update_changelog'],
-				'url_update_releaseZip' => $default['url_update_releaseZip'],
-				'url_update_preReleaseZip' => $default['url_update_preReleaseZip']
-			];
-			$saveValues = array_merge($default, Configs::getAll(), $newValues);
-			FileSystemBasics::writeFile(Paths::FILE_CONFIG, '<?php return ' . var_export($saveValues, true) . ';');
-			if(method_exists('backend\Configs', 'resetConfig'))
-				Configs::resetConfig();
-			if(method_exists('backend\Configs', 'reload'))
-				Configs::reload();
-		}
-		if($fromVersion <= 200) {
+	function runUpdateScript() {
+		if($this->versionIsBelow('2.0.0')) {
 			$changeResponsesIndex = function(int $studyId, string $identifier) {
 				$values = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, $identifier)));
 				if(!$values)
@@ -248,7 +263,7 @@ class UpdateVersion extends CheckUpdate {
 				}
 			}
 		}
-		else if($fromVersion <= 204) { //these changes done directly in $fromVersion <= 200
+		else if($this->versionIsBelow('2.0.4')) { //these changes done directly in $fromVersion <= 200
 			$folderErrorReports = PathsFS::folderErrorReports();
 			$handle = opendir($folderErrorReports);
 			$path = $folderErrorReports .".error_info"; //we cannot use ErrorReportInfoLoader::importFile because we are still using the old version of PathFS
@@ -274,7 +289,7 @@ class UpdateVersion extends CheckUpdate {
 			closedir($handle);
 		}
 		
-		if($fromVersion <= 204) {
+		if($this->versionIsBelow('2.0.4')) {
 			//prevent automatic logout:
 			
 			if(isset($_COOKIE['user'])) {
@@ -284,16 +299,45 @@ class UpdateVersion extends CheckUpdate {
 			if(isset($_SESSION['user']))
 				$_SESSION['account'] = $_SESSION['user'];
 		}
+		if($this->versionIsBelow('2.1.0-alpha.2')) {
+			//index numbers in ~open array got messed up. We have to fix them:
+			$studyIndex = StudyAccessKeyIndexLoader::importFile();
+			$newArray = [];
+			foreach($studyIndex['~open'] as $studyId) {
+				$newArray[] = $studyId;
+			}
+			$studyIndex['~open'] = $newArray;
+			StudyAccessKeyIndexLoader::exportFile($studyIndex);
+		}
 	}
 	
 	/**
-	 * @throws \backend\exceptions\CriticalException
-	 * @throws \backend\exceptions\PageFlowException
+	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	function exec(): array {
 		if(!isset($_GET['fromVersion']))
 			throw new PageFlowException('Missing data');
-		$this->runUpdateScript($this->getVersionNumber($_GET['fromVersion']));
+		
+		$this->fromVersion = $_GET['fromVersion'];
+		try {
+			$this->runUpdateScript();
+		}
+		catch(Throwable $e) {
+			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
+		}
+		
+		
+		//cleaning up
+		if(file_exists($this->folderPathBackup) && (!FileSystemBasics::emptyFolder($this->folderPathBackup) || !@rmdir($this->folderPathBackup)))
+			throw new PageFlowException("Failed to clean up backup. The update was successful. But please delete this folder and check its contents manually: $this->folderPathBackup");
 		return [];
+	}
+	
+	
+	//only for testing:
+	function testVersionCheck(string $fromVersion, string $checkVersion): bool {
+		$this->fromVersion = $fromVersion;
+		return $this->versionIsBelow($checkVersion);
 	}
 }

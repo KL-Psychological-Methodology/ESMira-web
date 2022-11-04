@@ -6,6 +6,7 @@ namespace test\backend\fileSystem;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\fileSystem\ESMiraInitializerFS;
+use backend\fileSystem\subStores\RewardCodeStoreFS;
 use backend\fileSystem\subStores\ServerStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyMetadataStoreFS;
@@ -60,5 +61,8 @@ class DataStoreFSTest extends BaseDataFolderTestSetup {
 	}
 	function test_getServerStore() {
 		$this->assertInstanceOf(ServerStoreFS::class, Configs::getDataStore()->getServerStore());
+	}
+	function test_getRewardCodeStore() {
+		$this->assertInstanceOf(RewardCodeStoreFS::class, Configs::getDataStore()->getRewardCodeStore());
 	}
 }

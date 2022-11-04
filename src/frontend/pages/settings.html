@@ -21,7 +21,7 @@
 	
 	<label class="right">
 		<small data-bind="text: Lang.get('update_version')"></small>
-		<select class="small" data-bind="indexValue: $root.branch">
+		<select class="small" data-bind="indexValue: $root.isPreRelease">
 			<option selected="selected" data-bind="text: Lang.get('stable')"></option>
 			<option data-bind="text: Lang.get('unstable')"></option>
 		</select>
@@ -35,7 +35,14 @@
 		<div class="center spacing_top">
 			<input type="button" data-bind="click: $root.updateNow, value: Lang.get('update_now')"/>
 		</div>
-		<div class="spacing_top" data-bind="html: $root.changelog"></div>
+		<div class="spacing_top" data-bind="foreach: $root.releases()">
+			<br/>
+			<h1>
+				<span data-bind="text: version"></span>
+				<span data-bind="text: '('+date.toLocaleDateString()+')'"></span>
+			</h1>
+			<div data-bind="html: $root.markdownRenderer.render(changeLog)"></div>
+		</div>
 	</div>
 	<div class="center highlight" data-bind="if: !$root.hasUpdate()">
 		<div class="center highlight" data-bind="text: $root.noConnectionToUpdate() ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')"></div>

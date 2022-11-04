@@ -36,6 +36,7 @@ jobs:
           zip -r ../ESMira-web.zip .
       
       - name: Create named release
+        if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,5 +44,7 @@ jobs:
           name: Pre-release version ${{ steps.autotag.outputs.version }}
           tag_name: pre.${{ steps.autotag.outputs.version}}
           prerelease: true
+          generate_release_notes: true
+          append_body: true
           body_path: CHANGELOG.md
           files: ESMira-web.zip

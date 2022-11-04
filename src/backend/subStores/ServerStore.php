@@ -11,13 +11,13 @@ interface ServerStore {
 	 */
 	public function saveImpressum(string $impressum, string $langCode);
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function deleteImpressum(string $langCode);
 	
 	public function getPrivacyPolicy(string $langCode): string;
 	/**
-	 * @throws \backend\exceptions\CriticalException
+	 * @throws CriticalException
 	 */
 	public function savePrivacyPolicy(string $privacyPolicy, string $langCode);
 	/**

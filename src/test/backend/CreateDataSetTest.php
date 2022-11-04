@@ -80,7 +80,7 @@ class CreateDataSetTest extends BaseTestSetup {
 					->method('addDataSetForSaving')
 					->with(
 						$this->equalTo($this->studyId),
-						$this->equalTo(0), //group
+						$this->anything(),
 						$this->anything(),
 						$this->anything()
 					)

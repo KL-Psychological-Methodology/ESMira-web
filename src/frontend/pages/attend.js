@@ -156,9 +156,9 @@ export function ViewModel(page) {
 		save_cookie(COOKIE_PARTICIPANT.replace("%d", study_id), new_participant);
 		self.participant_id(new_participant);
 		
-		Site.save_dataset(page, "quit", old_participant).then(
-			Site.save_dataset.bind(Site, page, "joined", new_participant)
-		);
+		Site.save_dataset(page, "quit", old_participant).then(function() {
+			Site.save_dataset(page, "joined", new_participant)
+		});
 	}
 	
 	this.scrollUp = function() {
