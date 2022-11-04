@@ -516,7 +516,6 @@
     "info_newVersionAvailable": "Eine neue Version ist verfügbar:",
     "info_web_update_complete": "ESMira wurde erfolgreich aktualisiert!\n\nDie Seite wird nun neu laden und ESMira ist dann hoffentlich super neu und modern! ;)",
     "update_now": "Jetzt updaten",
-    "state_installing": "Installiere…",
     "info_trigger_needs_action": "Es wird mindestens eine Aktion benötigt.",
     "edit_page_x": "Bearbeite Seite %d",
     "info_study_is_public": "Studie ist öffentlich zugänglich. Füge einen oder mehrere Zugangsschlüssel hinzu um sie nur eingeschränkt zugänglich zu machen.",
@@ -550,6 +549,7 @@
     "colon_entries_at_creation_time": "Einträge zum Generierungszeitpunkt:",
     "email_content": "Email Inhalt",
     "info_reward_email_content": "Muss [[CODE]] beinhalten, was durch den tatsächlichen Belohnungscode ersetzt wird.",
+    "state_installing": "Installiere…",
     "state_finish_installing": "Installation abschließen…",
     "reward_code_instructions": "Belohnungscode-Instruktionen"
 }

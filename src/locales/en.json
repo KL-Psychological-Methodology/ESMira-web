@@ -90,7 +90,7 @@
     "colon_questionnaire_availability": "Availability of questionnaire:",
     "colon_qrCode": "QR-Code:",
     "colon_quit_study": "Quit study:",
-    "colon_reminder": "number of reminders:",
+    "colon_number_of_reminders": "number of reminders:",
     "colon_recipient": "Repicipient:",
     "colon_runtime": "Runtime:",
     "colon_search": "Search:",
@@ -549,6 +549,7 @@
     "colon_entries_at_creation_time": "Entries at creation time:",
     "email_content": "Email content",
     "info_reward_email_content": "Must contain [[CODE]] which will be replaced by the actual reward code.",
-    "state_installing": "Finishing update…",
+    "state_installing": "Updating…",
+    "state_finish_installing": "Finishing update…",
     "reward_code_instructions": "Reward code instructions"
 }
