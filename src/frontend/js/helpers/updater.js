@@ -131,5 +131,12 @@ export function repairStudy(study) {
 		}
 		study.serverVersion = serverVersion;
 	}
+	switch(study.packageVersion) {
+		case undefined:
+			study.langCodes.push("unnamed");
+			study.defaultLang = "unnamed";
+	}
+	study.packageVersion = PACKAGE_VERSION;
+	
 	return true;
 }

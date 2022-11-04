@@ -1,0 +1,23 @@
+<div class="list_parent">
+	<div class="list_child">
+		<div data-bind="foreach: $component.langCodes">
+			<div>
+				<label class="middle">
+					<small data-bind="text: Lang.get('language')"></small>
+					<select data-bind="options: $component.langCodesNames, optionsText: 'English', optionsValue: 'alpha2', valueAllowUnset: true, value: $rawData"></select>
+				</label>
+				<label>
+					<input type="radio" name="default_language" data-bind="checked: $component.defaultLang, value: $data"/>
+					<span data-bind="text: Lang.get('default_language')"></span>
+				</label>
+				
+				<widget-delete data-bind="click: $component.deleteLang"></widget-delete>
+			</div>
+		</div>
+		<label class="spacing_top">
+			<small data-bind="text: Lang.get('language')"></small>
+			<select data-bind="options: $component.langCodesNames, optionsText: 'English', optionsCaption: Lang.get('select_to_add'), event: {change: $root.addLang}"></select>
+		</label>
+	</div>
+	<br/>
+</div>

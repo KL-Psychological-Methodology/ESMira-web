@@ -44,7 +44,7 @@ export function ViewModel(page) {
 			return [serverSettings, detector];
 		})
 	];
-	this.extraContent = "<lang-options params='enableAdd: true, alwaysVisible: true, hasTitle: true, langObj: $root.dataObj, langDefaults: $root.defaults'></lang-options>";
+	this.extraContent = "<lang-chooser params='enableAdd: true, alwaysVisible: true, hasTitle: true, langObj: $root.dataObj, langDefaults: $root.defaults'></lang-chooser>";
 	this.dataObj = OwnMapping.fromJS(Defaults.serverSettings, Defaults.serverSettings);
 	this.defaults = Defaults.serverSettings;
 	

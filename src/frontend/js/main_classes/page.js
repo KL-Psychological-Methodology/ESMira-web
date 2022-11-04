@@ -69,7 +69,6 @@ export function Page(depth, code) {
 		title_el = createElement("div", false, {className: "title"}, {"data-bind": "text: $root.page.printTitle"}),
 		extra_el = createElement("div", false, {className: "extra"}),
 		content_el = createElement("div", "opacity: 0", {className: "page_content"}, {"data-bind": "with: dataObj"});
-		// lang_el = createElement("lang-options", false, false, {"params": "page: $root.page, data: $data"});
 	
 	top_el.appendChild(back_el);
 	top_el.appendChild(title_line_el);

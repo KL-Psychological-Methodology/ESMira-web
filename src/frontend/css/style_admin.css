@@ -391,7 +391,7 @@ label .richText {
 	padding-right: 3px;
 	margin-top: 5px;
 }
-.richText lang-options {
+.richText lang-chooser {
 	z-index: 1;
 	position: sticky;
 	top: 29px;
@@ -454,20 +454,20 @@ label .richText {
 
 
 /**********
-lang-options
+lang-chooser
 **********/
 
-lang-options {
+lang-chooser {
 	text-align: end;
 }
-lang-options .title {
+lang-chooser .title {
 	font-size: 9pt !important;
 	line-height: 9pt !important;
 }
-lang-options .codes {
+lang-chooser .codes {
 	line-height: 100%; /* to make sure its vertically centered in .extra of title-line */
 }
-lang-options .codes .element {
+lang-chooser .codes .element {
 	padding: 0 2px;
 	line-height: 9pt !important;
 	font-size: 9pt !important;
@@ -475,10 +475,10 @@ lang-options .codes .element {
 	transition: background-color 0.5s, color 0.5s !important;
 	background-color: white;
 }
-lang-options .codes .element:hover {
+lang-chooser .codes .element:hover {
 	background-color: #cdf0fc;
 }
-lang-options .codes .element.selected {
+lang-chooser .codes .element.selected {
 	background-color: #9fe0f7;
 }
 

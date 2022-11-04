@@ -10,14 +10,6 @@
 </label>
 
 <title-row params="title: Lang.get('additional_languages')"></title-row>
-<div class="small_text" data-bind="text: Lang.get('info_languages')"></div>
+<div class="small_text spacing_bottom" data-bind="text: Lang.get('info_languages')"></div>
 
-<div class="list_parent spacing_top">
-	<div class="list_child" data-bind="foreach: langCodes">
-		<div data-bind="if: $data !== '_'">
-			<widget-delete data-bind="click: $root.delete_lang"></widget-delete>
-			<span data-bind="text: $data"></span>
-		</div>
-	</div>
-	<widget-add data-bind="click: $root.add_lang" params="title: Lang.get('add')"></widget-add>
-</div>
+<lang-list></lang-list>

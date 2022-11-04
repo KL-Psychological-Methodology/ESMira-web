@@ -54,13 +54,13 @@
 		<label class="line spacing_top" data-bind="visible: responseType() === 'video' || responseType() === 'image'">
 			<small data-bind="text: Lang.get('url')"></small>
 			<input class="big" type="url" data-bind="value: url"/>
-			<lang-options></lang-options>
+			<lang-chooser></lang-chooser>
 		</label>
 		
 		<label class="vertical no_desc spacing_top spacing_bottom" data-bind="visible: responseType() !== 'dynamic_input' && responseType() !== 'image' && responseType() !== 'video' && responseType() !== 'photo' && responseType() !== 'app_usage'">
 			<small data-bind="text: Lang.get('prefilledValue')"></small>
 			<input type="text" data-bind="value: defaultValue, disable: required"/>
-			<lang-options></lang-options>
+			<lang-chooser></lang-chooser>
 		</label>
 		
 		
@@ -80,12 +80,12 @@
 			<label class="spacing_bottom">
 				<small data-bind="text: Lang.get('label_leftChoice')"></small>
 				<input class="big" type="url" data-bind="value: leftSideLabel"/>
-				<lang-options></lang-options>
+				<lang-chooser></lang-chooser>
 			</label>
 			<label class="spacing_bottom">
 				<small data-bind="text: Lang.get('label_rightChoice')"></small>
 				<input class="big" type="url" data-bind="value: rightSideLabel"/>
-				<lang-options></lang-options>
+				<lang-chooser></lang-chooser>
 			</label>
 		</div>
 	</div>
@@ -95,7 +95,7 @@
 		<title-row params="title: Lang.get('colon_choices')"></title-row>
 		<div class="list_parent">
 			<div class="list_child">
-				<lang-options></lang-options>
+				<lang-chooser></lang-chooser>
 				<div data-bind="foreach: listChoices, dragRoot">
 					<div class="vertical" data-bind="dragTarget: $parent.listChoices">
 						<drag-start class="horizontal"></drag-start>

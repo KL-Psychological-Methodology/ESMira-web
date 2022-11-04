@@ -18,8 +18,10 @@ import {RichText} from "../../widgets/rich_text";
 import {Studies} from "../main_classes/studies";
 import {Defaults} from "../variables/defaults";
 import "../../css/style_admin.css";
-import {LangOptions} from "../../widgets/lang_options";
-import lang_options from "../../widgets/lang_options.html";
+import {LangChooser} from "../../widgets/lang_chooser";
+import lang_chooser from "../../widgets/lang_chooser.html";
+import {LangList} from "../../widgets/lang_list";
+import lang_list from "../../widgets/lang_list.html";
 import {SearchBox} from "../../widgets/search_box";
 import {ShowHide} from "../../widgets/show_hide";
 
@@ -276,13 +278,21 @@ export const AdminTools = {
 			},
 			template: rich_text
 		});
-		ko.components.register('lang-options', {
+		ko.components.register('lang-chooser', {
 			viewModel: {
 				createViewModel: function(params, componentInfo) {
-					return new LangOptions(ko.contextFor(componentInfo.element).$root.page, params);
+					return new LangChooser(ko.contextFor(componentInfo.element).$root.page, params);
 				}
 			},
-			template: lang_options
+			template: lang_chooser
+		});
+		ko.components.register('lang-list', {
+			viewModel: {
+				createViewModel: function(params, componentInfo) {
+					return new LangList(ko.contextFor(componentInfo.element).$root.page, params);
+				}
+			},
+			template: lang_list
 		});
 		ko.components.register('search-box', {
 			viewModel: {
