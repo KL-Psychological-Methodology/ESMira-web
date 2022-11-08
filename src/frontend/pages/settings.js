@@ -181,7 +181,7 @@ export function ViewModel(page) {
 					return Requests.load(FILE_ADMIN + "?type=do_update");
 				})
 				.then(function() {
-					page.loader.update(Lang.get("state_installing"))
+					page.loader.update(Lang.get("state_finish_installing"))
 					return Requests.load(FILE_ADMIN + "?type=update_version&fromVersion="+PACKAGE_VERSION);
 				})
 				.then(function() {
