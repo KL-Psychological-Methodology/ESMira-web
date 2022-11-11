@@ -99,7 +99,8 @@ class Main {
 	}
 	
 	public static function strictCheckInput($s): bool {
-		return empty($s) || (strlen($s) < Configs::get('user_input_max_length') && preg_match('/^[a-zA-Z0-9À-ž_\-().\s]+$/', $s));
+		//Thanks to: https://dev.to/tillsanders/let-s-stop-using-a-za-z-4a0m
+		return empty($s) || (strlen($s) < Configs::get('user_input_max_length') && preg_match('/^[\p{L}\p{M}\p{N}_\'\-().\s]+$/ui', $s));
 	}
 	
 	static function arrayToCSV(array $data, string $csvDelimiter): string {

@@ -63,7 +63,10 @@ class MainTest extends BaseTestSetup {
 	
 	function test_strictCheckInput() {
 		$this->assertTrue(Main::strictCheckInput(''));
-		$this->assertTrue(Main::strictCheckInput('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZäöüÄÖÜß-_(). '));
+		$this->assertTrue(Main::strictCheckInput('0123456789'));
+		$this->assertTrue(Main::strictCheckInput('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+		$this->assertTrue(Main::strictCheckInput('äöüÄÖÜß'));
+		$this->assertTrue(Main::strictCheckInput('Психічне здоров\'я у повсякденному житті'));
 		$this->assertFalse(Main::strictCheckInput('!'));
 		$this->assertFalse(Main::strictCheckInput(':'));
 		$this->assertFalse(Main::strictCheckInput(':'));
