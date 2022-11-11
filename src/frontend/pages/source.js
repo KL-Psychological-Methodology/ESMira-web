@@ -10,7 +10,7 @@ export function ViewModel(page) {
 	this.promiseBundle = [
 		Studies.init(page),
 	];
-	this.extraContent = "<lang-chooser params='onChange: $root.onChangeLang'></lang-chooser>";
+	this.extraContent = "<lang-chooser params='hasTitle: true, onChange: $root.onChangeLang'></lang-chooser>";
 	page.title(Lang.get("study_source"));
 	
 	let study, editor, btn;

@@ -1,5 +1,5 @@
-### 🚀 Added
-- Added reward system via code for participants
+### ⚠️ Breaking
+- Default server language will be set to english. Please check your server settings after update
 
 ### ✏️ Changed
-- Improved discovery system for new updates
+- Now allowing non ASCII characters in study settings

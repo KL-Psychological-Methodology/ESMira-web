@@ -12,6 +12,10 @@ import {NavigationRow} from "./navigation_row";
 export function Page(depth, code) {
 	let self = this;
 	
+	//used by tab-bar widget so keep tab selection after page reload
+	this.tabBarSize = 0
+	this.tabBarSelections = []
+	
 	this.isLoading = false;
 	this.codeString = code;
 	this.depth = depth;
@@ -221,6 +225,7 @@ export function Page(depth, code) {
 	//
 	
 	this.reload = function() {
+		self.tabBarSize = 0
 		ko.cleanNode(parentEl);
 		promise = load(pageName);
 	};

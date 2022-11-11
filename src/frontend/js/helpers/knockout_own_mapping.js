@@ -87,7 +87,8 @@ export const OwnMapping = {
 		else if(Array.isArray(value)) {
 			let a = [];
 			for(let i=0, max=value.length; i<max; ++i) {
-				a.push(this.fromJS(value[i], defaultObj ? defaultObj[i] : null));
+				//its entries should only have a default if it is a container:
+				a.push(this.fromJS(value[i], (defaultObj && (typeof (defaultObj[i])) === "object") ? defaultObj[i] : undefined));
 			}
 			return this._observableArray(a, defaultObj);
 		}
@@ -162,7 +163,7 @@ export const OwnMapping = {
 		return r;
 	},
 	
-	createLanguageContainer: function(obs, translationJs, translations) {
+	bindNewLanguageContainer: function(obs, translationJs, translations) {
 		// Assumption: objs has the same structure as translationJs
 		// So translatable values are ordered the same
 		
@@ -173,7 +174,7 @@ export const OwnMapping = {
 		
 		if(Array.isArray(value)) {
 			for(let i=0, max=value.length; i<max; ++i) {
-				this.createLanguageContainer(value[i], translationJs ? translationJs[i] : null, translations);
+				this.bindNewLanguageContainer(value[i], translationJs ? translationJs[i] : null, translations);
 			}
 			return;
 		}
@@ -185,7 +186,7 @@ export const OwnMapping = {
 			let currentObs = value[key];
 			
 			if(!currentObs.hasOwnProperty("___translationId")) {
-				this.createLanguageContainer(value[key], translationJs ? translationJs[key] : null, translations);
+				this.bindNewLanguageContainer(value[key], translationJs ? translationJs[key] : null, translations);
 				continue;
 			}
 			
@@ -221,13 +222,13 @@ export const OwnMapping = {
 				return;
 			
 			let id = currentObs.___translationId;
-			if(!fromLanguageContainer.hasOwnProperty(id))
+			if(fromLanguageContainer && !fromLanguageContainer.hasOwnProperty(id))
 				fromLanguageContainer[id] = currentObs;
 			
 			if(!toLanguageContainer.hasOwnProperty(id)) {
 				toLanguageContainer[id] = Array.isArray(currentObs)
 					? self._observableArray([], currentObs.___defaultValue || [], id)
-					: self._observableValue(currentObs.___defaultValue || "", currentObs.___defaultValue || "", id);
+					: self._observableValue(currentObs() || "", currentObs.___defaultValue || "", id);
 			}
 			parent[key] = toLanguageContainer[id];
 			
@@ -293,40 +294,6 @@ export const OwnMapping = {
 		//there is no need to delete unneeded properties in old_obj since they will be filtered and it will happen rarely anyway
 	},
 	
-	add_lang: function(obj, defaultObj, langObj, code) {
-		if(defaultObj.hasOwnProperty("$")) {
-			let $ = defaultObj.$;
-			if($.hasOwnProperty("translated")) {
-				let defaultTranslations = $.translated;
-				for(let key in defaultTranslations) {
-					if(!defaultTranslations.hasOwnProperty(key))
-						continue;
-					
-					let value;
-					if(langObj && langObj.hasOwnProperty(key))
-						value = langObj[key];
-					else
-						value = defaultTranslations[key];
-					obj[key].___setLang(code, value);
-				}
-			}
-			
-			if($.hasOwnProperty("children")) {
-				let defaultChildren = $.children;
-				for(let key in defaultChildren) {
-					if(!defaultChildren.hasOwnProperty(key))
-						continue;
-					let array = obj[key]();
-					let langArray = (langObj && langObj.hasOwnProperty(key)) ? langObj[key] : [];
-					for(let i = array.length - 1; i >= 0; --i) {
-						this.add_lang(array[i], defaultChildren[key], langArray[i], code);
-					}
-				}
-			}
-		}
-	},
-	
-	
 	loopAll: function(obj, valueFu, arrayFu, currentParent, currentKey) {
 		let value = typeof obj === "function" ? obj() : obj;
 		
@@ -334,30 +301,23 @@ export const OwnMapping = {
 			return valueFu(obj, currentParent, currentKey);
 		
 		if(Array.isArray(value)) {
-			let a = [];
 			for(let i=0, max=value.length; i<max; ++i) {
-				let v = this.loopAll(value[i], valueFu, arrayFu, value, i);
-				if(v !== undefined)
-					a.push(v);
+				this.loopAll(value[i], valueFu, arrayFu, value, i);
 			}
 			if(arrayFu)
 				arrayFu(obj, currentParent, currentKey);
-			
-			return a;
+			return;
 		}
 		
-		let o = {};
 		for(let key in value) {
 			if(!value.hasOwnProperty(key))
 				continue;
 			
-			let v = this.loopAll(value[key], valueFu, arrayFu, value, key);
-			if(v !== undefined)
-				o[key] = v;
+			this.loopAll(value[key], valueFu, arrayFu, value, key);
 		}
-		return o;
 	},
-	subscribe: function(obj, dirtyObj, changedFu) {
+	subscribe: function(obj, changedFu) {
+		let dirtyObj = ko.observable(false);
 		let self = this;
 		let subscriptions = []; //used to keep track how many variables are dirty (and when dirty can be false again)
 		let dirtyTrack = {};
@@ -387,13 +347,24 @@ export const OwnMapping = {
 			}));
 		};
 		this.loopAll(obj, subscribeFu, subscribeFu);
-		return subscriptions;
+		
+		
+		return {
+			dispose: function() {
+				for(let i=subscriptions.length-1; i>=0; --i) {
+					subscriptions[i].dispose();
+				}
+			},
+			isDirty: dirtyObj
+		};
+		// return subscriptions;
 	},
 	unsetDirty: function(obj) {
 		let self = this;
 		let unsetFu = function(currentObj) {
 			self._toOwnObservableValue(currentObj); //in case we added new elements as ko.observable() instead of _observableValue()
 			currentObj.___unsetDirty();
+			currentObj.notifySubscribers();
 		};
 		this.loopAll(obj, unsetFu, unsetFu);
 	},
@@ -406,10 +377,40 @@ export const OwnMapping = {
 		});
 	},
 	toJS: function(obj) {
-		return this.loopAll(obj, function(currentObj) {
-			return (currentObj() !== currentObj.___defaultValue) ? currentObj() : undefined; //by setting it to undefined, we effectively strip the whole variable away
-		});
+		let value = typeof obj === "function" ? obj() : obj;
+		
+		if(typeof value !== "object")
+			return (value !== obj.___defaultValue) ? value : undefined; //by setting it to undefined, we effectively strip the whole variable away
+		
+		if(Array.isArray(value)) {
+			let a = [];
+			for(let i=0, max=value.length; i<max; ++i) {
+				let v = this.toJS(value[i], value, i);
+				if(v !== undefined)
+					a.push(v);
+			}
+			if(!a.length && value.length) // if all entries were default values then they were stripped while creating the array - leaving n empty array
+				return obj.___defaultValue;
+			return a;
+		}
+		
+		let o = {};
+		for(let key in value) {
+			if(!value.hasOwnProperty(key))
+				continue;
+			
+			let v = this.toJS(value[key], value, key);
+			if(v !== undefined)
+				o[key] = v;
+		}
+		return o;
 	},
+	// toJS: function(obj) {
+	// 	let sanitizeValue = function(currentObj) {
+	// 		return (currentObj() !== currentObj.___defaultValue) ? currentObj() : undefined; //by setting it to undefined, we effectively strip the whole variable away
+	// 	};
+	// 	return this.loopAll(obj, sanitizeValue);
+	// },
 	toJSON: function(obj) {
 		let a = this.toJS(obj);
 		return JSON.stringify(a);

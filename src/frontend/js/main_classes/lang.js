@@ -1,32 +1,54 @@
 import {Requests} from "./requests";
 import {Site} from "./site";
+import {PromiseCache} from "./promise_cache";
+
+const localFallback = {
+	state_loading: "Loading…"
+};
+let vars = {};
+let fallback = {};
+let promise = Promise.resolve();
 
 export const Lang = {
-	_promise: Promise.resolve(),
-	_vars: {},
-	_fallback: {
-		state_loading: "Loading…"
-	},
 	code: "error",
 	isInit: false,
 	init: function(langCode) {
 		let self = this;
 		this.code = langCode;
-		this._promise = Requests.load("locales/" + langCode + ".json?v="+PACKAGE_VERSION, true).then(function(obj) {
-			self._vars = JSON.parse(obj);
+		
+		if(langCode === "en") {
+			promise = Promise.all([
+				Requests.load("locales/en.json?v="+PACKAGE_VERSION, true)
+			]).then(function(langJson) {
+				fallback = vars = JSON.parse(langJson);
+			});
+		}
+		else {
+			promise = Promise.all([
+				Requests.load("locales/" + langCode + ".json?v="+PACKAGE_VERSION, true),
+				Requests.load("locales/en.json?v="+PACKAGE_VERSION, true)
+			]).then(function([langJson, fallbackJson]) {
+				vars = JSON.parse(langJson);
+				fallback = JSON.parse(fallbackJson);
+			});
+		}
+		promise.then(function() {
 			Site.init_lang();
 			self.isInit = true;
 		});
 	},
 	awaitPromise: function() {
-		return this._promise;
+		return promise;
 	},
 	get: function(key, ... replacers) {
-		if(!Lang._vars.hasOwnProperty(key)) {
-			 return Lang._fallback.hasOwnProperty(key) ? Lang._fallback[key] : key;
-		}
+		let s;
+		if(vars.hasOwnProperty(key))
+			s = vars[key];
+		else if(fallback.hasOwnProperty(key))
+			s = fallback[key];
+		else
+			return localFallback.hasOwnProperty(key) ? localFallback[key] : key;
 		
-		let s = Lang._vars[key];
 		if(replacers.length) {
 			for(let i=0, max=replacers.length; i<max; ++i) {
 				let replace = replacers[i];

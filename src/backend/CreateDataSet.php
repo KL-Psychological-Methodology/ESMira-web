@@ -338,7 +338,7 @@ class CreateDataSet {
 		$dataSetQuestionnaireName = $dataSet->questionnaireName ?? '';
 		
 		if((!Main::strictCheckInput($dataSetQuestionnaireName)) || !Main::strictCheckInput($eventType))
-			throw new DataSetException("Unexpected input! Questionnaire: $dataSetQuestionnaireName; Event-Type: $eventType");
+			throw new DataSetException("Unexpected input! Questionnaire: $dataSetQuestionnaireName; EventType: $eventType");
 		
 		return true;
 	}

@@ -17,39 +17,36 @@ export function loadStudyLangConfigs(study, page) {
 	// When a language is added: it won't be subscribed to. So we need to add it
 	
 	return page.loader.showLoader(Lang.get("state_loading"), PromiseCache.loadJson(FILE_ADMIN+"?type=load_langs&study_id="+study.id(), function(langObj) {
-		let languages = {};
-		languages[study.defaultLang()] = {}; // will be filled as soon as we switch languages
+		let translations = {};
+		translations[study.defaultLang()] = {}; // will be filled as soon as we switch languages
 		
 		let detector = Studies.tools.getStudyChangedDetector(study.id());
 		for(let code in langObj) {
 			if(langObj.hasOwnProperty(code)) {
-				let lang = OwnMapping.createLanguageContainer(study, langObj[code]);
-				languages[code] = lang;
+				let lang = OwnMapping.bindNewLanguageContainer(study, langObj[code]);
+				translations[code] = lang;
 				detector.addMonitored(lang);
 			}
 		}
-		
-		
-		return languages;
+		translations.__detector = detector;
+		return translations;
 	}));
 }
 
-export function changeLang(obs, languages, toLangCode) {
-	if(!languages.hasOwnProperty(toLangCode))
+export function changeLang(obs, translations, toLangCode) {
+	if(!translations.hasOwnProperty(toLangCode))
 		return;
-	OwnMapping.switchLanguage(obs, languages[currentLangCode], languages[toLangCode]);
+	OwnMapping.switchLanguage(obs, translations[currentLangCode], translations[toLangCode]);
+	translations.__detector.reload();
 	currentLangCode = toLangCode;
 }
 
-export function add_lang(obs, languages, detector) {
-	let langCode = prompt(Lang.get("prompt_languageCode"));
-	if(!langCode)
+export function addLang(obs, translations, langCode) {
+	if(translations.hasOwnProperty(langCode))
 		return;
-	
-	if(languages.hasOwnProperty(langCode))
-		return;
-	let lang = OwnMapping.createLanguageContainer(obs);
-	languages[langCode] = lang;
+	let lang = OwnMapping.bindNewLanguageContainer(obs);
+	translations[langCode] = lang;
 	obs.langCodes.push(ko.observable(langCode));
-	detector.addMonitored(lang);
+	
+	translations.__detector.addMonitored(lang); //technically, we don't need this because when we add a new language, detector should be dirty anyway.
 }

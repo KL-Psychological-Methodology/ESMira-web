@@ -142,18 +142,18 @@ export const Studies_tools = {
 		let page = Site.get_lastPage();
 		
 		let currentLang = currentLangCode;
-		let languages;
+		let translations;
 		let defaultLang = study.defaultLang();
 		
 		page.loader.showLoader(
 			Lang.get("state_loading"),
-			loadStudyLangConfigs(study, page).then(function(loadedLanguages) {
-				languages = loadedLanguages;
+			loadStudyLangConfigs(study, page).then(function(loadedTranslations) {
+				translations = loadedTranslations;
 				let studies = {};
 				let langCodes = study.langCodes();
 				for(let i=langCodes.length-1; i>=0; --i) {
 					let code = langCodes[i]();
-					changeLang(study, languages, code);
+					changeLang(study, translations, code);
 					let langStudy = OwnMapping.toJS(study);
 					langStudy.lang = code;
 					studies[code === defaultLang ? "_" : code] = langStudy;
@@ -168,12 +168,12 @@ export const Studies_tools = {
 				self.lastChanged[studyId] = lastChanged;
 				
 				//only default settings were changed:
-				changeLang(study, languages, defaultLang);
+				changeLang(study, translations, defaultLang);
 				self.update_study(study, json._);
-				changeLang(study, languages, currentLang);
+				changeLang(study, translations, currentLang);
 				
 				Site.reload_allPages();
-				self.set_study_changedState(study);
+				self.set_study_changedState(study, false);
 			})
 		);
 	},

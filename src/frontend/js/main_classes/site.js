@@ -12,6 +12,7 @@ import {Lang} from "./lang";
 import {TabBar} from "../../widgets/tab_bar";
 import tab_box from "../../widgets/tab_bar.html";
 import {NavigationRow} from "./navigation_row";
+import {LangChooser} from "../../widgets/lang_chooser";
 
 const PAGE_MIN_WIDTH = 650;
 
@@ -129,7 +130,11 @@ export const Site = {
 			template: titleRow
 		});
 		ko.components.register('tab-bar', {
-			viewModel: TabBar,
+			viewModel: {
+				createViewModel: function(params, componentInfo) {
+					return new TabBar(ko.contextFor(componentInfo.element).$root.page, params);
+				}
+			},
 			template: tab_box
 		});
 		

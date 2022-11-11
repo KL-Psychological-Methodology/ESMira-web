@@ -265,14 +265,3 @@ Defaults.account = {
 	write: [],
 	publish: []
 };
-
-Defaults.serverSettings = {
-	langCodes: [],
-	$: {
-		translated: {
-			impressum: "",
-			serverName: "",
-			privacyPolicy: "",
-		}
-	}
-}

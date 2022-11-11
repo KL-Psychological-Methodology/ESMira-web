@@ -4,35 +4,47 @@ import ko from "knockout";
 export function DetectChange(obj, changedFu) {
 	let self = this;
 	let monitoredObjects = [obj];
-	this.isDirty = ko.observable(false);
 	let internalChangedFu = null;
-	let subscriptions = [];
+	let subscriptions = ko.observableArray([]);
+	let alwaysDirty = ko.observable(false);
 	let setSubscriptions = function() {
 		for(let i=monitoredObjects.length-1; i>=0; --i) {
-			subscriptions.concat(OwnMapping.subscribe(monitoredObjects[i], self.isDirty, internalChangedFu));
+			subscriptions.push(OwnMapping.subscribe(monitoredObjects[i], internalChangedFu));
 		}
 	};
-	if(changedFu) { //when we only want the dirty state, we dont care if new objects are changed. They are still new anyway (dirty = true)
+	if(changedFu) { //when we only want the dirty state, we don't care if new objects are changed. They are still new anyway (dirty = true)
 		internalChangedFu = function() {
 			changedFu();
-			//in case a new element was added to obj, we need to readd subscriptions:
+			//in case a new element was added to obj, we need to read subscriptions:
 			self.destroy();
 			setSubscriptions();
 		}
 	}
 	setSubscriptions();
 	
+	this.isDirty = ko.pureComputed({
+		read: function() {
+			if(alwaysDirty())
+				return true
+			let a = subscriptions();
+			for(let i = a.length - 1; i >= 0; --i) {
+				if(a[i].isDirty())
+					return true;
+			}
+			return false;
+		},
+		write: function(newValue) {
+			alwaysDirty(!!newValue);
+		}
+	});
+	
 	this.setDirty = function(state) {
 		if(this.isDirty() === state)
-			return
-		// No matter if state is true or false, we unsetDirty in obj. This is the right approach because:
-		// if state == true:
-		// isDirty will be true. It will be set to false as soon as any change happens in obj EXCEPT because of that change, isDirty will stay true UNTIL that change is reversed again
-		// if state == false:
-		// Then we want to unsetDirty on obj anyway
-		
-		for(let i=monitoredObjects.length-1; i>=0; --i) {
-			OwnMapping.unsetDirty(monitoredObjects[i]);
+			return;
+		if(!state) {
+			for(let i = monitoredObjects.length - 1; i >= 0; --i) {
+				OwnMapping.unsetDirty(monitoredObjects[i]);
+			}
 		}
 		this.isDirty(state);
 	};
@@ -47,13 +59,19 @@ export function DetectChange(obj, changedFu) {
 	
 	this.addMonitored = function(newObj) {
 		monitoredObjects.push(newObj);
-		subscriptions.concat(OwnMapping.subscribe(newObj, self.isDirty, internalChangedFu));
+		subscriptions.push(OwnMapping.subscribe(newObj, internalChangedFu));
+	}
+	
+	this.reload = function() {
+		this.destroy();
+		setSubscriptions();
 	}
 	
 	this.destroy = function() {
-		for(let i=subscriptions.length-1; i>=0; --i) {
-			subscriptions[i].dispose();
+		let a = subscriptions();
+		for(let i=a.length-1; i>=0; --i) {
+			a[i].dispose();
 		}
-		subscriptions = [];
+		subscriptions([]);
 	};
 }

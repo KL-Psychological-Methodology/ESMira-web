@@ -1,10 +1,15 @@
 import * as ko from "knockout";
 import {Lang} from "../js/main_classes/lang";
 
-export function TabBar({tabs, selectedIndex, showAllTab, tabName, addFu, draggable}) {
+export function TabBar(page, {tabs, selectedIndex, showAllTab, tabName, addFu, draggable}) {
 	let self = this;
-	
 	this.selectedIndex = selectedIndex || ko.observable(showAllTab ? -1 : 0);
+	
+	if(page.tabBarSelections[page.tabBarSize])
+		this.selectedIndex(page.tabBarSelections[page.tabBarSize]());
+	
+	page.tabBarSelections[page.tabBarSize] = this.selectedIndex;
+	++page.tabBarSize;
 	
 	this.is_selected = function(index) {
 		return self.selectedIndex() === index;

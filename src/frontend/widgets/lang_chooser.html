@@ -1,16 +1,13 @@
-<div data-bind="if: $component.alwaysVisible || $component.langCodes().length, attr: {title: Lang.get('language')}">
+<div data-bind="if: $component.langCodes().length > 1, attr: {title: Lang.get('language')}">
 	<div class="codes">
 		<span data-bind="if: $component.hasTitle">
 			<span class="title" data-bind="text: Lang.get('colon_languages')"></span>
 		</span>
 		<span data-bind="foreach: $component.langCodes">
 			<span class="element" data-bind="click: $component.changeLang.bind($component, $data),
-					text: $data,
+					text: $component.langNames()[$data] ? $component.langNames()[$data] : $data,
 					css: {selected: $component.currentLang === $data}
 				"></span>
-		</span>
-		<span data-bind="if: $component.enableAdd">
-			<widget-add class="horizontal" data-bind="click: $component.add_lang"></widget-add>
 		</span>
 	</div>
 </div>

@@ -1,6 +1,6 @@
 import {Site} from "../main_classes/site";
 import {OwnMapping} from "../helpers/knockout_own_mapping";
-import {bindEvent, check_string, safe_confirm} from "../helpers/basics";
+import {bindEvent, safe_confirm} from "../helpers/basics";
 import {FILE_ADMIN} from "../variables/urls";
 import ko from "knockout";
 import search_box from '../../widgets/search_box.html';
