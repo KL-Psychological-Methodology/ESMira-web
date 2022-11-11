@@ -210,11 +210,12 @@ class CreateDataSet {
 		$responses = $dataSet->responses;
 		$studyId = $this->getStudyId($dataSet);
 		$datasetId = $this->getDataSetId($dataSet);
-		$questionnaireName = $dataSet->questionnaireName ?? '';
 		
 		$questionnaireId = (int) ($dataSet->questionnaireInternalId ?? -1);
-		if(!Configs::getDataStore()->getStudyStore()->questionnaireExists($studyId, $questionnaireId))
+		if(!Configs::getDataStore()->getStudyStore()->questionnaireExists($studyId, $questionnaireId)) {
+			$questionnaireName = $dataSet->questionnaireName ?? '';
 			throw new DataSetException("Questionnaire '$questionnaireName' (id=$questionnaireId) does not exist");
+		}
 		
 		
 		$statisticsMetadata = $this->statisticMetadataIndex[$studyId]
@@ -335,10 +336,11 @@ class CreateDataSet {
 		//basic checks:
 		//*****
 		
-		$dataSetQuestionnaireName = $dataSet->questionnaireName ?? '';
 		
-		if((!Main::strictCheckInput($dataSetQuestionnaireName)) || !Main::strictCheckInput($eventType))
+		if(!Main::strictCheckInput($eventType)) {
+			$dataSetQuestionnaireName = $dataSet->questionnaireName ?? '';
 			throw new DataSetException("Unexpected input! Questionnaire: $dataSetQuestionnaireName; Event-Type: $eventType");
+		}
 		
 		return true;
 	}
