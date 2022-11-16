@@ -1,5 +1,5 @@
 ### 🚀 Added
-- Added reward system via code for participants
+- Added ukrainian translations.
 
 ### ✏️ Changed
-- Improved discovery system for new updates
+- Now allowing non ASCII characters in study settings.
