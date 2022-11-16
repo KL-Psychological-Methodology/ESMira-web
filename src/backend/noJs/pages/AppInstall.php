@@ -105,7 +105,7 @@ class AppInstall implements Page {
 			</li>
 			
 			<li>
-				<div>' .Lang::get('studyTut_participate_selectServer', Configs::getServerName()) .'</div>
+				<div>' .Lang::get('studyTut_participate_selectServer', $_SERVER['HTTP_HOST'].$scriptName) .'</div>
 				<div class="screenshot_box">
 					<img alt="screenshot" src="' .Lang::get('screenshot_server_ask_android') .'"/>
 				</div>

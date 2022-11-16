@@ -1,7 +1,7 @@
 import html from "./app_install.html"
 import {Studies} from "../js/main_classes/studies";
 import * as ko from "knockout";
-import {create_studyUrl} from "../js/shared/esmira_links";
+import {create_studyUrl, get_base_domain, get_base_url} from "../js/shared/esmira_links";
 import {Site} from "../js/main_classes/site";
 
 export function ViewModel(page) {
@@ -31,6 +31,7 @@ export function ViewModel(page) {
 		
 		this.accessKey = study.accessKeys().length ? (Studies.accessKey().length ? Studies.accessKey() : study.accessKeys()[0]()) : '';
 		this.appUrl = create_studyUrl(this.accessKey, study.id(), true, "esmira:");
+		this.serverUrl = get_base_domain("");
 		
 		let qr = qrcode(0, 'L');
 		qr.addData(this.appUrl);

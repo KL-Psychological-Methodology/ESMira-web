@@ -437,7 +437,7 @@
     "studyTut_participate_scanQr": "Scan the following QR code with your smartphone:",
     "studyTut_participate_selectAccessKeyYes": "When you are asked for an <b>access key</b> select \"<b>Yes</b>\" and enter \"<b style='color:red'>%s</b>\".",
     "studyTut_participate_selectAccessKeyNo": "When you are asked for an <b>access key</b> select \"<b style='color:red'>No, join a public study</b>\".",
-    "studyTut_participate_selectServer": "When you are asked for the <b>server</b> select \"<b style='color:red'>%s</b>\".",
+    "studyTut_participate_selectServer": "When you are asked for the <b>server</b>, select \"<b style='color:red'>Enter manually</b>\". Then type in \"<b style='color:red'>%s</b>\".",
     "studyTut_participate_startApp": "Start ESMira on your smartphone and follow the instructions.",
     "studyTut_show_installInstructions": "Show instructions",
     "summary": "Summary",

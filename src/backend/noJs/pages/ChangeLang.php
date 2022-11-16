@@ -11,7 +11,8 @@ class ChangeLang implements Page {
 	}
 	
 	public function getContent(): string {
-		return '<a class="vertical verticalPadding" href="?lang=de">&#127465;&#127466; Deutsch</a>
-		<a class="vertical verticalPadding" href="?lang=en">&#127468;&#127463; English</a>';
+		return '<a class="vertical verticalPadding" href="?lang=de">Deutsch</a>
+		<a class="vertical verticalPadding" href="?lang=en">English</a>
+		<a class="vertical verticalPadding" href="?lang=uk">українська</a>';
 	}
 }

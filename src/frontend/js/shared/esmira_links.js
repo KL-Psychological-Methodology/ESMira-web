@@ -1,5 +1,9 @@
+export function get_base_domain() {
+	return location.host + location.pathname.replace(/[^/]+$/, "");
+}
+
 export function get_base_url(protocol) {
-	return (protocol || location.protocol) + '//' + location.host + location.pathname.replace(/[^/]+$/, "");
+	return (protocol || location.protocol) + '//' + get_base_domain();
 }
 
 export function create_appUrl(key, id, long, protocol) {
