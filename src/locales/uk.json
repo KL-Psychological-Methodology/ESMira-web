@@ -141,7 +141,7 @@
     "studyTut_participate_open_this_website": "Відкрийте цей сайт на своєму смартфоні.",
     "studyTut_participate_opens_automatically": "ESMira відкривається автоматично.",
     "studyTut_participate_selectAccessKeyNo": "Коли вас запитають <b>ключ доступу</b>, виберіть «<b style='color:red'>Ні, приєднатися до публічного дослідження</b>».",
-    "studyTut_participate_selectServer": "Коли вас запитають про <b>сервер</b>, виберіть «<b style='color:red'>%s</b>».",
+    "studyTut_participate_selectServer": "Коли вас запитають про <b>сервер</b>, виберіть \"<b style='color:red'>Введіть вручну </b>\". Потім надрукуйте \"<b style='color:red'>%s</b>\".",
     "studyTut_participate_startApp": "Запустіть ESMira на своєму смартфоні та дотримуйтесь інструкцій.",
     "studyTut_show_installInstructions": "Показати інструкції",
     "summary": "Резюме",
