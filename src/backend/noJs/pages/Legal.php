@@ -13,21 +13,22 @@ class Legal implements Page {
 	}
 	
 	public function getContent(): string {
-		$langCode = Main::getLang();
+		$langCode = Main::getLang(false);
 		
 		$serverStore = Configs::getDataStore()->getServerStore();
 		$output = '';
+		$defaultLangCode = Configs::get('defaultLang');
 		
 		$impressum = $serverStore->getImpressum($langCode);
 		if(empty($impressum))
-			$impressum = $serverStore->getImpressum('_');
+			$impressum = $serverStore->getImpressum($defaultLangCode);
 		if(!empty($impressum)) {
 			$output .= '<div class="title-row">'.Lang::get('impressum').'</div>' .$impressum;
 		}
 		
 		$privacyPolicy = $serverStore->getPrivacyPolicy($langCode);
 		if(empty($privacyPolicy))
-			$privacyPolicy = $serverStore->getPrivacyPolicy('_');
+			$privacyPolicy = $serverStore->getPrivacyPolicy($defaultLangCode);
 		if(!empty($privacyPolicy)) {
 			$output .= '<br/><br/><div class="title-row">'.Lang::get('privacyPolicy').'</div>' .$privacyPolicy;
 		}

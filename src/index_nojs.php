@@ -88,7 +88,7 @@ function drawPage(Page $page = null) {
 ?>
 
 <!DOCTYPE html>
-<html lang="<?php echo Main::getLang('en'); ?>">
+<html lang="<?php echo Main::getLang(); ?>">
 <head>
 	<meta charset="UTF-8">
 	<title>ESMira</title>
@@ -135,12 +135,16 @@ function drawPage(Page $page = null) {
 	<div id="lang_chooser">
 		<a href="?change_lang">
 		<?php
-		switch(Main::getLang('en')) {
-			case 'en':
-				echo '&#127468;&#127463; English';
-				break;
+		switch(Main::getLang()) {
 			case 'de':
-				echo '&#127465;&#127466; Deutsch';
+				echo 'Deutsch';
+				break;
+			case 'uk':
+				echo 'українська';
+				break;
+			case 'en':
+			default:
+				echo 'English';
 				break;
 		}
 		?>

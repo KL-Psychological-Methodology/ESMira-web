@@ -4,7 +4,7 @@ require_once 'backend/autoload.php';
 use backend\Configs;
 use backend\Main;
 
-$lang = Main::getLang('en');
+$lang = Main::getLang();
 
 //
 //Choose starting page:

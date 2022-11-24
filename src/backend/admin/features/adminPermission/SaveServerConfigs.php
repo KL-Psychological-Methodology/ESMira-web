@@ -58,47 +58,11 @@ class SaveServerConfigs extends HasAdminPermission {
 		$settingsCollection['configs']['serverName'] = $serverNames;
 		FileSystemBasics::writeServerConfigs($settingsCollection['configs']);
 		
-		
-		
-//		if(!isset($settingsCollection->_))
-//			throw new PageFlowException('No default settings');
-//
-//		$oldLangCodes = Configs::get('langCodes');
-//
-//		$serverNames = [];
-//		$langCodes = [];
-//		foreach($settingsCollection as $code => $obj) {
-//			if($code !== '_') {
-//				$langCodes[] = $code;
-//				if(($k = array_search($code, $oldLangCodes)) !== false)
-//					unset($oldLangCodes[$k]);
-//			}
-//
-//			$serverNames[$code] = $this->extractServerName($obj);
-//
-//			$impressum = urldecode($obj->impressum);
-//			if(strlen($impressum))
-//				$serverStore->saveImpressum($impressum, $code);
-//			else
-//				$serverStore->deleteImpressum($code);
-//
-//			$privacyPolicy = urldecode($obj->privacyPolicy);
-//			if(strlen($privacyPolicy))
-//				$serverStore->savePrivacyPolicy($privacyPolicy, $code);
-//			else
-//				$serverStore->deletePrivacyPolicy($code);
-//		}
-		
 		//if a language has been removed, we need to remove its files too:
 		foreach($oldLangCodes as $code) {
 			$serverStore->deleteImpressum($code);
 			$serverStore->deletePrivacyPolicy($code);
 		}
-		
-//		FileSystemBasics::writeServerConfigs([
-//			'serverName' => $serverNames,
-//			'langCodes' => $langCodes,
-//		]);
 		
 		return [];
 	}

@@ -39,7 +39,7 @@ class NoJsMain {
 		$studyAccessIndexStore = Configs::getDataStore()->getStudyAccessIndexStore();
 		$accessKey = Main::getAccessKey();
 		$idsForAccessKey = $studyAccessIndexStore->getStudyIds($accessKey);
-		$lang = Main::getLang();
+		$lang = Main::getLang(false);
 		
 		if(empty($idsForAccessKey) && !empty($accessKey))
 			throw new PageFlowException(Lang::get('error_wrong_accessKey'));

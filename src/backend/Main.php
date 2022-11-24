@@ -41,7 +41,7 @@ class Main {
 	static function report(string $msg): bool {
 		return Configs::getDataStore()->getErrorReportStore()->saveErrorReport($msg);
 	}
-	static function getLang(string $default = '_'): string {
+	static function getLang(bool $limitLang = true): string {
 		if(isset($_GET['lang'])) {
 			$lang = $_GET['lang'];
 			self::setCookie('lang', $_GET['lang'], 32532447600);
@@ -52,15 +52,17 @@ class Main {
 			$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 		}
 		else
-			$lang = $default;
+			$lang = Configs::get('defaultLang') ?: 'en';
 		
-		switch($lang) {
-			case 'de':
-			case 'en':
-			case 'uk':
-				break;
-			default:
-				$lang = $default;
+		if($limitLang) {
+			switch($lang) {
+				case 'de':
+				case 'en':
+				case 'uk':
+					return $lang;
+				default:
+					return 'en';
+			}
 		}
 		return $lang;
 	}

@@ -9,7 +9,7 @@ class Lang {
 	private static $cache;
 	private static $initialized = false;
 	static function init() {
-		self::$langCode = Main::getLang('en');
+		self::$langCode = Main::getLang();
 		self::$cache = json_decode(file_get_contents(DIR_BASE .'locales/'.self::$langCode.'.json'));
 		self::$initialized = true;
 	}

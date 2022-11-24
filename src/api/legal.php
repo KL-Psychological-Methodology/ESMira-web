@@ -11,10 +11,11 @@ if(!Configs::getDataStore()->isInit()) {
 	return;
 }
 
-$lang = Main::getLang();
-
+$lang = Main::getLang(false);
+$defaultLangCode = Configs::get('defaultLang');
 $serverStore = Configs::getDataStore()->getServerStore();
+
 echo JsonOutput::successObj([
-	'impressum' => $serverStore->getImpressum($lang) ?: $serverStore->getImpressum('_'),
-	'privacyPolicy' => $serverStore->getPrivacyPolicy($lang) ?: $serverStore->getPrivacyPolicy('_')
+	'impressum' => $serverStore->getImpressum($lang) ?: $serverStore->getImpressum($defaultLangCode),
+	'privacyPolicy' => $serverStore->getPrivacyPolicy($lang) ?: $serverStore->getPrivacyPolicy($defaultLangCode)
 ]);

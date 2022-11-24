@@ -26,7 +26,7 @@ class StudiesList implements Page {
 	 */
 	static function listFromIndex(string $accessKey): string {
 		$output = '';
-		$lang = Main::getLang();
+		$lang = Main::getLang(false);
 		
 		$studyStore = Configs::getDataStore()->getStudyStore();
 		$ids = Configs::getDataStore()->getStudyAccessIndexStore()->getStudyIds($accessKey);
