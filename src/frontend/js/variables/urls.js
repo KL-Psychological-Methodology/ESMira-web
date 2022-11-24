@@ -1,6 +1,6 @@
 export const URL_ABOUT_ESMIRA_SOURCE = 'https://esmira.kl.ac.at/documents/about/',
 	URL_ABOUT_ESMIRA_JSON = URL_ABOUT_ESMIRA_SOURCE+"langs/%s.json",
-	URL_RELEASES_LIST = "https://api.github.com/repos/KL-Psychological-Methodology/ESMira-web/releases?per_page=5",
+	URL_RELEASES_LIST = "https://api.github.com/repos/KL-Psychological-Methodology/ESMira-web/releases?per_page=50",
 	
 	FILE_CHECK_HTACCESS = 'api/check_htaccess/check.php',
 	FILE_ADMIN = 'api/admin.php',

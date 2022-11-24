@@ -551,5 +551,6 @@
     "info_reward_email_content": "Must contain [[CODE]] which will be replaced by the actual reward code.",
     "state_installing": "Updating…",
     "state_finish_installing": "Finishing update…",
-    "reward_code_instructions": "Reward code instructions"
+    "reward_code_instructions": "Reward code instructions",
+    "default_language": "Default langauge"
 }

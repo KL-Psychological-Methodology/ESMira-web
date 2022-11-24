@@ -23,6 +23,9 @@ class UpdateVersionTest extends BaseAdminPermissionTestSetup {
 		$this->assertFalse($obj->testVersionCheck('1.2.3', '1.1.4'));
 		$this->assertFalse($obj->testVersionCheck('2.2.3', '1.3.3'));
 		
+		$this->assertTrue($obj->testVersionCheck('1.2.3-alpha.4', '1.2.3'));
+		$this->assertFalse($obj->testVersionCheck('1.2.3', '1.2.3-alpha.4'));
+		
 		$this->assertTrue($obj->testVersionCheck('1.2.3-alpha.4', '1.2.3-alpha.5'));
 		$this->assertTrue($obj->testVersionCheck('1.2.3-alpha.4', '1.2.4-alpha.3'));
 		$this->assertTrue($obj->testVersionCheck('1.2.3-alpha.4', '1.3.3-alpha.2'));

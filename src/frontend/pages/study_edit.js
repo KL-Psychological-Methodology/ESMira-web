@@ -7,7 +7,7 @@ export function ViewModel(page) {
 	this.html = html;
 	this.promiseBundle = [Studies.init(page)];
 	this.study = null;
-	this.extraContent = "<lang-options params='enableAdd: true, alwaysVisible: true, hasTitle: true'></lang-options>";
+	this.extraContent = "<lang-chooser params='hasTitle: true'></lang-chooser>";
 	
 	this.preInit = function({id}, studies) {
 		let study = studies[id];

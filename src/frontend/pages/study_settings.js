@@ -4,8 +4,6 @@ import {Lang} from "../js/main_classes/lang";
 import {FILE_ADMIN} from "../js/variables/urls";
 import ko from "knockout";
 import {Site} from "../js/main_classes/site";
-import {load_langConfigs, add_lang} from "../js/shared/lang_configs";
-import {Defaults} from "../js/variables/defaults";
 
 export function ViewModel(page) {
 	let self = this;
@@ -25,9 +23,6 @@ export function ViewModel(page) {
 	this.preInit = function({id}, studies) {
 		study = studies[id];
 		this.dataObj = study;
-		
-		this.add_lang = add_lang.bind(this, study, Defaults.studies);
-		load_langConfigs(study, page);
 		
 		this.locked_enabled.subscribe(function() {
 			page.loader.loadRequest(FILE_ADMIN + "?type=freeze_study" + (self.locked_enabled() ? "&frozen" : "") + "&study_id="+id).then(function(frozen) {

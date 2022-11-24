@@ -72,7 +72,7 @@ But since I suspect that this will not be used often and it is easier to grasp f
 					<small data-bind="text: Lang.get('title')"></small>
 					<input class="small" type="text" data-bind="value: label, attr: {class: random() ? 'small' : ''}"/>
 					<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: !label() || !label().length"/>
-					<lang-options></lang-options>
+					<lang-chooser></lang-chooser>
 				</label>
 				
 				
@@ -201,7 +201,7 @@ But since I suspect that this will not be used often and it is easier to grasp f
 		<small data-bind="text: Lang.get('message')"></small>
 		<textarea data-bind="value: msgText"></textarea>
 		<img class="warn" src="../imgs/warn.svg" alt="" data-bind="visible: !msgText().length"/>
-		<lang-options></lang-options>
+		<lang-chooser></lang-chooser>
 		<small data-bind="text: Lang.get('info_notification_title')"></small>
 	</label>
 </div>

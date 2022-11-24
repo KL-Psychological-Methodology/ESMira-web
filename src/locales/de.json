@@ -551,5 +551,6 @@
     "info_reward_email_content": "Muss [[CODE]] beinhalten, welches durch den tatsächlichen Belohnungscode ersetzt wird.",
     "state_installing": "Aktualisiere…",
     "state_finish_installing": "Installation abschließen…",
-    "reward_code_instructions": "Belohnungscode-Instruktionen"
+    "reward_code_instructions": "Belohnungscode-Instruktionen",
+    "default_language": "Standard-Sprache"
 }

@@ -1,0 +1,13 @@
+<div data-bind="if: $component.langCodes().length > 1, attr: {title: Lang.get('language')}">
+	<div class="codes">
+		<span data-bind="if: $component.hasTitle">
+			<span class="title" data-bind="text: Lang.get('colon_languages')"></span>
+		</span>
+		<span data-bind="foreach: $component.langCodes">
+			<span class="element" data-bind="click: $component.changeLang.bind($component, $data),
+					text: $component.langNames()[$data] ? $component.langNames()[$data] : $data,
+					css: {selected: $component.currentLang === $data}
+				"></span>
+		</span>
+	</div>
+</div>

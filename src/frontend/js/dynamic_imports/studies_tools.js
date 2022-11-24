@@ -12,6 +12,8 @@ import {add_default} from "../helpers/list_functions";
 import "../../css/style_admin.css";
 import {DetectChange} from "../main_classes/detect_change";
 import {NavigationRow} from "../main_classes/navigation_row";
+import {PromiseCache} from "../main_classes/promise_cache";
+import {changeLang, currentLangCode, loadStudyLangConfigs} from "../shared/lang_configs";
 
 
 function clone(obj) {
@@ -22,7 +24,6 @@ export const Studies_tools = {
 	changed_state: {},
 	newMessages: ko.observable(),
 	lastChanged: {},
-	currentLang: ko.observable("_"),
 	
 	init: function(page) {
 		ko.options.deferUpdates = true;
@@ -38,10 +39,15 @@ export const Studies_tools = {
 			Studies.init(page).then(this.change_observedStudy.bind(this, (study_id)));
 	},
 	initStudy: function(study) {
+		// At this point, langauges are not loaded yet.
+		// They will be loaded as soon as the user opens the study.
 		let self = this;
 		let studyId = study.id();
 		let detector = new DetectChange(study);
-		this.changed_state[study.id()] = detector;
+		if(this.changed_state[studyId])
+			this.changed_state[studyId].destroy();
+			
+		this.changed_state[studyId] = detector;
 		
 		detector.isDirty.subscribe(function(newValue) {
 			if(newValue && study.version()) {
@@ -100,9 +106,9 @@ export const Studies_tools = {
 	
 	update_study: function(studyObj, updates) {
 		OwnMapping.update(studyObj, updates, Defaults.studies);
-		this.initStudy(studyObj);
-		this.change_observedStudy(studyObj.id());
-		this.set_study_changedState(studyObj, true);
+		// this.initStudy(studyObj);
+		// this.change_observedStudy(studyObj.id());
+		// this.set_study_changedState(studyObj, true);
 	},
 	
 	add_questionnaire: function(page, study, pageCode) {
@@ -135,35 +141,41 @@ export const Studies_tools = {
 		let studyId = study.id();
 		let page = Site.get_lastPage();
 		
-		let studies = {
-			_: OwnMapping.toLangJs(study, "_")
-		};
+		let currentLang = currentLangCode;
+		let translations;
+		let defaultLang = study.defaultLang();
 		
-		let langCodes = study.langCodes();
-		for(let i=langCodes.length-1; i>=0; --i) {
-			let code = langCodes[i]();
-			let langStudy = OwnMapping.toLangJs(study, code);
-			langStudy.lang = code;
-			studies[code] = langStudy;
-		}
-		
-		return page.loader.loadRequest(
-			FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
-			false,
-			"post",
-			JSON.stringify(studies)
-		).then(function({lastChanged, json}) {
-			self.lastChanged[studyId] = lastChanged;
-			
-			
-			//only default settings were changed:
-			let currentLang = Studies.tools.currentLang();
-			Studies.tools.currentLang("_");
-			self.update_study(study, json._);
-			Studies.tools.currentLang(currentLang);
-			
-			self.set_study_changedState(study);
-		});
+		page.loader.showLoader(
+			Lang.get("state_loading"),
+			loadStudyLangConfigs(study, page).then(function(loadedTranslations) {
+				translations = loadedTranslations;
+				let studies = {};
+				let langCodes = study.langCodes();
+				for(let i=langCodes.length-1; i>=0; --i) {
+					let code = langCodes[i]();
+					changeLang(study, translations, code);
+					let langStudy = OwnMapping.toJS(study);
+					langStudy.lang = code;
+					studies[code === defaultLang ? "_" : code] = langStudy;
+				}
+				return Requests.load(
+					FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
+					false,
+					"post",
+					JSON.stringify(studies)
+				);
+			}).then(function({lastChanged, json}) {
+				self.lastChanged[studyId] = lastChanged;
+				
+				//only default settings were changed:
+				changeLang(study, translations, defaultLang);
+				self.update_study(study, json._);
+				changeLang(study, translations, currentLang);
+				
+				Site.reload_allPages();
+				self.set_study_changedState(study, false);
+			})
+		);
 	},
 	backup_study: function(page, study) {
 		let studyId = study.id();
@@ -220,11 +232,14 @@ export const Studies_tools = {
 		}
 		return false;
 	},
+	getStudyChangedDetector(studyId) {
+		return this.changed_state[studyId];
+	},
 	set_study_changedState: function(study, changed) {
-		this.changed_state[study.id()].setDirty(changed || false);
+		this.getStudyChangedDetector(study.id()).setDirty(changed || false);
 	},
 	set_studyDetector_enabled: function(study, enabled) {
-		this.changed_state[study.id()].set_enabled(enabled);
+		this.getStudyChangedDetector(study.id()).set_enabled(enabled);
 	},
 	
 	lock: function(page, study, el) {
@@ -236,7 +251,7 @@ export const Studies_tools = {
 	
 	change_observedStudy: function(study_id) {
 		NavigationRow.admin.change_observed(
-			this.changed_state[study_id],
+			this.getStudyChangedDetector(study_id),
 			this.save_study.bind(this),
 			Studies.list()[study_id].new_changes,
 			this.mark_study_as_updated.bind(this)

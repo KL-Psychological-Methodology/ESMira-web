@@ -213,7 +213,7 @@ Defaults.studies = {
 			questionnaires: Defaults.questionnaires
 		},
 		translated: {
-			title: "Error",
+			title: "Study title",
 			studyDescription: "",
 			informedConsentForm: "",
 			postInstallInstructions: "",
@@ -232,6 +232,7 @@ Defaults.studies = {
 	version: -1,
 	subVersion: -1,
 	serverVersion: -1,
+	packageVersion: "0.0.0",
 	lang: "",
 	new_changes: false,
 	published: false,
@@ -240,7 +241,8 @@ Defaults.studies = {
 	publishedIOS: true,
 	sendMessagesAllowed: true,
 	accessKeys: [],
-	langCodes: [],
+	langCodes: ["unnamed"],
+	defaultLang: "unnamed",
 	eventUploadSettings: Defaults.eventUploadSettings,
 	randomGroups: 0,
 	enableRewardSystem: false,
@@ -263,14 +265,3 @@ Defaults.account = {
 	write: [],
 	publish: []
 };
-
-Defaults.serverSettings = {
-	langCodes: [],
-	$: {
-		translated: {
-			impressum: "",
-			serverName: "",
-			privacyPolicy: "",
-		}
-	}
-}

@@ -33,24 +33,28 @@ class UpdateVersion extends DoUpdate {
 	 */
 	private $fromVersion;
 	
-	protected function versionIsBelow(string $newVersionString): bool {
+	protected function versionIsBelowThen(string $newVersionString): bool {
 		$oldVersionString = $this->fromVersion;
 		$matchOld = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $oldVersionString, $integersOld);
 		$matchNew = preg_match("/(\d+)\.(\d+)\.(\d+)\D*(\d*)/", $newVersionString, $integersNew);
 		
 		return $matchOld && $matchNew &&
 			(
-				$integersNew[1] > $integersOld[1]
+				$integersNew[1] > $integersOld[1] // e.g. 2.0.0 > 1.0.0
 				|| (
 					$integersNew[1] === $integersOld[1]
 					&& (
-						$integersNew[2] > $integersOld[2]
+						$integersNew[2] > $integersOld[2] // e.g. 2.1.0 > 2.0.0
 						|| (
 							$integersNew[2] === $integersOld[2]
 							&& (
-								$integersNew[3] > $integersOld[3]
+								$integersNew[3] > $integersOld[3] // e.g. 2.1.1 > 2.1.0
 								|| (
-									$integersNew[3] === $integersOld[3] && $integersNew[4] && $integersNew[4] > $integersOld[4]
+									$integersNew[3] === $integersOld[3]
+									&& (
+										($integersOld[4] !== '' && $integersNew[4] == '') // e.g. 2.1.1 > 2.1.1-alpha.1
+										|| ($integersOld[4] !== '' && $integersNew[4] !== '' && $integersNew[4] > $integersOld[4]) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
+									)
 								)
 							)
 						)
@@ -63,7 +67,7 @@ class UpdateVersion extends DoUpdate {
 	 * @throws CriticalException
 	 */
 	function runUpdateScript() {
-		if($this->versionIsBelow('2.0.0')) {
+		if($this->versionIsBelowThen('2.0.0')) {
 			$changeResponsesIndex = function(int $studyId, string $identifier) {
 				$values = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, $identifier)));
 				if(!$values)
@@ -263,7 +267,7 @@ class UpdateVersion extends DoUpdate {
 				}
 			}
 		}
-		else if($this->versionIsBelow('2.0.4')) { //these changes done directly in $fromVersion <= 200
+		else if($this->versionIsBelowThen('2.0.4')) { //these changes done directly in $fromVersion <= 200
 			$folderErrorReports = PathsFS::folderErrorReports();
 			$handle = opendir($folderErrorReports);
 			$path = $folderErrorReports .".error_info"; //we cannot use ErrorReportInfoLoader::importFile because we are still using the old version of PathFS
@@ -289,7 +293,7 @@ class UpdateVersion extends DoUpdate {
 			closedir($handle);
 		}
 		
-		if($this->versionIsBelow('2.0.4')) {
+		if($this->versionIsBelowThen('2.0.4')) {
 			//prevent automatic logout:
 			
 			if(isset($_COOKIE['user'])) {
@@ -299,7 +303,7 @@ class UpdateVersion extends DoUpdate {
 			if(isset($_SESSION['user']))
 				$_SESSION['account'] = $_SESSION['user'];
 		}
-		if($this->versionIsBelow('2.1.0-alpha.2')) {
+		if($this->versionIsBelowThen('2.1.0-alpha.2')) {
 			//index numbers in ~open array got messed up. We have to fix them:
 			$studyIndex = StudyAccessKeyIndexLoader::importFile();
 			$newArray = [];
@@ -308,6 +312,34 @@ class UpdateVersion extends DoUpdate {
 			}
 			$studyIndex['~open'] = $newArray;
 			StudyAccessKeyIndexLoader::exportFile($studyIndex);
+		}
+		if($this->versionIsBelowThen('2.1.1')) {
+			$serverName = Configs::get('serverName');
+			$langCodes = Configs::get('langCodes');
+			if(!isset($serverName['en'])) {
+				$serverName['en'] = $serverName['_'];
+				unset($serverName['_']);
+				$serverStore = Configs::getDataStore()->getServerStore();
+				$impressum = $serverStore->getImpressum('_');
+				$privacyPolicy = $serverStore->getPrivacyPolicy('_');
+				
+				$serverStore->saveImpressum($impressum, 'en');
+				$serverStore->deleteImpressum($impressum, '_');
+				$serverStore->saveImpressum($privacyPolicy, 'en');
+				$serverStore->deleteImpressum($privacyPolicy, '_');
+				
+				$langCodes[] = 'en';
+				FileSystemBasics::writeServerConfigs([
+					'serverName' => $serverName,
+					'langCodes' => $langCodes
+				]);
+			}
+			else {
+				$langCodes[] = '_';
+				FileSystemBasics::writeServerConfigs([
+					'langCodes' => $langCodes
+				]);
+			}
 		}
 	}
 	
@@ -338,6 +370,6 @@ class UpdateVersion extends DoUpdate {
 	//only for testing:
 	function testVersionCheck(string $fromVersion, string $checkVersion): bool {
 		$this->fromVersion = $fromVersion;
-		return $this->versionIsBelow($checkVersion);
+		return $this->versionIsBelowThen($checkVersion);
 	}
 }

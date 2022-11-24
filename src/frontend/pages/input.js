@@ -40,7 +40,6 @@ export function ViewModel(pageModel) {
 	
 	this.add_listChoice = function(input) {
 		listTools.add_prompted(input.listChoices);
-		console.log(input.listChoices());
 	}
 	
 	this.optionsInput = [

@@ -17,7 +17,6 @@ export function init(startHash, serverName, serverVersion, server_accessKey, lan
 		toggleUrl();
 		return;
 	}
-	
 	Lang.init(langCode);
 	
 	Site.init(serverName, startHash, serverVersion, server_accessKey);
