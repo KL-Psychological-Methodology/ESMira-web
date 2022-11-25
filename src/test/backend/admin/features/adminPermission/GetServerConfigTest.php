@@ -32,12 +32,32 @@ class GetServerConfigTest extends BaseAdminPermissionTestSetup {
 		Configs::injectConfig('configs.langCodes.injected.php');
 		$obj = new GetServerConfig();
 		
-		$serverSettings = Configs::getAll();
-		$serverSettings['impressum'] = ['_' => $this->impressumContent, 'en' => $this->impressumContent, 'fr' => $this->impressumContent, 'de' => $this->impressumContent];
-		$serverSettings['privacyPolicy'] = ['_' => $this->privacyPolicyContent, 'en' => $this->privacyPolicyContent, 'fr' => $this->privacyPolicyContent, 'de' => $this->privacyPolicyContent];
+		$serverSettings = [
+			'configs' => [
+				'langCodes' => ['en', 'fr', 'de'],
+				'defaultLang' => 'de'
+			],
+			'translationData' => [
+				'en' => [
+					'serverName' => '',
+					'impressum' => $this->impressumContent,
+					'privacyPolicy' => $this->privacyPolicyContent
+				],
+				'fr' => [
+					'serverName' => '',
+					'impressum' => $this->impressumContent,
+					'privacyPolicy' => $this->privacyPolicyContent
+				],
+				'de' => [
+					'serverName' => '',
+					'impressum' => $this->impressumContent,
+					'privacyPolicy' => $this->privacyPolicyContent
+				]
+			]
+		];
 		$this->assertEquals($serverSettings, $obj->exec());
 		
-		$this->assertDataMock('getImpressum', ['en'], ['fr'], ['de'], ['_']);
-		$this->assertDataMock('getPrivacyPolicy', ['en'], ['fr'], ['de'], ['_']);
+		$this->assertDataMock('getImpressum', ['en'], ['fr'], ['de']);
+		$this->assertDataMock('getPrivacyPolicy', ['en'], ['fr'], ['de']);
 	}
 }

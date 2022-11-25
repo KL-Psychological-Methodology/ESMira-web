@@ -1,7 +1,8 @@
 <?php
 return [
 	'serverName' => [
-		'_' => 'test name',
-		'en' => 'test name2'
+		'de' => 'test name - de',
+		'en' => 'test name - en'
 	],
+	'defaultLang' => 'de'
 ];

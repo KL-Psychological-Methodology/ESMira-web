@@ -11,11 +11,12 @@ require_once __DIR__ .'/../../../../backend/autoload.php';
 class LegalTest extends BaseNoJsTestSetup {
 	private $impressum = [
 		'en' => 'impressumEn',
-		'_' => 'impressum_'
+		'de' => 'impressum_'
 	];
 	private $privacyPolicy = [
 		'en' => 'privacyPolicyEn',
-		'_' => 'privacyPolicy_'
+		'de' => 'privacyPolicyDe',
+		'fr' => 'privacyPolicyFr'
 	];
 	function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
@@ -44,6 +45,6 @@ class LegalTest extends BaseNoJsTestSetup {
 		$this->setGet(['lang' => 'de']);
 		$content = $obj->getContent();
 		$this->assertStringContainsString('impressum_', $content);
-		$this->assertStringContainsString('privacyPolicy_', $content);
+		$this->assertStringContainsString('privacyPolicyDe', $content);
 	}
 }

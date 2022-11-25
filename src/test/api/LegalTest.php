@@ -2,6 +2,7 @@
 
 namespace test\api;
 
+use backend\Configs;
 use backend\JsonOutput;
 use backend\subStores\ServerStore;
 use PHPUnit\Framework\MockObject\Stub;
@@ -23,9 +24,10 @@ class LegalTest extends BaseApiTestSetup {
 	}
 	
 	function test() {
+		Configs::injectConfig('configs.langCodes.injected.php');
 		$this->setGet(['lang' => 'en']);
 		require DIR_BASE .'/api/legal.php';
-		$this->assertDataMock('getImpressum', ['en'], ['_']);
+		$this->assertDataMock('getImpressum', ['en'], ['de']);
 		$this->assertDataMock('getPrivacyPolicy', ['en']);
 		$this->expectOutputString(JsonOutput::successObj([
 			'impressum' => '',

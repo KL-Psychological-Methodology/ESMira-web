@@ -51,20 +51,23 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 	function test_saveServerName() {
 		Configs::injectConfig('configs.langCodes.injected.php');
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => '',
-				'privacyPolicy' => ''
-			],
-			'fr' => [
-				'serverName' => $this->serverNameContent2,
-				'impressum' => '',
-				'privacyPolicy' => ''
-			],
-			'de' => [
-				'serverName' => $this->serverNameContent3,
-				'impressum' => '',
-				'privacyPolicy' => ''
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent2,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent3,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -72,16 +75,19 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 		$obj = new SaveServerConfigs();
 		$obj->exec();
 		
-		$this->assertEquals(['_' => $this->serverNameContent1, 'fr' => $this->serverNameContent2, 'de' => $this->serverNameContent3], Configs::get('serverName'));
-		$this->assertEquals(['fr', 'de'], Configs::get('langCodes'));
+		$this->assertEquals(['en' => $this->serverNameContent1, 'fr' => $this->serverNameContent2, 'de' => $this->serverNameContent3], Configs::get('serverName'));
+		$this->assertEquals(['en', 'fr', 'de'], Configs::get('langCodes'));
 	}
 	
 	function test_short_saveServerName() {
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => '12',
-				'impressum' => '',
-				'privacyPolicy' => ''
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => '12',
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -92,10 +98,13 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 	}
 	function test_long_saveServerName() {
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => '1234567890123456789012345678901',
-				'impressum' => '',
-				'privacyPolicy' => ''
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => '1234567890123456789012345678901',
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -106,10 +115,13 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 	}
 	function test_saveServerName_with_forbidden_characters() {
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => 'name$',
-				'impressum' => '',
-				'privacyPolicy' => ''
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => 'name$',
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -122,20 +134,23 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 	function test_save_and_delete_impressum() {
 		Configs::injectConfig('configs.langCodes.injected.php');
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => $this->impressumContent1,
-				'privacyPolicy' => ''
-			],
-			'fr' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => '',
-				'privacyPolicy' => ''
-			],
-			'de' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => $this->impressumContent2,
-				'privacyPolicy' => ''
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => $this->impressumContent1,
+					'privacyPolicy' => ''
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => $this->impressumContent2,
+					'privacyPolicy' => ''
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -143,27 +158,30 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 		$obj = new SaveServerConfigs();
 		$obj->exec();
 		
-		$this->assertDataMock('saveImpressum', [$this->impressumContent1, '_'], [$this->impressumContent2, 'de']);
-		$this->assertDataMock('deleteImpressum', ['fr'], ['en']);
+		$this->assertDataMock('saveImpressum', [$this->impressumContent1, 'en'], [$this->impressumContent2, 'de']);
+		$this->assertDataMock('deleteImpressum', ['fr']);
 	}
 	
 	function test_save_and_delete_privacyPolicy() {
 		Configs::injectConfig('configs.langCodes.injected.php');
 		$defaultPostInput = [
-			'_' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => '',
-				'privacyPolicy' => $this->privacyPolicyContent1
-			],
-			'fr' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => '',
-				'privacyPolicy' => ''
-			],
-			'de' => [
-				'serverName' => $this->serverNameContent1,
-				'impressum' => '',
-				'privacyPolicy' => $this->privacyPolicyContent2
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => $this->privacyPolicyContent1
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => $this->privacyPolicyContent2
+				]
 			]
 		];
 		Main::$defaultPostInput = json_encode($defaultPostInput);
@@ -171,8 +189,8 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 		$obj = new SaveServerConfigs();
 		$obj->exec();
 		
-		$this->assertDataMock('savePrivacyPolicy', [$this->privacyPolicyContent1, '_'], [$this->privacyPolicyContent2, 'de']);
-		$this->assertDataMock('deletePrivacyPolicy', ['fr'], ['en']);
+		$this->assertDataMock('savePrivacyPolicy', [$this->privacyPolicyContent1, 'en'], [$this->privacyPolicyContent2, 'de']);
+		$this->assertDataMock('deletePrivacyPolicy', ['fr']);
 	}
 	
 	function test_with_missing_data() {

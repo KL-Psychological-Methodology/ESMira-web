@@ -1,4 +1,5 @@
 <?php
 return [
-	'langCodes' => ['en', 'fr', 'de']
+	'langCodes' => ['en', 'fr', 'de'],
+	'defaultLang' => 'de'
 ];

@@ -32,18 +32,18 @@ class MainTest extends BaseTestSetup {
 	}
 	
 	function test_getLang() {
-		$this->assertEquals('default', Main::getLang('default'));
+		$this->assertEquals('en', Main::getLang());
 		
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-		$this->assertEquals('en', Main::getLang('default'));
+		$this->assertEquals('en', Main::getLang(false));
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = null;
 		
 		$_COOKIE['lang'] = 'en';
-		$this->assertEquals('en', Main::getLang('default'));
+		$this->assertEquals('en', Main::getLang(false));
 		$_COOKIE['lang'] = null;
 		
 		$_GET['lang'] = 'en';
-		$this->assertEquals('en', Main::getLang('default'));
+		$this->assertEquals('en', Main::getLang(false));
 	}
 	
 	function test_getAccessKey() {
