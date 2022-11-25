@@ -1,5 +1,4 @@
 import ko from "knockout";
-import {Studies} from "../main_classes/studies";
 
 
 let copyArray = function(a) {
@@ -148,7 +147,7 @@ export const OwnMapping = {
 				if(!defaultTranslations.hasOwnProperty(realKey))
 					continue;
 				
-				let newValue = value[realKey];
+				let newValue = value.hasOwnProperty(realKey) ? value[realKey] : defaultTranslations[realKey];
 				let defaultValue = defaultTranslations[realKey];
 				if(Array.isArray(defaultValue)) {
 					let obs = this.fromJS(newValue, defaultTranslations[realKey]); // this will be an _observableArray filled with observables
