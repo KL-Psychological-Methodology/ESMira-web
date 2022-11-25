@@ -133,6 +133,8 @@ export function repairStudy(study) {
 	}
 	switch(study.packageVersion) {
 		case undefined:
+			if(!study.langCodes)
+				study.langCodes = [];
 			study.langCodes.push("unnamed");
 			study.defaultLang = "unnamed";
 	}
