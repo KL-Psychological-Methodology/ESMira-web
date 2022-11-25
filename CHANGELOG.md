@@ -6,3 +6,4 @@
 
 ### ✏️ Changed
 - Now allowing non ASCII characters in study settings.
+- Fixed Bugs when using multiple languages
