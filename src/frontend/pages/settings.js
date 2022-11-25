@@ -161,9 +161,6 @@ export function ViewModel(page) {
 	}
 	
 	this.saveServerSettings = function() {
-		
-		
-		
 		let translationData = {};
 		let langCodes = self.dataObj.langCodes();
 		for(let i=langCodes.length-1; i>=0; --i) {

@@ -19,7 +19,7 @@ class GetServerConfig extends HasAdminPermission {
 		$serverStore = Configs::getDataStore()->getServerStore();
 		foreach($langCodes as $code) {
 			$translationData[$code] = [
-				'serverName' => $serverName[$code],
+				'serverName' => $serverName[$code] ?? '',
 				'impressum' => $serverStore->getImpressum($code),
 				'privacyPolicy' => $serverStore->getPrivacyPolicy($code)
 			];
