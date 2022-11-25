@@ -172,13 +172,6 @@ export function ViewModel(page) {
 				privacyPolicy: self.dataObj.privacyPolicy(),
 			};
 		}
-		console.log({
-			configs: {
-				langCodes: OwnMapping.toJS(langCodes),
-				defaultLang: self.dataObj.defaultLang()
-			},
-			translationData: translationData
-		})
 
 		return page.loader.loadRequest(
 			FILE_ADMIN + "?type=save_serverConfigs",
