@@ -39,7 +39,7 @@ class Configs {
 	static function getServerName(): string {
 		$lang = Main::getLang();
 		$serverNameArray = self::get('serverName');
-		return $serverNameArray[$lang] ?? ($serverNameArray['_'] ?? '');
+		return $serverNameArray[$lang] ?? ($serverNameArray['en'] ?? '');
 	}
 	
 	static function resetConfig() {
