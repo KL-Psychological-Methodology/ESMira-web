@@ -363,7 +363,7 @@ export const OwnMapping = {
 		let unsetFu = function(currentObj) {
 			self._toOwnObservableValue(currentObj); //in case we added new elements as ko.observable() instead of _observableValue()
 			currentObj.___unsetDirty();
-			currentObj.notifySubscribers();
+			currentObj.notifySubscribers(currentObj());
 		};
 		this.loopAll(obj, unsetFu, unsetFu);
 	},
