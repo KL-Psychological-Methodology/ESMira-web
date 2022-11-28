@@ -121,11 +121,8 @@ export const Studies_tools = {
 		
 		return page.loader.showLoader(Lang.get("state_loading"),
 			Requests.load(FILE_ADMIN+"?type=get_new_id&for=questionnaire&study_id="+study.id(), false, "post", JSON.stringify(filtered)).then(function(internalId) {
-				let title = Lang.get("default_questionnaire_name", questionnaires.length)
 				let newQuestionnaire = add_default(study.questionnaires, "questionnaires");
 				newQuestionnaire.internalId(internalId);
-				//in case another language was selected, we make sure to only set the default language (from which others automatically copy from):
-				newQuestionnaire.title.___setLang("_", title);
 				
 				if(pageCode)
 					Site.add_page(pageCode.replace("%", study.questionnaires().length-1), page.depth);
