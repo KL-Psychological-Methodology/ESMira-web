@@ -39,8 +39,6 @@ export function DetectChange(obj, changedFu) {
 	});
 	
 	this.setDirty = function(state) {
-		if(this.isDirty() === state)
-			return;
 		if(!state) {
 			for(let i = monitoredObjects.length - 1; i >= 0; --i) {
 				OwnMapping.unsetDirty(monitoredObjects[i]);
