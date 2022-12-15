@@ -68,11 +68,10 @@ foreach($data as $studyId => $line) {
 			$message->read = Main::getMilliseconds();
 			$message->delivered += 1;
 			
-			$newMessage = $message; //clones the variable
-			$newMessage->from = 'server';
-			$outputMessages[] = $newMessage;
+			$outputMessage = clone $message;
+			$outputMessage->from = 'server';
+			$outputMessages[] = $outputMessage;
 			return true;
-			
 		});
 		if(count($outputMessages))
 			$line['msgs'] = $outputMessages;
