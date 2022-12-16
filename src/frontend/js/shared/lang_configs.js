@@ -34,8 +34,8 @@ export function loadStudyLangConfigs(study, page) {
 }
 
 export function changeLang(obs, translations, toLangCode) {
-	if(!translations.hasOwnProperty(toLangCode))
-		return;
+	if(!translations.hasOwnProperty(toLangCode)) //can happen when the languages change when source JSON was overwritten
+		translations[toLangCode] = {};
 	OwnMapping.switchLanguage(obs, translations[currentLangCode], translations[toLangCode]);
 	translations.__detector.reload();
 	currentLangCode = toLangCode;
