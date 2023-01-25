@@ -51,7 +51,7 @@ foreach($data as $studyId => $line) {
 		$lastMessageTimestamp = $line->msgTimestamp;
 		
 		$accessKeys = $metadata->getAccessKeys();
-		if(!empty($accessKeys) && !in_array(strtolower($line->accessKey ?? ''), $accessKeys)) {
+		if(!empty($accessKeys) && !in_array(trim(strtolower($line->accessKey ?? '')), $accessKeys)) {
 			echo JsonOutput::error('Wrong accessKey: ' .($line->accessKey ?? ''));
 			return;
 		}

@@ -15,7 +15,7 @@ if(!Configs::getDataStore()->isInit()) {
 }
 
 if(intval($_SERVER['CONTENT_LENGTH']) > 0 && empty($_POST)){
-	echo JsonOutput::error('File is too big');
+	echo JsonOutput::error('File is too big for server');
 	return;
 }
 

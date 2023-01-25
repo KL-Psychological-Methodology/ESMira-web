@@ -22,7 +22,7 @@ $studyId = (int) $_GET['id'];
 try {
 	$metadata = Configs::getDataStore()->getStudyMetadataStore($studyId);
 	$accessKeys = $metadata->getAccessKeys();
-	if(sizeof($accessKeys) && (!isset($_GET['access_key']) || !in_array(strtolower($_GET['access_key']), $accessKeys))) {
+	if(sizeof($accessKeys) && (!isset($_GET['access_key']) || !in_array(strtolower(trim($_GET['access_key'])), $accessKeys))) {
 		echo JsonOutput::error("Wrong accessKey: $_GET[access_key]");
 		return;
 	}

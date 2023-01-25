@@ -51,7 +51,7 @@ try {
 		}
 	}
 	else {
-		$key = isset($_GET['access_key']) ? strtolower($_GET['access_key']) : '';
+		$key = isset($_GET['access_key']) ? strtolower(trim($_GET['access_key'])) : '';
 		$lang = Main::getLang(false);
 		
 		$ids = Configs::getDataStore()->getStudyAccessIndexStore()->getStudyIds($key);

@@ -308,7 +308,7 @@ class CreateDataSet {
 			throw new DataSetException($e->getMessage());
 		}
 		
-		if(sizeof($accessKeys) && (!isset($dataSet->accessKey) || !in_array(strtolower($dataSet->accessKey), $accessKeys)))
+		if(sizeof($accessKeys) && (!isset($dataSet->accessKey) || !in_array(strtolower(trim($dataSet->accessKey)), $accessKeys)))
 			throw new DataSetException('Wrong accessKey: ' .($dataSet->accessKey ?? ''));
 		
 		
