@@ -7,6 +7,7 @@ use backend\exceptions\CriticalException;
 use backend\dataClasses\Message;
 use backend\dataClasses\MessageParticipantInfo;
 use backend\dataClasses\MessagesList;
+use backend\Main;
 use backend\Paths;
 use backend\fileSystem\PathsFS;
 use backend\fileSystem\loader\MessagesArchivedLoader;
@@ -170,6 +171,14 @@ class MessagesStoreFS implements MessagesStore {
 	 * @throws CriticalException
 	 */
 	public function receiveMessage(int $studyId, string $userId, string $from, string $content): int {
+		$this->updateOrArchivePendingMessages($studyId, $userId, function(Message $message): bool {
+			if($message->delivered < 1)
+				return true;
+			$message->read = Main::getMilliseconds();
+			return false;
+		});
+		
+		
 		$messages = MessagesUnreadLoader::importFile($studyId, $userId, true);
 		$msg = new Message($from, $content, false, true);
 		$messages[] = $msg;
