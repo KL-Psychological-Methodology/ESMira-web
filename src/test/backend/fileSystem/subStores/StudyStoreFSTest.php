@@ -295,7 +295,8 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$studyStore = Configs::getDataStore()->getStudyStore();
 		
 		$this->createStudy($config, [$questionnaireId => new ResponsesIndex(['key1', 'key2'])]);
-		$dataset = new CreateDataSet((object) [
+		$dataset = new CreateDataSet();
+		$dataset->prepare((object) [
 			'userId' => 'userId',
 			'appType' => 'appType',
 			'appVersion' => 'appVersion',

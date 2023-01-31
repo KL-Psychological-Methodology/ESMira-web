@@ -28,7 +28,7 @@ class StudyStatisticsLoader {
 				$content = fread(static::$handle, filesize($pathJson));
 			}
 			else {
-				static::$handle = fopen($pathJson, 'w');
+				static::$handle = fopen($pathJson, 'x');
 				if(!static::$handle)
 					throw new CriticalException("Could not open $pathJson");
 				flock(static::$handle, LOCK_EX);

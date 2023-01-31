@@ -101,12 +101,8 @@ class CreateDataSet {
 		return date('Y/m/d H:i:s', (int) round($time / 1000));
 	}
 	
-	/**
-	 * @throws CriticalException
-	 */
-	function __construct(stdClass $json) {
+	function __construct() {
 		$this->cache = new DataSetCache();
-		$this->prepare($json);
 	}
 	
 	private function lineOutputSuccess(int $datasetId) {
@@ -465,5 +461,9 @@ class CreateDataSet {
 		$this->userDataStore->writeAndClose();
 		
 		$this->updateServerStatistics();
+	}
+	
+	function close() {
+		$this->userDataStore->close();
 	}
 }

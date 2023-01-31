@@ -33,12 +33,15 @@ class UserDataStoreFS extends UserDataStore {
 			throw new CriticalException("Userdata $this->userId for study $studyId is already opened");
 		$pathUserData = PathsFS::fileUserData($studyId, $this->userId);
 		
-		if(file_exists($pathUserData) && ($fileSize = filesize($pathUserData)) != 0) {
+		if(file_exists($pathUserData)) {
 			$handle = fopen($pathUserData, 'r+');
 			
 			if($handle) {
+				flock($handle, LOCK_EX);
 				$this->fileHandles[$studyId] = $handle;
-				$userData = UserDataLoader::import(fread($handle, $fileSize));
+				$filesize = filesize($pathUserData);
+				
+				$userData = UserDataLoader::import(fread($handle, $filesize));
 			}
 			else {
 				Main::report("Could not open token for user \"$this->userId\" in study $studyId");
@@ -46,10 +49,12 @@ class UserDataStoreFS extends UserDataStore {
 			}
 		}
 		else {
-			$handle = fopen($pathUserData, 'w');
+			$handle = fopen($pathUserData, 'x');
 			
-			if($handle)
+			if($handle) {
+				flock($handle, LOCK_EX);
 				$this->fileHandles[$studyId] = $handle;
+			}
 			else
 				Main::report("Could not create token for user \"$this->userId\" in study $studyId");
 			
@@ -59,7 +64,6 @@ class UserDataStoreFS extends UserDataStore {
 		}
 		
 		
-		flock($handle, LOCK_EX);
 		$this->userDataArray[$studyId] = $userData;
 		return $userData;
 	}

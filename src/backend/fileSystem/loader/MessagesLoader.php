@@ -28,7 +28,7 @@ trait MessagesLoader {
 				$content = fread(static::$handle, filesize($path));
 			}
 			else {
-				static::$handle = fopen($path, 'w');
+				static::$handle = fopen($path, 'x');
 				if(!static::$handle)
 					throw new CriticalException("Could not open $path");
 				flock(static::$handle, LOCK_EX);

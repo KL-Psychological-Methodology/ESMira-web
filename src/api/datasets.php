@@ -20,8 +20,9 @@ if(!($json = json_decode(Main::getRawPostInput()))) {
 	return;
 }
 
+$dataSet = new CreateDataSet();
 try {
-	$dataSet = new CreateDataSet($json);
+	$dataSet->prepare($json);
 	$dataSet->exec();
 	echo JsonOutput::successObj([
 		'states' => $dataSet->output,
@@ -29,6 +30,7 @@ try {
 	]);
 }
 catch(CriticalException $e) {
+	$dataSet->close();
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

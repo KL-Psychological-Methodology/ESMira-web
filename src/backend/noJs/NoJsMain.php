@@ -114,7 +114,8 @@ class NoJsMain {
 			]],
 		];
 		
-		$dataSet = new CreateDataSet($json);
+		$dataSet = new CreateDataSet();
+		$dataSet->prepare($json);
 		$dataSet->exec();
 		if(empty($dataSet->output))
 			throw new CriticalException('No response data');

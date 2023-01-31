@@ -225,8 +225,8 @@ class CreateDataSetTest extends BaseTestSetup {
 	
 	private function createDataSetObj(array $datasetObj, array $json = []): CreateDataSet {
 		Configs::injectDataStore($this->dataStoreObserver);
-		
-		$dataset = new CreateDataSet((object) array_merge([
+		$dataset = new CreateDataSet();
+		$dataset->prepare((object) array_merge([
 			'userId' => $this->userId,
 			'appType' => $this->appType,
 			'appVersion' => $this->appVersion,
