@@ -83,13 +83,17 @@ class Permission {
 			self::setLoggedOut();
 			return false;
 		}
-		else if(self::getHashedToken($token) !== $loginTokenStore->getLoginToken($accountName, $tokenId)) { //Something fishy is going on
-			$ip = $_SERVER['REMOTE_ADDR'];
-			$userAgent = $_SERVER['HTTP_USER_AGENT'];
-			Main::report("Somebody tried to log in with a broken token. All token for that account have been deleted for security reasons.\nAccount: $accountName,\nIp: $ip,\ntokenId: $tokenId,\ntokenHash: $token,\nUserAgent: $userAgent");
-			
-			$loginTokenStore->clearAllLoginToken($accountName);
-			self::setLoggedOut();
+		else if(self::getHashedToken($token) !== $loginTokenStore->getLoginToken($accountName, $tokenId)) {
+			// This either happens when somebody stole the token cookie
+			// Or when a browser has cached the session and tries to restore it. This seems to happen mainly on mobile browsers and it seems they
+			// just save the request and resend it - which is has an outdated token because the token cookie has changed
+			// My first approach would be to log the user out for safety. But since this is happening way more than anticipated and becoming a real annoyance,
+			// we will just return false and only force the user to reload the page
+//			$ip = $_SERVER['REMOTE_ADDR'];
+//			$userAgent = $_SERVER['HTTP_USER_AGENT'];
+//			Main::report("Somebody tried to log in with a broken token. All token for that account have been deleted for security reasons.\nAccount: $accountName,\nIp: $ip,\ntokenId: $tokenId,\ntokenHash: $token,\nUserAgent: $userAgent");
+//			$loginTokenStore->clearAllLoginToken($accountName);
+//			self::setLoggedOut();
 			return false;
 		}
 		self::addToLoginHistoryEntry($accountName, $tokenId);
