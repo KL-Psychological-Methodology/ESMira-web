@@ -112,7 +112,7 @@ class MessagesStoreFS implements MessagesStore {
 		}
 		if(empty($newPendingMessages)) {
 			$path = PathsFS::fileMessagePending($studyId, $userId);
-			if(!unlink($path))
+			if(file_exists($path) && !unlink($path))
 				throw new CriticalException('Could not update messages');
 		}
 		else

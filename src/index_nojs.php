@@ -75,10 +75,10 @@ function drawPage(Page $page = null) {
 		drawPage($exception->getPage());
 	}
 	catch(CriticalException $exception) {
-		echo "<div id=\"errorEl\">$exception->getMessage()</div>";
+		echo "<div id=\"errorEl\">$exception</div>";
 	}
 	catch(PageFlowException $exception) {
-		echo "<div id=\"errorEl\">$exception->getMessage()</div>";
+		echo "<div id=\"errorEl\">$exception</div>";
 	}
 	catch(Throwable $exception) {
 		echo "<div id=\"errorEl\">Internal server error!</div>";
