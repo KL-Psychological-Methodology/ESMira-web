@@ -83,7 +83,8 @@ export function RichText(rootEl, {value, langObj, noLang}) {
 				renderHTML({node, HTMLAttributes }) {
 					return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
 				},
-			}), //normal paragraph except we use <div> instead of <p>.
+			}), //We always want HardBreaks. but we need to trick tiptap to achieve it.
+			//So we use normal paragraph except we use <div> instead of <p> and when exporting we replace <div></div> with <br>
 			// Thanks to: https://github.com/ueberdosis/tiptap/issues/291 and https://github.com/ueberdosis/tiptap/issues/426
 			Text, //required
 			Document, //required
@@ -107,9 +108,8 @@ export function RichText(rootEl, {value, langObj, noLang}) {
 		content: value(),
 		onUpdate({editor}) {
 			justChanged = true;
-			let s = editor.getHTML();
-			value(s === "<div></div>" ? "" : s);
-			// console.log(s);
+			let s = editor.getHTML().replaceAll("<div></div>", "<br>");
+			value(s === "<br>" ? "" : s);
 		},
 		onSelectionUpdate: onSelectionUpdate,
 		beforeDestroy() {
