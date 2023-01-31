@@ -13,13 +13,10 @@ class SaveServerConfigs extends HasAdminPermission {
 	/**
 	 * @throws PageFlowException
 	 */
-	private function extractServerName(array $obj): string {
+	private function extractServerName(array $obj, string $langCode): string {
 		$serverName = urldecode($obj['serverName']);
-		$len = strlen($serverName);
-		if($len < 3 || $len > 30)
-			throw new PageFlowException("The server name '$serverName' needs to consist of 3 to 30 characters");
-		else if(!Main::strictCheckInput($serverName))
-			throw new PageFlowException("The server name '$serverName' has forbidden characters");
+		if(!Main::strictCheckInput($serverName))
+			throw new PageFlowException("The server name '$serverName' in the language '$langCode' has forbidden characters");
 		else
 			return $serverName;
 	}
@@ -40,7 +37,7 @@ class SaveServerConfigs extends HasAdminPermission {
 			if(($k = array_search($code, $oldLangCodes)) !== false)
 				unset($oldLangCodes[$k]);
 			
-			$serverNames[$code] = $this->extractServerName($obj);
+			$serverNames[$code] = $this->extractServerName($obj, $code);
 			
 			$impressum = urldecode($obj['impressum']);
 			if(strlen($impressum))
