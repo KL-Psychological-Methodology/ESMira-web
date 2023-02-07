@@ -671,7 +671,7 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 	if(scrollable)
 		chart_div.classList.add("scrollable");
 	
-	let verticalPadding = chartType === STATISTICS_CHARTTYPES_PIE ? 20 : 0;
+	let verticalPadding = chartType === STATISTICS_CHARTTYPES_PIE ? 40 : 0;
 	let chart_js = new Chart(el.getContext('2d'), {
 		type: drawnChartType,
 		data: {
