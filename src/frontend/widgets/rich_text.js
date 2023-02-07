@@ -103,7 +103,9 @@ export function RichText(rootEl, {value, langObj, noLang}) {
 			OrderedList,
 			Image,
 			Link,
-			TextAlign
+			TextAlign.configure({
+				types: ['heading', 'paragraph'],
+			})
 		],
 		content: value(),
 		onUpdate({editor}) {
