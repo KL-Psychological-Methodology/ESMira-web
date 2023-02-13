@@ -25,7 +25,6 @@ export function ViewModel(page) {
 	
 	this.days = 3;
 	this.modelsList = ko.observableArray();
-	this.modelCount = ko.observable(0);
 	this.showData = ko.observable(true);
 	this.enableGroupStatistics = ko.observable(false);
 	
@@ -126,7 +125,6 @@ export function ViewModel(page) {
 				loader.get_valueList("model", true)
 					.then(function(valueList) {
 						self.modelsList(valueList);
-						self.modelCount(valueList.length);
 					});
 				
 				let oneDay_ms = ONE_DAY * 1000;

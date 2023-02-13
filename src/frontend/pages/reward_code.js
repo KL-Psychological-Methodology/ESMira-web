@@ -8,17 +8,43 @@ import {Lang} from "../js/main_classes/lang";
 export function ViewModel(page) {
 	let self = this;
 	this.html = html;
-	this.promiseBundle = [Studies.init(page)];
+	this.promiseBundle = [page.loader.loadRequest(
+		FILE_ADMIN+"?type=get_reward_code_data",
+		false,
+		"post",
+		"study_id="+Site.valueIndex.id
+	)];
 	page.title(Lang.get("validate_reward_code"));
 	
-	this.code = ko.observable("");
+	
 	this.timestamp = ko.observable();
 	this.showResponse = ko.observable(false);
 	this.faultyCode = ko.observable(false);
 	this.questionnaireEntryCount = ko.observableArray();
 	
+	this.rewardCodes = ko.observableArray([]);
+	this.participantsWithRewardCode = ko.observableArray([]);
+	this.participantsWithoutRewardCode = ko.observableArray([]);
+	this.code = ko.observable("");
+	
+	this.preInit = function(_index, {rewardCodes, participantsWithRewardCode, participantsWithoutRewardCode}) {
+		this.rewardCodes(rewardCodes);
+		this.participantsWithRewardCode(participantsWithRewardCode);
+		this.participantsWithoutRewardCode(participantsWithoutRewardCode);
+	}
+	
+	
+	this.selectRewardCode = function(value) {
+		self.code(value);
+		self.checkCode();
+	};
+	
+	
 	this.checkCode = function() {
 		self.showResponse(false);
+		
+		if(!self.code().length)
+			return;
 		let study_id = Site.valueIndex.id;
 		
 		page.loader.loadRequest(
@@ -55,7 +81,6 @@ export function ViewModel(page) {
 					continue;
 				questionnaireEntryCount.push({title: questionnaireIndex[internalId], count: questionnaireDataSetCount[internalId]});
 			}
-			console.log(questionnaireEntryCount);
 			self.questionnaireEntryCount(questionnaireEntryCount);
 			
 			self.showResponse(true);

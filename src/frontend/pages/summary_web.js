@@ -23,7 +23,6 @@ export function ViewModel(page) {
 	
 	this.months = 3;
 	this.refererList = ko.observableArray();
-	this.refererCount = ko.observable(0);
 	this.user_agentList = ko.observableArray();
 	this.user_agentCount = ko.observable(0);
 	this.showData = ko.observable(true);
@@ -118,7 +117,6 @@ export function ViewModel(page) {
 	
 				loader.get_valueList("referer").then(function(valueList) {
 					self.refererList(valueList);
-					self.refererCount(valueList.length);
 				});
 				loader.get_valueList("user_agent").then(function(valueList) {
 					self.user_agentList(valueList);

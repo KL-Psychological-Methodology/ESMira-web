@@ -186,3 +186,17 @@ input.search {
 	background-size: 15px;
 	padding-left:30px;
 }
+
+input.nothing {
+	padding-right:30px;
+}
+input.success {
+	background: url(../imgs/success.svg) no-repeat scroll right 9px;
+	background-size: 15px;
+	padding-right:30px;
+}
+input.failed {
+	background: url(../imgs/failed.svg) no-repeat scroll right 9px;
+	background-size: 15px;
+	padding-right:30px;
+}

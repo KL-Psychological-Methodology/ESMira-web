@@ -6,7 +6,7 @@
 </script>
 
 <dash-row>
-	<search-box class="dashEl" params="titleKey: 'participants_with_count', count: $root.participantCount, list: $root.participantList">
+	<search-box class="dashEl" params="titleKey: 'participants_with_count', list: $root.participantList">
 		<span class="verticalPadding searchTarget small_text" data-bind="click: $root.selectUser,
 				css: {'selected': name === $root.currentParticipant()},
 				text: Lang.get('text_with_questionnaireCount', name, count)

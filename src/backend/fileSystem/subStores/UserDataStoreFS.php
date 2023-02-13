@@ -11,6 +11,7 @@ use backend\exceptions\CriticalException;
 use backend\dataClasses\UserData;
 use backend\fileSystem\PathsFS;
 use backend\fileSystem\loader\UserDataLoader;
+use backend\Paths;
 use backend\subStores\UserDataStore;
 
 class UserDataStoreFS extends UserDataStore {

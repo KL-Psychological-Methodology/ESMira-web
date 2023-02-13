@@ -32,7 +32,6 @@ export function ViewModel(page) {
 	this.group = ko.observableArray();
 	
 	this.participantList = ko.observableArray();
-	this.participantCount = ko.observable(0);
 	this.currentParticipant = ko.observable("");
 	this.isLoading = ko.observable(false);
 	this.showData = ko.computed(function() {
@@ -56,7 +55,6 @@ export function ViewModel(page) {
 			eventsLoader.get_valueList("userId", true)
 				.then(function(valueList) {
 					self.participantList(valueList);
-					self.participantCount(valueList.length);
 				});
 		});
 		

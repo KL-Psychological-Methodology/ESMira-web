@@ -1,37 +1,47 @@
-<div class="center spacing_bottom">
-	<label>
-		<small data-bind="text: Lang.get('reward_code')"></small>
-		<input type="text" data-bind="value: $root.code, event: {change: $root.checkCode}"/>
-		<input class="right" type="button" data-bind="click: $root.checkCode, value: Lang.get('check')"/>
-	</label>
-</div>
-
-
-
-<div data-bind="if: $root.showResponse" class="list_parent">
-	<div data-bind="if: $root.faultyCode">
-		<svg xmlns="http://www.w3.org/2000/svg" height="96" viewBox="0 0 24 24" width="96"><path d="M0 0h24v24H0z" fill="none"/><path fill="red" d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-		<div data-bind="text: Lang.get('code_does_not_exist')"></div>
-	</div>
-	<div data-bind="ifnot: $root.faultyCode" class="list_child">
-		<svg class="left" xmlns="http://www.w3.org/2000/svg" height="96" viewBox="0 0 24 24" width="96"><path d="M0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none"/><path fill="green" d="M16.59 7.58L10 14.17l-3.59-3.58L5 12l5 5 8-8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>
-		
-		<div class="right">
-			<div>
-				<span data-bind="text: Lang.get('colon_creation_date')"></span>
-				<span data-bind="text: (new Date($root.timestamp())).toLocaleString()"></span>
-			</div>
-			
-			<h3 data-bind="text: Lang.get('colon_entries_at_creation_time')"></h3>
-			<div class="spacing_left" data-bind="foreach: $root.questionnaireEntryCount">
-				<div>
-					<span data-bind="text: title"></span>: <span data-bind="text: count"></span>
-				</div>
-			</div>
+<title-row params="title: Lang.get('reward_codes')"></title-row>
+<dash-row>
+	<search-box class="dashEl" params="titleKey: 'generated_reward_codes', list: $root.rewardCodes">
+		<span class="verticalPadding searchTarget small_text" data-bind="click: $root.selectRewardCode,
+				css: {'selected': $data === $root.code()},
+				text: $data
+			"></span>
+	</search-box>
+	
+	<div class="multipleChildren">
+		<div class="dashEl horizontalPadding verticalPadding">
+			<label>
+				<small data-bind="text: Lang.get('reward_code')"></small>
+				<input type="text" data-bind="
+						value: $root.code,
+						css: {nothing: !$root.showResponse(), success: $root.showResponse() && !$root.faultyCode(), failed: $root.showResponse() && $root.faultyCode()},
+						event: {change: $root.checkCode}
+					"/>
+				
+				<input class="" type="button" data-bind="click: $root.checkCode, value: Lang.get('check')"/>
+			</label>
+		</div>
+		<div data-bind="css: {visible: $root.showResponse() && !$root.faultyCode()}" class="dashEl vanishing mini_spacing_top">
+			<h2 class="spacing_left" data-bind="text: Lang.get('colon_creation_date')"></h2>
+			<div class="spacing_left horizontalPadding spacing_bottom" data-bind="text: (new Date($root.timestamp())).toLocaleString()"></div>
+		</div>
+		<div data-bind="css: {visible: $root.showResponse() && !$root.faultyCode()}" class="dashEl vanishing mini_spacing_top">
+			<h2 class="spacing_left" data-bind="text: Lang.get('colon_entries_at_creation_time')"></h2>
+			<table class="spacing_left spacing_bottom" data-bind="foreach: $root.questionnaireEntryCount">
+				<tr>
+					<td class="horizontalPadding" data-bind="text: title + ':'"></td>
+					<td class="horizontalPadding" data-bind="text: count"></td>
+				</tr>
+			</table>
 		</div>
 	</div>
-</div>
+</dash-row>
 
-<div data-bind="if: $root.codeData">
-
-</div>
+<title-row params="title: Lang.get('participants')"></title-row>
+<dash-row>
+	<search-box class="dashEl" params="titleKey: 'without_reward_code', list: $root.participantsWithoutRewardCode">
+		<span class="verticalPadding searchTarget small_text" data-bind="text: $data"></span>
+	</search-box>
+	<search-box class="dashEl" params="titleKey: 'with_reward_code', list: $root.participantsWithRewardCode">
+		<span class="verticalPadding searchTarget small_text" data-bind="text: $data"></span>
+	</search-box>
+</dash-row>

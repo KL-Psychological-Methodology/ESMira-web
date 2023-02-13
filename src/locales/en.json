@@ -539,6 +539,8 @@
     "confirm_prerelease_update": "The unstable version of ESMira has not been fully tested and might contain breaking bugs. Are you sure you want to continue?",
     "reward_system": "Reward system",
     "reward_code": "Reward code",
+    "reward_codes": "Reward codes",
+    "generated_reward_codes": "Generated reward codes",
     "enable_reward_system": "Enable reward system",
     "desc_reward_system": "If the reward system is enabled, the app gives participants the option to generate a randomized reward code which they are then asked to send to the researcher (to not break anonymity it is important that this code is sent using a channel outside of ESMira because participants usually also need to provide banking details or a home address).",
     "colon_visible_after": "Visible after:",
@@ -552,5 +554,7 @@
     "state_installing": "Updating…",
     "state_finish_installing": "Finishing update…",
     "reward_code_instructions": "Reward code instructions",
-    "default_language": "Default langauge"
+    "default_language": "Default langauge",
+    "without_reward_code": "Without reward code",
+    "with_reward_code": "With reward code"
 }

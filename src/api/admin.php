@@ -42,6 +42,7 @@ $classIndex = [
 	
 	//read:
 	'validate_reward_code' => 'backend\admin\features\readPermission\ValidateRewardCode',
+	'get_reward_code_data' => 'backend\admin\features\readPermission\GetRewardCodeData',
 	'list_data' => 'backend\admin\features\readPermission\ListData',
 	'get_data' => 'backend\admin\features\readPermission\GetData',
 	'create_mediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',

@@ -18,4 +18,9 @@ interface RewardCodeStore {
 	 * @throws CriticalException
 	 */
 	public function saveRewardCodeData(int $studyId, RewardCodeData $rewardCodeData);
+	
+	/**
+	 * @throws CriticalException
+	 */
+	function listRewardCodes(int $studyId): array;
 }
