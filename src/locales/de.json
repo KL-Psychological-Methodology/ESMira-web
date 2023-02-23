@@ -540,7 +540,7 @@
     "reward_system": "Belohnungssystem",
     "reward_code": "Belohnungscode",
     "reward_codes": "Belohnungscodes",
-    "generated_reward_codes": "Generierte Belohnungscodes",
+    "generated_reward_codes": "Generierte Belohnungscodes (%d)",
     "enable_reward_system": "Aktiviere Belohnungssystem",
     "desc_reward_system": "Wenn das Belohnungssystem aktiviert ist, haben Teilnehmer in der App die Möglichkeit sich einen zufälligen Belohnungscode zu generieren, welcher an die Studienleitung gesendet werden kann (um die Anonymität nicht brechen ist es wichtig, dass dafür ein Kommunikationsweg außerhalb von ESMira verwendet wird, weil es in der Regel notwendig ist, dass Teilnehmer ihre Bankdaten oder Adresse bekannt geben).",
     "colon_visible_after": "Sichtbar nach:",
@@ -555,6 +555,7 @@
     "state_finish_installing": "Installation abschließen…",
     "reward_code_instructions": "Belohnungscode-Instruktionen",
     "default_language": "Standard-Sprache",
-    "without_reward_code": "Ohne Belohnungscode",
-    "with_reward_code": "Mit Belohnungscode"
+    "without_reward_code": "Ohne Belohnungscode (%d)",
+    "with_reward_code": "Mit Belohnungscode (%d)",
+    "colon_device_information": "Geräte-Informationen"
 }
