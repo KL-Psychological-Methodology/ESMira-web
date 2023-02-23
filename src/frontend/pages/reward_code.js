@@ -28,9 +28,9 @@ export function ViewModel(page) {
 	this.code = ko.observable("");
 	
 	this.preInit = function(_index, {rewardCodes, participantsWithRewardCode, participantsWithoutRewardCode}) {
-		this.rewardCodes(rewardCodes);
-		this.participantsWithRewardCode(participantsWithRewardCode);
-		this.participantsWithoutRewardCode(participantsWithoutRewardCode);
+		this.rewardCodes(rewardCodes.sort());
+		this.participantsWithRewardCode(participantsWithRewardCode.sort());
+		this.participantsWithoutRewardCode(participantsWithoutRewardCode.sort());
 	}
 	
 	
