@@ -259,7 +259,7 @@ class InputToString {
 			<div class=\"right small_text\">$rightSideLabel</div>
 		</div>
 		<div class=\"center\">
-			<input name=\"$name\" value=\"" .($value != "" ? $value : 50) ."\" type=\"range\" min=\"0\" max=\"100\" $requiredMarker/>
+			<input name=\"$name\" value=\"" .($value != "" ? $value : 50) ."\" type=\"range\" min=\"1\" max=\"100\" $requiredMarker/>
 		</div>";
 	}
 	

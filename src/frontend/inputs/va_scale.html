@@ -4,14 +4,14 @@
 	<div data-bind="html: $component.input.rightSideLabel" class="right small_text"></div>
 </div>
 <div class="center">
-	<input type="range" min="0" max="100" value="50" data-bind="
+	<input type="range" min="1" max="100" value="50" data-bind="
 		attr: {class: $component.isClicked() ? '' : 'not-clicked'},
 		event: {
 			mousedown: function(data, e) {
 					$component.isClicked(true);
 					//ios-track-clickable-workaround:
 					//let el = e.target;
-					//el.value = Math.min(el.max, Math.max(0, Math.round((el.max / el.offsetWidth) * (e.offsetX))));
+					//el.value = Math.min(el.max, Math.max(1, Math.round((el.max / el.offsetWidth) * (e.offsetX))));
 					return true;
 				},
 			touchstart: function(data, e) {
@@ -19,7 +19,7 @@
 					
 					//ios-track-clickable-workaround:
 					//let el = e.target;
-					//el.value = Math.min(el.max, Math.max(0, Math.round((el.max / el.offsetWidth) * (e.touches[0].clientX - el.getBoundingClientRect().x))));
+					//el.value = Math.min(el.max, Math.max(1, Math.round((el.max / el.offsetWidth) * (e.touches[0].clientX - el.getBoundingClientRect().x))));
 					return true;
 				}},
 		value: $component.value"/>
