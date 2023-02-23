@@ -24,8 +24,6 @@ module.exports = merge(require('./config.base.js'), {
 					android: false,
 					appleIcon: false,
 					appleStartup: false,
-					coast: false,
-					favicons: true,
 					firefox: false,
 					windows: false,
 					yandex: false,
