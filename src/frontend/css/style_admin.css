@@ -486,17 +486,6 @@ lang-chooser .codes .element.selected {
 search-box
 **********/
 
-search-box .header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	flex-wrap: wrap;
-}
-search-box .header h2 {
-	flex-grow: 1;
-	text-align: center;
-}
-
 search-box .selected{
 	font-weight: bold;
 	text-decoration: underline;
