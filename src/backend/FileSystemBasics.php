@@ -13,8 +13,6 @@ class FileSystemBasics {
 	public static function writeFile(string $file, string $s) {
 		if(!file_put_contents($file, $s, LOCK_EX))
 			throw new CriticalException("Writing the file '$file' failed");
-		else
-			chmod($file, 0666);
 	}
 	
 	/**
@@ -23,7 +21,7 @@ class FileSystemBasics {
 	public static function createFolder(string $folder) {
 		if(file_exists($folder))
 			return;
-		if(!mkdir($folder, 0775) || !chmod($folder, 0775))
+		if(!mkdir($folder, 0744))
 			throw new CriticalException("Creating the folder '$folder' failed");
 	}
 	
