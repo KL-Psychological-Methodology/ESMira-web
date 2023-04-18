@@ -200,7 +200,7 @@ class StudyStoreFS implements StudyStore {
 	public function getStudyConfigAsJson(int $studyId): string {
 		$path = PathsFS::fileStudyConfig($studyId);
 		if(!file_exists($path))
-			throw new CriticalException("Study $studyId does not exist");
+			throw new CriticalException("Study id $studyId does not exist");
 		return file_get_contents($path);
 	}
 	public function getStudyConfig(int $studyId): stdClass {
@@ -360,14 +360,14 @@ class StudyStoreFS implements StudyStore {
 	
 	public function delete(int $studyId) {
 		//remove study data
-		$folder_study = PathsFS::folderStudy($studyId);
-		if(file_exists($folder_study)) {
-			FileSystemBasics::emptyFolder($folder_study);
-			if(!rmdir($folder_study))
-				throw new CriticalException("Could not remove $folder_study");
+		$folderStudy = PathsFS::folderStudy($studyId);
+		if(file_exists($folderStudy)) {
+			FileSystemBasics::emptyFolder($folderStudy);
+			if(!rmdir($folderStudy))
+				throw new CriticalException("Could not remove $folderStudy");
 		}
 		else
-			throw new CriticalException("$folder_study does not exist!");
+			throw new CriticalException("$folderStudy does not exist!");
 		
 		$accessKeyStore = Configs::getDataStore()->getStudyAccessIndexStore();
 		$accessKeyStore->removeStudy($studyId);
