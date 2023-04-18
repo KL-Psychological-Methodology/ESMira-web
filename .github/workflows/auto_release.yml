@@ -43,5 +43,7 @@ jobs:
         with:
           name: Release version ${{ steps.autotag.outputs.version }}
           tag_name: v${{ steps.autotag.outputs.version}}
+          generate_release_notes: true
+          append_body: true
           body_path: CHANGELOG.md
           files: ESMira-web.zip
