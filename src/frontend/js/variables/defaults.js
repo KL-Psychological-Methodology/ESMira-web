@@ -85,7 +85,9 @@ Defaults.inputs = {
 	numberHasDecimal: false,
 	asDropDown: true,
 	forceInt: false,
-	packageId: ""
+	packageId: "",
+	timeoutSec: 0,
+	showValue: true
 };
 Defaults.inputs.$.children = {
 	subInputs: JSON.parse(JSON.stringify(Defaults.inputs))

@@ -42,37 +42,26 @@ export function ViewModel(pageModel) {
 		listTools.add_prompted(input.listChoices);
 	}
 	
-	this.optionsInput = [
-		{key: "text", value: Lang.get("input_text")},
-		{key: "video", value: Lang.get("input_video")},
-		{key: "image", value: Lang.get("input_image")},
-		{key: "photo", value: Lang.get("input_photo")},
-		{key: "text_input", value: Lang.get("input_text_input")},
-		{key: "number", value: Lang.get("input_number")},
-		{key: "binary", value: Lang.get("input_binary")},
-		{key: "date", value: Lang.get("input_date")},
-		{key: "time", value: Lang.get("input_time")},
-		{key: "likert", value: Lang.get("input_likert")},
-		{key: "va_scale", value: Lang.get("input_va_scale")},
-		{key: "list_single", value: Lang.get("input_list_single")},
-		{key: "list_multiple", value: Lang.get("input_list_multiple")},
-		{key: "dynamic_input", value: Lang.get("input_dynamic_input")},
-		{key: "app_usage", value: Lang.get("input_app_usage")}
-	];
 	this.optionsSubInput = [
 		{key: "text", value: Lang.get("input_text")},
 		{key: "image", value: Lang.get("input_image")},
 		{key: "video", value: Lang.get("input_video")},
+		{key: "record_audio", value: Lang.get("input_record_audio")},
 		{key: "text_input", value: Lang.get("input_text_input")},
 		{key: "number", value: Lang.get("input_number")},
 		{key: "binary", value: Lang.get("input_binary")},
+		{key: "compass", value: Lang.get("input_compass")},
+		{key: "countdown", value: Lang.get("input_countdown")},
 		{key: "date", value: Lang.get("input_date")},
+		{key: "share", value: Lang.get("input_share")},
 		{key: "time", value: Lang.get("input_time")},
 		{key: "likert", value: Lang.get("input_likert")},
 		{key: "va_scale", value: Lang.get("input_va_scale")},
 		{key: "list_multiple", value: Lang.get("input_list_multiple")},
 		{key: "list_single", value: Lang.get("input_list_single")}
 	];
+	this.optionsInput = this.optionsSubInput.concat({key: "dynamic_input", value: Lang.get("input_dynamic_input")});
+	
 	this.get_uniqueName = get_uniqueName;
 	
 	this.ko__remove_from_list = listTools.ko__remove_from_list;
