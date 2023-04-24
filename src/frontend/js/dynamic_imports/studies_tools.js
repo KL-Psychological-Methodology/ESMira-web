@@ -85,6 +85,7 @@ export const Studies_tools = {
 				
 				new_study.id = id;
 				new_study.serverVersion = Site.serverVersion;
+				new_study.packageVersion = PACKAGE_VERSION;
 				new_study.version = 0;
 				new_study.subVersion = 0;
 				new_study.published = false;
