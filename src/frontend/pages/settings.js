@@ -60,25 +60,25 @@ export function ViewModel(page) {
 	this.markdownRenderer = new MarkdownIt();
 	
 	let versionIsBelowThen =  function(newVersionString) {
-		let integersOld = PACKAGE_VERSION.match(/(\d+)\.(\d+)\.(\d+)\D*(\d*)/);
-		let integersNew = newVersionString.match(/(\d+)\.(\d+)\.(\d+)\D*(\d*)/);
+		let [matchOld, majorOld, minorOld, patchOld, devNameOld, devBuiltOld] = PACKAGE_VERSION.match(/(\d+)\.(\d+)\.(\d+)(\D*)(\d*)/);
+		let [matchNew, majorNew, minorNew, patchNew, devNameNew, devBuiltNew] = newVersionString.match(/(\d+)\.(\d+)\.(\d+)(\D*)(\d*)/);
 		
-		return integersOld && integersNew &&
+		return matchOld && matchNew &&
 			(
-				integersNew[1] > integersOld[1] // e.g. 2.0.0 > 1.0.0
+				majorNew > majorOld // e.g. 2.0.0 > 1.0.0
 				|| (
-					integersNew[1] === integersOld[1]
+					majorNew === majorOld
 					&& (
-						integersNew[2] > integersOld[2] // e.g. 2.1.0 > 2.0.0
+						minorNew > minorOld // e.g. 2.1.0 > 2.0.0
 						|| (
-							integersNew[2] === integersOld[2]
+							minorNew === minorOld
 							&& (
-								integersNew[3] > integersOld[3] // e.g. 2.1.1 > 2.1.0
+								patchNew > patchOld // e.g. 2.1.1 > 2.1.0
 								|| (
-									integersNew[3] === integersOld[3]
+									patchNew === patchOld
 									&& (
-										(integersOld[4] !== '' && integersNew[4] === '') // e.g. 2.1.1 > 2.1.1-alpha.1
-										|| (integersOld[4] !== '' && integersNew[4] !== '' && integersNew[4] > integersOld[4]) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
+										(devNameOld !== '' && devNameNew === '') // e.g. 2.1.1 > 2.1.1-alpha || 2.1.1 > 2.1.1-alpha.1
+										|| (devBuiltOld !== '' && devBuiltNew !== '' && devBuiltNew > devBuiltOld) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
 									)
 								)
 							)
