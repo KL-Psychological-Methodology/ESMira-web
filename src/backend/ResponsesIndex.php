@@ -28,6 +28,10 @@ class ResponsesIndex {
 				$this->addName($name);
 				$this->types[$name] = 'image';
 				break;
+			case 'record_audio':
+				$this->addName($name);
+				$this->types[$name] = 'audio';
+				break;
 			default:
 				$this->addName($name);
 				break;

@@ -15,8 +15,32 @@ class Paths {
 	public static function folderImages(int $studyId): string {
 		return self::folderMedia($studyId) . 'images/';
 	}
+	public static function folderAudio(int $studyId): string {
+		return self::folderMedia($studyId) . 'audio/';
+	}
 	public static function folderMedia(int $studyId): string {
 		return Configs::getDataStore()->getServerStore()->getMediaFolderPath($studyId);
+	}
+	
+	
+	public static function publicFileMedia(string $userId, int $entryId, string $key): string {
+		return "$userId/$key-$entryId";
+	}
+	public static function fileMediaZip(int $studyId): string {
+		return self::folderMedia($studyId) . Paths::FILENAME_MEDIA_ZIP;
+	}
+	
+	public static function publicFileAudioFromFileName(string $fileName): string {
+		return 'audio/' . $fileName . '.3gpp';
+	}
+	public static function publicFileAudioFromData(string $userId, int $entryId, string $key): string {
+		return self::publicFileAudioFromFileName(self::publicFileMedia($userId, $entryId, $key));
+	}
+	public static function publicFileAudioFromMediaFilename(string $fileName): string {
+		return self::publicFileAudioFromFileName(self::getFromUrlFriendly($fileName));
+	}
+	public static function fileAudioFromData(int $studyId, string $userId, int $entryId, string $key): string {
+		return self::folderAudio($studyId) . Paths::makeUrlFriendly(Paths::publicFileMedia($userId, $entryId, $key));
 	}
 	
 	public static function publicFileImageFromFileName(string $fileName): string {
@@ -28,15 +52,8 @@ class Paths {
 	public static function publicFileImageFromMediaFilename(string $fileName): string {
 		return self::publicFileImageFromFileName(self::getFromUrlFriendly($fileName));
 	}
-	public static function publicFileMedia(string $userId, int $entryId, string $key): string {
-		return "$userId/$key-$entryId";
-	}
-	
 	public static function fileImageFromData(int $studyId, string $userId, int $entryId, string $key): string {
 		return self::folderImages($studyId) . Paths::makeUrlFriendly(Paths::publicFileMedia($userId, $entryId, $key));
-	}
-	public static function fileMediaZip(int $studyId): string {
-		return self::folderMedia($studyId) . Paths::FILENAME_MEDIA_ZIP;
 	}
 	
 	

@@ -135,19 +135,32 @@ class ResponsesStoreFS implements ResponsesStore {
 		closedir($handle);
 		return $lastActivities;
 	}
+	
+	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename) {
+		$handle = opendir($path);
+		while($file = readdir($handle)) {
+			if($file[0] != '.') {
+				$zip->addFile("$path/$file", $getMediaFilename($file));
+			}
+		}
+		closedir($handle);
+	}
 	public function createMediaZip(int $studyId) {
 		$pathZip = Paths::fileMediaZip($studyId);
 		$zip = new ZipArchive();
 		$zip->open($pathZip, ZIPARCHIVE::CREATE);
 		
-		$pathImages = Paths::folderImages($studyId);
-		$handle = opendir($pathImages);
-		while($file = readdir($handle)) {
-			if($file[0] != '.') {
-				$zip->addFile("$pathImages/$file", Paths::publicFileImageFromMediaFilename($file));
-			}
-		}
-		closedir($handle);
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderImages($studyId),
+			function($fileName) { return Paths::publicFileImageFromMediaFilename($fileName); }
+		);
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderAudio($studyId),
+			function($fileName) { return Paths::publicFileAudioFromMediaFilename($fileName); }
+		);
+		
 		$zip->close();
 	}
 	public function outputResponsesFile(int $studyId, string $identifier) {

@@ -73,6 +73,12 @@ switch($dataType) {
 		}
 		
 		break;
+    case 'Audio':
+        if(!preg_match('/video/i', mime_content_type($fileData['tmp_name']))) {
+            echo JsonOutput::error('Wrong format');
+            return;
+        }
+        break;
 	default:
 		echo JsonOutput::error('Unknown type');
 		return;
