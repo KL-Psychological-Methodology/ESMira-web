@@ -87,6 +87,7 @@ Defaults.inputs = {
 	forceInt: false,
 	packageId: "",
 	timeoutSec: 0,
+	playSound: 0,
 	showValue: true
 };
 Defaults.inputs.$.children = {

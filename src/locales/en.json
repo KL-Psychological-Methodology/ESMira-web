@@ -329,6 +329,7 @@
     "packageId": "package id",
     "packageId_desc": "for example \"at.jodlidev.esmira\"",
     "password": "Password",
+    "play_sound_when_finished": "Play sound when finished",
     "please_select": "Please select",
     "plugins": "Plugins",
     "prefilledValue": "Pre-filled value",

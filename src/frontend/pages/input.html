@@ -54,6 +54,10 @@
 			<input type="number" data-bind="numericValue: timeoutSec"/>
 			<span data-bind="text: Lang.get('seconds')"></span>
 		</label>
+		<label class="vertical no_desc" data-bind="visible: responseType() === 'countdown'">
+			<input type="checkbox" data-bind="checked: playSound"/>
+			<small data-bind="text: Lang.get('play_sound_when_finished')"></small>
+		</label>
 		<label class="vertical no_desc" data-bind="visible: responseType() === 'compass'">
 			<input type="checkbox" data-bind="checked: showValue"/>
 			<span data-bind="text: Lang.get('show_value')"></span>
