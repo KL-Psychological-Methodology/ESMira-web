@@ -120,8 +120,10 @@ class StudyStoreFS implements StudyStore {
 			unset($index[$value]);
 		}
 		
-		if(empty($index)) //no new headers
+		if(empty($index)) {//no new headers
+			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex); //recreate index in case types have changed
 			return;
+		}
 		
 		$pathResponsesBackup = PathsFS::fileResponsesBackup($studyId, $identifier);
 		
@@ -267,6 +269,7 @@ class StudyStoreFS implements StudyStore {
 		FileSystemBasics::createFolder(PathsFS::folderMedia($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderPendingUploads($studyId));
 		FileSystemBasics::createFolder(Paths::folderImages($studyId));
+		FileSystemBasics::createFolder(Paths::folderAudio($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderResponses($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderResponsesIndex($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderMessagesArchive($studyId));
@@ -327,6 +330,7 @@ class StudyStoreFS implements StudyStore {
 		FileSystemBasics::emptyFolder(PathsFS::folderResponses($studyId));
 		FileSystemBasics::emptyFolder(PathsFS::folderStatistics($studyId));
 		FileSystemBasics::emptyFolder(Paths::folderImages($studyId));
+		FileSystemBasics::emptyFolder(Paths::folderAudio($studyId));
 		FileSystemBasics::emptyFolder(PathsFS::folderPendingUploads($studyId));
 		
 		$mediaZip = Paths::fileMediaZip($studyId);
