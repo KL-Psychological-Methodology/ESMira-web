@@ -46,6 +46,7 @@ export function ViewModel(pageModel) {
 		{key: "text", value: Lang.get("input_text")},
 		{key: "image", value: Lang.get("input_image")},
 		{key: "video", value: Lang.get("input_video")},
+		{key: "photo", value: Lang.get("input_photo")},
 		{key: "record_audio", value: Lang.get("input_record_audio")},
 		{key: "text_input", value: Lang.get("input_text_input")},
 		{key: "number", value: Lang.get("input_number")},
