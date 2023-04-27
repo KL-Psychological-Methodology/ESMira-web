@@ -24,11 +24,11 @@ class ResponsesIndexTest extends BaseTestSetup {
 		], $index->keys);
 		$this->assertEquals(['key1' => 'type'], $index->types);
 		
-		$index->addInput('text', 'textName');
-		$index->addInput('dynamic_input', 'dynamicName');
-		$index->addInput('app_usage', 'appName');
-		$index->addInput('photo', 'photoName');
-		$index->addInput('something else', 'elseName');
+		$index->addInput((object) ['name' => 'textName', 'responseType' => 'text']);
+		$index->addInput((object) ['name' => 'dynamicName', 'responseType' => 'dynamic_input']);
+		$index->addInput((object) ['name' => 'appName', 'responseType' => 'app_usage']);
+		$index->addInput((object) ['name' => 'photoName', 'responseType' => 'photo']);
+		$index->addInput((object) ['name' => 'elseName', 'responseType' => 'something else']);
 		
 		$this->assertEquals([
 			'key1',

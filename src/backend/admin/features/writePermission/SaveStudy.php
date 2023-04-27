@@ -334,12 +334,11 @@ class SaveStudy extends HasWritePermission {
 			foreach($page->inputs ?? [] as $input) {
 				if(!isset($input->name))
 					continue;
-				$responseType = $input->responseType ?? 'text_input';
 				
-				if($responseType != 'text') {
+				if($input->responseType ?? 'text_input' != 'text') {
 					$this->uniqueNameOrThrow($input->name, $questionnaire->title);
 					$this->uniqueInputNames[$input->name] = $questionnaire->title;
-					$questionnaireIndex->addInput($responseType, $input->name);
+					$questionnaireIndex->addInput($input);
 				}
 			}
 		}

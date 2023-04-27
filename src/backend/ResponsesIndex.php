@@ -12,8 +12,9 @@ class ResponsesIndex {
 		$this->types = $types;
 	}
 	
-	public function addInput($responseType, $name) {
-		switch($responseType) {
+	public function addInput(\stdClass $input) {
+		$name = $input->name;
+		switch($input->responseType ?? 'text_input') {
 			case 'text':
 				return;
 			case 'dynamic_input':
@@ -23,6 +24,12 @@ class ResponsesIndex {
 			case 'app_usage':
 				$this->addName($name);
 				$this->addName("$name~usageCount");
+				break;
+			case 'list_multiple':
+				$this->addName($name);
+				foreach($input->listChoices ?? [] as $entry) {
+					$this->addName("$name~$entry");
+				}
 				break;
 			case 'photo':
 				$this->addName($name);
