@@ -125,7 +125,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 	
 	function test_getStudyConfig_for_not_existing_study() {
 		$studyStore = Configs::getDataStore()->getStudyStore();
-		$this->expectErrorMessage("Study $this->studyId does not exist");
+		$this->expectErrorMessage("Study id $this->studyId does not exist");
 		$this->assertEquals(new stdClass(), $studyStore->getStudyConfig($this->studyId));
 	}
 	

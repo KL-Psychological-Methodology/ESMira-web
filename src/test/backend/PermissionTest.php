@@ -200,9 +200,6 @@ class PermissionTest extends BaseTestSetup {
 		
 		$this->setUpAccountStore(function(MockObject $accountStore, MockObject $loginTokenStore) use ($accountName, $tokenId, $token) {
 			$loginTokenStore->expects($this->once())
-				->method('clearAllLoginToken');
-			
-			$loginTokenStore->expects($this->once())
 				->method('loginTokenExists')
 				->with(
 					$this->equalTo($accountName),

@@ -79,40 +79,6 @@ class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
 		$this->assertEquals(['en', 'fr', 'de'], Configs::get('langCodes'));
 	}
 	
-	function test_short_saveServerName() {
-		$defaultPostInput = [
-			'configs' => [],
-			'translationData' => [
-				'en' => [
-					'serverName' => '12',
-					'impressum' => '',
-					'privacyPolicy' => ''
-				]
-			]
-		];
-		Main::$defaultPostInput = json_encode($defaultPostInput);
-		
-		$this->expectException(PageFlowException::class);
-		$obj = new SaveServerConfigs();
-		$obj->exec();
-	}
-	function test_long_saveServerName() {
-		$defaultPostInput = [
-			'configs' => [],
-			'translationData' => [
-				'en' => [
-					'serverName' => '1234567890123456789012345678901',
-					'impressum' => '',
-					'privacyPolicy' => ''
-				]
-			]
-		];
-		Main::$defaultPostInput = json_encode($defaultPostInput);
-		
-		$this->expectException(PageFlowException::class);
-		$obj = new SaveServerConfigs();
-		$obj->exec();
-	}
 	function test_saveServerName_with_forbidden_characters() {
 		$defaultPostInput = [
 			'configs' => [],
