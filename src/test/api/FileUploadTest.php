@@ -110,7 +110,7 @@ class FileUploadTest extends BaseApiTestSetup {
 		$this->doPreparations();
 		$_FILES['upload']['size'] = Configs::get('max_filesize_for_uploads') + 1;
 		require DIR_BASE .'/api/file_uploads.php';
-		$this->expectOutputString(JsonOutput::error('File is too big'));
+		$this->expectOutputString(JsonOutput::error('File is too big for settings'));
 	}
 	
 	function test_without_fileInfo() {
@@ -132,7 +132,7 @@ class FileUploadTest extends BaseApiTestSetup {
 		$this->setPost(); //php removes post data when file is too big
 		
 		require DIR_BASE .'/api/file_uploads.php';
-		$this->expectOutputString(JsonOutput::error('File is too big'));
+		$this->expectOutputString(JsonOutput::error('File is too big for server'));
 	}
 	
 	function test_with_missing_data() {
