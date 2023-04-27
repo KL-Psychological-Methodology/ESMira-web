@@ -300,7 +300,8 @@ export const Studies_tools = {
 	},
 	
 	is_media: function(input) {
-		return input.responseType() === 'photo';
+		let responseType = input.responseType();
+		return responseType === 'photo' || responseType === 'record_audio';
 	},
 	for_each_input: function(study, fu) {
 		let questionnaires = study.questionnaires();
@@ -332,6 +333,9 @@ export const Studies_tools = {
 			switch(input.responseType()) {
 				case 'photo':
 					columns.push({key: input.name(), type: 'image'});
+					break;
+				case 'record_audio':
+					columns.push({key: input.name(), type: 'audio'});
 					break;
 			}
 		});

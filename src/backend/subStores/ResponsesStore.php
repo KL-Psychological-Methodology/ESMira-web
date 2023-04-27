@@ -25,6 +25,10 @@ interface ResponsesStore {
 	 * @throws CriticalException
 	 */
 	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key);
+	/**
+	 * @throws CriticalException
+	 */
+	public function outputAudioFromResponses(int $studyId, string $userId, int $entryId, string $key);
 	public function getResponseFilesList(int $studyId): array;
 	
 }

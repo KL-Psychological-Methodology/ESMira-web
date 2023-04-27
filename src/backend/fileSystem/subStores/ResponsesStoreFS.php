@@ -171,14 +171,23 @@ class ResponsesStoreFS implements ResponsesStore {
 		Main::setHeader('Content-Type: text/csv');
 		readfile($path);
 	}
-	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
-		$path = Paths::fileImageFromData($studyId, $userId, $entryId, $key);
+	
+	/**
+	 * @throws CriticalException
+	 */
+	private function outputMediaFromResponses(string $path, string $contentType) {
 		if(!file_exists($path))
 			throw new CriticalException("$path does not exist");
 		
-		Main::setHeader('Content-Type: image/png');
+		Main::setHeader("Content-Type: $contentType");
 		Main::setHeader('Content-Length: '.filesize($path));
 		readfile($path);
+	}
+	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
+		$this->outputMediaFromResponses(Paths::fileImageFromData($studyId, $userId, $entryId, $key), 'image/png');
+	}
+	public function outputAudioFromResponses(int $studyId, string $userId, int $entryId, string $key) {
+		$this->outputMediaFromResponses(Paths::fileAudioFromData($studyId, $userId, $entryId, $key), 'video/3gpp');
 	}
 	public function getResponseFilesList(int $studyId): array {
 		$list = [];

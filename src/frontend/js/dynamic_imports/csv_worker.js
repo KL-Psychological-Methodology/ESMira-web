@@ -41,6 +41,7 @@ const CsvData = {
 		timestamp: {},
 		skipped: {},
 		image: {},
+		audio: {}
 	},
 	
 	loadingStarted: false,
@@ -53,6 +54,7 @@ const CsvData = {
 	timestamp_columns_numIndex: [],
 	timestamp_columns_nameIndex: {},
 	image_columns_numIndex: [],
+	audio_columns_numIndex: [],
 	skipped_index: [],
 	valueIndex: [],
 	rowsIndex: [],
@@ -103,6 +105,9 @@ const CsvData = {
 				}
 				else if(this.specialColumnsIndex.image.hasOwnProperty(column_value)) {
 					this.image_columns_numIndex[i] = true;
+				}
+				else if(this.specialColumnsIndex.audio.hasOwnProperty(column_value)) {
+					this.audio_columns_numIndex[i] = true;
 				}
 				else if(this.specialColumnsIndex.skipped.hasOwnProperty(column_value)) {
 					this.skipped_index[i] = true;
@@ -177,6 +182,18 @@ const CsvData = {
 				cell.real_value = raw_row[i];
 				if(cell.real_value) {
 					cell.specialType = "image";
+					cell.value = cell.real_value;
+				}
+				else {
+					cell.specialType = "empty";
+					cell.value = EMPTY_DATA_SYMBOL;
+				}
+			}
+			else if(this.audio_columns_numIndex[i]) {
+				cell.special = true;
+				cell.real_value = raw_row[i];
+				if(cell.real_value) {
+					cell.specialType = "audio";
 					cell.value = cell.real_value;
 				}
 				else {

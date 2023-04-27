@@ -1,6 +1,6 @@
 import html from "./data_view.html"
 import {Lang} from "../js/main_classes/lang";
-import {FILE_ADMIN, FILE_IMAGE, FILE_RESPONSES} from "../js/variables/urls";
+import {FILE_ADMIN, FILE_AUDIO, FILE_IMAGE, FILE_RESPONSES} from "../js/variables/urls";
 import reload_svg from '../imgs/reload.svg?raw';
 import {
 	bindEvent,
@@ -71,16 +71,27 @@ export function ViewModel(page) {
 						hoverInfo = header_names[column_i]+"<br/>"+Lang.get("colon_timestamp")+" "+set.real_value;
 						break;
 					case "image":
-						let url = FILE_IMAGE
+						let imageUrl = FILE_IMAGE
 							.replace("%1", studyId)
 							.replace("%2", cells[userId_columnNum].value)
 							.replace("%3", cells[entryId_columnNum].value)
 							.replace("%4", header_names[column_i]);
 						
 						td = createElement("td", "font-style: italic");
-						let a = createElement("a", false, {href: url, target: "_blank", innerText: set.value});
-						td.appendChild(a);
-						hoverInfo = "<img alt='image' style='max-width: 500px; max-height: 500px;' src='"+url+"'/>";
+						let imageA = createElement("a", false, {href: imageUrl, target: "_blank", innerText: set.value});
+						td.appendChild(imageA);
+						hoverInfo = "<img alt='image' style='max-width: 500px; max-height: 500px;' src='"+imageUrl+"'/>";
+						break;
+					case "audio":
+						let audioUrl = FILE_AUDIO
+							.replace("%1", studyId)
+							.replace("%2", cells[userId_columnNum].value)
+							.replace("%3", cells[entryId_columnNum].value)
+							.replace("%4", header_names[column_i]);
+						td = createElement("td", "font-style: italic");
+						let audioA = createElement("a", false, {href: audioUrl, target: "_blank", innerText: set.value});
+						hoverInfo = header_names[column_i];
+						td.appendChild(audioA);
 						break;
 					case "empty":
 						td = createElement("td", "font-style: italic", {innerText: set.value});
