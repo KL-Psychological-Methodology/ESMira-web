@@ -287,10 +287,6 @@ class CreateDataSet {
 			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		
-		if($eventIndex == null) {
-			Main::report("Study $studyId seems to be broken. EventIndex does not exist");
-			throw new DataSetException("Study $studyId seems to be broken");
-		}
 		$eventsWrite = [];
 		foreach($eventIndex->keys as $key) {
 			$eventsWrite[$key] = $this->getAnswer($dataSet, $key);
