@@ -1,6 +1,6 @@
 {
 	"name": "web",
-	"version": "2.2.4-alpha.2",
+	"version": "2.2.4-alpha.3",
 	"description": "This is the web server module for ESMira",
 	"keywords": [
 		"open-source",
