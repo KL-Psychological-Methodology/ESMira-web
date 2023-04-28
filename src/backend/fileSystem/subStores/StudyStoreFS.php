@@ -108,20 +108,22 @@ class StudyStoreFS implements StudyStore {
 			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex);
 			return;
 		}
-		$oldKeys = ResponsesIndexLoader::importFile($studyId, $identifier);
-		$oldKeys->types = $questionnaireIndex->types;
+		$oldIndex = ResponsesIndexLoader::importFile($studyId, $identifier);
+		$oldIndex->types = $questionnaireIndex->types;
 		
 		//finding out if there are new headers:
 		$index = [];
 		foreach($questionnaireIndex->keys as $value) {
 			$index[$value] = $value;
 		}
-		foreach($oldKeys->keys as $value) {
+		foreach($oldIndex->keys as $value) {
 			unset($index[$value]);
 		}
 		
 		if(empty($index)) {//no new headers
-			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex); //recreate index in case types have changed
+			//save types in case they have changed (but we need to use oldIndex in case order of items is different)
+			$oldIndex->types = $questionnaireIndex->types;
+			ResponsesIndexLoader::exportFile($studyId, $identifier, $oldIndex);
 			return;
 		}
 		
@@ -140,7 +142,7 @@ class StudyStoreFS implements StudyStore {
 			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex);
 		}
 		else
-			$this->correctResponseFile($index, $oldKeys, $questionnaireIndex, $pathResponses, $pathResponsesBackup, $studyId, $identifier);
+			$this->correctResponseFile($index, $oldIndex, $questionnaireIndex, $pathResponses, $pathResponsesBackup, $studyId, $identifier);
 	}
 	
 	/**
