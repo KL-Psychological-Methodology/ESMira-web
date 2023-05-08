@@ -23,6 +23,7 @@
     "after_joining_study": "after joining the study",
     "all": "All",
     "all_accessKeys": "All keys",
+    "allow_back_button": "Allow back button between pages",
     "allow_decimal_input": "Allow decimals",
     "allow_incoming_messages": "Allow participants to write messages",
     "Android": "Android",

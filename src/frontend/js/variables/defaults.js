@@ -195,7 +195,8 @@ Defaults.questionnaires = {
 	completableAtSpecificTimeStart: -1,
 	completableAtSpecificTimeEnd: -1,
 	limitToGroup: 0,
-	minDataSetsForReward: 0
+	minDataSetsForReward: 0,
+	isBackEnabled: true
 };
 Defaults.eventUploadSettings = {
 	actions_executed: false,

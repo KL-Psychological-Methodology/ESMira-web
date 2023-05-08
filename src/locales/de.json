@@ -23,6 +23,7 @@
     "after_x_seconds": "Nach %d Sekunden",
     "all": "Alle",
     "all_accessKeys": "Alle Schlüssel",
+    "allow_back_button": "Erlaube Zurück-Button zwischen Seiten",
     "allow_decimal_input": "Erlaube Kommastellen",
     "allow_incoming_messages": "Erlaube Teilnehmenden Nachrichten zu schreiben",
     "Android": "Android",
