@@ -105,6 +105,7 @@ Defaults.pages = {
 		}
 	},
 	randomized: false,
+	skipAfterSecs: 0
 };
 Defaults.actions = {
 	$: {

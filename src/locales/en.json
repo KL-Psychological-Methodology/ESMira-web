@@ -398,6 +398,8 @@
     "show_study_statistics": "Show statistics from studies",
     "show_value": "Show value",
     "size": "Size",
+    "skip_page_after_secs": "Jump to next page after",
+    "skip_page_after_secs_info": "Automatically skips the page after the provided amount of time (items that must be filled out will be ignored). 0 to disable.",
     "state_applyingFilter": "Applying filter…",
     "state_creatingStatistics": "Creating statistics…",
     "state_creatingIndex": "Creating Index…",

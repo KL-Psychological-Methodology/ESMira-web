@@ -398,6 +398,8 @@
     "show_study_statistics": "Zeige Statistiken von Studien",
     "show_value": "Zeige Wert",
     "size": "Größe",
+    "skip_page_after_secs": "Springe zur nächsten Seite nach",
+    "skip_page_after_secs_info": "Überspringt die Seite automatisch nach der angegebenen Zeit (ignoriert Items die ausgefüllt werden müssen). 0 zum deaktivieren.",
     "state_applyingFilter": "Filtere Daten…",
     "state_creatingStatistics": "Erstelle Statistiken…",
     "state_creatingIndex": "Erstelle Index…",
