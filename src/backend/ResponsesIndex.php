@@ -24,6 +24,8 @@ class ResponsesIndex {
 			case 'app_usage':
 				$this->addName($name);
 				$this->addName("$name~usageCount");
+				$this->addName("$name~usageTimeToday");
+				$this->addName("$name~usageCountToday");
 				break;
 			case 'list_multiple':
 				$this->addName($name);
