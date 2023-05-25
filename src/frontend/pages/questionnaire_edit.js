@@ -13,7 +13,7 @@ export function ViewModel(page) {
 	page.title(Lang.get("questionnaires"));
 	this.promiseBundle = [Studies.init(page), Site.init_drag()];
 	this.extraContent = "<div data-bind=\"if: $root.selectedIndex() !== undefined\">" +
-		"<a class=\"right\" data-bind=\"navi: 'attend,demo,q:'+$root.selectedIndex(), text: Lang.get('preview')\"></a>" +
+		"<a class=\"right\" data-bind=\"navi: 'attend,q:'+$root.selectedIndex(), text: Lang.get('preview')\"></a>" +
 		"</div>";
 	
 	this.selectedIndex = selectedQuestionnaire;

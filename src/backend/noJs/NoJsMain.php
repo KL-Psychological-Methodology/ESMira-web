@@ -61,10 +61,11 @@ class NoJsMain {
 			$study = $studyStore->getStudyLangConfig($idsForAccessKey[0], $lang);
 		
 		if(!isset($study)) {
-			if(!empty($accessKey)) //provided access key is valid but for the wrong study
-				throw new PageFlowException(Lang::get('error_wrong_accessKey'));
-			else
-				throw new ForwardingException(new StudiesList());
+			throw new PageFlowException(Lang::get('error_wrong_accessKey'));
+//			if(!empty($accessKey)) //provided access key is valid but for the wrong study
+//				throw new PageFlowException(Lang::get('error_wrong_accessKey'));
+//			else
+//				throw new ForwardingException(new StudiesList());
 		}
 		
 		return (!isset($_GET['qid']) || !($questionnaire = self::getQuestionnaire($study, (int)$_GET['qid'])))
@@ -78,48 +79,5 @@ class NoJsMain {
 			return implode(',', $v);
 		else
 			return $v;
-	}
-	
-	/**
-	 * @throws CriticalException
-	 */
-	static function saveDataset(string $type, string $userId, stdClass $study, stdClass $questionnaire=null, array $datasetResponses=null) {
-		$accessKey = Main::getAccessKey();
-		
-		$responses = (object)[
-			'model' => $_SERVER['HTTP_USER_AGENT'] ?? ''
-		];
-		if(isset($datasetResponses)) {
-			foreach($datasetResponses as $k => $v) {
-				$responses->{$k} = self::extractInputValue($v);
-			}
-		}
-		$json = (object)[
-			'userId' => $userId,
-			'appType' => 'Web-NOJS',
-			'appVersion' => (string) Main::SERVER_VERSION,
-			'serverVersion' => Main::SERVER_VERSION,
-			'dataset' => [(object)[
-				'dataSetId' => 0,
-				'studyId' => $study->id,
-				'studyVersion' => $study->version ?? 0,
-				'studySubVersion' => $study->subVersion ?? 0,
-				'studyLang' => $study->lang ?? '',
-				'accessKey' => ($accessKey) ?: '',
-				'questionnaireName' => $questionnaire ? $questionnaire->title : null,
-				'questionnaireInternalId' => $questionnaire ? $questionnaire->internalId : null,
-				'eventType' => $type,
-				'responseTime' => Main::getMilliseconds(),
-				'responses' => $responses
-			]],
-		];
-		
-		$dataSet = new CreateDataSet();
-		$dataSet->prepare($json);
-		$dataSet->exec();
-		if(empty($dataSet->output))
-			throw new CriticalException('No response data');
-		else if(!$dataSet->output[0]['success'])
-			throw new CriticalException($dataSet->output[0]['error']);
 	}
 }

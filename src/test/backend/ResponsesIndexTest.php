@@ -38,6 +38,8 @@ class ResponsesIndexTest extends BaseTestSetup {
 			'dynamicName~index',
 			'appName',
 			'appName~usageCount',
+			'appName~usageTimeToday',
+			'appName~usageCountToday',
 			'photoName',
 			'elseName'
 		], $index->keys);
@@ -52,6 +54,8 @@ class ResponsesIndexTest extends BaseTestSetup {
 			'dynamicName~index',
 			'appName',
 			'appName~usageCount',
+			'appName~usageTimeToday',
+			'appName~usageCountToday',
 			'photoName',
 			'elseName',
 			'added'
