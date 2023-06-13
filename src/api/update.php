@@ -33,6 +33,7 @@ $output = new stdClass();
 $dataStore = Configs::getDataStore();
 $studyStore = $dataStore->getStudyStore();
 $messagesStore = $dataStore->getMessagesStore();
+$lang = Main::getLang(false);
 
 foreach($data as $studyId => $line) {
 	if(!isset($line->version) || !isset($line->msgTimestamp)) {
@@ -81,7 +82,7 @@ foreach($data as $studyId => $line) {
 		if($forceStudyUpdate || $metadata->getVersion() > $version) {
 			//TODO: $study_json is a String, so we need to turn it into an object first or JSON will format it as a string.
 			// This is a waste of performance. So a better solution would be to just concat the JSON string manually which is ugly
-			$line['study'] = $studyStore->getStudyConfig($studyId);
+			$line['study'] = $studyStore->getStudyLangConfig($studyId, $lang);
 		}
 		
 		
