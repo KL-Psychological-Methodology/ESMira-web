@@ -1,15 +1,21 @@
+### ⚠️ Breaking
+- The names for cookies in the **web version of the questionnaire** have changed. This leads to:
+  - The state of dynamic items in the web version of the questionnaire will reset for participants after this update.
+  - Participants will have to provide a username again in the web version of the questionnaire.
+  - Participants will have to accept the informed consent again in the web version of the questionnaire.
+
 ### 🚀 Added
-- Added additional views to reward code page.
+- Add new item: record_audio.
+- Add new item: compass.
+- Add new item: countdown.
+- Add new item: share.
+- The item list_multiple now has one additional column per entry.
+- Add new option to allow / disallow going back between questionnaire pages.
 
 ### ✏️ Changed
-- The min value for VaScale in the web questionnaire is now 1 instead of 0.
-- Removed automatic logout when the admin page was loaded from an old state (when page was cached). Now, just reloading the page suffices.
-- WYSIWYG fields now use `<br>` instead of `<div></div>` for hard breaks.
-- Removed the servername length requirement.
-- **Bugfix**: Do not treat columns in data viewer called "date" as Date.
-- **Bugfix**: Fix possibility of overwriting participant metadata.
-- **Bugfix**: Fix labels of pie chart being clipped when value is too high.
-- **Bugfix**: Change server settings to allow big files.
-- **Bugfix**: Fix Crash when languages where changes via JSON.
-- **Bugfix**: Fix faulty ordering of messages in some situations.
-- **Bugfix**: Sender of server message is not set to "server" anymore after message was read by user.
+- AppUsage item now also saves usageCountToday and usageTimeToday.
+- Rewrite of the web version of the questionnaire.
+- **Bugfix**: Questionnaire cookies (also in demo) would accumulate over time and make the page unresponsive.
+- **Bugfix**: When creating a new study, the default unknown language was added twice.
+- **Bugfix**: Server would sometime expect wrong item types when only study items were changed.
+- **Bugfix**: Study updates would not respect user language.
