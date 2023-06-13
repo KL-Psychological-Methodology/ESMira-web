@@ -358,8 +358,18 @@ class StudyStoreFS implements StudyStore {
 		$study->version = isset($study->version) ? $study->version + 1 : 1;
 		$study->subVersion = 0;
 		$study->new_changes = false;
-		
 		FileSystemBasics::writeFile(PathsFS::fileStudyConfig($studyId), json_encode($study));
+		
+		foreach($study->langCodes as $langCode) {
+			if($langCode == $study->lang)
+				continue;
+			$langStudy = $this->getStudyLangConfig($studyId, $langCode);
+			$langStudy->version = $study->version;
+			$langStudy->subVersion = 0;
+			$langStudy->new_changes = false;
+			FileSystemBasics::writeFile(PathsFS::fileLangConfig($studyId, $langCode), json_encode($langStudy));
+		}
+		
 		
 		Configs::getDataStore()->getStudyMetadataStore($studyId)->updateMetadata($study);
 	}
