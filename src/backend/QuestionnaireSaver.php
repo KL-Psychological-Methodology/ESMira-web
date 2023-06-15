@@ -62,6 +62,8 @@ class QuestionnaireSaver {
 		if(!isset($_SESSION[$this->cacheId]['formStarted']))
 			$_SESSION[$this->cacheId]['formStarted'] = Main::getMilliseconds();
 		$this->formStarted = (int) $_SESSION[$this->cacheId]['formStarted'];
+		if(!isset($_SESSION[$this->cacheId]['pageStarted']))
+			$_SESSION[$this->cacheId]['pageStarted'] = [];
 		$this->currentPageInt = (int) ($_SESSION[$this->cacheId]['currentPage'] ?? 0);
 	}
 	
@@ -160,11 +162,14 @@ class QuestionnaireSaver {
 		}
 	}
 	
-	function setPage($i) {
+	function setPage($i, $movedToNext = false) {
 		$i = min($i, count($this->questionnaire->pages));
 		$i = max($i, 0);
 		$this->currentPageInt = $i;
 		$_SESSION[$this->cacheId]['currentPage'] = $i;
+		
+		if($movedToNext)
+			$_SESSION[$this->cacheId]['pageStarted'][$i-1] = Main::getMilliseconds();
 	}
 	function unsetPage() {
 		unset($_SESSION[$this->cacheId]['currentPage']);
@@ -306,7 +311,18 @@ class QuestionnaireSaver {
 		
 		
 		if(isset($_POST['save'])) {
-			$this->saveCache('formDuration', Main::getMilliseconds() - $this->formStarted); //used in CreateDataSet
+			$now = Main::getMilliseconds();
+			$pageStarted = $_SESSION[$this->cacheId]['pageStarted'];
+			$pageDurations = [];
+			$last = $this->formStarted;
+			foreach($pageStarted as $current) {
+				$pageDurations[] = $current - $last;
+				$last = $current;
+			}
+			$pageDurations[] = $now - $last;
+			
+			$this->saveCache('formDuration', $now - $this->formStarted); //used in CreateDataSet
+			$this->saveCache('pageDurations', implode(",", $pageDurations)); //used in CreateDataSet
 			$this->saveDataset(CreateDataSet::DATASET_TYPE_QUESTIONNAIRE, $this->participant, true, $appType);
 			
 			$lastCompletedCookieName = sprintf(self::COOKIE_LAST_COMPLETED, $this->study->id, $this->questionnaire->internalId);
@@ -317,8 +333,9 @@ class QuestionnaireSaver {
 			
 			$this->isCompleted = true;
 		}
-		else if(isset($_POST['continue']))
-			$this->setPage($pageBefore + 1);
+		else if(isset($_POST['continue'])) {
+			$this->setPage($pageBefore + 1, true);
+		}
 		
 		return null;
 	}

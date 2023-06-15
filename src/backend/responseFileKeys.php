@@ -17,6 +17,7 @@ const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
 	'responseTime',
 	'responseTime_formatted', //will be created by the server
 	'formDuration',
+	'pageDurations',
 	'lastInvitation',
 	'lastInvitation_formatted' //will be created by the server
 ];
