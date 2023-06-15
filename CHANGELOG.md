@@ -9,6 +9,7 @@
 - Add new item: compass.
 - Add new item: countdown.
 - Add new item: share.
+- Added new value "pageDuration": Data for questionnaires now also contain the duration for each page (studies that were created before this update need to be saved again to make sure this value is created in the data file).
 - The item list_multiple now has one additional column per entry.
 - Add new option to allow / disallow going back between questionnaire pages.
 
