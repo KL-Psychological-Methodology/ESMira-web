@@ -5,6 +5,7 @@
   - Participants will have to accept the informed consent again in the web version of the questionnaire.
 
 ### 🚀 Added
+- Added new permission "create": Can create studies.
 - Add new item: record_audio.
 - Add new item: compass.
 - Add new item: countdown.
@@ -14,6 +15,7 @@
 - Add new option to allow / disallow going back between questionnaire pages.
 
 ### ✏️ Changed
+- Users with write permission can now also delete a study (previously, admin permission was needed).
 - AppUsage item now also saves usageCountToday and usageTimeToday.
 - Rewrite of the web version of the questionnaire.
 - **Bugfix**: Questionnaire cookies (also in demo) would accumulate over time and make the page unresponsive.
