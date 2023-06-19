@@ -1,5 +1,5 @@
 
-<div data-bind="if: Site.admin.is_loggedIn()">
+<div data-bind="if: Admin.enable_adminFeatures && Admin.tools.is_rootAdmin()">
 	<title-row params="title: Lang.get('last_activities')"></title-row>
 	<dash-row>
 		<div class="stretched scrollBox">
