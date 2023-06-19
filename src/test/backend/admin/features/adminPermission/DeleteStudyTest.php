@@ -2,7 +2,6 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\DeleteStudy;
 use backend\subStores\StudyStore;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;
@@ -23,7 +22,7 @@ class DeleteStudyTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test() {
-		$obj = new DeleteStudy();
+		$obj = new \backend\admin\features\writePermission\DeleteStudy();
 		
 		$this->assertDataMockFromPost($obj, 'delete', [
 			'studyId' => $this->studyId
@@ -31,7 +30,7 @@ class DeleteStudyTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(DeleteStudy::class, [
+		$this->assertMissingDataForFeatureObj(\backend\admin\features\writePermission\DeleteStudy::class, [
 			'studyId' => $this->studyId
 		]);
 	}

@@ -113,6 +113,19 @@ class AccountStoreFS implements AccountStore {
 		
 		PermissionsLoader::exportFile($permissions);
 	}
+	public function setCreatePermission(string $accountName, bool $canCreate) {
+		$permissions = PermissionsLoader::importFile();
+		
+		if($permissions[$accountName]['admin'])
+			return;
+		
+		if(!isset($permissions[$accountName]))
+			$permissions[$accountName] = ['create' => $canCreate];
+		else
+			$permissions[$accountName]['create'] = $canCreate;
+		
+		PermissionsLoader::exportFile($permissions);
+	}
 	
 	public function removeBlocking(string $accountName) {
 		$path = PathsFS::fileBlockLogin($accountName);

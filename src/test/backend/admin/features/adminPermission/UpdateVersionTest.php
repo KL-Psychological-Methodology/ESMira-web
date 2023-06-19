@@ -2,7 +2,7 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\ToggleAdmin;
+use backend\admin\features\adminPermission\ToggleAccountPermission;
 use backend\admin\features\adminPermission\UpdateVersion;
 use backend\exceptions\PageFlowException;
 use backend\Permission;

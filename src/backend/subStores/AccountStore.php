@@ -25,6 +25,10 @@ interface AccountStore {
 	 * @throws CriticalException
 	 */
 	public function setAdminPermission(string $accountName, bool $isAdmin);
+	/**
+	 * @throws CriticalException
+	 */
+	public function setCreatePermission(string $accountName, bool $canCreate);
 	
 	/**
 	 * @throws CriticalException

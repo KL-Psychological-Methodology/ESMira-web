@@ -265,6 +265,7 @@ Defaults.messages = {
 Defaults.account = {
 	accountName: "Error",
 	admin: false,
+	create: false,
 	read: [],
 	msg: [],
 	write: [],

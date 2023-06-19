@@ -72,6 +72,7 @@ function ListTools(page) {
 export const AdminTools = {
 	accountName: ko.observable(),
 	is_rootAdmin: ko.observable(false),
+	canCreate: ko.observable(false),
 	publish: ko.observableArray(),
 	write: ko.observableArray(),
 	msg: ko.observableArray(),
@@ -321,9 +322,10 @@ export const AdminTools = {
 		return this.is_rootAdmin() || this.msg.indexOf(studyId) !== -1
 	},
 	
-	set_loginStatus: function({accountName, isLoggedIn, loginTime, permissions, new_messages, is_admin, has_errors}) {
+	set_loginStatus: function({accountName, isLoggedIn, loginTime, permissions, new_messages, is_admin, can_create, has_errors}) {
 		if(!isLoggedIn) {
 			this.is_rootAdmin(false);
+			this.canCreate(false);
 			Admin.is_loggedIn(false);
 		}
 		else {
@@ -344,6 +346,7 @@ export const AdminTools = {
 			
 			this.loginTime = loginTime;
 			this.accountName(accountName);
+			this.canCreate(can_create);
 			
 			if(is_admin)
 				this.is_rootAdmin(true);

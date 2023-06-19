@@ -14,7 +14,7 @@ export function ViewModel(page) {
 		let tools = admin.tools;
 		this.is_admin = tools.is_rootAdmin();
 		this.can_read = tools.is_rootAdmin() || tools.read().length;
-		this.can_write = tools.is_rootAdmin() || tools.write().length;
+		this.canCreate = tools.canCreate();
 		this.can_msg = tools.is_rootAdmin() || tools.msg().length;
 	};
 	

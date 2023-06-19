@@ -2,7 +2,7 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\DeleteAccountPermission;
+use backend\admin\features\adminPermission\DeleteStudyPermission;
 use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseAdminPermissionTestSetup;
@@ -19,7 +19,7 @@ class DeleteAccountPermissionTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	function test() {
-		$obj = new DeleteAccountPermission();
+		$obj = new DeleteStudyPermission();
 		
 		$this->assertDataMockFromPost($obj, 'removeStudyPermission', [
 			'accountName' => $this->accountName,
@@ -53,7 +53,7 @@ class DeleteAccountPermissionTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(DeleteAccountPermission::class, [
+		$this->assertMissingDataForFeatureObj(DeleteStudyPermission::class, [
 			'accountName' => 'accountName',
 			'permission' => 'write',
 			'studyId' => 123

@@ -1,12 +1,12 @@
 <?php
 
-namespace backend\admin\features\adminPermission;
+namespace backend\admin\features\writePermission;
 
-use backend\admin\HasAdminPermission;
+use backend\admin\HasWritePermission;
 use backend\Configs;
 use backend\exceptions\PageFlowException;
 
-class DeleteStudy extends HasAdminPermission {
+class DeleteStudy extends HasWritePermission {
 	
 	function exec(): array {
 		if($this->studyId == 0)

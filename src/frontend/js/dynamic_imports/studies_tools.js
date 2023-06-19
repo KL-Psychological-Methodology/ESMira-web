@@ -156,8 +156,9 @@ export const Studies_tools = {
 					langStudy.lang = code;
 					studies[code === defaultLang ? "_" : code] = langStudy;
 				}
+				let saveType = study.version() === 0 ? "create_study" : "save_study";
 				return Requests.load(
-					FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
+					FILE_ADMIN+"?type=" + saveType + "&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
 					false,
 					"post",
 					JSON.stringify(studies)

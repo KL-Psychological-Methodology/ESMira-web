@@ -17,11 +17,15 @@ class GetPermissions extends NoPermission {
 			if(Permission::isAdmin()) {
 				$obj = [
 					'is_admin' => true,
+					'can_create' => true,
 					'has_errors' => Configs::getDataStore()->getErrorReportStore()->hasErrorReports()
 				];
 			}
 			else
-				$obj = ['permissions' => Permission::getPermissions()];
+				$obj = [
+					'permissions' => Permission::getPermissions(),
+					'can_create' => Permission::canCreate()
+				];
 			$obj['accountName'] = Permission::getAccountName();
 			$obj['isLoggedIn'] = true;
 			$obj['loginTime'] = time();
