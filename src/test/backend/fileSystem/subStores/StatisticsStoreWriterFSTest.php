@@ -3,7 +3,7 @@
 namespace test\backend\fileSystem\subStores;
 
 use backend\Configs;
-use backend\fileSystem\subStores\ServerServerStatisticsStoreFS;
+use backend\fileSystem\subStores\ServerStatisticsStoreFS;
 use backend\fileSystem\subStores\StatisticsStoreWriterFS;
 use test\testConfigs\BaseTestSetup;
 
@@ -15,7 +15,7 @@ class StatisticsStoreWriterFSTest extends BaseTestSetup {
 	 */
 	private $writer;
 	function setUp(): void {
-		$statistics = (new ServerServerStatisticsStoreFS())->getStatisticsAsJsonString();
+		$statistics = (new ServerStatisticsStoreFS())->getStatisticsAsJsonString();
 		$this->writer = new StatisticsStoreWriterFS(json_decode($statistics));
 	}
 	

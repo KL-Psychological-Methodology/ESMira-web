@@ -12,7 +12,7 @@ use backend\fileSystem\subStores\MessagesStoreFS;
 use backend\fileSystem\subStores\ResponsesStoreFS;
 use backend\fileSystem\subStores\RewardCodeStoreFS;
 use backend\fileSystem\subStores\ServerStoreFS;
-use backend\fileSystem\subStores\ServerServerStatisticsStoreFS;
+use backend\fileSystem\subStores\ServerStatisticsStoreFS;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
@@ -76,7 +76,7 @@ class DataStoreFS implements DataStoreInterface {
 		return new StudyStatisticsStoreFS($studyId);
 	}
 	public function getServerStatisticsStore(): ServerStatisticsStore {
-		return new ServerServerStatisticsStoreFS();
+		return new ServerStatisticsStoreFS();
 	}
 	public function getErrorReportStore(): ErrorReportStore {
 		return new ErrorReportStoreFS();
