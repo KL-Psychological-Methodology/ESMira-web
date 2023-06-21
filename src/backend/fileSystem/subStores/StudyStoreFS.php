@@ -14,6 +14,7 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\ResponsesIndex;
+use backend\subStores\StatisticsStoreWriter;
 use backend\subStores\StudyStore;
 use stdClass;
 
@@ -375,7 +376,9 @@ class StudyStoreFS implements StudyStore {
 	}
 	
 	public function delete(int $studyId) {
-		//remove study data
+		if(!$this->studyExists($studyId))
+			return;
+		$study = $this->getStudyConfig($studyId);
 		$folderStudy = PathsFS::folderStudy($studyId);
 		if(file_exists($folderStudy)) {
 			FileSystemBasics::emptyFolder($folderStudy);
@@ -389,5 +392,11 @@ class StudyStoreFS implements StudyStore {
 		$accessKeyStore->removeStudy($studyId);
 		$accessKeyStore->saveChanges();
 		$this->removeStudyFromPermissions($studyId);
+		
+		if($study->published ?? false) {
+			Configs::getDataStore()->getServerStatisticsStore()->update(function(StatisticsStoreWriter $statistics) {
+				$statistics->decrementStudies();
+			});
+		}
 	}
 }
