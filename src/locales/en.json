@@ -259,7 +259,6 @@
     "info_charts_loadingTime": "Depending on the size of the study data files and the performance of your computer, some statistics may take some time to load.",
     "info_no_password_forget": "Be aware that there is no \"forgot password\" option.",
     "info_no_questionnaires_created": "No questionnaires were created yet.",
-    "info_notification_title": "Depending on how this action was evoked, the title for the message will be either the respective point in time (under schedules) or the title of the respective event.",
     "info_publish": "This will increase the version number of this study. This will signal to all participating apps, that a new updated version of this study should be downloaded.",
     "info_required": "* input required",
     "info_study_frozen": "Study is now locked.",

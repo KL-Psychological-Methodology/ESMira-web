@@ -259,7 +259,6 @@
     "info_charts_loadingTime": "Abhängig von der Größe der Studien-Datenfiles und der Leistung Ihres Computers, können manche Statistiken längere Ladezeiten benötigen.",
     "info_no_password_forget": "Achtung: Es gibt keine \"Passwort-vergessen\"-Funktion.",
     "info_no_questionnaires_created": "Es wurden noch keine Fragebögen erstellt.",
-    "info_notification_title": "Abhängig davon wodurch die Aktion gestartet wurde, wird der Titel der Nachricht entweder aus dem Titel des entsprechenden Zeitpunktes (unter Zeitpläne) oder aus dem Titel des entsprechenden Events bestehen.",
     "info_publish": "Erhöht die Versionsnummer der Studie. Damit wird teilnehmenden Apps signalisiert, dass ein Update herunter geladen werden soll.",
     "info_required": "* Eingabe erforderlich",
     "info_study_frozen": "Studie ist nun gesperrt.",
