@@ -39,6 +39,13 @@
 	<div class="center highlight" data-bind="if: !$root.hasUpdate()">
 		<div class="center highlight" data-bind="text: $root.noConnectionToUpdate() ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')"></div>
 	</div>
+	
+	
+	<div data-bind="if: $root.isTestServer">
+		<br/><br/>
+		<title-row params="title: 'Debugging'"></title-row>
+		<a data-bind="attr: {href: $root.updateUrl}">Run update script</a>
+	</div>
 </div>
 
 <div data-bind="if: $root.selectedIndex() == 1">

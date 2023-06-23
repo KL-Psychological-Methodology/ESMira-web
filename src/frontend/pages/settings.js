@@ -150,6 +150,8 @@ export function ViewModel(page) {
 	
 	this.translations = null;
 	
+	this.updateUrl = FILE_ADMIN + "?type=update_version&fromVersion="+PACKAGE_VERSION;
+	this.isTestServer = process.env.NODE_ENV !== 'production';
 	this.hasUpdate = ko.observable(false);
 	this.noConnectionToUpdate = ko.observable(false);
 	this.newVersion = ko.observable("");
@@ -208,7 +210,7 @@ export function ViewModel(page) {
 				})
 				.then(function() {
 					page.loader.update(Lang.get("state_finish_installing"))
-					return Requests.load(FILE_ADMIN + "?type=update_version&fromVersion="+PACKAGE_VERSION);
+					return Requests.load(self.updateUrl);
 				})
 				.then(function() {
 					alert(Lang.get("info_web_update_complete"));
