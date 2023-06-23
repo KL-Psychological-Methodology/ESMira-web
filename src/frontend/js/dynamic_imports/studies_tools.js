@@ -278,11 +278,20 @@ export const Studies_tools = {
 						continue;
 					case "app_usage":
 						variables.push(name+"~usageCount");
+						variables.push(name+"~usageTimeToday");
+						variables.push(name+"~usageCountToday");
 						variables.push(name);
 						break;
 					case "dynamic_input":
 						variables.push(name+"~index");
 						variables.push(name);
+						break;
+					case "list_multiple":
+						variables.push(name);
+						let listChoices = input.listChoices();
+						for(let k=0, maxK=listChoices.length; k<maxK; ++k) {
+							variables.push(name + "~" + listChoices[k]());
+						}
 						break;
 					default:
 						variables.push(name);
@@ -296,7 +305,6 @@ export const Studies_tools = {
 				variables.push(sumScores[i].name());
 			}
 		}
-		
 		return variables;
 	},
 	
