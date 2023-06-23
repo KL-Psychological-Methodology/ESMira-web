@@ -370,6 +370,7 @@
     "required_desc": "Muss ausgefüllt werden",
     "save": "Speichern",
     "save_as_minutes": "Speichere in Minuten",
+    "save_as_number": "Speichere als Zahl",
     "save_current_chart_settings_in_browser": "Speichere diese Graphen Einstellungen in Browser",
     "screenshots": "Screenshots",
     "screenshot_appInstall_android": "frontend/screenshots/store_install-android-de.png",

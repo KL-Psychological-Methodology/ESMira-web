@@ -370,6 +370,7 @@
     "required_desc": "Must be filled out",
     "save": "Save",
     "save_as_minutes": "Save as minutes",
+    "save_as_number": "Save as number",
     "save_current_chart_settings_in_browser": "Save currrent chart settings in browser",
     "screenshots": "Screenshots",
     "screenshot_appInstall_android": "frontend/screenshots/store_install-android-en.png",

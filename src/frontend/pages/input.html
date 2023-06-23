@@ -49,6 +49,10 @@
 			<input type="checkbox" data-bind="checked: forceInt"/>
 			<span data-bind="text: Lang.get('save_as_minutes')"></span>
 		</label>
+		<label class="vertical no_title no_desc" data-bind="visible: responseType() === 'list_single'">
+			<input type="checkbox" data-bind="checked: forceInt"/>
+			<span data-bind="text: Lang.get('save_as_number')"></span>
+		</label>
 		<label class="vertical no_desc" data-bind="visible: responseType() === 'countdown'">
 			<small data-bind="text: Lang.get('timeout')"></small>
 			<input type="number" data-bind="numericValue: timeoutSec"/>
