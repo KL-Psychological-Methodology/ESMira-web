@@ -1,4 +1,5 @@
-export const URL_ABOUT_ESMIRA_SOURCE = 'https://esmira.kl.ac.at/documents/about/',
+export const URL_ABOUT_ESMIRA_SOURCE = 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira/main/about/',
+	URL_ABOUT_ESMIRA_STRUCTURE_JSON = URL_ABOUT_ESMIRA_SOURCE+"structure.json",
 	URL_ABOUT_ESMIRA_JSON = URL_ABOUT_ESMIRA_SOURCE+"langs/%s.json",
 	URL_RELEASES_LIST = "https://api.github.com/repos/KL-Psychological-Methodology/ESMira-web/releases?per_page=50",
 	

@@ -115,7 +115,7 @@ dash-el .msg {
 	text-align: justify;
 	hyphens: auto;
 }
-dash-el > .link {
+dash-el .link {
 	position: absolute;
 	right: 5px;
 	bottom: 5px;
