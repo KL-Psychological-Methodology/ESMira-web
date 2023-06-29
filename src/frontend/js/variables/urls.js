@@ -11,7 +11,7 @@ export const URL_ABOUT_ESMIRA_SOURCE = 'https://raw.githubusercontent.com/KL-Psy
 	FILE_AUDIO = FILE_ADMIN+"?type=get_media&study_id=%1&userId=%2&entryId=%3&key=%4&media_type=audio",
 	FILE_SAVE_ACCESS = 'api/access.php',
 	FILE_LEGAL = 'api/legal.php',
-	FILE_GET_QUESTIONNAIRE = 'api/questionnaire.php?id=%d1&qid=%d2&access_key=%s1.php&%s2',
+	FILE_GET_QUESTIONNAIRE = 'api/questionnaire.php?id=%d1&qid=%d2&access_key=%s1&lang=%s2&%s3',
 	FILE_SAVE_DATASET = 'api/datasets.php',
 	FILE_SERVER_STATISTICS = 'api/server_statistics.php',
 	FILE_STATISTICS = 'api/statistics.php?id=%d&access_key=%s',

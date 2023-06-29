@@ -48,7 +48,7 @@ class QuestionnaireSaver {
 	/**
 	 * @throws CriticalException|ForwardingException
 	 */
-	function __construct(stdClass $study, stdClass $questionnaire) {
+	function __construct(stdClass $study, stdClass $questionnaire, bool $doForwarding = true) {
 		$this->study = $study;
 		$this->questionnaire = $questionnaire;
 		$this->cacheId = 'questionnaire_' .($questionnaire->internalId ?? -2);
@@ -57,7 +57,8 @@ class QuestionnaireSaver {
 		if(!isset($_SESSION[$this->cacheId]))
 			$_SESSION[$this->cacheId] = [];
 		
-		$this->doForwarding();
+		if($doForwarding)
+			$this->doForwarding();
 		
 		if(!isset($_SESSION[$this->cacheId]['formStarted']))
 			$_SESSION[$this->cacheId]['formStarted'] = Main::getMilliseconds();

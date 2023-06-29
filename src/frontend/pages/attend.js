@@ -22,6 +22,7 @@ import video from "../inputs/video.html";
 import error from "../inputs/error.html";
 import {Requests} from "../js/main_classes/requests";
 import {FILE_GET_QUESTIONNAIRE, FILE_SAVE_DATASET} from "../js/variables/urls";
+import {currentLangCode} from "../js/shared/lang_configs";
 
 
 export function ViewModel(page) {
@@ -93,7 +94,8 @@ export function ViewModel(page) {
 				.replace("%d1", study.id())
 				.replace("%d2", questionnaire.internalId())
 				.replace("%s1", Studies.accessKey())
-				.replace("%s2", noCookiesSid),
+				.replace("%s2", currentLangCode)
+				.replace("%s3", noCookiesSid || ""),
 			false, "post", data
 		).then(function({dataType, sid, currentPageInt, pageHtml, pageTitle, missingInput}) { //TODO: sid, missingInput
 			noCookiesSid = sid;

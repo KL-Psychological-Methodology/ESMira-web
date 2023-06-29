@@ -7,19 +7,32 @@ use backend\JsonOutput;
 use backend\Main;
 use backend\noJs\ForwardingException;
 use backend\noJs\NoJsMain;
+use backend\Permission;
 use backend\QuestionnaireSaver;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
 $studyStore = Configs::getDataStore()->getStudyStore();
 try {
-	$studyData = NoJsMain::getStudyData();
-	$study = $studyData->study;
-	$questionnaire = $studyData->questionnaire;
+	if(isset($_GET['id']) && isset($_GET['qid']) && Permission::isLoggedIn()) {
+		$studyStore = Configs::getDataStore()->getStudyStore();
+		$lang = Main::getLang(false);
+		
+		$study = $studyStore->getStudyLangConfig((int) $_GET['id'], $lang);
+		$questionnaire = NoJsMain::getQuestionnaire($study, (int) $_GET['qid']);
+		$doForwarding = false;
+	}
+	else {
+		$studyData = NoJsMain::getStudyData();
+		
+		$study = $studyData->study;
+		$questionnaire = $studyData->questionnaire;
+		$doForwarding = true;
+	}
 	$studyId = $study->id;
 	$questionnaireId = $questionnaire->internalId;
 	
-	$inputObj = new QuestionnaireSaver($study, $questionnaire);
+	$inputObj = new QuestionnaireSaver($study, $questionnaire, $doForwarding);
 	if($inputObj->finishActionNeeded()) {
 		$missingInput = $inputObj->doPageFinishActions('Web');
 	}
