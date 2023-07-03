@@ -16,7 +16,7 @@
 
 ### ✏️ Changed
 - Users with write permission can now also delete a study (previously, admin permission was needed).
-- AppUsage item now also saves usageCountToday and usageTimeToday.
+- App_usage item now also saves usageCountToday and usageTimeToday.
 - Rewrite of the web version of the questionnaire.
 - **Bugfix**: Questionnaire cookies (also in demo) would accumulate over time and make the page unresponsive.
 - **Bugfix**: When creating a new study, the default unknown language was added twice.
