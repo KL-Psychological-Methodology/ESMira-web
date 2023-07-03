@@ -277,7 +277,8 @@ export const Studies_tools = {
 					case "text":
 						continue;
 					case "app_usage":
-						variables.push(name+"~usageCount");
+						variables.push(name+"~usageTimeYesterday");
+						variables.push(name+"~usageCountYesterday");
 						variables.push(name+"~usageTimeToday");
 						variables.push(name+"~usageCountToday");
 						variables.push(name);
