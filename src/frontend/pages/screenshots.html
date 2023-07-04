@@ -1,13 +1,13 @@
-<div data-bind="foreach: $root.page_screenshots">
-	<title-row params="title: title" data-bind="attr: {id: 'screenshots_'+id}"></title-row>
+<div data-bind="foreach: $root.structure.page_screenshots">
+	<title-row params="title: $root.translations[$data.id + '_title']" data-bind="attr: {id: 'screenshots_'+$data.id}"></title-row>
 	
-	<dash-row data-bind="foreach: images">
+	<dash-row data-bind="foreach: $data.images">
 		<div data-bind="css: {multipleChildren: $data.length > 1}">
 			<div data-bind="foreach: $data" class="dashEl">
 				<div class="imageBox" data-bind="click: $root.clickScreenshot">
-					<img alt="screenshot" data-bind="attr: {src: $root.URL_ABOUT_ESMIRA_SOURCE + src}"/>
+					<img alt="screenshot" data-bind="attr: {src: $root.URL_ABOUT_ESMIRA_SOURCE + $data.src}"/>
 					<span class="desc small_text" data-bind="text: $data.desc, visible: $data.desc"></span>
-				</table>
+				</div>
 			</div>
 		</div>
 	</dash-row>

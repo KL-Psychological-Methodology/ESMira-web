@@ -1,6 +1,6 @@
 <dash-row>
-	<div class="multipleChildren" data-bind="visible: $root.can_write">
-		<a class="floating" data-bind="click: function() {Studies.tools.add_study($root.page);}, visible: $root.is_admin">
+	<div class="multipleChildren" data-bind="visible: $root.canCreate">
+		<a class="floating" data-bind="click: function() {Studies.tools.add_study($root.page);}">
 			<dash-el params="title: Lang.get('create')"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></dash-el>
 		</a>
 		<a data-bind="navi: 'studies,edit'">

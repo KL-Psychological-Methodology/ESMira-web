@@ -87,7 +87,9 @@ class Main {
 		return '';
 	}
 	
-	static function setCookie(string $key, string $value, int $expires = 32532447600) {
+	static function setCookie(string $key, string $value, int $expires = -1) {
+		if($expires == -1)
+			$expires = time() + 15552000;
 		$_COOKIE[$key] = $value;
 		if(IS_TEST_INSTANCE)
 			return;

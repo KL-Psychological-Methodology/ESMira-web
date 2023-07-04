@@ -145,9 +145,11 @@ export function Page(depth, code) {
 						return pageInfo;
 					else {
 						let tools = admin.tools;
+						let canCreate = tools.canCreate();
 						let studyId = parseInt(Site.valueIndex.id);
 						for(let i=neededPermissions.length-1; i>=0; --i) {
-							if(tools[neededPermissions[i]].indexOf(studyId) !== -1)
+							let permissionName = neededPermissions[i];
+							if(permissionName === "write" && canCreate || (tools[permissionName].indexOf(studyId) !== -1))
 								return pageInfo;
 						}
 						self.contentEl.innerHTML = "";

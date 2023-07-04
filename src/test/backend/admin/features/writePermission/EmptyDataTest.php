@@ -137,8 +137,8 @@ class EmptyDataTest extends BaseWritePermissionTestSetup {
 		$obj->exec();
 		
 		$responsesIndex = new ResponsesIndex();
-		$responsesIndex->addInput('photo', 'input1');
-		$responsesIndex->addInput('textInput', 'input2');
+		$responsesIndex->addInput((object) ['name' => 'input1', 'responseType' => 'photo']);
+		$responsesIndex->addInput((object) ['name' => 'input2', 'responseType' => 'textInput']);
 		$keys = [
 			$this->internalId => $responsesIndex
 		];

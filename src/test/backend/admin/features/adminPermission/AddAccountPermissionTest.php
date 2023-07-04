@@ -2,7 +2,7 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\AddAccountPermission;
+use backend\admin\features\adminPermission\AddStudyPermission;
 use test\testConfigs\BaseAdminPermissionTestSetup;
 use backend\exceptions\PageFlowException;
 use PHPUnit\Framework\MockObject\Stub;
@@ -19,7 +19,7 @@ class AddAccountPermissionTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	function test() {
-		$obj = new AddAccountPermission();
+		$obj = new AddStudyPermission();
 		
 		$this->assertDataMockFromPost($obj, 'addStudyPermission', [
 			'accountName' => $this->accountName,
@@ -53,7 +53,7 @@ class AddAccountPermissionTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(AddAccountPermission::class, [
+		$this->assertMissingDataForFeatureObj(AddStudyPermission::class, [
 			'accountName' => 'accountName',
 			'permission' => 'write',
 			'studyId' => 123

@@ -135,19 +135,32 @@ class ResponsesStoreFS implements ResponsesStore {
 		closedir($handle);
 		return $lastActivities;
 	}
+	
+	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename) {
+		$handle = opendir($path);
+		while($file = readdir($handle)) {
+			if($file[0] != '.') {
+				$zip->addFile("$path/$file", $getMediaFilename($file));
+			}
+		}
+		closedir($handle);
+	}
 	public function createMediaZip(int $studyId) {
 		$pathZip = Paths::fileMediaZip($studyId);
 		$zip = new ZipArchive();
 		$zip->open($pathZip, ZIPARCHIVE::CREATE);
 		
-		$pathImages = Paths::folderImages($studyId);
-		$handle = opendir($pathImages);
-		while($file = readdir($handle)) {
-			if($file[0] != '.') {
-				$zip->addFile("$pathImages/$file", Paths::publicFileImageFromMediaFilename($file));
-			}
-		}
-		closedir($handle);
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderImages($studyId),
+			function($fileName) { return Paths::publicFileImageFromMediaFilename($fileName); }
+		);
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderAudio($studyId),
+			function($fileName) { return Paths::publicFileAudioFromMediaFilename($fileName); }
+		);
+		
 		$zip->close();
 	}
 	public function outputResponsesFile(int $studyId, string $identifier) {
@@ -158,14 +171,23 @@ class ResponsesStoreFS implements ResponsesStore {
 		Main::setHeader('Content-Type: text/csv');
 		readfile($path);
 	}
-	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
-		$path = Paths::fileImageFromData($studyId, $userId, $entryId, $key);
+	
+	/**
+	 * @throws CriticalException
+	 */
+	private function outputMediaFromResponses(string $path, string $contentType) {
 		if(!file_exists($path))
 			throw new CriticalException("$path does not exist");
 		
-		Main::setHeader('Content-Type: image/png');
+		Main::setHeader("Content-Type: $contentType");
 		Main::setHeader('Content-Length: '.filesize($path));
 		readfile($path);
+	}
+	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
+		$this->outputMediaFromResponses(Paths::fileImageFromData($studyId, $userId, $entryId, $key), 'image/png');
+	}
+	public function outputAudioFromResponses(int $studyId, string $userId, int $entryId, string $key) {
+		$this->outputMediaFromResponses(Paths::fileAudioFromData($studyId, $userId, $entryId, $key), 'video/3gpp');
 	}
 	public function getResponseFilesList(int $studyId): array {
 		$list = [];

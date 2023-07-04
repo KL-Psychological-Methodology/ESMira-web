@@ -134,7 +134,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 	//getStudyData() without ids:
 	public function test_getStudyData_with_nothing() {
 		$this->setGet();
-		$this->expectErrorMessage(StudiesList::class);
+		$this->expectErrorMessage('Wrong access key.');
 		NoJsMain::getStudyData();
 	}
 	public function test_getStudyData_with_not_existing_accessKey() {
@@ -171,7 +171,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		$this->setGet([
 			'id' => 999
 		]);
-		$this->expectErrorMessage(StudiesList::class);
+		$this->expectErrorMessage('Wrong access key.');
 		NoJsMain::getStudyData();
 	}
 	public function test_getStudyData_with_studyId_and_unneeded_accessKey() {
@@ -219,7 +219,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		$this->setGet([
 			'qid' => 9999
 		]);
-		$this->expectErrorMessage(StudiesList::class);
+		$this->expectErrorMessage('Wrong access key.');
 		NoJsMain::getStudyData();
 	}
 	public function test_getStudyData_with_questionnaireId_and_unneeded_accessKey() {
@@ -315,19 +315,5 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		]);
 		$this->expectErrorMessage('Wrong access key.');
 		NoJsMain::getStudyData();
-	}
-	
-	public function test_saveDataset() {
-		NoJsMain::saveDataset(
-			'joined',
-			'userId',
-			(object) ['id' => 111, 'version' => 1, 'subVersion' => 0],
-			(object) ['title' => 'title', 'internalId' => 1111],
-			[$this->eventIndexKey => 'data']
-		);
-		$cache = new DataSetCache();
-		$cache->addToEventCache(111, 0, [$this->eventIndexKey => 'data']);
-		$cache->getEventIndex(111);
-		$this->assertDataMock('saveDataSetCache', ['userId', $cache, new SkipArgument(), new SkipArgument()]);
 	}
 }

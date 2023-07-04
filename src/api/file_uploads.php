@@ -54,7 +54,7 @@ $identifier = (int) $fileData['name'];
 //check size:
 
 if ($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
-	echo JsonOutput::error('File is too big');
+	echo JsonOutput::error('File is too big for settings');
 	return;
 }
 
@@ -73,6 +73,12 @@ switch($dataType) {
 		}
 		
 		break;
+    case 'Audio':
+        if(!preg_match('/video/i', mime_content_type($fileData['tmp_name']))) {
+            echo JsonOutput::error('Wrong format');
+            return;
+        }
+        break;
 	default:
 		echo JsonOutput::error('Unknown type');
 		return;

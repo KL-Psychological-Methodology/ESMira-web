@@ -2,6 +2,12 @@
 	<input type="checkbox" data-bind="checked: randomized"/>
 	<span data-bind="text: Lang.get('randomize_page')"></span>
 </label>
+<label class="vertical spacing_top">
+	<small data-bind="text: Lang.get('skip_page_after_secs')"></small>
+	<input type="number" data-bind="numericValue: skipAfterSecs"/>
+	<span data-bind="text: Lang.get('seconds')"></span>
+	<small data-bind="text: Lang.get('skip_page_after_secs_info')"></small>
+</label>
 <div class="fakeLabel spacing_top line no_desc">
 	<small data-bind="text: Lang.get('header')"></small>
 	<rich-text params="value: header"></rich-text>

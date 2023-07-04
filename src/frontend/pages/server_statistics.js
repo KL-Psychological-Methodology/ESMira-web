@@ -22,7 +22,7 @@ export function ViewModel(page) {
 	let self = this;
 	this.html = html;
 	page.title(Lang.get("server_statistics"));
-	if(Admin.enable_adminFeatures)
+	if(Admin.enable_adminFeatures && Admin.tools.is_rootAdmin())
 		this.promiseBundle = [
 			import("../js/dynamic_imports/chart_box.js"),
 			Requests.load(FILE_SERVER_STATISTICS),

@@ -4,6 +4,7 @@
 			<tr>
 				<th class="accountName"></th>
 				<th data-bind="text: Lang.get('permission_admin')"></th>
+				<th data-bind="text: Lang.get('permission_create')"></th>
 				<th data-bind="text: Lang.get('permission_write')"></th>
 				<th data-bind="text: Lang.get('permission_msg')"></th>
 				<th data-bind="text: Lang.get('permission_read')"></th>
@@ -18,6 +19,9 @@
 				</td>
 				<td>
 					<span data-bind="visible: admin()">&#10004;</span>
+				</td>
+				<td>
+					<span data-bind="visible: admin() || create()">&#10004;</span>
 				</td>
 				<td>
 					<span data-bind="text: admin() ? '&#10004;' : write().length">&#10004;</span>

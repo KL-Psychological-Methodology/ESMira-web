@@ -12,8 +12,9 @@ class ResponsesIndex {
 		$this->types = $types;
 	}
 	
-	public function addInput($responseType, $name) {
-		switch($responseType) {
+	public function addInput(\stdClass $input) {
+		$name = $input->name;
+		switch($input->responseType ?? 'text_input') {
 			case 'text':
 				return;
 			case 'dynamic_input':
@@ -22,11 +23,24 @@ class ResponsesIndex {
 				break;
 			case 'app_usage':
 				$this->addName($name);
-				$this->addName("$name~usageCount");
+				$this->addName("$name~usageCountYesterday");
+				$this->addName("$name~usageCountToday");
+				$this->addName("$name~usageTimeYesterday");
+				$this->addName("$name~usageTimeToday");
+				break;
+			case 'list_multiple':
+				$this->addName($name);
+				foreach($input->listChoices ?? [] as $entry) {
+					$this->addName("$name~$entry");
+				}
 				break;
 			case 'photo':
 				$this->addName($name);
 				$this->types[$name] = 'image';
+				break;
+			case 'record_audio':
+				$this->addName($name);
+				$this->types[$name] = 'audio';
 				break;
 			default:
 				$this->addName($name);

@@ -18,5 +18,5 @@ export const
 		"eventType",
 		"timezone",
 		"responseTime",
-		"responseTime_formatted"
+		"formDuration"
 	];

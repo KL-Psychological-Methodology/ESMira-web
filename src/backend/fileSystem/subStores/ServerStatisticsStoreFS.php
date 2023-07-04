@@ -6,7 +6,7 @@ use backend\Main;
 use backend\fileSystem\PathsFS;
 use backend\subStores\ServerStatisticsStore;
 
-class ServerServerStatisticsStoreFS extends ServerStatisticsStore {
+class ServerStatisticsStoreFS extends ServerStatisticsStore {
 	public function getStatisticsAsJsonString(): string {
 		if(file_exists(PathsFS::fileServerStatistics()))
 			return file_get_contents(PathsFS::fileServerStatistics());

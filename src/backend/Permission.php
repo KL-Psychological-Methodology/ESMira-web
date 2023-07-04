@@ -123,6 +123,10 @@ class Permission {
 		$permissions = self::getPermissions();
 		return isset($permissions['admin']) && $permissions['admin'];
 	}
+	static function canCreate(): bool {
+		$permissions = self::getPermissions();
+		return isset($permissions['create']) && $permissions['create'];
+	}
 	static function hasPermission(int $studyId, string $permCode): bool {
 		$permissions = self::getPermissions();
 		return isset($permissions[$permCode]) && in_array($studyId, $permissions[$permCode]);

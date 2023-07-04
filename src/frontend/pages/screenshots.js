@@ -15,8 +15,9 @@ export function ViewModel(page) {
 	this.promiseBundle = [
 		get_aboutESMira_json()
 	];
-	this.preInit = function(index, {page_screenshots}) {
-		this.page_screenshots = page_screenshots;
+	this.preInit = function(index, {structure, translations}) {
+		this.structure = structure;
+		this.translations = translations;
 	}
 	this.postInit = function({screenshots}) {
 		window.setTimeout(function() {

@@ -32,10 +32,22 @@ export function ViewModel(page) {
 			return;
 		}
 		page.loader.loadRequest(
-			FILE_ADMIN + "?type=toggle_admin",
+			FILE_ADMIN + "?type=toggle_accountPermission",
 			false,
 			"post",
-			"accountName="+self.userData.accountName() + (admin ? "&admin" : "")
+			"accountName="+self.userData.accountName() + (admin ? "&admin=1" : "&admin=0")
+		).then(function() {
+			page.loader.info(Lang.get("info_successful"));
+		});
+	};
+	
+	this.user_toggle_create = function() {
+		let canCreate = self.userData.create();
+		page.loader.loadRequest(
+			FILE_ADMIN + "?type=toggle_accountPermission",
+			false,
+			"post",
+			"accountName="+self.userData.accountName() + (canCreate ? "&create=1" : "&create=0")
 		).then(function() {
 			page.loader.info(Lang.get("info_successful"));
 		});
@@ -58,7 +70,7 @@ export function ViewModel(page) {
 			let line = createElement("div", false, {innerText: studies[i].title(), className: "clickable"});
 			bindEvent(line, "click", function() {
 				page.loader.loadRequest(
-					FILE_ADMIN + "?type=add_accountPermission",
+					FILE_ADMIN + "?type=add_studyPermission",
 					false,
 					"post",
 					"accountName="+self.userData.accountName() + "&permission="+permission + "&study_id="+study_id
@@ -81,7 +93,7 @@ export function ViewModel(page) {
 	}
 	this.remove_permission = function(index, study_id, permission) {
 		page.loader.loadRequest(
-			FILE_ADMIN + "?type=delete_accountPermission",
+			FILE_ADMIN + "?type=delete_studyPermission",
 			false,
 			"post",
 			"accountName="+self.userData.accountName() + "&permission="+permission + "&study_id="+study_id

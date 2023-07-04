@@ -604,7 +604,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		$obj->exec();
 		
 		$responsesIndex = new ResponsesIndex();
-		$responsesIndex->addInput('text_input', 'key1');
+		$responsesIndex->addInput((object) ['name' => 'key1', 'responseType' => 'text_input']);
 		$this->assertDataMock('saveStudy', [
 			new SkipArgument(),
 			[$this->internalId => $responsesIndex]

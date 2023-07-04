@@ -14,6 +14,7 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\ResponsesIndex;
+use backend\subStores\StatisticsStoreWriter;
 use backend\subStores\StudyStore;
 use stdClass;
 
@@ -108,20 +109,24 @@ class StudyStoreFS implements StudyStore {
 			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex);
 			return;
 		}
-		$oldKeys = ResponsesIndexLoader::importFile($studyId, $identifier);
-		$oldKeys->types = $questionnaireIndex->types;
+		$oldIndex = ResponsesIndexLoader::importFile($studyId, $identifier);
+		$oldIndex->types = $questionnaireIndex->types;
 		
 		//finding out if there are new headers:
 		$index = [];
 		foreach($questionnaireIndex->keys as $value) {
 			$index[$value] = $value;
 		}
-		foreach($oldKeys->keys as $value) {
+		foreach($oldIndex->keys as $value) {
 			unset($index[$value]);
 		}
 		
-		if(empty($index)) //no new headers
+		if(empty($index)) {//no new headers
+			//save types in case they have changed (but we need to use oldIndex in case order of items is different)
+			$oldIndex->types = $questionnaireIndex->types;
+			ResponsesIndexLoader::exportFile($studyId, $identifier, $oldIndex);
 			return;
+		}
 		
 		$pathResponsesBackup = PathsFS::fileResponsesBackup($studyId, $identifier);
 		
@@ -138,7 +143,7 @@ class StudyStoreFS implements StudyStore {
 			ResponsesIndexLoader::exportFile($studyId, $identifier, $questionnaireIndex);
 		}
 		else
-			$this->correctResponseFile($index, $oldKeys, $questionnaireIndex, $pathResponses, $pathResponsesBackup, $studyId, $identifier);
+			$this->correctResponseFile($index, $oldIndex, $questionnaireIndex, $pathResponses, $pathResponsesBackup, $studyId, $identifier);
 	}
 	
 	/**
@@ -267,11 +272,13 @@ class StudyStoreFS implements StudyStore {
 		FileSystemBasics::createFolder(PathsFS::folderMedia($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderPendingUploads($studyId));
 		FileSystemBasics::createFolder(Paths::folderImages($studyId));
+		FileSystemBasics::createFolder(Paths::folderAudio($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderResponses($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderResponsesIndex($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderMessagesArchive($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderMessagesPending($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderMessagesUnread($studyId));
+		FileSystemBasics::createFolder(PathsFS::folderRewardCodes($studyId));
 		
 		
 		Configs::getDataStore()->getStudyStore()->lockStudy($studyId);
@@ -327,6 +334,7 @@ class StudyStoreFS implements StudyStore {
 		FileSystemBasics::emptyFolder(PathsFS::folderResponses($studyId));
 		FileSystemBasics::emptyFolder(PathsFS::folderStatistics($studyId));
 		FileSystemBasics::emptyFolder(Paths::folderImages($studyId));
+		FileSystemBasics::emptyFolder(Paths::folderAudio($studyId));
 		FileSystemBasics::emptyFolder(PathsFS::folderPendingUploads($studyId));
 		
 		$mediaZip = Paths::fileMediaZip($studyId);
@@ -352,14 +360,26 @@ class StudyStoreFS implements StudyStore {
 		$study->version = isset($study->version) ? $study->version + 1 : 1;
 		$study->subVersion = 0;
 		$study->new_changes = false;
-		
 		FileSystemBasics::writeFile(PathsFS::fileStudyConfig($studyId), json_encode($study));
+		
+		foreach($study->langCodes as $langCode) {
+			if($langCode == $study->lang)
+				continue;
+			$langStudy = $this->getStudyLangConfig($studyId, $langCode);
+			$langStudy->version = $study->version;
+			$langStudy->subVersion = 0;
+			$langStudy->new_changes = false;
+			FileSystemBasics::writeFile(PathsFS::fileLangConfig($studyId, $langCode), json_encode($langStudy));
+		}
+		
 		
 		Configs::getDataStore()->getStudyMetadataStore($studyId)->updateMetadata($study);
 	}
 	
 	public function delete(int $studyId) {
-		//remove study data
+		if(!$this->studyExists($studyId))
+			return;
+		$study = $this->getStudyConfig($studyId);
 		$folderStudy = PathsFS::folderStudy($studyId);
 		if(file_exists($folderStudy)) {
 			FileSystemBasics::emptyFolder($folderStudy);
@@ -373,5 +393,11 @@ class StudyStoreFS implements StudyStore {
 		$accessKeyStore->removeStudy($studyId);
 		$accessKeyStore->saveChanges();
 		$this->removeStudyFromPermissions($studyId);
+		
+		if($study->published ?? false) {
+			Configs::getDataStore()->getServerStatisticsStore()->update(function(StatisticsStoreWriter $statistics) {
+				$statistics->decrementStudies();
+			});
+		}
 	}
 }

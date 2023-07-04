@@ -6,8 +6,6 @@ namespace backend;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\exceptions\CriticalException;
 use backend\exceptions\DataSetException;
-use backend\fileSystem\PathsFS;
-use backend\subStores\ServerStatisticsStore;
 use backend\subStores\StatisticsStoreWriter;
 use backend\subStores\UserDataStore;
 use stdClass;
@@ -175,28 +173,46 @@ class CreateDataSet {
 			return '';
 	}
 	
-	private function getQuestionnaireAnswer(stdClass $dataSet, string $key, array $types): string {
-		$answer = $this->getAnswer($dataSet, $key);
-		
-		if(isset($types[$key]) && $types[$key] === 'image') { // we are expecting a file:
-			$studyId = $this->getStudyId($dataSet);
-			$datasetId = $this->getDataSetId($dataSet);
-			$identifier = (int) $answer;
-			if($identifier != 0) {
-				$entryId = (int) ($dataSet->entryId ?? 0);
-				$this->cache->addToFileCache(
-					$studyId,
-					Paths::fileImageFromData($studyId, $this->userId, $entryId, $key),
-					$identifier,
-					$datasetId
-				);
-				return Paths::publicFileImageFromData($this->userId, $entryId, $key);
-			}
-			else
-				return '';
+	private function prepareFile(stdClass $dataSet, string $key, callable $getInternalPath, callable $getPublicPath): string {
+		$studyId = $this->getStudyId($dataSet);
+		$entryId = (int) ($dataSet->entryId ?? 0);
+		$identifier = (int) $this->getAnswer($dataSet, $key);
+		$datasetId = $this->getDataSetId($dataSet);
+		if($identifier != 0) {
+			$this->cache->addToFileCache(
+				$studyId,
+				$getInternalPath($studyId, $this->userId, $entryId, $key),
+				$identifier,
+				$datasetId
+			);
+			return $getPublicPath($this->userId, $entryId, $key);
 		}
 		else
-			return $answer;
+			return '';
+	}
+	private function getQuestionnaireAnswer(stdClass $dataSet, string $key, array $types): string {
+		if(isset($types[$key])) {
+			switch($types[$key]) {
+				case 'image':
+					return $this->prepareFile(
+						$dataSet,
+						$key,
+						function($studyId, $userId, $entryId, $key) { return Paths::fileImageFromData($studyId, $userId, $entryId, $key); },
+						function($userId, $entryId, $key) { return Paths::publicFileImageFromData($userId, $entryId, $key); }
+					);
+				case 'audio':
+					return $this->prepareFile(
+						$dataSet,
+						$key,
+						function($studyId, $userId, $entryId, $key) { return Paths::fileAudioFromData($studyId, $userId, $entryId, $key); },
+						function($userId, $entryId, $key) { return Paths::publicFileAudioFromData($userId, $entryId, $key); }
+					);
+				default:
+					return $this->getAnswer($dataSet, $key);
+			}
+		}
+		else
+			return $this->getAnswer($dataSet, $key);
 	}
 	
 	/**
@@ -271,10 +287,6 @@ class CreateDataSet {
 			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		
-		if($eventIndex == null) {
-			Main::report("Study $studyId seems to be broken. EventIndex does not exist");
-			throw new DataSetException("Study $studyId seems to be broken");
-		}
 		$eventsWrite = [];
 		foreach($eventIndex->keys as $key) {
 			$eventsWrite[$key] = $this->getAnswer($dataSet, $key);

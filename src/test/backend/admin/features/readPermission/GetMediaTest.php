@@ -2,14 +2,14 @@
 
 namespace test\backend\admin\features\readPermission;
 
-use backend\admin\features\readPermission\GetMediaImage;
+use backend\admin\features\readPermission\GetMedia;
 use backend\subStores\ResponsesStore;
 use PHPUnit\Framework\MockObject\Stub;
 use test\testConfigs\BaseReadPermissionTestSetup;
 
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
-class GetMediaImageTest extends BaseReadPermissionTestSetup {
+class GetMediaTest extends BaseReadPermissionTestSetup {
 	
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
@@ -30,19 +30,21 @@ class GetMediaImageTest extends BaseReadPermissionTestSetup {
 		$this->setGet([
 			'userId' => $userId,
 			'entryId' => $entryId,
-			'key' => $key
+			'key' => $key,
+			'media_type' => 'image'
 		]);
-		$obj = new GetMediaImage();
+		$obj = new GetMedia();
 		
 		$obj->execAndOutput();
 		$this->assertDataMock('outputImageFromResponses', [$this->studyId, $userId, $entryId, $key]);
 	}
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(GetMediaImage::class, [
+		$this->assertMissingDataForFeatureObj(GetMedia::class, [
 			'userId' => 'userId',
 			'entryId' => 'entryId',
-			'key' => 'key'
+			'key' => 'key',
+			'media_type' => 'image'
 		], true, true);
 	}
 }

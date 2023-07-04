@@ -2,7 +2,7 @@
 
 namespace test\testConfigs;
 
-use backend\admin\features\adminPermission\AddAccountPermission;
+use backend\admin\features\adminPermission\AddStudyPermission;
 use backend\admin\features\noPermission\Login;
 use backend\Configs;
 use backend\exceptions\CriticalException;

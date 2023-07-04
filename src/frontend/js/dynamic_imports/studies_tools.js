@@ -156,8 +156,9 @@ export const Studies_tools = {
 					langStudy.lang = code;
 					studies[code === defaultLang ? "_" : code] = langStudy;
 				}
+				let saveType = study.version() === 0 ? "create_study" : "save_study";
 				return Requests.load(
-					FILE_ADMIN+"?type=save_study&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
+					FILE_ADMIN+"?type=" + saveType + "&study_id="+studyId+"&lastChanged="+(self.lastChanged[studyId] || Admin.tools.loginTime),
 					false,
 					"post",
 					JSON.stringify(studies)
@@ -276,12 +277,22 @@ export const Studies_tools = {
 					case "text":
 						continue;
 					case "app_usage":
-						variables.push(name+"~usageCount");
+						variables.push(name+"~usageTimeYesterday");
+						variables.push(name+"~usageCountYesterday");
+						variables.push(name+"~usageTimeToday");
+						variables.push(name+"~usageCountToday");
 						variables.push(name);
 						break;
 					case "dynamic_input":
 						variables.push(name+"~index");
 						variables.push(name);
+						break;
+					case "list_multiple":
+						variables.push(name);
+						let listChoices = input.listChoices();
+						for(let k=0, maxK=listChoices.length; k<maxK; ++k) {
+							variables.push(name + "~" + listChoices[k]());
+						}
 						break;
 					default:
 						variables.push(name);
@@ -295,12 +306,12 @@ export const Studies_tools = {
 				variables.push(sumScores[i].name());
 			}
 		}
-		
 		return variables;
 	},
 	
 	is_media: function(input) {
-		return input.responseType() === 'photo';
+		let responseType = input.responseType();
+		return responseType === 'photo' || responseType === 'record_audio';
 	},
 	for_each_input: function(study, fu) {
 		let questionnaires = study.questionnaires();
@@ -332,6 +343,9 @@ export const Studies_tools = {
 			switch(input.responseType()) {
 				case 'photo':
 					columns.push({key: input.name(), type: 'image'});
+					break;
+				case 'record_audio':
+					columns.push({key: input.name(), type: 'audio'});
 					break;
 			}
 		});

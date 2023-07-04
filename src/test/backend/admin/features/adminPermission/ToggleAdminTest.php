@@ -2,7 +2,7 @@
 
 namespace test\backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\ToggleAdmin;
+use backend\admin\features\adminPermission\ToggleAccountPermission;
 use backend\exceptions\PageFlowException;
 use backend\Permission;
 use PHPUnit\Framework\MockObject\Stub;
@@ -20,7 +20,7 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	function test() {
-		$obj = new ToggleAdmin();
+		$obj = new ToggleAccountPermission();
 		
 		$this->assertDataMockFromPost($obj, 'setAdminPermission', [
 			'accountName' => $this->accountName,
@@ -36,7 +36,7 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 	}
 	
 	function test_remove_own_admin_permission() {
-		$obj = new ToggleAdmin();
+		$obj = new ToggleAccountPermission();
 		
 		$this->expectException(PageFlowException::class);
 		$this->assertDataMockFromPost($obj, 'setAdminPermission', [
@@ -46,7 +46,7 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 	
 	
 	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(ToggleAdmin::class, [
+		$this->assertMissingDataForFeatureObj(ToggleAccountPermission::class, [
 			'accountName' => 'accountName',
 		]);
 	}

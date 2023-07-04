@@ -5,7 +5,7 @@
 			<div data-bind="foreach: $root.userData[permCode]" class="list_child">
 				<div>
 					<widget-delete data-bind="click: function() {$root.remove_permission($index(), $data, $parent.permCode);}"></widget-delete>
-					<span data-bind="text: Studies.list().hasOwnProperty($data) ? Studies.list()[$data].title() : Lang.get('unknown')"></span>
+					<span data-bind="text: Studies.list().hasOwnProperty($data) ? Studies.list()[$data].title() : Lang.get('unknown') + ' (' + $data + ')'"></span>
 				</div>
 			</div>
 			<widget-add data-bind="click: function() {$root.add_permission(permCode, $element);}" class="spacing_top"></widget-add>
@@ -18,9 +18,14 @@
 <change-account params="accountName: $root.userData.accountName(), finish: $root.change_password">
 	<p data-bind=" text: Lang.get('change_password')"></p>
 </change-account>
-<label>
+
+<label class="vertical">
 	<span data-bind="text: Lang.get('colon_permissions_admin')"></span>
 	<input type="checkbox" data-bind="checked: $root.userData.admin, event: {change: $root.user_toggle_admin}"/>
+</label>
+<label class="vertical">
+	<span data-bind="text: Lang.get('colon_permissions_create')"></span>
+	<input type="checkbox" data-bind="checked: $root.userData.create, event: {change: $root.user_toggle_create}"/>
 </label>
 
 

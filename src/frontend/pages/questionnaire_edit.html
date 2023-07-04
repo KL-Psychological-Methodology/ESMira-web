@@ -1,12 +1,19 @@
 <tab-bar params="tabs: $root.study.questionnaires, tabName: function(q) {return q.title()}, selectedIndex: $root.selectedIndex, addFu: $root.add_questionnaire, draggable: true">
-	<div class="center">
-		<label>
-			<small data-bind="text: Lang.get('questionnaire_name')"></small>
-			<input type="text" data-bind="value: title"/>
-			<lang-chooser></lang-chooser>
-		</label>
-		<widget-delete class="right spacing_top" data-bind="click: $root.delete_questionnaire.bind($root, tabIndex)" params="title: Lang.get('delete_questionnaire')"></widget-delete>
-	
+	<div class="list_parent">
+		<div class="list_child">
+			<label class="vertical">
+				<small data-bind="text: Lang.get('questionnaire_name')"></small>
+				<input type="text" data-bind="value: title"/>
+				<lang-chooser></lang-chooser>
+			</label>
+			
+			<label class="vertical">
+				<input type="checkbox" data-bind="checked: isBackEnabled"/>
+				<span data-bind="text: Lang.get('allow_back_button')"></span>
+			</label>
+			
+			<widget-delete class="spacing_top" data-bind="click: $root.delete_questionnaire.bind($root, tabIndex)" params="title: Lang.get('delete_questionnaire')"></widget-delete>
+		</div>
 	</div>
 	<div data-bind="foreach: $data.pages, dragRoot" id="questionnaire_editBox">
 		<div data-bind="let: {qIndex: tabIndex, pIndex: $index(), pCount: $parent.pages().length, itemCount: inputs().length}">

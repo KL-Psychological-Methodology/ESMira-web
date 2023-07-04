@@ -1094,7 +1094,9 @@ charts
 screenshots
 **********/
 
-
+.screenshots .multipleChildren {
+	padding: 5px;
+}
 .screenshots dash-row > * {
 	text-align: center;
 }

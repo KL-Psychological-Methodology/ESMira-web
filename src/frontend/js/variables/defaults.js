@@ -85,7 +85,10 @@ Defaults.inputs = {
 	numberHasDecimal: false,
 	asDropDown: true,
 	forceInt: false,
-	packageId: ""
+	packageId: "",
+	timeoutSec: 0,
+	playSound: 0,
+	showValue: true
 };
 Defaults.inputs.$.children = {
 	subInputs: JSON.parse(JSON.stringify(Defaults.inputs))
@@ -102,6 +105,7 @@ Defaults.pages = {
 		}
 	},
 	randomized: false,
+	skipAfterSecs: 0
 };
 Defaults.actions = {
 	$: {
@@ -192,7 +196,8 @@ Defaults.questionnaires = {
 	completableAtSpecificTimeStart: -1,
 	completableAtSpecificTimeEnd: -1,
 	limitToGroup: 0,
-	minDataSetsForReward: 0
+	minDataSetsForReward: 0,
+	isBackEnabled: true
 };
 Defaults.eventUploadSettings = {
 	actions_executed: false,
@@ -260,6 +265,7 @@ Defaults.messages = {
 Defaults.account = {
 	accountName: "Error",
 	admin: false,
+	create: false,
 	read: [],
 	msg: [],
 	write: [],

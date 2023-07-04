@@ -16,7 +16,6 @@ use test\testConfigs\BaseNoJsTestSetup;
 require_once __DIR__ .'/../../../../backend/autoload.php';
 
 class QuestionnaireAttendTest extends BaseNoJsTestSetup {
-	private $hasSavingError = false;
 	protected $configs = [
 		123 => ['id' => 123, 'title' => 'study1', 'webQuestionnaireCompletedInstructions' => 'completed', 'questionnaires' => [
 			['internalId' => 1111, 'title'=>'questionnaire', 'pages' => [
@@ -107,7 +106,7 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 					$this->assertEquals('value14', $data['input14']);
 					$this->assertEquals('value21', $data['input21']);
 					$this->assertEquals('value22', $data['input22']);
-					$this->assertEquals('value23', $data['input23']);
+					$this->assertEquals('value23,value232', $data['input23']);
 					$this->assertEquals('value24', $data['input24']);
 					$this->assertEquals('value31', $data['input31']);
 					$this->assertEquals('90', $data['input33']);
@@ -129,6 +128,9 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->hasSavingError = false;
 		$_GET['qid'] = 1111;
 		$_COOKIE["participant123"] = 'userId';
+		
+		if(!defined('SID'))
+			define("SID", 'session_name=session'); //session_start() is not called but SID is used in QuestionnaireSaver::getSessionUrlParameter()
 	}
 	
 	function test_with_non_web_study() {
@@ -143,12 +145,6 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		new QuestionnaireAttend();
 	}
 	
-	function test_with_faulty_page() {
-		$this->setPost(['continue' => true, 'page' => 99]);
-		$this->expectErrorMessage(Lang::get('error_unknown_data'));
-		new QuestionnaireAttend();
-	}
-	
 	function test_without_participant() {
 		unset($_COOKIE["participant123"]);
 		$this->expectErrorMessage(GetParticipant::class);
@@ -160,6 +156,7 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->setPost(['participant' => 'newUser', 'new_participant' => true]);
 		$obj = new QuestionnaireAttend();
 		$content = $obj->getContent();
+		
 		$this->assertStringContainsString('name="participant" value="newUser"', $content);
 	}
 	
@@ -209,13 +206,12 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->assertStringContainsString('name="responses[input13]"', $content);
 		$this->assertStringContainsString('name="responses[input14]"', $content);
 		$this->assertStringContainsString('name="continue"', $content);
-		$this->assertStringContainsString('name="page" value="0"', $content);
 		$this->assertStringContainsString('name="participant" value="userId"', $content);
 		$this->assertStringContainsString('name="informed_consent" value="1"', $content);
 	}
 	
 	function test_page2() {
-		$this->setPost(['continue' => true, 'page' => 0, 'form_started' => 999999]);
+		$this->setPost(['continue' => true]);
 		$obj = new QuestionnaireAttend();
 		$study = $this->configs[123];
 		$questionnaire = $study['questionnaires'][0];
@@ -232,14 +228,14 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->assertStringContainsString('name="responses[input23][]"', $content);
 		$this->assertStringContainsString('name="responses[input24]"', $content);
 		$this->assertStringContainsString('name="continue"', $content);
-		$this->assertStringContainsString('name="page" value="1"', $content);
 		$this->assertStringContainsString('name="participant" value="userId"', $content);
-		$this->assertStringContainsString('name="form_started" value="999999"', $content);
+		$this->assertEquals($_SESSION['questionnaire_1111']['currentPage'], 1);
 		$this->assertStringContainsString('name="informed_consent" value="1"', $content);
 	}
 	
 	function test_from_page2_with_missing_data() {
-		$this->setPost(['continue' => true, 'page' => 1, 'form_started' => 999999]);
+		$this->setPost(['continue' => true]);
+		$obj = new QuestionnaireAttend();//page 2
 		$obj = new QuestionnaireAttend();
 		$study = $this->configs[123];
 		$questionnaire = $study['questionnaires'][0];
@@ -256,19 +252,17 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->assertStringContainsString('name="responses[input23][]"', $content);
 		$this->assertStringContainsString('name="responses[input24]"', $content);
 		$this->assertStringContainsString('name="continue"', $content);
-		$this->assertStringContainsString('name="page" value="1"', $content);
+		$this->assertEquals(1, $_SESSION['questionnaire_1111']['currentPage']);
 		$this->assertStringContainsString('name="participant" value="userId"', $content);
-		$this->assertStringContainsString('name="form_started" value="999999"', $content);
 		$this->assertStringContainsString('name="informed_consent" value="1"', $content);
 	}
 	
 	function test_page3() {
 		$this->setPost([
 			'continue' => true,
-			'page' => 1,
-			'form_started' => 999999,
-			'responses' => ['input21' => 'value21', 'input22' => 'value22', 'input23' => 'value23', 'input24' => 'value24']
+			'responses' => ['input21' => 'value21', 'input22' => 'value22', 'input23' => ['value23'], 'input24' => 'value24']
 		]);
+		$obj = new QuestionnaireAttend();//page 2
 		$obj = new QuestionnaireAttend();
 		$study = $this->configs[123];
 		$questionnaire = $study['questionnaires'][0];
@@ -279,127 +273,79 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->assertStringContainsString($questionnaire['title'], $title);
 		$this->assertStringContainsString('3/3', $title);
 		
-		$this->assertStringContainsString('type="hidden" name="responses[input21]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input22]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input23]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input24]"', $content);
+		$savedResponses = $_SESSION['questionnaire_1111']['responses'];
+		$this->assertEquals('value21', $savedResponses['input21']);
+		$this->assertEquals('value22', $savedResponses['input22']);
+		$this->assertEquals('value23', $savedResponses['input23']);
+		$this->assertEquals('value24', $savedResponses['input24']);
+		$this->assertEquals(2, $_SESSION['questionnaire_1111']['currentPage']);
 		
 		$this->assertStringContainsString('name="responses[input31]"', $content);
 		$this->assertStringContainsString('name="responses[input33]"', $content);
 		$this->assertStringContainsString('name="responses[input34]"', $content);
 		$this->assertStringContainsString('name="responses[input35]"', $content);
 		$this->assertStringContainsString('name="save"', $content);
-		$this->assertStringContainsString('name="page" value="2"', $content);
 		$this->assertStringContainsString('name="participant" value="userId"', $content);
-		$this->assertStringContainsString('name="form_started" value="999999"', $content);
 		$this->assertStringContainsString('name="informed_consent" value="1"', $content);
 	}
 	
-	function test_save_after_page3_with_error() {
-		$this->hasSavingError = true;
+	function test_save_after_page() {
 		$this->setPost([
-			'save' => true,
-			'page' => 2,
-			'form_started' => 999999,
+			'continue' => true,
 			'responses' => [
 				'input11' => 'value11',
 				'input12' => 'value12',
 				'input13' => 'value13',
 				'input14' => 'value14',
+			]
+		]);
+		$obj = new QuestionnaireAttend(); //to page 2
+		$savedResponses = &$_SESSION['questionnaire_1111']['responses'];
+		$this->assertEquals('value11', $savedResponses['input11']);
+		$this->assertEquals('value12', $savedResponses['input12']);
+		$this->assertEquals('value13', $savedResponses['input13']);
+		$this->assertEquals('value14', $savedResponses['input14']);
+		$this->assertStringContainsString('name="continue"', $obj->getContent());
+		$this->assertStringContainsString('2/3', $obj->getTitle());
+		
+		$this->setPost([
+			'continue' => true,
+			'responses' => [
 				'input21' => 'value21',
 				'input22' => 'value22',
-				'input23' => 'value23',
+				'input23' => ['value23', 'value232'],
 				'input24' => 'value24',
+			]
+		]);
+		$obj = new QuestionnaireAttend(); //to page 3
+		$this->assertEquals('value21', $savedResponses['input21']);
+		$this->assertEquals('value22', $savedResponses['input22']);
+		$this->assertEquals('value23,value232', $savedResponses['input23']);
+		$this->assertEquals('value24', $savedResponses['input24']);
+		$this->assertStringContainsString('name="save"', $obj->getContent());
+		$this->assertStringContainsString('3/3', $obj->getTitle());
+		
+		$this->setPost([
+			'save' => true,
+			'responses' => [
 				'input31' => 'value31',
 				'input33' => '01:30',
 				'input34' => 'value34',
 				'input35' => 'value35'
 			]
 		]);
-		$obj = new QuestionnaireAttend();
+		$obj = new QuestionnaireAttend(); //finish
+		$this->assertEquals('value31', $savedResponses['input31']);
+		$this->assertEquals('90', $savedResponses['input33']);
+		$this->assertEquals('value34', $savedResponses['input34']);
+		$this->assertEquals('value35', $savedResponses['input35']);
+		
+		$this->assertStringContainsString('3/3', $obj->getTitle());
+		
 		$study = $this->configs[123];
 		$questionnaire = $study['questionnaires'][0];
 		
 		$content = $obj->getContent();
-		$title = $obj->getTitle();
-		
-		$this->assertStringContainsString($questionnaire['title'], $title);
-		$this->assertStringContainsString('3/3', $title);
-		
-		$this->assertStringContainsString('type="hidden" name="responses[input11]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input12]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input13]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input14]"', $content);
-		
-		$this->assertStringContainsString('type="hidden" name="responses[input21]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input22]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input23]"', $content);
-		$this->assertStringContainsString('type="hidden" name="responses[input24]"', $content);
-		
-		$this->assertStringNotContainsString('type="hidden" name="responses[input31]"', $content);
-		$this->assertStringNotContainsString('type="hidden" name="responses[input33]"', $content);
-		$this->assertStringNotContainsString('type="hidden" name="responses[input34]"', $content);
-		
-		$this->assertStringContainsString('name="responses[input31]"', $content);
-		$this->assertStringContainsString('name="responses[input33]"', $content);
-		$this->assertStringContainsString('name="responses[input34]"', $content);
-		$this->assertStringContainsString('name="responses[input35]"', $content);
-		$this->assertStringContainsString('name="save"', $content);
-		$this->assertStringContainsString('name="page" value="2"', $content);
-		$this->assertStringContainsString('name="participant" value="userId"', $content);
-		$this->assertStringContainsString('name="form_started" value="999999"', $content);
-		$this->assertStringContainsString('name="informed_consent" value="1"', $content);
-	}
-	function test_save_after_page3_with_success() {
-		$this->setPost([
-			'save' => true,
-			'page' => 2,
-			'form_started' => 999999,
-			'responses' => [
-				'input11' => 'value11',
-				'input12' => 'value12',
-				'input13' => 'value13',
-				'input14' => 'value14',
-				'input21' => 'value21',
-				'input22' => 'value22',
-				'input23' => 'value23',
-				'input24' => 'value24',
-				'input31' => 'value31',
-				'input33' => '1:30',
-				'input34' => 'value34',
-				'input35' => 'value35'
-			]
-		]);
-		$obj = new QuestionnaireAttend();
-		$study = $this->configs[123];
-		$questionnaire = $study['questionnaires'][0];
-		
-		$content = $obj->getContent();
-		$title = $obj->getTitle();
-		
-		$this->assertStringContainsString($questionnaire['title'], $title);
-		$this->assertStringContainsString('3/3', $title);
-		
-		$this->assertStringNotContainsString('name="responses[input11]"', $content);
-		$this->assertStringNotContainsString('name="responses[input12]"', $content);
-		$this->assertStringNotContainsString('name="responses[input13]"', $content);
-		$this->assertStringNotContainsString('name="responses[input14]"', $content);
-		
-		$this->assertStringNotContainsString('name="responses[input21]"', $content);
-		$this->assertStringNotContainsString('name="responses[input22]"', $content);
-		$this->assertStringNotContainsString('name="responses[input23]"', $content);
-		$this->assertStringNotContainsString('name="responses[input24]"', $content);
-		
-		$this->assertStringNotContainsString('name="responses[input31]"', $content);
-		$this->assertStringNotContainsString('name="responses[input33]"', $content);
-		$this->assertStringNotContainsString('name="responses[input34]"', $content);
-		$this->assertStringNotContainsString('name="responses[input35]"', $content);
-		
-		$this->assertStringNotContainsString('name="responses[input31]"', $content);
-		$this->assertStringNotContainsString('name="responses[input33]"', $content);
-		$this->assertStringNotContainsString('name="responses[input34]"', $content);
-		$this->assertStringNotContainsString('name="responses[input35]"', $content);
-		$this->assertStringNotContainsString('name="save"', $content);
 		$this->assertStringContainsString($this->configs[123]['webQuestionnaireCompletedInstructions'], $content);
 	}
 }

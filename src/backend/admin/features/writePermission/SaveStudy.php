@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace backend\admin\features\writePermission;
 
 use backend\admin\HasWritePermission;
-use backend\Main;
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\exceptions\CriticalException;
 use backend\dataClasses\StatisticsJsonEntry;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
+use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
+use backend\Main;
 use backend\Permission;
 use backend\ResponsesIndex;
 use backend\subStores\StatisticsStoreWriter;
@@ -334,12 +333,11 @@ class SaveStudy extends HasWritePermission {
 			foreach($page->inputs ?? [] as $input) {
 				if(!isset($input->name))
 					continue;
-				$responseType = $input->responseType ?? 'text_input';
 				
-				if($responseType != 'text') {
+				if($input->responseType ?? 'text_input' != 'text') {
 					$this->uniqueNameOrThrow($input->name, $questionnaire->title);
 					$this->uniqueInputNames[$input->name] = $questionnaire->title;
-					$questionnaireIndex->addInput($responseType, $input->name);
+					$questionnaireIndex->addInput($input);
 				}
 			}
 		}

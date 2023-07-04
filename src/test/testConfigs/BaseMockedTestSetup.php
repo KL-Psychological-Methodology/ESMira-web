@@ -28,6 +28,7 @@ class BaseMockedTestSetup extends BaseTestSetup {
 		parent::tearDown();
 		$this->setPost();
 		$this->setGet();
+		$this->setSession();
 	}
 	public static function tearDownAfterClass(): void {
 		parent::tearDownAfterClass();
@@ -70,6 +71,9 @@ class BaseMockedTestSetup extends BaseTestSetup {
 	}
 	protected function setGet(array $data = []) {
 		$_GET = $data;
+	}
+	protected function setSession(array $data = []) {
+		$_SESSION = $data;
 	}
 	
 	

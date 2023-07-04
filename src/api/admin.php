@@ -6,8 +6,8 @@ set_time_limit(0);
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
 use backend\exceptions\CriticalException;
-use backend\JsonOutput;
 use backend\exceptions\PageFlowException;
+use backend\JsonOutput;
 
 
 if(!isset($_GET['type'])) {
@@ -25,7 +25,6 @@ $classIndex = [
 	'get_permissions' => 'backend\admin\features\noPermission\GetPermissions',
 	
 	//logged in:
-	'get_new_id' => 'backend\admin\features\writePermission\GetNewId',
 	'change_password' => 'backend\admin\features\loggedIn\ChangePassword',
 	'change_accountName' => 'backend\admin\features\loggedIn\ChangeAccountName',
 	'get_tokenList' => 'backend\admin\features\loggedIn\GetTokenList',
@@ -46,17 +45,22 @@ $classIndex = [
 	'list_data' => 'backend\admin\features\readPermission\ListData',
 	'get_data' => 'backend\admin\features\readPermission\GetData',
 	'create_mediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',
-	'get_mediaImage' => 'backend\admin\features\readPermission\GetMediaImage',
+	'get_media' => 'backend\admin\features\readPermission\GetMedia',
 	
 	//write
 	'is_frozen' => 'backend\admin\features\writePermission\IsFrozen',
+	'delete_study' => 'backend\admin\features\writePermission\DeleteStudy',
 	'freeze_study' => 'backend\admin\features\writePermission\FreezeStudy',
+	'get_new_id' => 'backend\admin\features\writePermission\GetNewId',
 	'empty_data' => 'backend\admin\features\writePermission\EmptyData',
 	'check_changed' => 'backend\admin\features\writePermission\CheckChanged',
 	'load_langs' => 'backend\admin\features\writePermission\LoadLangs',
 	'backup_study' => 'backend\admin\features\writePermission\BackupStudy',
 	'save_study' => 'backend\admin\features\writePermission\SaveStudy',
 	'mark_study_as_updated' => 'backend\admin\features\writePermission\MarkStudyAsUpdated',
+	
+	//create
+	'create_study' => 'backend\admin\features\createPermission\CreateStudy',
 	
 	//admin
 	'get_last_activities' => 'backend\admin\features\adminPermission\GetLastActivities',
@@ -66,13 +70,12 @@ $classIndex = [
 	'get_error' => 'backend\admin\features\adminPermission\GetError',
 	'change_error' => 'backend\admin\features\adminPermission\ChangeError',
 	'delete_error' => 'backend\admin\features\adminPermission\DeleteError',
-	'delete_study' => 'backend\admin\features\adminPermission\DeleteStudy',
 	'list_accounts' => 'backend\admin\features\adminPermission\ListAccounts',
 	'create_account' => 'backend\admin\features\adminPermission\CreateAccount',
 	'delete_account' => 'backend\admin\features\adminPermission\DeleteAccount',
-	'add_accountPermission' => 'backend\admin\features\adminPermission\AddAccountPermission',
-	'delete_accountPermission' => 'backend\admin\features\adminPermission\DeleteAccountPermission',
-	'toggle_admin' => 'backend\admin\features\adminPermission\ToggleAdmin',
+	'add_studyPermission' => 'backend\admin\features\adminPermission\AddStudyPermission',
+	'delete_studyPermission' => 'backend\admin\features\adminPermission\DeleteStudyPermission',
+	'toggle_accountPermission' => 'backend\admin\features\adminPermission\ToggleAccountPermission',
 	'download_update' => 'backend\admin\features\adminPermission\DownloadUpdate',
 	'do_update' => 'backend\admin\features\adminPermission\DoUpdate',
 	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production

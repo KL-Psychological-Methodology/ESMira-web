@@ -7,7 +7,7 @@ use backend\Configs;
 use backend\exceptions\PageFlowException;
 use backend\Permission;
 
-class ToggleAdmin extends HasAdminPermission {
+class ToggleAccountPermission extends HasAdminPermission {
 	
 	function exec(): array {
 		if(!isset($_POST['accountName']))
@@ -16,9 +16,11 @@ class ToggleAdmin extends HasAdminPermission {
 			throw new PageFlowException('You can not remove your own admin permissions');
 		
 		$accountName = $_POST['accountName'];
-		$isAdmin = isset($_POST['admin']);
 		
-		Configs::getDataStore()->getAccountStore()->setAdminPermission($accountName, $isAdmin);
+		if(isset($_POST['admin']))
+			Configs::getDataStore()->getAccountStore()->setAdminPermission($accountName, (bool) $_POST['admin']);
+		if(isset($_POST['create']))
+			Configs::getDataStore()->getAccountStore()->setCreatePermission($accountName, (bool) $_POST['create']);
 		
 		return [];
 	}

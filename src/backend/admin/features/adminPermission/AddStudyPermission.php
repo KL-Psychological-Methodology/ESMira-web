@@ -6,7 +6,7 @@ use backend\admin\HasAdminPermission;
 use backend\Configs;
 use backend\exceptions\PageFlowException;
 
-class AddAccountPermission extends HasAdminPermission {
+class AddStudyPermission extends HasAdminPermission {
 	function exec(): array {
 		if(!isset($_POST['accountName']) || !isset($_POST['permission']) || $this->studyId == 0)
 			throw new PageFlowException('Missing data');
