@@ -275,6 +275,7 @@
     "input_countdown": "Countdown",
     "input_date": "Datums-Eingabe",
     "input_image": "Bild",
+    "input_file_upload": "Bild-Upload",
     "input_dynamic_input": "Dynamisches Item",
     "input_likert": "Likert-Skala",
     "input_list_multiple": "Liste - Multiple choice",

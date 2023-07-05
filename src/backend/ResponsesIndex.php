@@ -34,6 +34,7 @@ class ResponsesIndex {
 					$this->addName("$name~$entry");
 				}
 				break;
+			case 'file_upload':
 			case 'photo':
 				$this->addName($name);
 				$this->types[$name] = 'image';

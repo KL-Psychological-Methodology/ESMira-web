@@ -274,6 +274,7 @@
     "input_compass": "Compass item",
     "input_countdown": "Countdown",
     "input_date": "Date input",
+    "input_file_upload": "Image upload",
     "input_image": "Image",
     "input_dynamic_input": "Dynamic item",
     "input_likert": "Likert scale",
