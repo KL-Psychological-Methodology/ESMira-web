@@ -308,10 +308,16 @@ export const Studies_tools = {
 		}
 		return variables;
 	},
-	
-	is_media: function(input) {
-		let responseType = input.responseType();
-		return responseType === 'photo' || responseType === 'record_audio';
+	get_media_type: function(input) {
+		switch(input.responseType()) {
+			case "file_upload":
+			case "photo":
+				return "image";
+			case "record_audio":
+				return "audio";
+			default:
+				return null;
+		}
 	},
 	for_each_input: function(study, fu) {
 		let questionnaires = study.questionnaires();
@@ -330,7 +336,7 @@ export const Studies_tools = {
 		let self = this;
 		let has_media = false;
 		this.for_each_input(study, function(input) {
-			if(self.is_media(input)) {
+			if(self.get_media_type(input) != null) {
 				has_media = true;
 				return false;
 			}
@@ -338,16 +344,12 @@ export const Studies_tools = {
 		return has_media;
 	},
 	list_specialDataColumns: function(study) {
+		let self = this;
 		let columns = [];
 		this.for_each_input(study, function(input) {
-			switch(input.responseType()) {
-				case 'photo':
-					columns.push({key: input.name(), type: 'image'});
-					break;
-				case 'record_audio':
-					columns.push({key: input.name(), type: 'audio'});
-					break;
-			}
+			let type = self.get_media_type(input);
+			if(type != null)
+				columns.push({key: input.name(), type: type});
 		});
 		
 		return columns;
