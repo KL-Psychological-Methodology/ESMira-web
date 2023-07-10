@@ -44,6 +44,7 @@ export function ViewModel(pageModel) {
 	
 	this.optionsSubInput = [
 		{key: "app_usage", value: Lang.get("input_app_usage")},
+		{key: "bluetooth_devices", value: Lang.get("input_bluetooth_devices")},
 		{key: "text", value: Lang.get("input_text")},
 		{key: "image", value: Lang.get("input_image")},
 		{key: "video", value: Lang.get("input_video")},

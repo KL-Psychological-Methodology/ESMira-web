@@ -271,6 +271,7 @@
     "init_esmira": "ESMira einrichten",
     "input_app_usage": "App Nutzungs-Zeiten",
     "input_binary": "Binäres Item",
+    "input_bluetooth_devices": "Liste von Bluetooth-Geräten",
     "input_compass": "Compass item",
     "input_countdown": "Countdown",
     "input_date": "Datums-Eingabe",

@@ -270,6 +270,7 @@
     "informed_consent": "Informed consent",
     "init_esmira": "Set up ESMira",
     "input_app_usage": "App usage tracking",
+    "input_bluetooth_devices": "List of bluetooth devices",
     "input_binary": "Binary item",
     "input_compass": "Compass item",
     "input_countdown": "Countdown",
