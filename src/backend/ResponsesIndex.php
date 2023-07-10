@@ -17,16 +17,19 @@ class ResponsesIndex {
 		switch($input->responseType ?? 'text_input') {
 			case 'text':
 				return;
-			case 'dynamic_input':
-				$this->addName($name);
-				$this->addName("$name~index");
-				break;
 			case 'app_usage':
 				$this->addName($name);
 				$this->addName("$name~usageCountYesterday");
 				$this->addName("$name~usageCountToday");
 				$this->addName("$name~usageTimeYesterday");
 				$this->addName("$name~usageTimeToday");
+				break;
+			case 'bluetooth_devices':
+				$this->addName("$name~devices");
+				break;
+			case 'dynamic_input':
+				$this->addName($name);
+				$this->addName("$name~index");
 				break;
 			case 'list_multiple':
 				$this->addName($name);

@@ -283,6 +283,10 @@ export const Studies_tools = {
 						variables.push(name+"~usageCountToday");
 						variables.push(name);
 						break;
+					case "bluetooth_devices":
+						variables.push(name+"~devices");
+						variables.push(name);
+						break;
 					case "dynamic_input":
 						variables.push(name+"~index");
 						variables.push(name);
