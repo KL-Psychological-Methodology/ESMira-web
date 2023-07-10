@@ -1,18 +1,18 @@
 <dash-row>
-	<div class="multipleChildren" data-bind="visible: $root.canCreate">
-		<a class="floating" data-bind="click: function() {Studies.tools.add_study($root.page);}">
+	<div class="multipleChildren">
+		<a class="floating" data-bind="click: function() {Studies.tools.add_study($root.page);}, visible: $root.canCreate">
 			<dash-el params="title: Lang.get('create')"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></dash-el>
 		</a>
-		<a data-bind="navi: 'studies,edit'">
+		<a data-bind="navi: 'studies,edit', visible: $root.canWrite">
 			<dash-el params="title: Lang.get('edit_studies')"><svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></dash-el>
 		</a>
 	</div>
 	
-	<a data-bind="navi: 'studies,msgs', visible: $root.can_msg">
+	<a data-bind="navi: 'studies,msgs', visible: $root.canMsg">
 		<dash-el params="title: Lang.get('messages')"><svg data-bind="class: Studies.tools.newMessages().count && Studies.tools.newMessages().count() ? 'highlight' : ''" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></dash-el>
 	</a>
 	
-	<a data-bind="navi: 'studies,data', visible: $root.can_read">
+	<a data-bind="navi: 'studies,data', visible: $root.canRead">
 		<dash-el params="title: Lang.get('show_data_statistics')"><svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 0 24 24" width="48"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></dash-el>
 	</a>
 	
@@ -21,7 +21,7 @@
 	</a>
 </dash-row>
 
-<div data-bind="if: $root.is_admin">
+<div data-bind="if: $root.isAdmin">
 	<title-row params="title: Lang.get('server')"></title-row>
 	<dash-row>
 		<a class="stretched" data-bind="navi: 'accountList'">

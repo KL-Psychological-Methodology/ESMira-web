@@ -12,10 +12,20 @@ export function ViewModel(page) {
 	this.changePw = ko.observable(false);
 	this.preInit = function(index, admin) {
 		let tools = admin.tools;
-		this.is_admin = tools.is_rootAdmin();
-		this.can_read = tools.is_rootAdmin() || tools.read().length;
-		this.canCreate = tools.canCreate();
-		this.can_msg = tools.is_rootAdmin() || tools.msg().length;
+		if(tools.is_rootAdmin()) {
+			this.isAdmin = true;
+			this.canRead = true;
+			this.canWrite = true;
+			this.canCreate = true;
+			this.canMsg = true;
+		}
+		else {
+			this.isAdmin = false;
+			this.canRead = tools.read().length;
+			this.canWrite = tools.write().length;
+			this.canCreate = tools.canCreate();
+			this.canMsg = tools.msg().length;
+		}
 	};
 	
 	this.logout = function() {
