@@ -297,7 +297,7 @@ class QuestionnaireSaver {
 	 * @throws PageFlowException
 	 * @throws CriticalException
 	 */
-	function doPageFinishActions(string $appType = "Web"): ?stdClass {
+	function doPageFinishActions(string $appType = "Web", bool $canSave = true): ?stdClass {
 		$pageBefore = $this->currentPageInt;
 		
 		$missingInput = $this->extractInputs(); //also caches values
@@ -310,8 +310,10 @@ class QuestionnaireSaver {
 		if($missingInput != null)
 			return $missingInput;
 		
-		
-		if(isset($_POST['save'])) {
+		if(isset($_POST['continue'])) {
+			$this->setPage($pageBefore + 1, true);
+		}
+		else if($canSave && isset($_POST['save'])) {
 			$now = Main::getMilliseconds();
 			$pageStarted = $_SESSION[$this->cacheId]['pageStarted'];
 			$pageDurations = [];
@@ -333,9 +335,6 @@ class QuestionnaireSaver {
 			$this->unsetPage();
 			
 			$this->isCompleted = true;
-		}
-		else if(isset($_POST['continue'])) {
-			$this->setPage($pageBefore + 1, true);
 		}
 		
 		return null;

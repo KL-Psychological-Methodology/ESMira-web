@@ -20,7 +20,7 @@ try {
 		
 		$study = $studyStore->getStudyLangConfig((int) $_GET['id'], $lang);
 		$questionnaire = NoJsMain::getQuestionnaire($study, (int) $_GET['qid']);
-		$doForwarding = false;
+		$doForwarding = !isset($_GET['demo']);
 	}
 	else {
 		$studyData = NoJsMain::getStudyData();
@@ -34,7 +34,7 @@ try {
 	
 	$inputObj = new QuestionnaireSaver($study, $questionnaire, $doForwarding);
 	if($inputObj->finishActionNeeded()) {
-		$missingInput = $inputObj->doPageFinishActions('Web');
+		$missingInput = $inputObj->doPageFinishActions('Web', $doForwarding);
 	}
 	
 	if($inputObj->isCompleted) {

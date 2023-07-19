@@ -37,7 +37,10 @@ export function ViewModel(page) {
 	
 	let study, questionnaire, noCookiesSid;
 	
-	this.preInit = function({id, q, qId}, studies) {
+	let isDemo = false
+	
+	this.preInit = function({id, q, qId, demo}, studies) {
+		isDemo = !!demo;
 		//get essentials:
 		if(!id) {
 			let [foundStudy, foundQuestionnaire] = Studies.get_studyByInternalId(qId);
@@ -95,7 +98,7 @@ export function ViewModel(page) {
 				.replace("%d2", questionnaire.internalId())
 				.replace("%s1", Studies.accessKey())
 				.replace("%s2", currentLangCode)
-				.replace("%s3", noCookiesSid || ""),
+				.replace("%s3", (isDemo ? "demo=1&" : "") + (noCookiesSid || "")),
 			false, "post", data
 		).then(function({dataType, sid, currentPageInt, pageHtml, pageTitle, missingInput}) { //TODO: sid, missingInput
 			noCookiesSid = sid;
