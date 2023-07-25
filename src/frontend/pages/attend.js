@@ -134,17 +134,23 @@ function handleInput(input) {
 	
 	switch(input.responseType()) {
 		case "va_scale":
-			if(child.value == 50)
+			if(child.getAttribute("no-value")) {
 				child.classList.add("not-clicked");
-			let wasClicked = function(e) {
-				child.classList.remove("not-clicked");
-				//ios-track-clickable-workaround:
-				//let el = e.target;
-				//child.value = Math.min(el.max, Math.max(1, Math.round((el.max / el.offsetWidth) * (e.offsetX))));
-				return true;
+				let wasClicked = function(e) {
+					child.classList.remove("not-clicked");
+					//ios-track-clickable-workaround:
+					//let el = e.target;
+					//child.value = Math.min(el.max, Math.max(1, Math.round((el.max / el.offsetWidth) * (e.offsetX))));
+					return true;
+				}
+				child.addEventListener("mousedown", wasClicked);
+				child.addEventListener("touchstart", wasClicked);
 			}
-			child.addEventListener("mousedown", wasClicked);
-			child.addEventListener("touchstart", wasClicked);
+			if(input.showValue) {
+				child.addEventListener("change", function() {
+					child.previousElementSibling.innerText = child.value;
+				});
+			}
 			break;
 		default:
 			break;

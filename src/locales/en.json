@@ -304,6 +304,8 @@
     "login_history": "Login history",
     "logout": "Logout",
     "mark_messages_as_read": "Mark messages as read",
+    "max_value": "Max value",
+    "max_value_vas_desc": "Will default to 100 if lower than 1.",
     "message": "Message",
     "messages": "Messages",
     "minimal_length": "Minimal length: %d",

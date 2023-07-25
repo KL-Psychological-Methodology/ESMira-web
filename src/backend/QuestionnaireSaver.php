@@ -581,13 +581,16 @@ class QuestionnaireSaver {
 		$leftSideLabel = $input->leftSideLabel ?? '';
 		$rightSideLabel = $input->rightSideLabel ?? '';
 		$requiredMarker = $required ? 'required="required"' : '';
+		$noValue = $value == "";
+		$maxValue = $input->maxValue > 1 ? $input->maxValue : 100;
 		return $this->text($input, $required, $name, $value)
 			."<div class=\"center\">&nbsp;
 			<div class=\"left small_text\">$leftSideLabel</div>
 			<div class=\"right small_text\">$rightSideLabel</div>
 		</div>
 		<div class=\"center\">
-			<input name=\"$name\" value=\"" .($value != "" ? $value : 50) ."\" type=\"range\" min=\"1\" max=\"100\" $requiredMarker/>
+			<div></div>
+			<input " .($noValue ? 'no-value="1"' : '') ." name=\"$name\" value=\"" .($noValue ? ($maxValue/2) : $value) ."\" type=\"range\" min=\"1\" max=\"$maxValue\" $requiredMarker/>
 		</div>";
 	}
 	

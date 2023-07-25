@@ -62,9 +62,14 @@
 			<input type="checkbox" data-bind="checked: playSound"/>
 			<span data-bind="text: Lang.get('play_sound_when_finished')"></span>
 		</label>
-		<label class="vertical no_desc" data-bind="visible: responseType() === 'compass'">
+		<label class="vertical no_desc" data-bind="visible: responseType() === 'compass' || responseType() === 'vas'">
 			<input type="checkbox" data-bind="checked: showValue"/>
 			<span data-bind="text: Lang.get('show_value')"></span>
+		</label>
+		<label class="vertical no_desc" data-bind="visible: responseType() === 'va_scale'">
+			<small data-bind="text: Lang.get('max_value')"></small>
+			<input type="number" data-bind="value: maxValue()"/>
+			<small data-bind="text: Lang.get('max_value_vas_desc')"></small>
 		</label>
 		
 		

@@ -304,6 +304,8 @@
     "login_history": "Login Verlauf",
     "logout": "Ausloggen",
     "mark_messages_as_read": "Nachrichten als gelesen markieren",
+    "max_value": "Max value",
+    "max_value_vas_desc": "Wenn kleiner als 1, wird stattdessen 100 verwendet.",
     "message": "Nachricht",
     "messages": "Nachrichten",
     "minimal_length": "Mindestlänge: %d",

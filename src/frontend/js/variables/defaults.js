@@ -88,7 +88,8 @@ Defaults.inputs = {
 	packageId: "",
 	timeoutSec: 0,
 	playSound: 0,
-	showValue: true
+	showValue: false,
+	maxValue: 0
 };
 Defaults.inputs.$.children = {
 	subInputs: JSON.parse(JSON.stringify(Defaults.inputs))
