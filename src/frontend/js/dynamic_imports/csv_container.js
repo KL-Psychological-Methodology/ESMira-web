@@ -69,7 +69,7 @@ function CsvContainer(page) {
 	
 	let getSpecialColumns = function() {
 		let study = Studies.get_current();
-		return Studies.tools.list_specialDataColumns(study);
+		return study ? Studies.tools.list_specialDataColumns(study) : [];
 	}
 	
 	let load = function(obj) {
