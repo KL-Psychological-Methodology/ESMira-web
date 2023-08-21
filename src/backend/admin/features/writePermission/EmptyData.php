@@ -4,7 +4,6 @@ namespace backend\admin\features\writePermission;
 
 use backend\Configs;
 use backend\dataClasses\StatisticsJsonEntry;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 
 class EmptyData extends SaveStudy {
@@ -29,7 +28,7 @@ class EmptyData extends SaveStudy {
 						$observedVariableJsonEntryJson->timeInterval
 					);
 					$metadataStore->addMetadataEntry($key, $observedVariableJsonEntry);
-					$jsonEntry = new StatisticsJsonEntry($observedVariableJsonEntry);
+					$jsonEntry = StatisticsJsonEntry::createNew($observedVariableJsonEntry);
 					$studyStatisticsStore->addEntry($key, $jsonEntry);
 				}
 			}

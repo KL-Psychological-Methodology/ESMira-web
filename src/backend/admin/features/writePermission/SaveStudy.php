@@ -99,8 +99,8 @@ class SaveStudy extends HasWritePermission {
 				break;
 			case CreateDataSet::STATISTICS_DATATYPES_XY:
 			default:
-				$timeInterval = Configs::get('smallest_timed_distance');
-				$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED;
+				$timeInterval = 0;
+				$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA;
 				break;
 		}
 		
@@ -406,7 +406,8 @@ class SaveStudy extends HasWritePermission {
 				foreach($observedVariableJsonArray as $observedVariableJsonEntry) {
 					$metadataStore->addMetadataEntry($key, $observedVariableJsonEntry);
 					
-					$jsonEntry = new StatisticsJsonEntry($observedVariableJsonEntry);
+					
+					$jsonEntry = StatisticsJsonEntry::createNew($observedVariableJsonEntry);
 					
 					$conditionString = self::getConditionString($key, $observedVariableJsonEntry->storageType, $observedVariableJsonEntry->timeInterval, $observedVariableJsonEntry->conditions);
 					if(isset($existingIndex[$conditionString])) { //copy existing values over to new obj:

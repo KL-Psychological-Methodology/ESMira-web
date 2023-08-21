@@ -503,11 +503,9 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 						
 						//add data:
 						
-						for(let day in rawXData) {
-							if(!rawXData.hasOwnProperty(day))
-								continue;
-							
-							let [xValue, yValue] = calcValues(rawXData[day], rawYData[day]);
+						for(let i in rawXData) {
+							let xValue = rawXData[i],
+								yValue = rawYData[i];
 							
 							if(xValue < xMinValue)
 								xMinValue = xValue;
@@ -577,10 +575,9 @@ export function ChartBox(parent, statistics, publicStatistics, chart, onClick_fu
 						axisIndex.push(newIndex);
 						let index = newIndex.index;
 						
-						for(let day in rawXData) {
-							if(!rawXData.hasOwnProperty(day))
-								continue;
-							let [xValue, yValue] = calcValues(rawXData[day], rawYData[day]);
+						for(let i in rawXData) {
+							let xValue = rawXData[i],
+								yValue = rawYData[i];
 							
 							if(xValue < general_xMinValue)
 								general_xMinValue = xValue;

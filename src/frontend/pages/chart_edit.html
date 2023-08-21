@@ -5,7 +5,6 @@
 			<select class="small horizontal" data-bind="options: axisValues, value: axis.variableName, event: {change: function() {
 						conditionOptions = $root.get_conditionValues(axis.variableName());
 					}}"></select>
-			<span class="middle">=</span>
 		</label>
 		
 		<div style="position:absolute; right: 0; width: 260px; margin-top:20px;" data-bind="if: axis.conditions().length >= 2">
@@ -134,10 +133,8 @@
 			<small data-bind="text: Lang.get('statisticsDataType')"></small>
 			<select data-bind="options: $root.statistics_dataTypes, indexValue: dataType"></select>
 		</label>
-	</div>
-	
-	<div data-bind="if: dataType() !== $root.STATISTICS_DATATYPES_FREQ_DISTR">
-		<label class="vertical no_desc">
+		
+		<label class="horizontal" data-bind="if: dataType() === $root.STATISTICS_DATATYPES_DAILY">
 			<small data-bind="text: Lang.get('statisticsValueType')"></small>
 			<select data-bind="options: $root.statistics_valueTypes, indexValue: valueType"></select>
 		</label>

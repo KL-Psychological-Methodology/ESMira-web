@@ -2,6 +2,7 @@
 
 namespace backend\fileSystem\subStores;
 
+use ArrayIterator;
 use backend\dataClasses\StatisticsJsonEntry;
 use backend\Main;
 use backend\Configs;
@@ -69,7 +70,7 @@ class StudyStatisticsStoreFS implements StudyStatisticsStore {
 	private function handleTimedStorageData(stdClass $statisticsJson, DataSetCacheStatisticsEntry $statisticsEntry) {
 		$currentJson = &$statisticsJson->{$statisticsEntry->key}[$statisticsEntry->index];
 		$hasAnswer = $statisticsEntry->answer != '';
-		$data = $currentJson->data;
+		$data = &$currentJson->data;
 		$timeInterval = $currentJson->timeInterval ?? ONE_DAY;
 		$answerTimestamp = $this->calcTimestamp($statisticsEntry->timestamp/1000, $timeInterval);
 		
@@ -95,7 +96,7 @@ class StudyStatisticsStoreFS implements StudyStatisticsStore {
 	private function handleFreqDistributionStorageData(stdClass $statisticsJson, DataSetCacheStatisticsEntry $statisticsEntry) {
 		$currentJson = &$statisticsJson->{$statisticsEntry->key}[$statisticsEntry->index];
 		$hasAnswer = $statisticsEntry->answer != '';
-		$data = $currentJson->data;
+		$data = &$currentJson->data;
 		
 		if($hasAnswer) {
 			if(isset($data->{$statisticsEntry->answer}))
@@ -103,6 +104,33 @@ class StudyStatisticsStoreFS implements StudyStatisticsStore {
 			else {
 				$data->{$statisticsEntry->answer} = 1;
 				++$currentJson->entryCount;
+			}
+		}
+	}
+	private function handlePerDataStorageData(stdClass $statisticsJson, DataSetCacheStatisticsEntry $statisticsEntry) {
+		//this is always used in connection with other variables. In theory, it is possible that variables have a different amount of entries.
+		// This can become a problem when we have to delete entries and only delete them in one variable
+		// (because the first entry in this variable is then not guaranteed to point to the same value at the other variable anymore).
+		// So we need to make sure that keys stay the same after deleting entries -> we cant use a simple array but use an object instead
+		$currentJson = &$statisticsJson->{$statisticsEntry->key}[$statisticsEntry->index];
+		$data = &$currentJson->data;
+		
+		if($currentJson->entryCount == 0) {
+			$data->{0} = floatval($statisticsEntry->answer);
+			$currentJson->entryCount = 1;
+		}
+		else {
+			$iterator = new ArrayIterator($data);
+			$firstKey = $iterator->key();
+			$newKey = $firstKey + $currentJson->entryCount;
+			$data->{$newKey} = floatval($statisticsEntry->answer);
+			++$currentJson->entryCount;
+			
+			$maxEntries = Configs::get('statistics_per_data_storage_max_entries');
+			while($currentJson->entryCount > $maxEntries) {
+				$iterator->rewind();
+				unset($data->{$iterator->key()});
+				--$currentJson->entryCount;
 			}
 		}
 	}
@@ -150,6 +178,9 @@ class StudyStatisticsStoreFS implements StudyStatisticsStore {
 					break;
 				case CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR:
 					$this->handleFreqDistributionStorageData($statisticsJson, $statisticsEntry);
+					break;
+				case CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA:
+					$this->handlePerDataStorageData($statisticsJson, $statisticsEntry);
 					break;
 				default:
 					Main::report("Unknown storageType (\"$currentJson->storageType\") in study $this->studyId");
