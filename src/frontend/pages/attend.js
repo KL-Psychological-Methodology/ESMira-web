@@ -146,7 +146,7 @@ function handleInput(input) {
 				child.addEventListener("mousedown", wasClicked);
 				child.addEventListener("touchstart", wasClicked);
 			}
-			if(input.showValue) {
+			if(input.showValue()) {
 				child.addEventListener("change", function() {
 					child.previousElementSibling.innerText = child.value;
 				});
