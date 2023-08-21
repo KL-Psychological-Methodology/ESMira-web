@@ -54,6 +54,7 @@ catch(CriticalException $e) {
 	return;
 }
 catch(Throwable $e) {
+	Main::reportError($e);
 	echo JsonOutput::error('Internal server error');
 	return;
 }

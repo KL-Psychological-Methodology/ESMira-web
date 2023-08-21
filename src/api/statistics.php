@@ -3,6 +3,7 @@
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\JsonOutput;
+use backend\Main;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
@@ -34,6 +35,7 @@ catch(CriticalException $e) {
 	return;
 }
 catch(Throwable $e) {
+	Main::reportError($e);
 	echo JsonOutput::error('Internal server error');
 	return;
 }

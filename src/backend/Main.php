@@ -3,6 +3,7 @@
 namespace backend;
 
 use backend\exceptions\CriticalException;
+use Throwable;
 
 const IS_TEST_INSTANCE = PHP_SAPI == 'cli';
 
@@ -38,6 +39,9 @@ class Main {
 		return function_exists('microtime') ? round(microtime(true) * 1000) : time() * 1000;
 	}
 	
+	static function reportError(Throwable $e) {
+		self::report("Server had an error:\n" .$e->getFile() .'('.$e->getLine().'): ' .$e->getMessage() ."\n" .$e->getTraceAsString());
+	}
 	static function report(string $msg): bool {
 		return Configs::getDataStore()->getErrorReportStore()->saveErrorReport($msg);
 	}
