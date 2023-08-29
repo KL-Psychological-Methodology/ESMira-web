@@ -32,10 +32,10 @@ class GetParticipant implements Page {
 				<small>' .Lang::get('user_id') .'</small>
 				<input name="participant" type="text" value=""/>
 			</label>
-			<input name="new_participant" type="hidden" value="1"/>
-			<input type="hidden" name="accept_informedConsent" value="1"/>
-			<input type="submit" value="' .Lang::get('save') .'"/>
 		</p>
+		<input name="new_participant" type="hidden" value="1"/>
+		<input type="hidden" name="accept_informedConsent" value="1"/>
+		<input type="submit" value="' .Lang::get('save') .'"/>
 	</form>';
 	}
 }

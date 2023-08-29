@@ -23,14 +23,14 @@ class Legal implements Page {
 		if(empty($impressum))
 			$impressum = $serverStore->getImpressum($defaultLangCode);
 		if(!empty($impressum)) {
-			$output .= '<div class="title-row">'.Lang::get('impressum').'</div>' .$impressum;
+			$output .= '<div class="titleRow">'.Lang::get('impressum').'</div>' .$impressum;
 		}
 		
 		$privacyPolicy = $serverStore->getPrivacyPolicy($langCode);
 		if(empty($privacyPolicy))
 			$privacyPolicy = $serverStore->getPrivacyPolicy($defaultLangCode);
 		if(!empty($privacyPolicy)) {
-			$output .= '<br/><br/><div class="title-row">'.Lang::get('privacyPolicy').'</div>' .$privacyPolicy;
+			$output .= '<br/><br/><div class="titleRow">'.Lang::get('privacyPolicy').'</div>' .$privacyPolicy;
 		}
 		
 		return $output;

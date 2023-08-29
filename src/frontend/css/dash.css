@@ -1,0 +1,169 @@
+.dashRow {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.dashRow > * {
+	box-sizing: border-box;
+	margin: 1%;
+	width: 48%;
+	max-width: 400px;
+	min-width: 150px;
+}
+.dashRow .dashEl {
+	padding: 5px 3px;
+}
+
+.dashRow .dashEl.highlight {
+	background: #ffdfea;
+}
+
+.dashRow > .multipleChildren.vertical {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	gap: 10px;
+}
+.dashRow > .multipleChildren.horizontal {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 10px;
+}
+.dashRow > .multipleChildren > .dashEl.floating {
+	z-index: 1;
+	position: absolute;
+	width: 65px;
+	height: 40px;
+	overflow: hidden;
+	outline: 5px solid white;
+	text-align: center;
+}
+.dashRow > .multipleChildren > .dashEl.floating.right {
+	right: 0
+}
+.dashRow > .multipleChildren .dashEl.floatingSpaceLeft {
+	padding-left: 80px;
+}
+.dashRow > .multipleChildren .dashEl.floatingSpaceRight {
+	padding-right: 80px;
+}
+.dashRow .dashEl .dashIcon svg {
+	width: 48px;
+	height: 48px;
+}
+.dashRow .dashEl .dashIcon {
+	height: 48px;
+}
+.dashRow .dashEl.floating .dashIcon svg, .dashRow .dashEl.small .dashIcon svg {
+	width: 24px;
+	height: 24px;
+}
+.dashRow .dashEl.floating .dashIcon, .dashRow .dashEl.small .dashIcon {
+	height: 24px;
+}
+.dashRow .dashEl.floating .dashTitle{
+	font-size: 9pt;
+	padding: 0;
+}
+.dashRow > .multipleChildren {
+	position: relative;
+	display: flex;
+	padding: 0;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.dashRow > .multipleChildren > .dashLink {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+}
+
+.dashRow .dashEl.dashLink {
+	transition: background 0.5s, color 0.5s !important;
+	border-width: 0;
+	background-color: #e6f9ff;
+	text-decoration: none;
+}
+.dashRow .dashLink:hover, .dashRow .dashLink.dropdownOpened, .dashRow .dashLink.selectedLink {
+	background-color: #9fe0f7;
+}
+
+.dashRow .dashEl.disabled {
+	opacity: 0.5;
+}
+
+.dashRow .dashLink.highlight {
+	background-color: #ffc7e5
+}
+.dashRow .dashLink.highlight:hover, .dashRow .dashLink.highlight.selectedLink {
+	background: #ff8fce;
+	color: #dc4e9d
+}
+.dashRow .dashLink.highlight .dashIcon svg {
+	fill: #dc4e9d;
+}
+.dashRow .dashLink .dashMsg {
+	transition: color 0.5s !important;
+	color: #2f2f2f;
+}
+.dashRow .dashLink:hover .dashMsg {
+	color: #2b98ca;
+}
+
+.dashRow .dashEl {
+	position: relative;
+	border: 1px solid #9fe0f799;
+}
+
+.dashRow *.stretched {
+	width: 98%;
+	max-width: unset;
+}
+.dashRow *.cramped {
+	width: 30%;
+	max-width: 200px;
+}
+
+.dashRow *.small {
+	text-align: center;
+}
+.dashRow *.small .dashIcon {
+	display: inline-block;
+	vertical-align: middle;
+}
+.dashRow .dashEl .dashIcon {
+	text-align: center;
+}
+.dashRow .dashEl .dashIcon img {
+	background: #9fe0f7;
+	padding: 5px;
+	margin: 5px;
+}
+
+.dashRow .dashEl .dashTitle, .dashEl .dashMsg {
+	padding: 5px;
+	text-align: center;
+	line-height: 1.5;
+}
+.dashRow .dashEl .dashTitle {
+	font-weight: bold;
+}
+.dashRow .dashEl.small .dashTitle {
+	display: inline;
+	vertical-align: middle;
+}
+
+.dashRow .dashEl .dashMsg {
+	font-size: 11pt;
+	color: #7e7e7e;
+	text-align: justify;
+	hyphens: auto;
+}
+.dashRow .dashEl .link {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}

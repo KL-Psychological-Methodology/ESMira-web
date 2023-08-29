@@ -20,6 +20,8 @@ try {
 		
 		$study = $studyStore->getStudyLangConfig((int) $_GET['id'], $lang);
 		$questionnaire = NoJsMain::getQuestionnaire($study, (int) $_GET['qid']);
+		if(!$questionnaire)
+			throw new CriticalException("Questionnaire $_GET[qid] does not exist");
 		$doForwarding = !isset($_GET['demo']);
 	}
 	else {

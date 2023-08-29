@@ -768,7 +768,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 	function test_without_default_study() {
 		Main::$defaultPostInput = '{"de": {}}';
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('No default study');
+		$this->expectErrorMessage('No default study language');
 		$obj->exec();
 	}
 	

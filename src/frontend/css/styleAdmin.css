@@ -1,0 +1,459 @@
+/**********
+Dragging
+**********/
+
+.dragStarter {
+	cursor: move;
+}
+
+.is_dragging .dragStarted {
+	display: none;
+}
+
+.is_dragging .drag_spacer  {
+	opacity: 0.5;
+}
+.dragHidden {
+	transition: opacity 0.3s;
+}
+.is_dragging .dragHidden {
+	opacity: 0;
+	/*height: 0;*/
+}
+
+.dragTarget {
+	transition: background-color 0.5s;
+	min-height: 20px;
+	min-width: 20px;
+}
+.is_dragging .dragTarget {
+	background-color: #9fe0f7 !important;
+}
+
+
+
+/**********
+jsoneditor
+**********/
+
+
+#jsoneditor {
+	background-color: white;
+	width: 100%;
+	height: 100%;
+}
+#jsonSaveBtn {
+	display: none;
+	position: absolute;
+	right: 30px;
+	bottom: 5px;
+	opacity: 0.8;
+}
+
+
+/**********
+accountList
+**********/
+
+#accountList th {
+	text-align: center;
+	padding-right: 10px;
+}
+#accountList td {
+	vertical-align: top;
+	text-align: center;
+}
+#accountList .accountName {
+	text-align: left;
+}
+
+
+/**********
+dataTable
+**********/
+
+.dataContainer {
+	position: relative;
+	height: 100%;
+	overflow: auto;
+}
+
+.dataContainer .heightViewForScrollbar {
+	position: absolute;
+	width: 1px;
+}
+.dataTable {
+	position: sticky;
+	top: 0;
+	border-collapse: collapse;
+}
+.dataTable th {
+	background-color: #e6f9ff;
+	color: #2b98ca;
+	font-weight: bold;
+}
+.dataTable td, .dataTable th {
+	border: 1px solid #9FE0F7;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-align: center;
+	white-space: nowrap;
+}
+.dataTable tr:hover {
+	background-color: #e6f9ff;
+}
+.dataTable > tbody > tr.marked {
+	background-color: #2DBFF3;
+	color: white;
+}
+
+.dataTable > tbody > tr .prettyValue {
+	display: inline-block;
+}
+.dataTable > tbody > tr .realValue {
+	display: none;
+}
+.dataTable > tbody > tr:hover .prettyValue {
+	display: none;
+}
+.dataTable > tbody > tr:hover .realValue {
+	display: inline-block;
+}
+
+.dataTable > thead {
+	background-color: #e6f9ff;
+}
+
+.dataTable > thead > tr > th > span {
+	cursor: pointer;
+	transition: color 0.3s;
+}
+.dataTable > tbody > tr > td.index_column:hover, .dataTable > thead > tr > th > span:hover {
+	color: #2DBFF3;
+}
+
+.markedRowsInfoView {
+	position: fixed;
+}
+
+
+/**********
+errorReportList
+**********/
+
+.errorReportInfo {
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	width: 100%;
+	text-align: end;
+}
+.errorReportInfo .content {
+	background-color: #ffffffcc;
+	padding: 5px;
+	display: inline-block;
+}
+.errorReportInfo .content .clickable {
+	padding: 3px 0;
+}
+
+.errorReportList .line {
+	position: relative;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: white;
+}
+.errorReportList .line pre {
+	margin: 0;
+}
+.errorReportList .divider {
+	border: 2px solid #dc4e9d;
+}
+.errorReportList .line.sticky {
+	position: sticky;
+	z-index: 1;
+	top: 10px;
+	bottom: 0;
+	background-color: #9FE0F7;
+}
+.errorReportList .line:hover pre {
+	background-color: #00000011;
+	cursor: pointer;
+}
+
+
+/**********
+signalTimes
+**********/
+
+#signalTimes input[type="time"] {
+	width: 70px;
+	min-width: 70px;
+}
+#signalTimes input[type="number"] {
+	width: 40px;
+	min-width: 40px;
+}
+#signalTimes select {
+	width: 50px;
+	min-width: 50px;
+}
+#signalTimes .btnDelete {
+	margin-left: 0;
+	margin-right: 5px;
+	line-height: 400%;
+}
+
+
+/**********
+Warn
+**********/
+
+.warn {
+	display: block;
+	position: relative;
+	top: -5px;
+	width: 15px;
+	margin-left: auto;
+	margin-right: 10px;
+	margin-top: -15px;
+	line-height: 0;
+}
+
+
+/**********
+Messages
+**********/
+
+.recipientBox {
+	z-index: 2;
+	position: relative;
+}
+.recipientBox .recipientChooser {
+	display: inline;
+	position: relative;
+}
+.recipientBox .recipientList {
+	width: 100%;
+	margin-top: -10px;
+	max-height: 300px;
+	overflow-y: auto;
+}
+.recipientBox .recipientList > a {
+	display: block;
+	margin-bottom:5px;
+	font-size: 9pt;
+}
+
+.chatBubble {
+	margin: 10px 0;
+}
+
+.chatBubble .btnDelete {
+	vertical-align: top;
+}
+
+.chatBubble.fromClient.unread .msg {
+	background-color: #dc4e9d;
+}
+.chatBubble.pending .msg {
+	opacity: 0.5;
+}
+.chatBubble .msg {
+	display: inline-block;
+	position: relative;
+	max-width: 80%;
+	min-width: 150px;
+	height: auto;
+	border-radius: 10px;
+	color: white;
+	text-align: left;
+}
+.chatBubble .msg::after {
+	position: absolute;
+	top: 0;
+	width: 0;
+	height: 0;
+	border: 12px solid;
+	content: ' ';
+}
+.chatBubble .headline {
+	font-size: 9pt;
+	margin-bottom: 2px;
+}
+.chatBubble .header {
+	float: left;
+}
+.chatBubble .footer {
+	float: right;
+}
+.chatBubble .header, .chatBubble .footer {
+	font-size: 9pt;
+	margin: 3px 5px;
+}
+.chatBubble .content {
+	margin: 25px 20px 10px 20px;
+	white-space: pre-wrap;
+}
+
+.chatBubble.fromServer {
+	text-align: right;
+}
+.chatBubble.fromServer .msg {
+	background-color: #2b98ca;
+	margin-right: 20px;
+}
+.chatBubble.fromServer .msg::after {
+	right: -10px;
+	left: auto;
+	border-color: #2b98ca transparent transparent transparent;
+}
+
+.chatBubble.fromClient {
+	text-align: left;
+}
+.chatBubble.fromClient .msg {
+	background-color: #2DBFF3;
+	margin-left: 20px;
+}
+.chatBubble.fromClient div::after {
+	left: -10px;
+	right: auto;
+	border-color: #2DBFF3 transparent transparent transparent;
+}
+.chatBubble.fromClient.unread div::after {
+	border-color: #dc4e9d transparent transparent transparent;
+}
+
+
+/**********
+rich Text
+**********/
+
+label .richText {
+	margin-top: 5px;
+}
+.richText {
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-top: 5px;
+}
+
+.richText .toolbar {
+	display: flex;
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	justify-content: space-between;
+	background: white;
+
+	border-top: 1px solid #f9f9f9;
+	box-shadow: 0 2px 5px #0002;
+	margin: 0 2px;
+}
+.richText .toolbar .group {
+	display: flex;
+	justify-content: center;
+}
+.richText .toolbar .toolbarBtn {
+	width: 24px;
+	height: 24px;
+	transition: background 0.3s;
+	padding: 2px 3px;
+}
+.richText .toolbar .toolbarBtn svg {
+	fill: #777;
+	transition: fill 0.3s;
+}
+.richText .toolbar .toolbarBtn.active {
+	background: #e6f9ff;
+}
+.richText .toolbar .toolbarBtn.disabled {
+	opacity: 0.5;
+}
+.richText .toolbar .toolbarBtn.active svg {
+	fill: #2b98ca;
+}
+.richText .toolbar .toolbarBtn:hover {
+	background: #e6f9ff;
+	cursor: pointer;
+}
+.richText .editor .ProseMirror {
+	padding: 10px 3px;
+	border-bottom: 1px solid #dc4e9d;
+}
+.richText .editor .ProseMirror-focused {
+	background-color: #2b98ca06;
+}
+.richText .editor img.ProseMirror-selectednode {
+	outline: 3px solid #9FE0F7;
+}
+.richText .editor img {
+	max-width: 100%;
+}
+
+
+/**********
+observableLangChooser
+**********/
+
+.observableLangChooser {
+	text-align: end;
+}
+.observableLangChooser {
+	line-height: 100%; /* to make sure its vertically centered in .extra of title-line */
+}
+.observableLangChooser .element {
+	padding: 0 2px;
+	margin: 0 3px 0 3px;
+	line-height: 9pt !important;
+	font-size: 9pt !important;
+	border: 1px solid #9fe0f7;
+	transition: background-color 0.5s, color 0.5s !important;
+	background-color: white;
+}
+.observableLangChooser .element:hover {
+	background-color: #cdf0fc;
+}
+.observableLangChooser .element.selected {
+	background-color: #9fe0f7;
+}
+
+/**********
+source
+**********/
+
+.source {
+	height: 100%;
+}
+
+.source .applyBtn {
+	animation: move-in-from-top 0.5s;
+	position: absolute;
+	right: 15px;
+	top: 0;
+	padding: 5px;
+	border: 1px solid #9FE0F7;
+	border-top-width: 0;
+	border-left-width: 0;
+	background-color: #e6f9ff;
+	box-shadow: 0 3px 3px #0002;
+	color: #dc4e9d;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.source .applyBtn:hover {
+	color: #ff8fce;
+}
+
+
+/**********
+inputSelector
+**********/
+
+.inputSelector .search {
+	position: absolute;
+	z-index: 1;
+	background-color: #ffffffaa;
+}

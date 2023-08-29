@@ -14,7 +14,7 @@ class SaveServerConfigs extends HasAdminPermission {
 	 * @throws PageFlowException
 	 */
 	private function extractServerName(array $obj, string $langCode): string {
-		$serverName = urldecode($obj['serverName']);
+		$serverName = urldecode($obj['serverName'] ?? '');
 		if(!Main::strictCheckInput($serverName))
 			throw new PageFlowException("The server name '$serverName' in the language '$langCode' has forbidden characters");
 		else
@@ -24,7 +24,7 @@ class SaveServerConfigs extends HasAdminPermission {
 		if(!($settingsCollection = json_decode(Main::getRawPostInput(), true)))
 			throw new PageFlowException('Unexpected data');
 		
-		if(!isset($settingsCollection['configs']) || !isset($settingsCollection['translationData']))
+		if(!isset($settingsCollection['translationData']))
 			throw new PageFlowException('Missing data');
 		
 		$serverStore = Configs::getDataStore()->getServerStore();
@@ -39,21 +39,22 @@ class SaveServerConfigs extends HasAdminPermission {
 			
 			$serverNames[$code] = $this->extractServerName($obj, $code);
 			
-			$impressum = urldecode($obj['impressum']);
+			$impressum = urldecode($obj['impressum'] ?? '');
 			if(strlen($impressum))
 				$serverStore->saveImpressum($impressum, $code);
 			else
 				$serverStore->deleteImpressum($code);
 			
-			$privacyPolicy = urldecode($obj['privacyPolicy']);
+			$privacyPolicy = urldecode($obj['privacyPolicy'] ?? '');
 			if(strlen($privacyPolicy))
 				$serverStore->savePrivacyPolicy($privacyPolicy, $code);
 			else
 				$serverStore->deletePrivacyPolicy($code);
 		}
 		
-		$settingsCollection['configs']['serverName'] = $serverNames;
-		FileSystemBasics::writeServerConfigs($settingsCollection['configs']);
+		$settingsCollection['serverName'] = $serverNames;
+		unset($settingsCollection['translationData']);
+		FileSystemBasics::writeServerConfigs($settingsCollection);
 		
 		//if a language has been removed, we need to remove its files too:
 		foreach($oldLangCodes as $code) {
@@ -61,6 +62,7 @@ class SaveServerConfigs extends HasAdminPermission {
 			$serverStore->deletePrivacyPolicy($code);
 		}
 		
-		return [];
+		$config = new GetServerConfig();
+		return $config->exec();
 	}
 }

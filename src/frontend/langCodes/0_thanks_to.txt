@@ -1,0 +1,2 @@
+Thanks to ihmpavel for providing the language files under MIT
+Taken from: https:github.com/ihmpavel/all-iso-language-codes

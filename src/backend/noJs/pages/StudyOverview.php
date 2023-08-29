@@ -47,7 +47,7 @@ class StudyOverview implements Page {
 		if(isset($this->study->studyDescription) && strlen($this->study->studyDescription))
 			$output .= '<div class="scrollBox">' .$this->study->studyDescription .'</div>';
 		
-		$output .= '<br/><div class="title-row">' .Lang::get('colon_questionnaires') .'</div>';
+		$output .= '<br/><div class="titleRow">' .Lang::get('questionnaires') .'</div>';
 		foreach($this->study->questionnaires as $questionnaire) {
 			if(!NoJsMain::questionnaireIsActive($questionnaire))
 				continue;

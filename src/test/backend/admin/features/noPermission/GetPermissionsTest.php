@@ -53,8 +53,8 @@ class GetPermissionsTest extends BaseAdminPermissionTestSetup {
 		$this->assertEquals(Permission::getAccountName(), $output['accountName']);
 		$this->assertTrue($output['isLoggedIn']);
 		$this->assertEquals(['admin' => $this->isAdmin], $output['permissions']); //set in parent::setUpAccountStoreObserver()
-		$this->assertArrayNotHasKey('is_admin', $output);
-		$this->assertEquals($this->newMessages, $output['new_messages']);
+		$this->assertArrayNotHasKey('isAdmin', $output);
+		$this->assertEquals($this->newMessages, $output['newMessages']);
 	}
 	function test_with_admin() {
 		$obj = new GetPermissions();
@@ -63,8 +63,8 @@ class GetPermissionsTest extends BaseAdminPermissionTestSetup {
 		
 		$this->assertEquals(Permission::getAccountName(), $output['accountName']);
 		$this->assertTrue($output['isLoggedIn']);
-		$this->assertTrue($output['is_admin']);
-		$this->assertTrue($output['has_errors']);
-		$this->assertEquals($this->newMessages, $output['new_messages']);
+		$this->assertTrue($output['isAdmin']);
+		$this->assertTrue($output['hasErrors']);
+		$this->assertEquals($this->newMessages, $output['newMessages']);
 	}
 }

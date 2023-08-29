@@ -1,0 +1,181 @@
+#navigationRow {
+	position: absolute;
+	height: 30px;
+	top: 65px;
+	transform: translateY(25px);
+	opacity: 0;
+
+	font-size: 9pt;
+	font-weight: bold;
+	transition: all 0.3s;
+	white-space: nowrap;
+}
+#navigationRow #navigationRowPositioner {
+	display: flex;
+	border-spacing: 5px 0;
+	position: absolute;
+	left: 1%; /* because page.margin-left is the same */
+	right: 1%; /* because page.margin-right is the same */
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#navigationRow.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+
+/**********
+Title line
+**********/
+
+#saveBox {
+	padding: 5px 5px;
+	margin-right: 5px;
+}
+#publishBox {
+	padding: 5px 3px;
+}
+
+#saveBox, #publishBox {
+	opacity: 0;
+	transform: translateY(25px);
+	font-weight: bold;
+}
+#saveBox.visible, #publishBox.visible {
+	opacity: 1;
+	transform: translateY(0px);
+}
+#saveBox, #publishBox, #navMenu {
+	height: 15px;
+	background-color: #e6f9ff;
+	border: 1px solid #9FE0F7;
+	box-shadow: 2px 1px 3px #0002;
+	transition: opacity 0.3s, transform 0.3s, color 0.3s;
+}
+
+
+/*
+titleBoxRoot: gives the total available space
+titleBoxAbsolute: absolutely positioned so titleBoxRoot width stays the same no matter the content (and for hover)
+titleBox: positions the content to the right
+navMenu: lists content starting from the left and has the actual size for designing
+navContent: to calculate the needed width of all elements while navMenu is restricted
+*/
+.smallScreen #titleBoxRoot {
+	display: none;
+}
+#titleBoxRoot {
+	position: relative;
+	margin-right: 10px;
+	flex: 1 1 auto;
+}
+#titleBoxShadow {
+	position: absolute;
+	left: 0;
+	top: 1px;
+	bottom: 1px;
+	width: 10px;
+	border-left: 1px solid #9FE0F7;
+	background: linear-gradient(to right, #e6f9ff 0%,#e6f9ff00 100%)
+}
+#titleBoxRoot:hover #titleBoxShadow {
+	display: none;
+}
+
+#titleBoxAbsolute {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#titleBox {
+	display: inline-flex;
+	flex-direction: row-reverse;
+	max-width: 100%;
+	overflow-x: hidden;
+	padding-top: 3px;
+	margin-top: -3px;
+	padding-right: 3px;
+}
+#titleBox:hover {
+	overflow: visible;
+}
+
+#navMenu {
+	padding: 5px 0;
+	transition: width 0.3s ease 0s;
+	min-width: 150px;
+	overflow: hidden;
+	font-weight: normal;
+	flex: 0 0 auto;/* to make sure its width (set by update_navi_dimensions() can be bigger than parent - or stuff wont be positioned at the right*/
+}
+
+#saveBox:before{
+	content: "[";
+}
+#saveBox:after {
+	content: "]";
+}
+
+#navContent {
+	display: inline-block;
+}
+#navContent > span {
+	display: inline-block;
+	max-width: 200px;
+	text-overflow: ellipsis;
+	transition: max-width 0.5s;
+	overflow: hidden;
+	color: #2b98ca;
+	margin-top: 0;
+	padding: 0 3px
+}
+#navContent > span:first-child:before {
+	content: "";
+	margin-left: 2px;
+}
+
+#navContent > span:last-child a {
+	text-decoration: none;
+}
+
+#navContent > span:before {
+	content: "➤";
+	margin-right: 6px;
+	line-height: 1;
+}
+
+#navContent .dropdownOpener {
+	display: inline-block;
+	width: 20px;
+	height: 10px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 8pt;
+}
+#navContent .dropdownOpener:before {
+	content: "\25BD";
+	line-height: 1;
+}
+#navContent .dropdownOpener:hover:before, #navContent .dropdownOpener.dropdownOpened:before {
+	content: "\25BC";
+}
+
+.navAlternatives > .line:before {
+	content: "\25B7";
+	color: #2b98ca;
+	padding-right: 2px;
+}
+.navAlternatives > .line.disabled:before {
+	content: "\25B6";
+}
+.navAlternatives .line.disabled {
+	color: #2b98ca;
+	font-weight: bold;
+}
+.navAlternatives .line {
+	font-size: 9pt;
+	padding-bottom: 5px;
+}

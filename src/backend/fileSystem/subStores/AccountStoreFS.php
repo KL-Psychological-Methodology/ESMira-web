@@ -18,7 +18,7 @@ class AccountStoreFS implements AccountStore {
 		$exists1 = file_exists($pathHistory1);
 		$exists2 = file_exists($pathHistory2);
 		
-		$header = Main::arrayToCSV(['login', 'ip', 'userAgent'], Configs::get('csv_delimiter'));
+		$header = Main::arrayToCSV(['uploaded', 'login', 'ip', 'userAgent'], Configs::get('csv_delimiter'));
 		
 		if($exists1 && $exists2) {
 			if(filemtime($pathHistory1) < filemtime($pathHistory2))
@@ -123,6 +123,17 @@ class AccountStoreFS implements AccountStore {
 			$permissions[$accountName] = ['create' => $canCreate];
 		else
 			$permissions[$accountName]['create'] = $canCreate;
+		
+		PermissionsLoader::exportFile($permissions);
+	}
+	
+	
+	private function movePermissions(string $oldAccountName, string $newAccountName) {
+		$permissions = PermissionsLoader::importFile();
+		if(!isset($permissions[$oldAccountName]) || isset($permissions[$newAccountName]))
+			return;
+		$permissions[$newAccountName] = $permissions[$oldAccountName];
+		unset($permissions[$oldAccountName]);
 		
 		PermissionsLoader::exportFile($permissions);
 	}
@@ -253,6 +264,8 @@ class AccountStoreFS implements AccountStore {
 		
 		$this->removeAccount($oldAccountName);
 		file_put_contents($pathLogins, "$newAccountName:$password\n", FILE_APPEND | LOCK_EX);
+		
+		$this->movePermissions($oldAccountName, $newAccountName);
 	}
 	
 	public function removeAccount($accountName) {

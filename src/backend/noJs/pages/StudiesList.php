@@ -43,8 +43,8 @@ class StudiesList implements Page {
 	
 	public function getContent(): string {
 		$accessKey = Main::getAccessKey();
-		return '<form method="get" action="" class="access_key_box">
-			<label class="no_desc">
+		return '<form method="get" action="" class="accessKeyBox">
+			<label class="noDesc">
 				<small>' .Lang::get('accessKey') .'</small>
 				<input type="hidden" name="studies"/>
 				<input name="key" type="text" value="' .($accessKey ? htmlentities($accessKey) : '') .'">

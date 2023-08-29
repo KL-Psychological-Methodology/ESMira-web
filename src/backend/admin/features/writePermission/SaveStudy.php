@@ -374,7 +374,7 @@ class SaveStudy extends HasWritePermission {
 		$this->saveStatistics();
 	}
 	
-	private  function createNamedStructureFromStatistics(stdClass $statistics, array $metadata): array {
+	private function createNamedStructureFromStatistics(stdClass $statistics, array $metadata): array {
 		$index = [];
 		if(!empty($statistics) || !empty($metadata)) {
 			foreach($statistics as $value => $jsonKeyBox) {
@@ -474,7 +474,7 @@ class SaveStudy extends HasWritePermission {
 		}
 		else {
 			$study->new_changes = true;
-			$study->subVersion += 1;
+			$study->subVersion = ($study->subVersion ?? 0) + 1;
 		}
 		
 		

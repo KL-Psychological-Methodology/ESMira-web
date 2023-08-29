@@ -19,13 +19,13 @@ if(Configs::getDataStore()->isInit()) {
 	}
 	else if(isset($_GET['id'])) {
 		$studyId = (int)$_GET['id'];
-		$jsKey = isset($_GET['app_install']) ? "appInstall,id:$studyId" : "sOverview,id:$studyId";
+		$jsKey = isset($_GET['app_install']) ? "appInstall,id:$studyId" : "studyOverview,id:$studyId";
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 	}
 	else if(isset($_GET['key']))
-		$jsKey = isset($_GET['app_install']) ? 'appInstall' : 'sOverview';
+		$jsKey = isset($_GET['app_install']) ? 'appInstall' : 'studyOverview';
 	else if(isset($_GET['impressum']))
 		$jsKey = 'legal,impressum';
 	else if(isset($_GET['privacyPolicy']))
@@ -41,7 +41,7 @@ if(Configs::getDataStore()->isInit()) {
 }
 else {
 	$servername = '';
-	$jsKey = 'init_esmira';
+	$jsKey = 'initESMira';
 }
 
 $accessKey = Main::getAccessKey();
@@ -68,41 +68,39 @@ else
 	<title>ESMira</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
-	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Mobile; Server; Open Source" />
+	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Questionnaire; Study; Mobile; Server; Open Source" />
 </head>
 <body onload="ESMira.init(<?php echo "'$jsKey','$servername',$serverVersion,'$accessKey','$lang','$type'"; ?>)">
 
 <div id="header">
 	<a href="#<?php echo $jsKey; ?>">
-		<img src="frontend/imgs/web_header.png" alt="ESMira"/>
+		<img src="frontend/imgs/webHeader.png" alt="ESMira"/>
 	</a>
-	<div class="title" id="header_serverName"></div>
+	<div class="title" id="headerServerName"></div>
 </div>
 
-
-<div id="el_pages">
-	<div class="page" style="opacity: 1">
-		<div class="page_title"></div>
-		<div class="page_content">
-			<noscript>
-				<div class="center highlight">
-					No JavaScript detected. if you are not redirected automatically, click
-					<a href="<?php echo $noJsUrl; ?>">here</a>
-				</div>
-				<meta http-equiv="refresh" content="0; url=<?php echo $noJsUrl; ?>"/>
-			</noscript>
+<div id="sectionContainer">
+	<div id="sectionsView">
+		<div class="section" style="opacity: 1">
+			<div class="sectionTitle"></div>
+			<div class="sectionContent">
+				<noscript>
+					<div class="center highlight">
+						No JavaScript detected. if you are not redirected automatically, click
+						<a href="<?php echo $noJsUrl; ?>">here</a>
+					</div>
+					<meta http-equiv="refresh" content="0; url=<?php echo $noJsUrl; ?>"/>
+				</noscript>
+			</div>
 		</div>
 	</div>
 </div>
 
 
-<div id="btn_up"></div>
+<input id="sectionBoxWidthSetter" type="range" min="20" max="100" value="45"/>
 
-
-<input id="pageBox_width" type="range" min="20" max="100" value="45">
-
-<div id="lang_chooser"></div>
-<a id="legalLink" class="internal_link no_arrow" href="#legal"></a>
+<div id="siteLangChooser"></div>
+<a id="legalLink" href="#legal"></a>
 
 </body>
 </html>
