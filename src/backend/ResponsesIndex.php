@@ -25,6 +25,7 @@ class ResponsesIndex {
 				$this->addName("$name~usageTimeToday");
 				break;
 			case 'bluetooth_devices':
+				$this->addName($name);
 				$this->addName("$name~devices");
 				break;
 			case 'dynamic_input':
