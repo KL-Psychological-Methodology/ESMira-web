@@ -414,7 +414,7 @@ class SaveStudy extends HasWritePermission {
 						$oldEntry = $existingIndex[$conditionString];
 						$jsonEntry->data = $oldEntry->data;
 						$jsonEntry->entryCount = $oldEntry->entryCount;
-						$jsonEntry->timeInterval = $oldEntry->timeInterval;
+						$jsonEntry->timeInterval = $oldEntry->timeInterval ?? 0;
 					}
 //						else {
 //							//TODO: extract statistics from already existing data
