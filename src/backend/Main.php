@@ -39,8 +39,8 @@ class Main {
 		return function_exists('microtime') ? round(microtime(true) * 1000) : time() * 1000;
 	}
 	
-	static function reportError(Throwable $e) {
-		self::report("Server had an error:\n" .$e->getFile() .'('.$e->getLine().'): ' .$e->getMessage() ."\n" .$e->getTraceAsString());
+	static function reportError(Throwable $e, string $msg = 'Server had an error:') {
+		self::report("$msg\n" .$e->getFile() .'('.$e->getLine().'): ' .$e->getMessage() ."\n" .$e->getTraceAsString());
 	}
 	static function report(string $msg): bool {
 		return Configs::getDataStore()->getErrorReportStore()->saveErrorReport($msg);

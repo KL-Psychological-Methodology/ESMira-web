@@ -73,7 +73,19 @@ class UserDataStoreFS extends UserDataStore {
 		$pathUserData = PathsFS::fileUserData($studyId, $this->userId);
 		if(!file_exists($pathUserData))
 			throw new CriticalException("No user data for study $studyId");
-		return UserDataLoader::import(file_get_contents($pathUserData));
+		try {
+			return UserDataLoader::import(file_get_contents($pathUserData));
+		}
+		catch(CriticalException $e) {
+			Main::reportError($e,
+				"The userData file seems to be corrupt!\n"
+				."This user will probably not be able to save any new data!\n\n"
+				."To resolve, either fix or delete $pathUserData (the userData file does not contain vital information)\n"
+				."Study: $studyId\n"
+				."User-Id: $this->userId"
+			);
+			throw $e;
+		}
 	}
 	
 	public function close() {
