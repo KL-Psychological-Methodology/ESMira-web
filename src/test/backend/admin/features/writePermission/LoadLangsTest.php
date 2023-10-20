@@ -2,7 +2,7 @@
 
 namespace test\backend\admin\features\writePermission;
 
-use backend\admin\features\writePermission\LoadLangs;
+use backend\admin\features\writePermission\GetFullStudy;
 use backend\JsonOutput;
 use backend\subStores\StudyStore;
 use PHPUnit\Framework\MockObject\Stub;
@@ -26,7 +26,7 @@ class LoadLangsTest extends BaseWritePermissionTestSetup {
 	}
 	
 	function test() {
-		$obj = new LoadLangs();
+		$obj = new GetFullStudy();
 		
 		$obj->execAndOutput();
 		$this->expectOutputString(JsonOutput::successString($this->langJson));

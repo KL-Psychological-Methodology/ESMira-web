@@ -46,14 +46,14 @@ class About implements Page {
 	
 	
 		foreach($content->page_about as $entry) {
-			$output .= "<div class=\"title-row\">$entry->title</div>";
+			$output .= "<div class=\"titleRow\">$entry->title</div>";
 			
 			foreach($entry->elements as $element) {
 				$output .= "<div class=\"highlight\">
 					<div class=\"horizontal\">$element->icon</div>
 					<span class=\"middle\">$element->title</span>
 				</div>
-				<div class=\"justify lineSize spacing_left\">
+				<div class=\"justify lineSize spacingLeft\">
 					<p class=\"justify\">$element->desc</p>
 				</div>";
 			}
@@ -70,7 +70,7 @@ class About implements Page {
 				</div>
 				<span class=\"middle\">$content->use_for_own_studies</span>
 			</div>
-			<div class=\"justify lineSize spacing_left\">
+			<div class=\"justify lineSize spacingLeft\">
 				<a class=\"justify\" target=\"_blank\" href=\"$content->repository_link'\">
 				<p class=\"justify\">$content->esmira_own_server_get_started</p>
 				</a>

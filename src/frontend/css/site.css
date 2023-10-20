@@ -1,0 +1,264 @@
+/**********
+Site elements
+**********/
+
+#header {
+	position:relative;
+	margin: auto;
+	text-align: center;
+}
+#header img {
+	height: 50px;
+}
+#header .title {
+	position: absolute;
+	left: 50%;
+	margin-top: -15px;
+	word-break: keep-all;
+	color: #2b98ca;
+	font-weight: bold;
+}
+#siteLangChooser {
+	position: absolute;
+	left: 10px;
+	top: 5px;
+}
+#siteLangChooser, .langChooserDropdown {
+	font-size: 9pt;
+}
+#siteLangChooser .desc, .langChooserDropdown .desc {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+#siteLangChooser .desc {
+	padding-right: 0;
+}
+#siteLangChooser .desc:after {
+	content: "\25BC"
+}
+.langChooserDropdown a {
+	text-decoration: none;
+}
+
+#legalLink {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	z-index: 1;
+	font-size: 10pt;
+}
+
+
+
+#sectionBoxWidthSetter {
+	z-index: 1;
+	position: absolute;
+	top: 1px;
+	right: 10px;
+	width: 100px;
+}
+
+
+#no_js_info {
+
+	position: absolute;
+	left: 11%;
+	top:65px;
+	/*z-index: 0;*/
+	padding: 3px 10px;
+	background: #9FE0F7;
+	box-shadow: 3px 3px 5px #aaa;
+	font-size: 9pt;
+	font-weight: bold;
+	color: #dc4e9d;
+}
+#no_js_info img {
+	width: 15px;
+}
+
+
+/**********
+sectionsView
+**********/
+
+#sectionsView {
+	z-index: 1;
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 80%;
+	margin: auto auto 2%;
+	top: 90px;
+	bottom: 0;
+	min-height: 100px;
+	overflow: visible;
+	transition: transform 0.3s;
+	white-space: nowrap;
+}
+
+#sectionsView > .section {
+	position: relative;
+	display: inline-flex;
+	overflow: hidden;
+	flex-direction: column;
+	width: 98%;
+	height: 98%;
+	min-height:100px;
+	max-height: 100%;
+	margin-left: 1%;
+	margin-right: 1%;
+
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	vertical-align: top;
+	background-color: white;
+	border: 1px solid #9FE0F7;
+	border-top-width: 0;
+	box-shadow: 3px 3px 5px #0002;
+	transition: opacity 0.3s;
+
+	white-space: normal;
+	animation: fade-in 0.5s;
+}
+
+#sectionsView > .section:first-child .back {
+	display: none;
+}
+#sectionsView > .section:first-child .sectionTop .sectionTitle {
+	padding-left: 15px;
+}
+#sectionsView > .section .back svg {
+	fill: #dc4e9d;
+}
+#sectionsView > .section .back:hover svg {
+	fill: #ff8fce;
+}
+
+#sectionsView > .section .sectionTop {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #e6f9ff;
+	color: #dc4e9d;
+	border-top: 1px solid #9FE0F7;
+	border-bottom: 1px solid #9FE0F7;
+	box-shadow: 0 3px 3px #0002;
+	transition: background-color 0.3s;
+}
+
+#sectionsView > .section .sectionTop .back {
+	width: 25px;
+	height: 25px;
+	margin-left: 0;
+	margin-top: 0;
+}
+#sectionsView > .section .sectionTop .sectionTitle {
+	z-index: 1;
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	height: 25px;
+	padding: 10px 10px 10px 5px;
+	font-size: 16pt;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#sectionsView > .section.pointOut .sectionTop {
+	background-color: #cdf0fc;
+}
+
+
+#sectionsView > .section .sectionTitle > .title {
+	height: 25px;
+	margin-right: 20px;
+	cursor: pointer;
+	flex: 0 100 auto;
+}
+#sectionsView > .section .sectionTitle > .extra {
+	max-height: 25px;
+	line-height: 25px;
+}
+#sectionsView > .section .sectionTitle > .extra > label {
+	padding: 0;
+}
+
+#sectionsView > .section .sectionTitle > .extra input {
+	color: #dc4e9d !important;
+	max-height: 25px;
+	padding: 0;
+}
+#sectionsView > .section .sectionTitle > .extra svg {
+	max-height: 25px;
+}
+#sectionsView > .section .sectionTitle > .title, .section .sectionTitle .extra {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#sectionsView > .section .sectionTitle .extra label {
+	margin-top: -3px; /*This is a workaround: For some reason, label elements have some kind of top-margin, that I can not get rid of.*/
+}
+
+#sectionsView > .section .sectionContent {
+	position: relative;
+	overflow: auto;
+	padding: 1%;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	transition: opacity 0.3s;
+}
+
+#sectionsView > .section .loader.visible {
+	transform: translateX(0);
+}
+#sectionsView > .section .loader.isError {
+	font-weight: bold;
+	color: #dc4e9d;
+}
+
+#sectionsView > .section .loader {
+	transform: translateX(-100%);
+
+	position: absolute;
+	left: 0;
+	top: 55px;
+	max-width: 90%;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	z-index: 1000;
+	transition: transform 0.3s, color 0.6s;
+
+	border: 1px solid #9FE0F7;
+	border-left-width: 0;
+	background-color: #e6f9ff;
+	box-shadow: 0 3px 3px #0002;
+	color: #2b98ca;
+}
+#sectionsView > .section .loader .loaderState {
+	margin-right: 20px;
+	overflow-x: auto;
+}
+#sectionsView > .section .loader .loaderAnimation {
+	margin-right: 10px;
+}
+
+#sectionsView > .section .loader .loaderRetry:before {
+	content: "[";
+}
+#sectionsView > .section .loader .loaderRetry:after {
+	content: "]";
+}
+#sectionsView > .section .loader .loaderClose {
+	width: 24px;
+	height: 24px;
+}

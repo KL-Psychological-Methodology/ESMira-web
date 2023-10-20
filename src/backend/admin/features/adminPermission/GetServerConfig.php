@@ -10,10 +10,6 @@ class GetServerConfig extends HasAdminPermission {
 	function exec(): array {
 		$langCodes = Configs::get('langCodes');
 		$serverName = Configs::get('serverName');
-		$configs = [
-			'langCodes' => $langCodes,
-			'defaultLang' => Configs::get('defaultLang')
-		];
 		$translationData = [];
 		
 		$serverStore = Configs::getDataStore()->getServerStore();
@@ -25,7 +21,8 @@ class GetServerConfig extends HasAdminPermission {
 			];
 		}
 		return [
-			'configs' => $configs,
+			'langCodes' => $langCodes,
+			'defaultLang' => Configs::get('defaultLang'),
 			'translationData' => $translationData
 		];
 	}

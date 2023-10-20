@@ -11,7 +11,7 @@ class AdminTest extends BaseApiTestSetup {
 	
 	function test() {
 		$this->setGet([
-			'type' => 'get_permissions',
+			'type' => 'GetPermissions',
 		]);
 		$this->expectOutputString(JsonOutput::successObj(['isLoggedIn' => false]));
 		require DIR_BASE .'/api/admin.php';

@@ -29,8 +29,8 @@ class GetRewardCodeData extends HasReadPermission {
 		
 		return [
 			'rewardCodes' => $rewardCodes,
-			'participantsWithRewardCode' => $participantsWithRewardCode,
-			'participantsWithoutRewardCode' => $participantsWithoutRewardCode
+			'userIdsWithRewardCode' => $participantsWithRewardCode,
+			'userIdsWithoutRewardCode' => $participantsWithoutRewardCode
 		];
 	}
 }

@@ -6,6 +6,7 @@ use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
+use backend\noJs\pages\AppInstall;
 use backend\noJs\pages\GetParticipant;
 use backend\noJs\pages\InformedConsent;
 use stdClass;
@@ -98,7 +99,9 @@ class QuestionnaireSaver {
 	private function doForwarding() {
 		$studyId = $this->study->id;
 		
-		if(isset($this->study->informedConsentForm) && strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$studyId"])) {
+		if(isset($this->study->publishedWeb) && !$this->study->publishedWeb)
+			throw new ForwardingException(new AppInstall());
+		else if(isset($this->study->informedConsentForm) && strlen($this->study->informedConsentForm) && !isset($_COOKIE["informed_consent$studyId"])) {
 			if(!isset($_POST['informed_consent']))
 				throw new ForwardingException(new InformedConsent());
 			else
@@ -199,7 +202,7 @@ class QuestionnaireSaver {
 		if($page->randomized ?? false)
 			shuffle($inputs);
 		
-		$output = '';
+		$output = '<form class="questionnaireBox coloredLines" method="post">';
 		
 		if(isset($page->header))
 			$output .= "<div class=\"line horizontalPadding verticalPadding\">$page->header</div>";
@@ -215,7 +218,7 @@ class QuestionnaireSaver {
 		
 		$output .= '<input type="hidden" name="participant" value="' .$this->participant .'"/>
 			<input type="hidden" name="informed_consent" value="1"/>
-			<p class="small_text spacing_top">* input required</p>'
+			<p class="smallText spacingTop">* input required</p>'
 			.($this->currentPageInt > 0
 				? '<input type="submit" id="pagePrevious" name="previous" class="left" value="'.Lang::get('previous').'"/>'
 				: ''
@@ -415,13 +418,13 @@ class QuestionnaireSaver {
 		$requiredMarker = $required ? 'required="required"' : '';
 		
 		return $this->text($input, $required, $name, $value)
-			."<div class=\"list_parent\">
-				<div class=\"list_child center\">&nbsp;
-					<label class=\"left no_desc no_title\">
+			."<div class=\"listParent\">
+				<div class=\"listChild center\">&nbsp;
+					<label class=\"left noDesc noTitle\">
 						$leftSideLabel
 						<input type=\"radio\" name=\"$name\" value=\"0\" $leftChecked $requiredMarker/>
 					</label>
-					<label class=\"right no_desc no_title\">
+					<label class=\"right noDesc noTitle\">
 						<input type=\"radio\" name=\"$name\" value=\"1\" $rightChecked $requiredMarker/>
 						$rightSideLabel
 					</label>
@@ -510,8 +513,8 @@ class QuestionnaireSaver {
 		return $this->text($input, $required, $name, $value)
 			."<div class=\"center\">
 			<div>&nbsp;
-				<div class=\"left small_text\">$leftSideLabel</div>
-				<div class=\"right small_text\">$rightSideLabel</div>
+				<div class=\"left smallText\">$leftSideLabel</div>
+				<div class=\"right smallText\">$rightSideLabel</div>
 			</div>
 			<div>
 				$radioBoxes
@@ -522,11 +525,11 @@ class QuestionnaireSaver {
 	function list_multiple(stdClass $input, bool $required, string $name, string $value): string {
 		$radioBoxes = '';
 		foreach($input->listChoices ?? [] as $v) {
-			$radioBoxes .= '<label class="no_title no_desc vertical"><input class="horizontal" type="checkbox" name="'.$name.'[]" value="'.$v.'" ' .(strpos($value, $v) !== false ? 'checked="checked"' : '') .'/><span>'.$v.'</span></label>';
+			$radioBoxes .= '<label class="noTitle noDesc vertical"><input class="horizontal" type="checkbox" name="'.$name.'[]" value="'.$v.'" ' .(strpos($value, $v) !== false ? 'checked="checked"' : '') .'/><span>'.$v.'</span></label>';
 		}
 		return $this->text($input, $required, $name, $value)
-			."<div class=\"list_parent\">
-			<div class=\"list_child\">
+			."<div class=\"listParent\">
+			<div class=\"listChild\">
 				$radioBoxes
 			</div>
 		</div>";
@@ -537,9 +540,9 @@ class QuestionnaireSaver {
 		$requiredMarker = $required ? 'required="required"' : '';
 		
 		if(isset($input->asDropDown) && !$input->asDropDown) {
-			$output .= '<div class="list_parent"><div class="list_child center">';
+			$output .= '<div class="listParent"><div class="listChild center">';
 			foreach($input->listChoices as $choiceValue) {
-				$output .= "<label class=\"vertical no_desc no_title\"><input type=\"radio\" name=\"$name\" value=\"$choiceValue\" ".($choiceValue==$value ? 'checked="checked"' : '') ."$requiredMarker/>
+				$output .= "<label class=\"vertical noDesc noTitle\"><input type=\"radio\" name=\"$name\" value=\"$choiceValue\" ".($choiceValue==$value ? 'checked="checked"' : '') ."$requiredMarker/>
 					<span>$choiceValue</span>
 					</label>";
 			}
@@ -585,8 +588,8 @@ class QuestionnaireSaver {
 		$maxValue = (isset($input->maxValue) && $input->maxValue > 1) ? $input->maxValue : 100;
 		return $this->text($input, $required, $name, $value)
 			."<div class=\"center\">&nbsp;
-			<div class=\"left small_text\">$leftSideLabel</div>
-			<div class=\"right small_text\">$rightSideLabel</div>
+			<div class=\"left smallText\">$leftSideLabel</div>
+			<div class=\"right smallText\">$rightSideLabel</div>
 		</div>
 		<div class=\"center\">
 			<div></div>

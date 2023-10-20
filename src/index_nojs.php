@@ -56,9 +56,10 @@ function getPageObj(): Page {
  * @throws CriticalException
  */
 function pageToOutput(Page $page) {
-	echo '<div class="page_top page_title">'
-		.$page->getTitle()
-		.'</div><div class="page_content">' .$page->getContent() .'</div>';
+	echo '<div class="sectionTop"><div class="sectionTitle">'
+			.$page->getTitle()
+		.'</div></div>'
+		.'<div class="sectionContent">' .$page->getContent() .'</div>';
 }
 
 function drawPage(Page $page = null) {
@@ -109,30 +110,30 @@ function drawPage(Page $page = null) {
         }
 	</style>
 	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
-	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Mobile; Server; Open Source" />
+	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Questionnaire; Study; Mobile; Server; Open Source" />
 </head>
-<body class="is_init">
+<body class="isInit">
 	<div id="header">
 		<a href="?">
-			<img src="frontend/imgs/web_header.png" alt="ESMira"/>
+			<img src="frontend/imgs/webHeader.png" alt="ESMira"/>
 		</a>
 		<div class="title"><?php echo Configs::getServerName(); ?></div>
 	</div>
 	<div id="no_js_info">
-		<img class="middle" src="frontend/imgs/warn.svg" alt=""/>
+		<img class="middle" src="frontend/imgs/icons/warn.svg" alt=""/>
 		&nbsp;
 		<span class="middle"><?php echo Lang::get('no_js'); ?></span>
 	</div>
 	
 	
-	<div id="el_pages">
-		<div class="page has_title" style="opacity: 1">
+	<div id="sectionsView">
+		<div class="section" style="opacity: 1">
 			<?php drawPage(); ?>
 		</div></div><!--Note: We cant have a whitespace here-->
 	
 	
 	
-	<div id="lang_chooser">
+	<div id="siteLangChooser">
 		<a href="?change_lang">
 		<?php
 		switch(Main::getLang()) {
@@ -150,7 +151,7 @@ function drawPage(Page $page = null) {
 		?>
 		</a>
 	</div>
-	<a id="legalLink" class="internal_link no_arrow" href="?legal"><?php echo Lang::get('impressum'); ?></a>
+	<a id="legalLink" href="?legal"><?php echo Lang::get('impressum'); ?></a>
 </body>
 </html>
 <?php

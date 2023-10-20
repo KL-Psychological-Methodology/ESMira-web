@@ -1,0 +1,36 @@
+.btnCollection {
+	display: inline-flex;
+	align-items: center;
+}
+.btn {
+	display: inline-flex;
+	align-items: center;
+	vertical-align: middle;
+	margin-left: 5px;
+	margin-right: 5px;
+	/*white-space: nowrap;*/
+}
+.btn svg {
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	flex: 0 0 auto;
+}
+
+.btn.dropdownOpened svg {
+	fill: #2DBFF3;
+}
+
+.btnDelete svg {
+	fill: #dc4e9d !important;
+	transition: fill 0.3s;
+}
+.btnDelete span {
+	transition: color 0.3s;
+}
+.btnDelete:hover span {
+	color: #ff8fce !important;
+}
+.btnDelete:hover svg {
+	fill: #ff8fce !important;
+}

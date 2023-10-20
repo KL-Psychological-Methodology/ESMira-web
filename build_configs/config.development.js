@@ -7,6 +7,9 @@ module.exports = merge(require('./config.base.js'), {
 	mode: 'development',
 	devtool: 'inline-source-map',
 	watch: true,
+	stats: {
+		errorDetails: true
+	},
 	output: {
 		filename: '[name].js',
 		//when watch:true then images embedded in html (coming from HtmlWebpackPlugin) will be deleted after a file change (in watch mode)
@@ -17,7 +20,7 @@ module.exports = merge(require('./config.base.js'), {
 	},
 	plugins: [
 		new FaviconsWebpackPlugin( {
-			logo: path.resolve(SRC, 'frontend', 'imgs', 'favicon_dev.svg'),
+			logo: path.resolve(SRC, 'frontend', 'imgs', 'faviconDev.svg'),
 			cache: true,
 			favicons: {
 				icons: {

@@ -1,0 +1,38 @@
+@keyframes move-in-from-top {
+	from { top: -50px; }
+	to { top: 0; }
+}
+
+@keyframes fade-in {
+	from { opacity:0; }
+	to { opacity:1; }
+}
+
+@keyframes fade-out {
+	from { opacity:1; }
+	to { opacity:0; }
+}
+
+@keyframes spin {
+	0% { transform:rotate(0deg); }
+	100% { transform:rotate(360deg); }
+}
+
+.fadeIn {
+	animation: fade-in 1s;
+}
+.fadeOut {
+	animation: fade-out 1s;
+}
+
+
+.loaderAnimation {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+
+	border: 5px solid #dc4e9d;
+	border-radius: 50%;
+	animation: spin 2s linear infinite;
+	border-top-color: rgba(0,0,0,0);
+}

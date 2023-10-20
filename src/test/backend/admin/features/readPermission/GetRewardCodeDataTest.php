@@ -52,8 +52,8 @@ class GetRewardCodeDataTest extends BaseReadPermissionTestSetup {
 		$r = $obj->exec();
 		$this->assertEquals([
 			'rewardCodes' => ['code1', 'code2'],
-			'participantsWithRewardCode' => ['user1', 'user3'],
-			'participantsWithoutRewardCode' => ['user2']
+			'userIdsWithRewardCode ' => ['user1', 'user3'],
+			'userIdsWithoutRewardCode' => ['user2']
 		], $r);
 		
 		$this->assertDataMock('getStudyParticipants', [$this->studyId]);

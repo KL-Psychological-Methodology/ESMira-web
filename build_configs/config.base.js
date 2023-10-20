@@ -12,16 +12,27 @@ module.exports = {
 	entry: {
 		main: [
 			path.resolve(SRC, 'frontend', 'css', 'style.css'),
-			path.resolve(SRC, 'frontend', 'css', 'input_design.css'),
+			path.resolve(SRC, 'frontend', 'css', 'site.css'),
+			path.resolve(SRC, 'frontend', 'css', 'animations.css'),
+			path.resolve(SRC, 'frontend', 'css', 'btnWidgets.css'),
+			path.resolve(SRC, 'frontend', 'css', 'dash.css'),
+			path.resolve(SRC, 'frontend', 'css', 'navigationRow.css'),
+			path.resolve(SRC, 'frontend', 'css', 'inputDesign.css'),
 			path.resolve(SRC, 'frontend', 'css', 'widgets.css'),
-			path.resolve(SRC, 'frontend', 'js', 'index.js'),
+			path.resolve(SRC, 'frontend', 'ts', 'index.ts'),
 		],
 		nojs: [
 			path.resolve(SRC, 'frontend', 'css', 'style.css'),
+			path.resolve(SRC, 'frontend', 'css', 'site.css'),
+			path.resolve(SRC, 'frontend', 'css', 'animations.css'),
 			path.resolve(SRC, 'frontend', 'css', 'nojs.css'),
-			path.resolve(SRC, 'frontend', 'css', 'input_design.css'),
-			path.resolve(SRC, 'frontend', 'js', 'index_nojs.js')
+			path.resolve(SRC, 'frontend', 'css', 'inputDesign.css'),
+			path.resolve(SRC, 'frontend', 'ts', 'index_nojs.ts')
 		]
+	},
+	resolve: {
+		extensions: [".ts", ".tsx", ".js"],
+		// modules: ['src', 'node_modules'],
 	},
 	output: {
 		path: path.resolve(DIST, 'frontend'),
@@ -37,6 +48,11 @@ module.exports = {
 	},
 	module: {
 		rules: [
+			{
+				test: /\.tsx?$/,
+				exclude: [/node_modules/],
+				loader: 'ts-loader'
+			},
 			{
 				test: /\.(html|php)$/,
 				loader: "html-loader"

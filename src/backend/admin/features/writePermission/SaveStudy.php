@@ -374,7 +374,7 @@ class SaveStudy extends HasWritePermission {
 		$this->saveStatistics();
 	}
 	
-	private  function createNamedStructureFromStatistics(stdClass $statistics, array $metadata): array {
+	private function createNamedStructureFromStatistics(stdClass $statistics, array $metadata): array {
 		$index = [];
 		if(!empty($statistics) || !empty($metadata)) {
 			foreach($statistics as $value => $jsonKeyBox) {
@@ -412,9 +412,9 @@ class SaveStudy extends HasWritePermission {
 					$conditionString = self::getConditionString($key, $observedVariableJsonEntry->storageType, $observedVariableJsonEntry->timeInterval, $observedVariableJsonEntry->conditions);
 					if(isset($existingIndex[$conditionString])) { //copy existing values over to new obj:
 						$oldEntry = $existingIndex[$conditionString];
-						$jsonEntry->data = $oldEntry->data;
-						$jsonEntry->entryCount = $oldEntry->entryCount;
-						$jsonEntry->timeInterval = $oldEntry->timeInterval ?? 0;
+						$jsonEntry->data = $oldEntry->data ?? [];
+						$jsonEntry->entryCount = $oldEntry->entryCount ?? 0;
+						$jsonEntry->timeInterval = $oldEntry->timeInterval ?? Configs::get('smallest_timed_distance');
 					}
 //						else {
 //							//TODO: extract statistics from already existing data
@@ -444,7 +444,7 @@ class SaveStudy extends HasWritePermission {
 			throw new PageFlowException('Unexpected data');
 		
 		if(!isset($this->studyCollection->_))
-			throw new PageFlowException('No default study');
+			throw new PageFlowException('No default study language');
 		
 		$study = $this->mainStudy = $this->studyCollection->_;
 		
@@ -474,7 +474,7 @@ class SaveStudy extends HasWritePermission {
 		}
 		else {
 			$study->new_changes = true;
-			$study->subVersion += 1;
+			$study->subVersion = ($study->subVersion ?? 0) + 1;
 		}
 		
 		

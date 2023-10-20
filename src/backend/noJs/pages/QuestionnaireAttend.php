@@ -94,12 +94,8 @@ class QuestionnaireAttend implements Page {
 			$output .= '<p class="highlight center">' .Lang::get('error_missing_requiredField') .'</p>';
 		}
 		
-		$output .= '<form class="colored_lines" id="questionnaire_box" method="post">';
-		
-		
 		
 		$output .= $this->inputObj->drawPage();
-		$output .= '</form>';
 		
 		return $output;
 	}

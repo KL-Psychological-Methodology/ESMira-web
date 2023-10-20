@@ -7,11 +7,12 @@ use backend\exceptions\CriticalException;
 use backend\Paths;
 use backend\FileSystemBasics;
 use backend\exceptions\PageFlowException;
+use Throwable;
 use ZipArchive;
 
 class DoUpdate extends HasAdminPermission {
 	//we dont want to blindly copy everything over in case there are non ESMira-files in our main folder:
-	const NEEDS_BACKUP = ['api/', 'backend/', 'frontend/', 'locales/', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
+	const NEEDS_BACKUP = ['api', 'backend',  'locales', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
 	
 	/**
 	 * @var string
@@ -48,35 +49,31 @@ class DoUpdate extends HasAdminPermission {
 		if(file_exists($this->fileUpdate))
 			unlink($this->fileUpdate);
 		
-		//source contains the files from the update. So remove them first
-		$handle = opendir($this->folderPathSource);
-		while($file = readdir($handle)) {
-			if(in_array($file, $this->filesToRetain))
-				continue;
-			
-			$path = $this->folderPathSource .$file;
-			if(is_file($path))
-				unlink($path);
-			else {
-				FileSystemBasics::emptyFolder($path);
-				rmdir($path);
-			}
-		}
-		closedir($handle);
-		
 		$revertFailedList = [];
 		
 		//now, copy everything back from the backup folder:
 		if(file_exists($this->folderPathBackup)) {
 			$handle = opendir($this->folderPathBackup);
 			while($file = readdir($handle)) {
-				if($file[0] != '.') {
-					$oldLocation = $this->folderPathBackup . $file;
-					$newLocation = $this->folderPathSource . $file;
-					
-					if(file_exists($newLocation) || !@rename($oldLocation, $newLocation))
-						$revertFailedList[] = $newLocation;
+				if($file == '.' || $file == '..')
+					continue;
+				
+				$oldLocation = $this->folderPathBackup . $file;
+				$newLocation = $this->folderPathSource . $file;
+				
+				//source contains the files from the update. So remove them first:
+				if(file_exists($newLocation)) {
+					if(is_file($newLocation))
+						unlink($newLocation);
+					else {
+						FileSystemBasics::emptyFolder($newLocation);
+						rmdir($newLocation);
+					}
 				}
+				
+				//Now we move stuff back:
+				if(!@rename($oldLocation, $newLocation))
+					$revertFailedList[] = $newLocation;
 			}
 			closedir($handle);
 		}
@@ -87,6 +84,31 @@ class DoUpdate extends HasAdminPermission {
 			rmdir($this->folderPathBackup);
 		
 		return new PageFlowException($msg);
+	}
+	
+	
+	/**
+	 * Windows throws some weird permission denied exceptions if we try to move the api-folder (probably because it is "used" by the server. So we move the files one by one.
+	 * @throws PageFlowException
+	 * @throws CriticalException
+	 */
+	private function move(string $oldLocation, string $newLocation) {
+		if(is_file($oldLocation)) {
+			if(!rename($oldLocation, $newLocation))
+				throw $this->revertUpdate("Renaming $oldLocation to $newLocation failed. Reverting...");
+		}
+		else {
+			$handle = opendir($oldLocation);
+			while($file = readdir($handle)) {
+				if($file == '.' || $file == '..')
+					continue;
+				
+				if(!file_exists($newLocation))
+					mkdir($newLocation, 0744);
+				$this->move("$oldLocation/$file", "$newLocation/$file");
+			}
+			closedir($handle);
+		}
 	}
 	
 	/**
@@ -106,8 +128,8 @@ class DoUpdate extends HasAdminPermission {
 			if(file_exists($newLocation))
 				throw $this->revertUpdate("Critical error! $newLocation already exists. This should never happen. Please check the file structure manually");
 			
-			if(!@rename($oldLocation, $newLocation))
-				throw $this->revertUpdate("Renaming $oldLocation to $newLocation failed. Reverting...");
+			
+			$this->move($oldLocation, $newLocation);
 		}
 		
 		//remember non-ESMira files we want to keep in case we need to revert
@@ -127,21 +149,24 @@ class DoUpdate extends HasAdminPermission {
 		
 		$this->moveEverythingToBackupLocation();
 		
-		
-		//unpacking update:
-		$zip = new ZipArchive;
-		if(!@$zip->open($this->fileUpdate))
-			throw $this->revertUpdate("Could not open the the zipped update: $this->fileUpdate. Reverting...");
-		if(!@$zip->extractTo($this->folderPathSource))
-			throw $this->revertUpdate("Could not unzip update: $this->fileUpdate. Reverting...");
-		$zip->close();
-		@unlink($this->fileUpdate);
-		
-		//restore config file:
-		if(!@copy($this->folderPathBackup .Paths::SUB_PATH_CONFIG, Paths::FILE_CONFIG))
-			throw $this->revertUpdate('Could not restore settings. Reverting...');
-		FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
-		
+		try {
+			//unpacking update:
+			$zip = new ZipArchive;
+			if(!@$zip->open($this->fileUpdate))
+				throw $this->revertUpdate("Could not open the the zipped update: $this->fileUpdate. Reverting...");
+			if(!@$zip->extractTo($this->folderPathSource))
+				throw $this->revertUpdate("Could not unzip update: $this->fileUpdate. Reverting...");
+			$zip->close();
+			@unlink($this->fileUpdate);
+			
+			//restore config file:
+			if(!@copy($this->folderPathBackup . Paths::SUB_PATH_CONFIG, Paths::FILE_CONFIG))
+				throw $this->revertUpdate('Could not restore settings. Reverting...');
+			FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
+		}
+		catch(Throwable $e) {
+			throw $this->revertUpdate($e->getMessage());
+		}
 		return [];
 	}
 }

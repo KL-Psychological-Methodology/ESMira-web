@@ -23,5 +23,5 @@ return [
 	
 	'serverName' => ['en' => ''], //_ is the default language. All alternative languages need to be added via language-code (langCodes needs to be updates as well)
 	'defaultLang' => 'en',
-	'langCodes' => [] //will be used for privacyPolicy, legal and servername. The optional languages of the UI are hardcoded and will not be influenced by this value
+	'langCodes' => ['en'] //will be used for privacyPolicy, legal and servername. The optional languages of the UI are hardcoded and will not be influenced by this value
 ];
