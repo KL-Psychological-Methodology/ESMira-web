@@ -4,6 +4,7 @@ import {Lang} from "../singletons/Lang";
 import {Section} from "../site/Section";
 import {TitleRow} from "../widgets/TitleRow";
 import {UrlAlternatives} from "../helpers/UrlAlternatives";
+import {BtnReload} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -15,6 +16,10 @@ export class Content extends SectionContent {
 	
 	public title(): string {
 		return Lang.get("messages")
+	}
+	
+	public titleExtra(): Vnode<any, any> | null {
+		return BtnReload(this.section.reload.bind(this.section))
 	}
 	
 	public hasAlternatives(): boolean {
