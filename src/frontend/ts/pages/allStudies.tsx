@@ -12,7 +12,6 @@ import {Content as StudiesContent} from "../pages/studies";
 export class Content extends StudiesContent {
 	protected targetPage: string
 	protected titleString: string
-	private openedTab: number
 	
 	private readonly selectedTab: ObservablePrimitive<number>
 	private readonly selectedAccessKeyTab: ObservablePrimitive<number>
@@ -29,10 +28,9 @@ export class Content extends StudiesContent {
 	
 	constructor(section: Section, studiesObs: StudiesDataType) {
 		super(section, studiesObs)
-		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
 		this.selectedAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("accessKeyIndex", 0)
 		
-		this.openedTab = 3
+		let openedTab = 3
 		switch(section.sectionValue) {
 			case "data":
 				this.targetPage = "dataStatistics"
@@ -41,7 +39,7 @@ export class Content extends StudiesContent {
 			case "msgs":
 				this.targetPage = "messagesOverview"
 				if(section.getTools().messagesLoader.studiesWithNewMessagesCount.get())
-					this.openedTab = 0;
+					openedTab = 0
 				this.titleString = Lang.get("messages")
 				break
 			case "edit":
@@ -50,6 +48,7 @@ export class Content extends StudiesContent {
 				this.titleString = Lang.get("edit_studies")
 				break
 		}
+		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", openedTab)
 		
 		this.initAccessKeyIndex(studiesObs)
 		
