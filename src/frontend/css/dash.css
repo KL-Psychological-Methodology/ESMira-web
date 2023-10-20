@@ -10,8 +10,6 @@
 	width: 48%;
 	max-width: 400px;
 	min-width: 150px;
-}
-.dashRow .dashEl {
 	padding: 5px 3px;
 }
 
@@ -31,11 +29,15 @@
 	justify-content: space-between;
 	gap: 10px;
 }
+.dashRow > .multipleChildren > .dashEl {
+	box-sizing: border-box;
+	padding: 5px 3px;
+}
 .dashRow > .multipleChildren > .dashEl.floating {
 	z-index: 1;
 	position: absolute;
 	width: 65px;
-	height: 40px;
+	height: 45px;
 	overflow: hidden;
 	outline: 5px solid white;
 	text-align: center;
