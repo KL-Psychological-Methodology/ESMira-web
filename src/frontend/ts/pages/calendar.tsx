@@ -28,7 +28,7 @@ interface FullcalendarComponentOptions {
 }
 
 const ONE_DAY = 1000 * 60 * 60 * 24
-const INFINITE_QUESTIONNAIRE_DURATION = ONE_DAY * 150
+const INFINITE_QUESTIONNAIRE_DURATION = ONE_DAY * 365
 class FullcalendarComponent implements Component<FullcalendarComponentOptions, any> {
 	private calendarView?: HTMLElement
 	private scheduler = new Scheduler()
@@ -191,7 +191,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	}
 	public onupdate(vNode: VnodeDOM<FullcalendarComponentOptions, any>): void {
 		this.calendarView = vNode.dom.getElementsByClassName("calendarView")[0] as HTMLElement
-		this.calendar?.render() //rerender calendar in case available space has changed
+		this.calendar?.updateSize()
 	}
 	
 	public view(vNode: Vnode<FullcalendarComponentOptions, any>): Vnode<any, any> {
