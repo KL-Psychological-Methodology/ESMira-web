@@ -16,7 +16,7 @@ import {MessageAsRead} from "../data/messages/MessageAsRead";
 import {safeConfirm} from "../constants/methods";
 import participantsSvg from "../../imgs/icons/participants.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
-import {BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnCustom, BtnOk, BtnReload, BtnTrash} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	private readonly userIdList: string[]
@@ -24,6 +24,7 @@ export class Content extends SectionContent {
 	private userId: string
 	private readonly fixedRecipient: boolean
 	private messages?: ParticipantMessagesContainer
+	private sortedMessages: Message[] = []
 	private toAll: boolean = false
 	private appVersion: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appVersion")
 	private appType: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appType")
@@ -57,10 +58,9 @@ export class Content extends SectionContent {
 	public titleExtra(): Vnode<any, any> | null {
 		if(this.userId && this.getTools().hasPermission("read", this.getStaticInt("id") ?? -1))
 			return <div>
+				{BtnReload(this.loadParticipantMessages.bind(this), Lang.get("reload"))}
 				{DropdownMenu("fileOptions",
-					<a class="clickable">
-						{m.trust(dataSvg)}
-					</a>,
+					BtnCustom(m.trust(dataSvg), undefined, Lang.get("data")),
 					(close) => <div>
 						<a class="line" href={this.getUrl("dataView:general,file:events,filter:userId")} onclick={close}>Events.csv</a>
 						{this.getStudyOrThrow().questionnaires.get().map((questionnaire) =>
@@ -68,8 +68,8 @@ export class Content extends SectionContent {
 						)}
 					</div>
 				)}
-				<a class="spacingLeft" href={this.getUrl("statsParticipants")}>
-					{m.trust(participantsSvg)}
+				<a href={this.getUrl("statsParticipants")}>
+					{BtnCustom(m.trust(participantsSvg), undefined, Lang.get("participants"))}
 				</a>
 			</div>
 		else
@@ -79,6 +79,13 @@ export class Content extends SectionContent {
 	private async loadParticipantMessages(): Promise<void> {
 		if(this.userId) {
 			this.messages = await this.getTools().messagesLoader.loadMessages(this.studyId, this.userId)
+			
+			this.sortedMessages = []
+			
+			this.sortedMessages = this.sortedMessages.concat(this.messages.archive)
+			this.sortedMessages = this.sortedMessages.concat(this.messages.unread)
+			this.sortedMessages = this.sortedMessages.concat(this.messages.pending)
+			this.sortedMessages.reverse() //our div is reversed. So we have to reverse data too
 			m.redraw()
 		}
 	}
@@ -174,23 +181,31 @@ export class Content extends SectionContent {
 	
 	public getView(): Vnode<any, any> {
 		return <div>
-			<div class="reversedScroll">
+			<div>
 				{this.messages &&
 					<div class="scrollBox reversedScroll big">
-						{ this.messages.archive.map((message) =>
-							this.getBubble(message)
-						)}
-						
-						{this.messages.unread.map((message) =>
-							this.getBubble(message)
-						)}
 						{ this.messages.unread.length >= 1 &&
 							BtnOk(this.setMessagesAsRead.bind(this), Lang.get("mark_messages_as_read"))
 						}
-						
-						{this.messages.pending.map((message) =>
+						{ this.sortedMessages.map((message) =>
 							this.getBubble(message)
 						)}
+						
+						
+						{/*{ this.messages.archive.map((message) =>*/}
+						{/*	this.getBubble(message)*/}
+						{/*)}*/}
+						
+						{/*{this.messages.unread.map((message) =>*/}
+						{/*	this.getBubble(message)*/}
+						{/*)}*/}
+						{/*{ this.messages.unread.length >= 1 &&*/}
+						{/*	BtnOk(this.setMessagesAsRead.bind(this), Lang.get("mark_messages_as_read"))*/}
+						{/*}*/}
+						
+						{/*{this.messages.pending.map((message) =>*/}
+						{/*	this.getBubble(message)*/}
+						{/*)}*/}
 						
 					</div>
 				}
