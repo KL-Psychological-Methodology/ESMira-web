@@ -51,11 +51,8 @@ export class LoaderState {
 		if(s)
 			this.stateMsg = s
 		
+		this.isVisible = true
 		this.updateView()
-		this.animationId = window.setTimeout(() => {
-			this.isVisible = true
-			this.updateView()
-		}, 100)
 	}
 	
 	private disable(ignoreError: boolean = false): void {
@@ -147,13 +144,11 @@ export class LoaderState {
 		if(s == this.stateMsg) //if error() was called by a view, it could cause a death loop because showMessage() calls m.redraw()
 			return
 		this.isError = true
-		this.showMessage(s)
-		
 		if(tryAgain) {
 			this.tryAgainCallback = tryAgain;
 			this.hasTryAgainBtn = true
 		}
-		this.updateView()
+		this.showMessage(s)
 	}
 	
 	public loadRaw(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<string> {
