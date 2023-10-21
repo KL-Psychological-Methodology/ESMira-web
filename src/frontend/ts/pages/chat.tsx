@@ -29,6 +29,7 @@ export class Content extends SectionContent {
 	private appVersion: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appVersion")
 	private appType: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appType")
 	private messageContent: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "messageContent")
+	private isLoading: boolean = false
 	
 	public static preLoad(section: Section): Promise<any>[] {
 		const studyId = section.getStaticInt("id") ?? -1
@@ -58,7 +59,10 @@ export class Content extends SectionContent {
 	public titleExtra(): Vnode<any, any> | null {
 		if(this.userId && this.getTools().hasPermission("read", this.getStaticInt("id") ?? -1))
 			return <div>
-				{BtnReload(this.loadParticipantMessages.bind(this), Lang.get("reload"))}
+				{BtnReload(
+					() => this.section.loader.showLoader(this.loadParticipantMessages()),
+					Lang.get("reload")
+				)}
 				{DropdownMenu("fileOptions",
 					BtnCustom(m.trust(dataSvg), undefined, Lang.get("data")),
 					(close) => <div>
@@ -78,6 +82,8 @@ export class Content extends SectionContent {
 	
 	private async loadParticipantMessages(): Promise<void> {
 		if(this.userId) {
+			this.isLoading = true
+			m.redraw()
 			this.messages = await this.getTools().messagesLoader.loadMessages(this.studyId, this.userId)
 			
 			this.sortedMessages = []
@@ -86,6 +92,7 @@ export class Content extends SectionContent {
 			this.sortedMessages = this.sortedMessages.concat(this.messages.unread)
 			this.sortedMessages = this.sortedMessages.concat(this.messages.pending)
 			this.sortedMessages.reverse() //our div is reversed. So we have to reverse data too
+			this.isLoading = false
 			m.redraw()
 		}
 	}
@@ -190,23 +197,6 @@ export class Content extends SectionContent {
 						{ this.sortedMessages.map((message) =>
 							this.getBubble(message)
 						)}
-						
-						
-						{/*{ this.messages.archive.map((message) =>*/}
-						{/*	this.getBubble(message)*/}
-						{/*)}*/}
-						
-						{/*{this.messages.unread.map((message) =>*/}
-						{/*	this.getBubble(message)*/}
-						{/*)}*/}
-						{/*{ this.messages.unread.length >= 1 &&*/}
-						{/*	BtnOk(this.setMessagesAsRead.bind(this), Lang.get("mark_messages_as_read"))*/}
-						{/*}*/}
-						
-						{/*{this.messages.pending.map((message) =>*/}
-						{/*	this.getBubble(message)*/}
-						{/*)}*/}
-						
 					</div>
 				}
 			</div>
@@ -299,7 +289,9 @@ export class Content extends SectionContent {
 	}
 	
 	private getBubble(message: Message): Vnode<any, any> {
-		let className = "chatBubble fadeIn"
+		let className = "chatBubble"
+		if(!this.isLoading)
+			className += " fadeIn"
 		if(message.unread)
 			className += " unread"
 		if(message.pending)
