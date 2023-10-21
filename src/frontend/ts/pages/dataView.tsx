@@ -13,6 +13,7 @@ import {CsvSpecialType} from "../loader/csv/CsvSpecialType";
 import {DATAVIEWER_SKIPPED_COLUMNS} from "../constants/csv";
 import {StaticValues} from "../site/StaticValues";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 
 const ROW_HEIGHT = 25;
 
@@ -21,9 +22,11 @@ interface DropDownOptions {
 	csvLoader: CsvLoader
 	columnName: string
 	columnIndex: number
+	showFilterForHeader: ObservablePrimitive<boolean>
 }
 class DropDownComponent implements Component<DropDownOptions, any> {
 	private csvLoader?: CsvLoader
+	private showFilterForHeader?: ObservablePrimitive<boolean>
 	private columnIndex: number = 0
 	private valueListInfo?: ValueListInfo[]
 	private readonly disabledValues: Record<string, boolean> = {}
@@ -31,24 +34,23 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 	private isAllUnchecked: boolean = true
 	private updateTableContent: () => void = () => {/*will be replaced in oncreate()*/}
 	
-	public oncreate(vNode: VnodeDOM<DropDownOptions, any>): void {
+	public async oncreate(vNode: VnodeDOM<DropDownOptions, any>): Promise<void> {
 		this.updateTableContent = vNode.attrs.updateTableContent
 		this.csvLoader = vNode.attrs.csvLoader
+		this.showFilterForHeader = vNode.attrs.showFilterForHeader
 		this.columnIndex = vNode.attrs.columnIndex
 		
-		this.csvLoader.getValueListInfo(vNode.attrs.columnName, false, true)
-			.then((valueListInfo) => {
-				this.valueListInfo = valueListInfo
-				let isAllUnchecked = true
-				valueListInfo.forEach((entry) => {
-					if(!entry.visible) {
-						this.disabledValues[entry.name] = true
-						isAllUnchecked = false
-					}
-				})
-				this.isAllUnchecked = isAllUnchecked
-				m.redraw()
-			})
+		const valueListInfo = await this.csvLoader.getValueListInfo(vNode.attrs.columnName, false, true)
+		this.valueListInfo = valueListInfo
+		let isAllUnchecked = true
+		valueListInfo.forEach((entry) => {
+			if(!entry.visible) {
+				this.disabledValues[entry.name] = true
+				isAllUnchecked = false
+			}
+		})
+		this.isAllUnchecked = isAllUnchecked
+		m.redraw()
 	}
 	
 	private async toggleAll(): Promise<void> {
@@ -63,6 +65,7 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 			}
 			this.checkedCount = this.valueListInfo?.length ?? 0
 			this.isAllUnchecked = false
+			this.showFilterForHeader?.set(true)
 		}
 		else {
 			for(let key in this.disabledValues) {
@@ -71,6 +74,7 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 			}
 			this.checkedCount = 0
 			this.isAllUnchecked = true
+			this.showFilterForHeader?.set(false)
 		}
 		this.updateTableContent()
 	}
@@ -80,10 +84,14 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 		if(enable) {
 			--this.checkedCount
 			delete this.disabledValues[value]
+			if(this.checkedCount == 0)
+				this.showFilterForHeader?.set(false)
 		}
 		else {
 			++this.checkedCount
 			this.disabledValues[value] = true
+			if(this.checkedCount == 1)
+				this.showFilterForHeader?.set(true)
 		}
 		
 		await this.csvLoader?.filterByValue(enable, this.columnIndex, value)
@@ -93,7 +101,7 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 	public view(): Vnode<any, any> {
 		const valueList = this.valueListInfo!
 		if(valueList == undefined)
-			return <div>{LoadingSpinner()}</div>
+			return <div class="center">{LoadingSpinner()}</div>
 		
 		return <div>
 			{SearchWidget((tools) =>
@@ -128,7 +136,9 @@ class DataComponent implements Component<DataComponentInterface, any> {
 	private markedRowsInfoView?: HTMLElement
 	private tableContent?: HTMLElement
 	
+	private filterParentObservable = new ObservablePrimitive<boolean>(false, null, "filterParentObservable")
 	private shownHeaderNames: string[] = []
+	private showFilterForHeaderArray: ObservablePrimitive<boolean>[] = []
 	private userIdColumnNum: number = 0
 	private entryIdColumnNum: number = 0
 	
@@ -296,7 +306,13 @@ class DataComponent implements Component<DataComponentInterface, any> {
 	}
 	
 	private getHeaderDropDown(csvLoader: CsvLoader, columnIndex: number, columnName: string): Vnode<any, any> {
-		return m(DropDownComponent, {updateTableContent: this.updateTableContent.bind(this), csvLoader: csvLoader, columnName: columnName, columnIndex: columnIndex})
+		return m(DropDownComponent, {
+			updateTableContent: this.updateTableContent.bind(this),
+			csvLoader: csvLoader,
+			columnName: columnName,
+			columnIndex: columnIndex,
+			showFilterForHeader: this.showFilterForHeaderArray[columnIndex]
+		})
 	}
 	
 	public view(vNode: Vnode<DataComponentInterface, any>): Vnode<any, any> {
@@ -310,7 +326,7 @@ class DataComponent implements Component<DataComponentInterface, any> {
 				{this.shownHeaderNames.map((columnName, columnIndex) =>
 					DropdownMenu("dataHeaderMenu",
 						<th style={`min-width: ${this.columnWidths[columnIndex + 1] ?? 0}px`}>
-							<span class="clickable" style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
+							<span class={this.showFilterForHeaderArray[columnIndex].get() ? "highlight clickable" : "clickable"} style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
 						</th>,
 						() => this.getHeaderDropDown(csvLoader, columnIndex, columnName)
 					)
@@ -346,9 +362,13 @@ class DataComponent implements Component<DataComponentInterface, any> {
 		}
 		
 		for(const headerName of this.csvLoader.headerNames) {
-			if(!skippedIndex.hasOwnProperty(headerName))
-				this.shownHeaderNames.push(headerName)
+			if(skippedIndex.hasOwnProperty(headerName))
+				continue
+			
+			this.shownHeaderNames.push(headerName)
+			this.showFilterForHeaderArray.push(new ObservablePrimitive<boolean>(false, this.filterParentObservable, headerName))
 		}
+		
 		
 		this.scrollRoot.addEventListener("scroll", this.scrollUpdate.bind(this))
 		this.updateVisibleRowNum()
@@ -364,12 +384,16 @@ class DataComponent implements Component<DataComponentInterface, any> {
 		
 		const filterKey = vNode.attrs.filterKey
 		const filterValue = vNode.attrs.filterValue
-		if(filterKey && filterValue) {
-			await this.csvLoader?.filterEntireColumn(false, filterKey)
-			await this.csvLoader?.filterByValue(true, filterKey, filterValue)
-			this.updateTableContent()
+		if(filterKey && filterValue && this.csvLoader) {
+			await this.csvLoader.filterEntireColumn(false, filterKey)
+			await this.csvLoader.filterByValue(true, filterKey, filterValue)
+			await this.updateTableContent()
+			const columnIndex = this.csvLoader.getColumnNum(filterKey)
+			this.showFilterForHeaderArray[columnIndex].set(true)
 		}
 		
+		this.filterParentObservable.addObserver(() => m.redraw())
+		this.filterParentObservable.addObserver(() => console.log(234324234))
 		m.redraw()
 	}
 	public onupdate(): void {

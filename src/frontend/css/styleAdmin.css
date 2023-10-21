@@ -92,6 +92,10 @@ dataTable
 	color: #2b98ca;
 	font-weight: bold;
 }
+
+.dataTable th .highlight::after {
+	content: "*"
+}
 .dataTable td, .dataTable th {
 	border: 1px solid #9FE0F7;
 	padding-left: 3px;
