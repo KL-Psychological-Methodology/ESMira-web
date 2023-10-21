@@ -58,7 +58,7 @@ export class Content extends SectionContent {
 		return Lang.get(this.randomContent ? "preview" : "calculate")
 	}
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(() => this.promise.set(this.loadStatistics()))
+		return BtnReload(() => this.promise.set(this.loadStatistics()), Lang.get("reload"))
 	}
 	
 	private async loadStatistics(): Promise<LoadedStatistics> {

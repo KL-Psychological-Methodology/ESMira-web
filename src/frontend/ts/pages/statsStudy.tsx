@@ -119,7 +119,7 @@ export class Content extends SectionContent {
 				<span>{Lang.getWithColon("days")}</span>
 				<input type="number" {... BindObservable(this.days)}/>
 			</label>
-			{BtnReload(this.section.reload.bind(this.section))}
+			{BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))}
 		</div>
 	}
 	

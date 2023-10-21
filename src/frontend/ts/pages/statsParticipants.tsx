@@ -75,7 +75,7 @@ export class Content extends SectionContent {
 		return Lang.get("participants")
 	}
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section))
+		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
 	}
 	
 	private async loadParticipants(): Promise<void> {

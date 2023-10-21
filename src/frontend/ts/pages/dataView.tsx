@@ -418,7 +418,7 @@ export class Content extends SectionContent {
 	}
 	
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section))
+		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
 	}
 	
 	public title(): string {
