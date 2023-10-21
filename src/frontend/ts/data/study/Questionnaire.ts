@@ -52,6 +52,13 @@ export class Questionnaire extends TranslatableObject {
 			return `${this.title.get()} (${Lang.get("group")} ${this.limitToGroup.get()})`
 	}
 	
+	public hasSchedules(): boolean {
+		const schedule = this.actionTriggers.get().find((actionTrigger) => {
+			return actionTrigger.get().schedules.get().length
+		})
+		return !!schedule
+	}
+	
 	/**
 	 * Needs to stay in sync with sharedCode.Questionnaire in kotlin
 	 */

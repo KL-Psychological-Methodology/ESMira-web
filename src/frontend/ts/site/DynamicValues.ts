@@ -9,5 +9,6 @@ export interface DynamicValues {
 	accessKeyIndex: number
 	studiesIndex: number
 	questionnaireIndex: number
-	pageIndex: number
+	pageIndex: number,
+	joinTimestamp: number,
 }

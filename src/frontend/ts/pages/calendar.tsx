@@ -22,9 +22,11 @@ import {LoadingSpinner} from "../widgets/LoadingSpinner";
 import {getMidnightMillis} from "../constants/methods";
 import {ActionTrigger} from "../data/study/ActionTrigger";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {TitleRow} from "../widgets/TitleRow";
 
 interface FullcalendarComponentOptions {
 	study: Study
+	joinTimestamp: ObservablePrimitive<number>
 }
 
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -33,19 +35,20 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	private calendarView?: HTMLElement
 	private scheduler = new Scheduler()
 	private calendar?: Calendar
-	private joinDate: BaseObservable<number> = new ObservablePrimitive(getMidnightMillis(Date.now()), null, "joinDate")
-	private joinTime: BaseObservable<number> = new ObservablePrimitive(Date.now() - getMidnightMillis(Date.now()), null, "joinTime")
+	private joinDate: BaseObservable<number> = new ObservablePrimitive(0, null, "joinDate")
+	private joinTime: BaseObservable<number> = new ObservablePrimitive(0, null, "joinTime")
 	private studyObserverId?: ObserverId
 	private visibleCalendars: Record<number, Questionnaire> = {}
 	private colors: Record<number, string> = {}
 	private isLoading: boolean = false
 	
 	private getJoinTimestamp(): number {
-		return this.joinDate.get() + this.joinTime.get()
+		return getMidnightMillis(this.joinDate.get()) + this.joinTime.get()
 	}
 	
 	private calcQuestionnaireStart(questionnaire: Questionnaire): number {
 		const joinDate = this.getJoinTimestamp()
+		
 		if(questionnaire.durationStart.get() != 0)
 			return questionnaire.durationStart.get()
 		else if(questionnaire.durationStartingAfterDays.get() != 0)
@@ -53,23 +56,23 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 		else
 			return joinDate
 	}
-	private calcQuestionnaireEnd(questionnaire: Questionnaire): number {
+	private calcQuestionnaireEnd(questionnaire: Questionnaire): number | null {
 		const joinTimestamp = this.getJoinTimestamp()
 		if(questionnaire.durationEnd.get() != 0)
 			return questionnaire.durationEnd.get()
 		else if(questionnaire.durationPeriodDays.get() != 0)
-			return joinTimestamp + ONE_DAY * (questionnaire.durationPeriodDays.get() + 1) //+1: fullcalendar does not include the last day if the time ends before midnight
+			return joinTimestamp + ONE_DAY * (questionnaire.durationPeriodDays.get())
 		else
-			return joinTimestamp + INFINITE_QUESTIONNAIRE_DURATION
+			return null
 	}
 	
 	private getQuestionnaireEvent(questionnaire: Questionnaire): EventInput {
 		return {
 			title: questionnaire.getTitle(),
 			start: this.calcQuestionnaireStart(questionnaire),
-			end: this.calcQuestionnaireEnd(questionnaire),
+			end: this.calcQuestionnaireEnd(questionnaire) ?? this.getJoinTimestamp() + INFINITE_QUESTIONNAIRE_DURATION,
 			color: this.colors[questionnaire.internalId.get()],
-			allDay: true
+			allDay: true,
 		}
 	}
 	
@@ -114,10 +117,10 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	}
 	
 	private initCalendar() {
-		this.isLoading = true
-		m.redraw()
 		if(!this.calendarView)
 			return
+		this.isLoading = true
+		m.redraw()
 		this.scheduler = new Scheduler()
 		const events: EventInput[] = []
 		
@@ -132,16 +135,17 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 			plugins: [ dayGridPlugin, timeGridPlugin, listPlugin ],
 			locales: [deLocale, ukLocale],
 			locale: Lang.code,
-			initialView: this.calendar?.view.type ?? "listWeek",
+			initialView: this.calendar?.view.type ?? "dayGridMonth",
 			headerToolbar: {
 				left: "title",
 				right: "prev,next,dayGridMonth,timeGridWeek,timeGridDay,listWeek"
 			},
 			contentHeight: "auto",
-			initialDate: Date.now(),
+			initialDate: this.calendar?.getDate() ?? this.getJoinTimestamp(),
 			allDayText: "",
 			editable: false,
 			dayMaxEvents: false,
+			
 			events: events,
 			eventTimeFormat: {
 				hour: "2-digit",
@@ -171,16 +175,22 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	
 	public oncreate(vNode: VnodeDOM<FullcalendarComponentOptions, any>): void {
 		const study = vNode.attrs.study
+		const joinTimestamp = vNode.attrs.joinTimestamp
+		this.joinDate.set(joinTimestamp.get())
+		this.joinTime.set(joinTimestamp.get() - getMidnightMillis(joinTimestamp.get()))
 		
 		study.questionnaires.get().forEach((questionnaire, index) => {
-			this.visibleCalendars[questionnaire.internalId.get()] = questionnaire
+			if(questionnaire.hasSchedules())
+				this.visibleCalendars[questionnaire.internalId.get()] = questionnaire
 			this.colors[questionnaire.internalId.get()] = getChartColor(index)
 		})
 		
 		this.joinDate.addObserver(() => {
+			joinTimestamp.set(this.getJoinTimestamp())
 			this.initCalendar()
 		})
 		this.joinTime.addObserver(() => {
+			joinTimestamp.set(this.getJoinTimestamp())
 			this.initCalendar()
 		})
 		this.studyObserverId = study.addObserver(() => {
@@ -197,42 +207,60 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	public view(vNode: Vnode<FullcalendarComponentOptions, any>): Vnode<any, any> {
 		const study = vNode.attrs.study
 		
-		return DashRow(
-			DashElement(null, {
-				content: <div>
-					<label class="noDesc">
-						<small>{Lang.get("join_date")}</small>
-						<input type="date" {... BindObservable(this.joinDate, DateTransformer)}/>
-					</label>
-					<label class="noDesc">
-						<small>{Lang.get("join_time")}</small>
-						<input type="time" {... BindObservable(this.joinTime, TimeTransformer)}/>
-					</label>
-					<br/>
-					<br/>
-					<div class="smallText spacingLeft spacingRight">{Lang.get("calendar_description")}</div>
-				</div>
-			}),
-			DashElement(null, {
-				content: <div>
-					{study.questionnaires.get().map((questionnaire) =>
-						<label class="noDesc line">
-							<input checked={this.visibleCalendars.hasOwnProperty(questionnaire.internalId.get())} type="checkbox" onchange={this.toggleQuestionnaire.bind(this, questionnaire)}/>
-							<span style={`color: ${this.colors[questionnaire.internalId.get()]}`}>{questionnaire.getTitle()}</span>
-						</label>
-					)}
-				</div>
-			}),
-			DashElement("stretched",
-				{
-					content:
-						<div>
-							<div class="center">{LoadingSpinner(!this.isLoading)}</div>
-							<div class="calendarView"></div>
+		return <div>
+			{DashRow(
+				DashElement("stretched", {
+					content: <div>
+						<div class="center">
+							<label class="noDesc middle">
+								<small>{Lang.get("join_date")}</small>
+								<input type="date" {... BindObservable(this.joinDate, DateTransformer)}/>
+							</label>
+							<label class="noDesc middle">
+								<small>{Lang.get("join_time")}</small>
+								<input type="time" {... BindObservable(this.joinTime, TimeTransformer)}/>
+							</label>
+							<div class="horizontal middle">
+								{ BtnReload(() => {
+									this.initCalendar()
+								})}
+							</div>
 						</div>
-				}
-			)
-		)
+						<br/>
+						<br/>
+						<div class="smallText spacingLeft spacingRight">{Lang.get("calendar_description")}</div>
+					</div>
+				}),
+				...study.questionnaires.get().map((questionnaire) => {
+					const endTimeStamp = this.calcQuestionnaireEnd(questionnaire)
+					return DashElement(null, {
+						content:
+							<div>
+								<label class="noTitle noDesc line">
+									<input checked={this.visibleCalendars.hasOwnProperty(questionnaire.internalId.get())} type="checkbox"
+										   onchange={this.toggleQuestionnaire.bind(this, questionnaire)}/>
+									<span style={`color: ${this.colors[questionnaire.internalId.get()]}`}>{questionnaire.getTitle()}</span>
+								</label>
+								<table class="spacingLeft smallText">
+									<tr>
+										<td><b>{Lang.getWithColon("from")}</b></td>
+										<td>{new Date(this.calcQuestionnaireStart(questionnaire)).toLocaleString()}</td>
+									</tr>
+									<tr>
+										<td><b>{Lang.getWithColon("to")}</b></td>
+										<td>{endTimeStamp ? new Date(endTimeStamp).toLocaleString() : "∞"}</td>
+									</tr>
+								</table>
+							</div>
+					})
+				})
+			)}
+			{TitleRow(Lang.getWithColon("calendar"))}
+			<div>
+				<div class="center">{LoadingSpinner(!this.isLoading)}</div>
+				<div class="calendarView"></div>
+			</div>
+		</div>
 	}
 	
 	public onremove(): void {
@@ -247,9 +275,6 @@ export class Content extends SectionContent {
 	public title(): string {
 		return Lang.get("study_description")
 	}
-	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(() => this.getStudyOrThrow().hasMutated())
-	}
 	
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
@@ -257,6 +282,9 @@ export class Content extends SectionContent {
 		if(!study.questionnaires.get().length)
 			return <div class="center spacingTop">{Lang.get("info_no_questionnaires_created")}</div>
 		else
-			return m(FullcalendarComponent, {study: study})
+			return m(FullcalendarComponent, {
+				study: study,
+				joinTimestamp: this.getDynamic("joinTimestamp", Date.now())
+			})
 	}
 }
