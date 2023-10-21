@@ -49,7 +49,7 @@ export const DateTransformer: Transformer = {
 		const intValue = typeof value == "number" ? value : parseInt(value.toString())
 		if(intValue == 0)
 			return ""
-		return (new Date(intValue)).toISOString().split("T")[0];
+		return (new Date(intValue)).toISOString().split("T")[0]
 	},
 	toObs(value: string): PrimitiveType {
 		if(value === "")
@@ -64,12 +64,7 @@ export const TimeTransformer: Transformer = {
 		if(intValue == -1)
 			return ""
 		else {
-			const date = new Date()
-			date.setHours(0)
-			date.setMinutes(0)
-			date.setSeconds(0)
-			date.setMilliseconds(0)
-			const midnight = date.getTime()
+			const midnight = getMidnightMillis()
 			
 			return timeStampToTimeString(midnight + intValue)
 		}

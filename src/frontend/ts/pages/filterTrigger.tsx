@@ -222,7 +222,6 @@ export class Content extends SectionContent {
 	}
 	
 	private getFilterDropdownView(questionnaire: Questionnaire): Vnode<any, any> {
-		console.log(questionnaire.getTitle())
 		const study = this.getStudyOrThrow()
 		return <div>
 			{study.randomGroups.get() != 0 && this.getDropdownFilterInputEntryView(Lang.get("group_availability"),
