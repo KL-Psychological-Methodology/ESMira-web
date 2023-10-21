@@ -161,6 +161,8 @@ export function openDropdown(id: string, openerView: Element, menuContent: (clos
 			},
 			view: () => menuContent(() => closeDropdown(id))
 		})
+	else
+		closeDropdown(id)
 }
 
 export function DropdownMenu(
