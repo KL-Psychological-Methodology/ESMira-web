@@ -81,7 +81,7 @@ export class NavigationRow {
 		return <div class="navAlternatives">
 			{section.sectionContent?.getAlternatives()?.map((entry) =>
 				entry.target
-					? <a class="line" href={section.sectionContent?.getUrl(entry.target, section.depth - 1)} onclick={() => close()}>{entry.title}</a>
+					? <a class="line" href={entry.target} onclick={() => close()}>{entry.title}</a>
 					: <span class="line disabled">{entry.title}</span>
 			)}
 		</div>
@@ -121,7 +121,6 @@ export class NavigationRow {
 																: this.getSectionEntry(section)
 															)
 															: this.getAlternativeLink(section)
-															
 														}
 													</span>
 												})

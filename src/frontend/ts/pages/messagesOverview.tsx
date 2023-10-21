@@ -26,7 +26,7 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] | null {
-		return UrlAlternatives.studyAlternatives(this.getStudyOrThrow().id.get(), "messagesOverview")
+		return UrlAlternatives.studyAlternatives(this, "msgs")
 	}
 	
 	public getView(): Vnode<any, any> {

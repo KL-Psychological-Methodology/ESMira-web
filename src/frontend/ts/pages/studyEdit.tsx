@@ -62,7 +62,7 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] | null {
-		return UrlAlternatives.studyAlternatives(this.getStudyOrThrow().id.get(), "studyEdit")
+		return UrlAlternatives.studyAlternatives(this, "edit")
 	}
 	
 	private updateSaveState(): void {
