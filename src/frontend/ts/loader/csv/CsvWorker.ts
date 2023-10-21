@@ -251,7 +251,7 @@ export class CsvData {
 		
 		//Note: if a filter happened, then reset_visibleFilter() should have been called and visible_rowsIndex is empty
 		// if not, we continue an index-action from before
-		for(; visibleRowI <= until; ++realRowI) {
+		for(; visibleRowI <= until && realRowI < this.rowsIndex.length; ++realRowI) {
 			if(this.rowsIndex[realRowI].hiddenSum)
 				continue
 			
