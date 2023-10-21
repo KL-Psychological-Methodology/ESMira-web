@@ -6,8 +6,8 @@ import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Study} from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
 import {StudiesDataType} from "../loader/StudyLoader";
-import {ObserverId} from "../observable/BaseObservable";
 import {Content as StudiesContent} from "../pages/studies";
+import {SectionAlternative} from "../site/SectionContent";
 
 export class Content extends StudiesContent {
 	protected targetPage: string
@@ -66,6 +66,24 @@ export class Content extends StudiesContent {
 		}
 	}
 	
+	
+	public hasAlternatives(): boolean {
+		return true
+	}
+	public getAlternatives(): SectionAlternative[] | null {
+		const allSections = this.section.allSections
+		const depth = this.section.depth
+		const id = allSections.length > depth+1 ? allSections[depth+1].getStaticInt("id") : null
+		
+		return this.studies.map((study) => {
+			const currentId = study.id.get()
+			return {
+				title: study.title.get(),
+				target: id != currentId ? this.getUrl(`${this.targetPage},id:${currentId}`) : false
+			}
+		})
+	}
+	
 	protected updateSortedStudies(studiesObs: StudiesDataType): void {
 		const studies = this.section.siteData.studyLoader.getSortedStudyList(Object.values(studiesObs.get()))
 		switch(this.section.sectionValue) {
@@ -102,17 +120,28 @@ export class Content extends StudiesContent {
 		}
 		return accessKeyIndex
 	}
+	
+	private createAccessKeyTab(title: string, accessKey: string): TabContent {
+		return {
+			title: title,
+			view: () => this.getStudyListView(this.studies.filter((study) => {
+				return study.accessKeys.indexOf(accessKey) != -1
+			}))
+		}
+	}
+	private getAccessKeyTitle(indexedAccessKeys: string[]): string {
+		switch(indexedAccessKeys.length) {
+			case 1:
+				return indexedAccessKeys[0]
+			case 2:
+				return `${indexedAccessKeys[0]}, ${indexedAccessKeys[indexedAccessKeys.length-1]}`
+			default:
+				return `${indexedAccessKeys[0]} ... ${indexedAccessKeys[indexedAccessKeys.length-1]}`
+		}
+	}
 	private initAccessKeyIndex(studiesObs: StudiesDataType): void {
 		this.updateSortedStudies(studiesObs)
 		
-		const createTab = (title: string, accessKey: string) => {
-			return {
-				title: title,
-				view: () => this.getStudyListView(this.studies.filter((study) => {
-					return study.accessKeys.indexOf(accessKey) != -1
-				}))
-			} as TabContent
-		}
 		const accessKeyTabs: TabContent[] = [{
 			title: Lang.get("all"),
 			highlight: true,
@@ -133,7 +162,7 @@ export class Content extends StudiesContent {
 		for(const accessKey in accessKeyIndex) {
 			const indexedStudies = accessKeyIndex[accessKey]
 			if(indexedStudies.length > 1) {
-				accessKeyTabs.push(createTab(accessKey, accessKey))
+				accessKeyTabs.push(this.createAccessKeyTab(accessKey, accessKey))
 				continue
 			}
 			
@@ -147,20 +176,9 @@ export class Content extends StudiesContent {
 		// Add remaining accessKey's to array but combine the ones leading to the same study:
 		for(const id in studyAccessKeyIndex) {
 			const indexedAccessKeys = studyAccessKeyIndex[id]
-			let title: string
-			switch(indexedAccessKeys.length) {
-				case 1:
-					title = indexedAccessKeys[0]
-					break
-				case 2:
-					title = `${indexedAccessKeys[0]}, ${indexedAccessKeys[indexedAccessKeys.length-1]}`
-					break
-				default:
-					title = `${indexedAccessKeys[0]} ... ${indexedAccessKeys[indexedAccessKeys.length-1]}`
-					break
-			}
+			
 			accessKeyTabs.push(
-				createTab(title, indexedAccessKeys[0])
+				this.createAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys), indexedAccessKeys[0])
 			)
 		}
 		accessKeyTabs.sort(function(a, b) {
