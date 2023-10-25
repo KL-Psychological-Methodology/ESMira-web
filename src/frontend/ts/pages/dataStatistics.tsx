@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Lang} from "../singletons/Lang";
-import dataTableSvg from "../../imgs/dashIcons/dataTable.svg?raw"
+import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import calculateSvg from "../../imgs/dashIcons/calculate.svg?raw"
 import summarySvg from "../../imgs/dashIcons/summary.svg?raw"
 import participantsSvg from "../../imgs/icons/participants.svg?raw"

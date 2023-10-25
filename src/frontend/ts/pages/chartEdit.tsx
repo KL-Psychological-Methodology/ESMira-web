@@ -25,7 +25,8 @@ import {DropdownMenu} from "../widgets/DropdownMenu";
 import {DashElement} from "../widgets/DashElement";
 import {Section} from "../site/Section";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
-import {BtnAdd, BtnCopy, BtnRemove, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash} from "../widgets/BtnWidgets";
+import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
 
 export abstract class ChartEditSectionContent extends SectionContent{
 	abstract getChart(): ChartData
@@ -44,12 +45,14 @@ export class Content extends ChartEditSectionContent {
 		this.isCalc = this.section.sectionValue == "calc"
 	}
 	
-	public titleExtra(): Vnode<any, any> | null {
-		return <a href={this.getUrl("chartPreview")}>{Lang.get(this.section.sectionValue == "calc" ? "calculate" : "preview")}</a>
-	}
-	
 	public title(): string {
 		return Lang.get("edit_chart")
+	}
+	
+	public titleExtra(): Vnode<any, any> | null {
+		return <a href={this.getUrl("chartPreview")}>
+			{BtnCustom(m.trust(statisticsSvg), undefined, Lang.get(this.section.sectionValue == "calc" ? "calculate" : "preview"))}
+		</a>
 	}
 	
 	public getChart(): ChartData {

@@ -4,6 +4,7 @@ import {Lang} from "../singletons/Lang";
 import upSvg from "../../imgs/icons/moveUp.svg?raw"
 import copySvg from "../../imgs/icons/copy.svg?raw"
 import downSvg from "../../imgs/icons/moveDown.svg?raw"
+import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import deleteSvg from "../../imgs/icons/trash.svg?raw"
 import {TabBar} from "../widgets/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
@@ -25,7 +26,7 @@ import {TranslatableObjectDataType} from "../observable/TranslatableObject";
 import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
-import {BtnAdd, BtnCopy, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
@@ -46,7 +47,9 @@ export class Content extends SectionContent {
 	public titleExtra(): Vnode<any, any> | null {
 		if(this.getStudyOrThrow().questionnaires.get().length == 0)
 			return null
-		return <a href={this.getUrl("demo")}>{Lang.get("preview")}</a>;
+		return <a href={this.getUrl("demo")}>
+			{BtnCustom(m.trust(dataTableSvg), undefined, Lang.get("preview"))}
+		</a>
 	}
 	
 	private autoValidateQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {

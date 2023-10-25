@@ -8,6 +8,7 @@ import {TranslatableObjectDataType} from "../observable/TranslatableObject";
 import {JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {Section} from "../site/Section";
 import {JsonTypes} from "../observable/types/JsonTypes";
+import {BtnCustom} from "../widgets/BtnWidgets";
 
 interface SourceComponentOptions {
 	study: Study
@@ -100,8 +101,7 @@ export class Content extends SectionContent {
 	public titleExtra(): Vnode<any, any> | null {
 		const study = this.getStudyOrThrow()
 		return <a href={window.URL.createObjectURL(new Blob([JSON.stringify(study.createJson())], {type: 'text/json'}))} download={`${study.title.get()}.json`}>
-			{m.trust(downloadSvg)}
-			<span class="spacingLeft">{Lang.get("download")}</span>
+			{BtnCustom(m.trust(downloadSvg), undefined, Lang.get("download"))}
 		</a>
 	}
 	

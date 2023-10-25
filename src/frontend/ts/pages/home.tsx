@@ -6,7 +6,7 @@ import {Lang} from "../singletons/Lang";
 import participateSvg from "../../imgs/dashIcons/participate.svg?raw"
 import githubSvg from "../../imgs/dashIcons/github.svg?raw"
 import questionSvg from "../../imgs/dashIcons/question.svg?raw"
-import statisticsSvg from "../../imgs/dashIcons/statistics.svg?raw"
+import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 
 export class Content extends SectionContent {
