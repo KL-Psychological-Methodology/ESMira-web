@@ -61,7 +61,7 @@ export class Content extends SectionContent {
 	public hasAlternatives(): boolean {
 		return true
 	}
-	public getAlternatives(): SectionAlternative[] | null {
+	public getAlternatives(): SectionAlternative[] {
 		return UrlAlternatives.studyAlternatives(this, "edit")
 	}
 	
@@ -87,7 +87,7 @@ export class Content extends SectionContent {
 			DashElement(null, {template: {title: Lang.get("study_description"), icon: m.trust(studyDescSvg) }, href: this.getUrl("studyDesc")}),
 			DashElement(null,
 				{floating: true, template: {title: Lang.get("create"), icon: m.trust(addSvg) }, onclick: this.addQuestionnaire.bind(this)},
-				{template: {title: Lang.get("edit_questionnaire"), icon: m.trust(editSvg) }, href: this.getUrl("qEdit")}
+				{template: {title: Lang.get("edit_questionnaires"), icon: m.trust(editSvg) }, href: this.getUrl("qEdit")}
 			),
 			DashElement(null, {template: {title: Lang.get("filter_and_trigger"), icon: m.trust(alarmsSvg) }, href: this.getUrl("filterTrigger"), disabled: disabled}),
 			DashElement(null, {template: {title: Lang.get("calendar"), icon: m.trust(calendarSvg) }, href: this.getUrl("calendar"), disabled: disabled}),

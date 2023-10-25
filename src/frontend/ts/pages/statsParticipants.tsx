@@ -92,7 +92,6 @@ export class Content extends SectionContent {
 	}
 	
 	private async selectParticipant(userId: string): Promise<void> {
-		console.log(userId)
 		this.isLoading = true
 		await this.csvLoader.reset()
 		
