@@ -1,4 +1,4 @@
-import {SectionContent} from "../site/SectionContent";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {BindObservable} from "../widgets/BindObservable";
@@ -78,6 +78,24 @@ export class Content extends SectionContent {
 			</div>
 		else
 			return null
+	}
+	
+	public hasAlternatives(): boolean {
+		return true
+	}
+	public getAlternatives(): Promise<SectionAlternative[]> {
+		return this.section.getTools().messagesLoader.getReloadedMessageParticipantInfoList(this.section.getStaticInt("id") ?? -1)
+			.then((participantList) => {
+				const output: SectionAlternative[] = []
+				participantList.get().forEach((entry) => {
+					const currentUserId = entry.name.get()
+					output.push({
+						title: currentUserId,
+						target: this.userId != currentUserId && this.getUrl(`chat,userId:${btoa(currentUserId)}`, this.section.depth - 1)
+					})
+				})
+				return output
+			})
 	}
 	
 	private async loadParticipantMessages(): Promise<void> {
