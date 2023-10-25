@@ -1,9 +1,42 @@
 import {Section} from "./Section";
-import m, {Vnode} from 'mithril';
+import m, {Component, Vnode, VnodeDOM} from 'mithril';
 import {Lang} from "../singletons/Lang";
 import {SiteData} from "./SiteData";
 import publishSvg from "../../imgs/icons/increaseVersion.svg?raw";
 import {DropdownMenu} from "../widgets/DropdownMenu";
+import {SectionAlternative} from "./SectionContent";
+import {LoadingSpinner} from "../widgets/LoadingSpinner";
+
+interface DropDownOptions {
+	alternatives: SectionAlternative[] | Promise<SectionAlternative[]>
+	close: () => void
+}
+class DropDownComponent implements Component<DropDownOptions, any> {
+	private sectionAlternatives?: SectionAlternative[]
+	
+	public async oninit(vNode: VnodeDOM<DropDownOptions, any>): Promise<void> {
+		const alternatives = vNode.attrs.alternatives
+		if(alternatives instanceof Promise<SectionAlternative[]>) {
+			this.sectionAlternatives = await vNode.attrs.alternatives
+			m.redraw()
+		}
+		else
+			this.sectionAlternatives = alternatives
+	}
+	
+	public view(vNode: Vnode<DropDownOptions, any>): Vnode<any, any> {
+		if(!this.sectionAlternatives)
+			return <div class="center">{LoadingSpinner()}</div>
+		
+		return <div class="navAlternatives">
+			{this.sectionAlternatives?.map((entry) =>
+				entry.target
+					? <a class="line" href={entry.target} onclick={() => vNode.attrs.close()}>{entry.title}</a>
+					: <span class="line disabled">{entry.title}</span>
+			)}
+		</div>
+	}
+}
 
 export class NavigationRow {
 	private readonly view: HTMLElement
@@ -78,13 +111,11 @@ export class NavigationRow {
 		</a>
 	}
 	private getAlternativeContent(section: Section, close: () => void): Vnode<any, any> {
-		return <div class="navAlternatives">
-			{section.sectionContent?.getAlternatives()?.map((entry) =>
-				entry.target
-					? <a class="line" href={entry.target} onclick={() => close()}>{entry.title}</a>
-					: <span class="line disabled">{entry.title}</span>
-			)}
-		</div>
+		const alternatives = section.sectionContent?.getAlternatives()
+		if(alternatives) {
+			return m(DropDownComponent, {alternatives: alternatives, close: close})
+		}
+		return <div></div>
 	}
 	
 	private renderView(): void {

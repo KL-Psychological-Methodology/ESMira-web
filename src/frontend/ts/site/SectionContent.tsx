@@ -53,7 +53,7 @@ export abstract class SectionContent {
 	public hasAlternatives(): boolean {
 		return false
 	}
-	public getAlternatives(): SectionAlternative[] | null {
+	public getAlternatives(): SectionAlternative[] | Promise<SectionAlternative[]> | null {
 		return null
 	}
 	
