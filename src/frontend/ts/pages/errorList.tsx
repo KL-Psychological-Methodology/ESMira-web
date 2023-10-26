@@ -37,7 +37,7 @@ export class Content extends SectionContent {
 		this.newReports = []
 		
 		reports = reports.sort((a, b) => {
-			return a.timestamp - b.timestamp;
+			return b.timestamp - a.timestamp
 		})
 		
 		for(const report of reports) {
