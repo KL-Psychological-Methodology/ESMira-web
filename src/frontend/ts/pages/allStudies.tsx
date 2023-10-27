@@ -30,7 +30,7 @@ export class Content extends StudiesContent {
 		super(section, studiesObs)
 		this.selectedAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("accessKeyIndex", 0)
 		
-		let openedTab = 3
+		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
 		switch(section.sectionValue) {
 			case "data":
 				this.targetPage = "dataStatistics"
@@ -39,7 +39,7 @@ export class Content extends StudiesContent {
 			case "msgs":
 				this.targetPage = "messagesOverview"
 				if(section.getTools().messagesLoader.studiesWithNewMessagesCount.get())
-					openedTab = 0
+					this.selectedTab.set(1)
 				this.titleString = Lang.get("messages")
 				break
 			case "edit":
@@ -48,7 +48,7 @@ export class Content extends StudiesContent {
 				this.titleString = Lang.get("edit_studies")
 				break
 		}
-		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", openedTab)
+		
 		
 		this.initAccessKeyIndex(studiesObs)
 		
