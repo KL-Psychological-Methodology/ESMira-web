@@ -94,7 +94,10 @@ export class Content extends SectionContent {
 			DashElement(null, {template: {title: Lang.get("create_charts"), icon: m.trust(chartsSvg) }, href: this.getUrl("charts"), disabled: disabled}),
 			DashElement(null, {template: {title: Lang.get("calculate_sumScores"), icon: m.trust(sumScoresSvg) }, href: this.getUrl("sumScores"), disabled: disabled}),
 			DashElement(null, {template: {title: Lang.get("languages_and_randomGroups"), icon: m.trust(langSvg) }, href: this.getUrl("langGroups")}),
-			DashElement(null, {template: {title: Lang.get("publish_study"), icon: m.trust(publishSvg) }, href: this.getUrl("publish")}),
+			DashElement(null, {
+				highlight: !this.getStudyOrThrow().published.get(),
+				template: {title: Lang.get("publish_study"), icon: m.trust(publishSvg) }, href: this.getUrl("publish")
+			}),
 			DashElement(null, {template: {title: Lang.get("reward_system"), icon: m.trust(rewardsSvg), noCompatibilityIcon: ["Web"] }, href: this.getUrl("rewards")}),
 			DashElement(null, {template: {title: Lang.get("study_settings"), icon: m.trust(settingsSvg) }, href: this.getUrl("studySettings")}),
 			DashElement(null, {template: {title: Lang.get("edit_source") }, href: this.getUrl("source")}),
