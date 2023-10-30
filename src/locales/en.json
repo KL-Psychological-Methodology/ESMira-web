@@ -495,7 +495,7 @@
     "server_update": "Server update (current version %s)",
     "info_ESMira_is_up_to_date": "ESMira is up to date 😀",
     "info_no_connection_to_update_server": "No connection to update server",
-    "info_newVersionAvailable": "A new version is available:",
+    "info_newVersionAvailable": "A new version is available",
     "info_web_update_complete": "ESMira was successfully updated.\n\nThe page will now reload and hopefully ESMira will then be super modern an cutting edge! ;)",
     "update_now": "Update now",
     "info_trigger_needs_action": "You need at least one action.",

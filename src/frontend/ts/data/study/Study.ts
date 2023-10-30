@@ -7,7 +7,7 @@ import {BaseObservable} from "../../observable/BaseObservable";
 import {TranslationRootInterface} from "../../observable/interfaces/TranslationRootInterface";
 import {Input, InputMediaTypes} from "./Input";
 
-export class Study extends TranslatableObject implements TranslationRootInterface{
+export class Study extends TranslatableObject implements TranslationRootInterface {
 	public lastChanged: number
 	public id										= this.primitive<number>(		"id",										0)
 	public version									= this.primitive<number>(		"version",									0)
