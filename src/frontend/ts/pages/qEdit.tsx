@@ -278,7 +278,7 @@ export class Content extends SectionContent {
 							<div class="nowrap flexCenter">
 								{BtnTrash(this.deleteInput.bind(this, page, qIndex))}
 								{BtnCopy(this.copyInput.bind(this, input, inputIndex+1))}
-								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${input.name.get()}`)}>
+								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${btoa(input.name.get())}`)}>
 									{BtnEdit()}
 								</a>
 							</div>

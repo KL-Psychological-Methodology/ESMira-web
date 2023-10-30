@@ -23,7 +23,8 @@ export class Content extends SectionContent {
 	}
 	
 	public title(): string {
-		return this.getStaticString("input") ?? "Error"
+		const inputName = this.getStaticString("input")
+		return inputName ? atob(inputName) : "Error"
 	}
 
 	private getInputIndices(study: Study, inputName: string): IndexContainer {
@@ -50,7 +51,7 @@ export class Content extends SectionContent {
 		const input = this.getInputFromIndices(study)
 		if(input) {
 			if(input.name.get() != inputName)
-				this.newSection(`inputEdit,input:${input.name.get()}`, this.section.depth-1)
+				this.newSection(`inputEdit,input:${btoa(input.name.get())}`, this.section.depth-1)
 			return input
 		}
 		
@@ -60,14 +61,14 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
-		let input = this.getInput(study, this.getStaticString("input") ?? "")
+		let input = this.getInput(study, atob(this.getStaticString("input") ?? ""))
 		if(!input)
-			throw new Error(`Input ${this.getStaticString("input")} does not exist`)
+			throw new Error(`Input ${atob(this.getStaticString("input") ?? "")} does not exist`)
 		const subItemI = this.getStaticInt("subInput")
 		if(subItemI != null) {
 			input = input.subInputs.get()[subItemI]
 			if(!input)
-				throw new Error(`SubItem ${subItemI} in Input ${this.getStaticString("input")} does not exist`)
+				throw new Error(`SubItem ${subItemI} in Input ${atob(this.getStaticString("input") ?? "")} does not exist`)
 		}
 		
 		const inputDesigner = new InputOptionDesigner(study, input, this.getUrl.bind(this), this.newSection.bind(this))
