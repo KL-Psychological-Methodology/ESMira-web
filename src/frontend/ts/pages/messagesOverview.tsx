@@ -38,20 +38,23 @@ export class Content extends SectionContent {
 			</div>
 			<br/>
 			{TitleRow(Lang.getWithColon("messages"))}
-			{messageParticipantEntryList.map((entry) =>
-				<div class="verticalPadding">
-					<a href={this.getUrl(`chat,userId:${btoa(entry.name.get())}`)}>
-						<span>{entry.name.get()}</span>
+			<div class="stickerList">
+				{messageParticipantEntryList.map((entry) =>
+					<div class="line">
+						<a href={this.getUrl(`chat,userId:${btoa(entry.name.get())}`)}>
+							<span>{entry.name.get()}</span>
+							{entry.pending.get() &&
+								<span class="extraNote">{Lang.get('waiting')}</span>
+								
+							}
+						</a>
 						<small class="infoSticker">{new Date(entry.lastMsg.get()).toLocaleString()}</small>
 						{entry.unread.get() &&
 							<small class="infoSticker highlight">{Lang.get("unread")}</small>
 						}
-						{entry.pending.get() &&
-							<small class="infoSticker highlight">{Lang.get("waiting")}</small>
-						}
-					</a>
-				</div>
-			)}
+					</div>
+				)}
+			</div>
 		</div>
 	}
 }

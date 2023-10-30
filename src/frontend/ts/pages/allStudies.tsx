@@ -195,7 +195,7 @@ export class Content extends StudiesContent {
 	}
 	
 	private getStudyListView(studies: Study[]): Vnode<any, any> {
-		return <div class="studyList">{
+		return <div class="stickerList">{
 			studies.map((study) =>
 				<div class={`line ${study.published.get() ? "" : "unPublishedStudy"}`}>
 					<span class="title">

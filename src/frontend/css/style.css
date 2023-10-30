@@ -441,23 +441,23 @@ accessKeyBox
 
 
 /**********
-studyList
+stickerList
 **********/
 
-.studyList .line {
+.stickerList .line {
 	display: flex;
 	justify-content: space-between;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-.studyList .line .title {
+.stickerList .line .title {
 	flex: 1 1 auto;
 	white-space: nowrap;
 	max-width: 50%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.studyList .line .accessKeys {
+.stickerList .line .accessKeys {
 	max-width: 50%;
 }
 .unPublishedStudy {

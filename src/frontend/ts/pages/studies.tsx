@@ -102,7 +102,7 @@ export class Content extends SectionContent {
 					</form>
 				}</div>
 				
-				<div class="studyList">{
+				<div class="stickerList">{
 					this.studies.map((study) =>
 						<div class="line">
 							<span class="title">{this.getStudyLinkView(study)}</span>
