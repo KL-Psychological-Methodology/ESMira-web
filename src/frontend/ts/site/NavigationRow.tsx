@@ -29,10 +29,14 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 			return <div class="center">{LoadingSpinner()}</div>
 		
 		return <div class="navAlternatives">
-			{this.sectionAlternatives?.map((entry) =>
-				entry.target
-					? <a class="line" href={entry.target} onclick={() => vNode.attrs.close()}>{entry.title}</a>
-					: <span class="line disabled">{entry.title}</span>
+			{this.sectionAlternatives?.map((entry) => {
+				if(entry.header)
+					return <div class="header">{entry.title}</div>
+				else
+					return entry.target
+						? <a class="line" href={entry.target} onclick={() => vNode.attrs.close()}>{entry.title}</a>
+						: <span class="line disabled">{entry.title}</span>
+				}
 			)}
 		</div>
 	}

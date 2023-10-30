@@ -1,4 +1,4 @@
-import {SectionContent} from "../site/SectionContent";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Study} from "../data/study/Study";
@@ -26,7 +26,36 @@ export class Content extends SectionContent {
 		const inputName = this.getStaticString("input")
 		return inputName ? atob(inputName) : "Error"
 	}
-
+	
+	
+	public hasAlternatives(): boolean {
+		return this.getStaticInt("subInput") == null
+	}
+	public getAlternatives(): SectionAlternative[] | null {
+		const study = this.getStudyOrThrow()
+		const alternatives: SectionAlternative[] = []
+		const depth = this.section.depth - 1
+		const inputName = atob(this.getStaticString("input") ?? "")
+		
+		study.questionnaires.get().forEach((questionnaire) => {
+			questionnaire.pages.get().forEach((page) => {
+				alternatives.push({
+					title: questionnaire.getTitle(),
+					header: true,
+					target: false
+				})
+				page.inputs.get().forEach((input) => {
+					alternatives.push({
+						title: input.name.get(),
+						target: input.name.get() == inputName ? false : this.getUrl(`inputEdit,input:${btoa(input.name.get())}`, depth)
+					})
+				})
+			})
+		})
+		
+		return alternatives
+	}
+	
 	private getInputIndices(study: Study, inputName: string): IndexContainer {
 		let pIndex = -1
 		let iIndex = -1

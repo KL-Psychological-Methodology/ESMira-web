@@ -163,6 +163,11 @@ navContent: to calculate the needed width of all elements while navMenu is restr
 	content: "\25BC";
 }
 
+.navAlternatives .header {
+	padding: 10px 0 5px 0;
+	font-weight: bold;
+	color: #dc4e9d;
+}
 .navAlternatives > .line:before {
 	content: "\25B7";
 	color: #2b98ca;

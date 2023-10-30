@@ -13,6 +13,7 @@ import {Admin} from "../admin/Admin";
 export interface SectionAlternative {
 	title: string
 	target: string | false
+	header?: boolean
 }
 
 /**
