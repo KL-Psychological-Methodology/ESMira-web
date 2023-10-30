@@ -201,7 +201,7 @@ export class ChartJsBox {
 				labels: dataSetCreator.labels,
 				datasets: datasets
 			},
-			options: this.getChartOptions(chartType, datasets),
+			options: this.getChartOptions(chartType, datasets, chart.inPercent.get()),
 			plugins: this.getChartPlugins(legendView)
 		})
 	}
@@ -276,7 +276,7 @@ export class ChartJsBox {
 		}]
 	}
 	
-	private getChartOptions(chartType: number, dataSets: ChartDataset[]): ChartOptions {
+	private getChartOptions(chartType: number, dataSets: ChartDataset[], inPercent: boolean): ChartOptions {
 		let verticalPadding = chartType === STATISTICS_CHARTTYPES_PIE ? 40 : 0;
 		return {
 			layout: {
@@ -303,7 +303,8 @@ export class ChartJsBox {
 					offset: 0,
 					display: chartType === STATISTICS_CHARTTYPES_SCATTER ? false : ({datasetIndex, dataIndex}) => {
 						return dataSets[datasetIndex].data[dataIndex] !== 0 ? "auto" : false
-					}
+					},
+					formatter: inPercent ? (value) => { return `${value}%` } : undefined
 				}
 			}
 		}
@@ -531,7 +532,36 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 		this.noSort = noSort
 	}
 	
-	private addNumVar(rawData: StatisticsEntryPerValue, axisContainer: AxisContainer, xValue: number): void {
+	
+	private createNumData(rawData: StatisticsEntryPerValue, xValue: number, xMin: number, xMax: number, inPercent: boolean): DataPoint {
+		const data: DataPoint = []
+		if(inPercent) {
+			let sum = 0
+			for(; xMin <= xMax; ++xMin) {
+				sum += rawData[rawData[xMin]] ?? 0
+			}
+			for(; xMin <= xMax; ++xMin) {
+				const value = rawData.hasOwnProperty(xMin) ? 100 / (sum / rawData[xMin]) : 0
+				
+				data.push(this.forScatterPlot
+					? {x: xValue, y: value}
+					: value
+				)
+				this.labels.push(xMin.toString())
+			}
+		}
+		else {
+			for(; xMin <= xMax; ++xMin) {
+				data.push(this.forScatterPlot
+					? {x: xValue, y: rawData[xMin]}
+					: rawData[xMin]
+				)
+				this.labels.push(xMin.toString())
+			}
+		}
+		return data
+	}
+	private addNumVar(rawData: StatisticsEntryPerValue, axisContainer: AxisContainer, xValue: number, inPercent: boolean): void {
 		let xMin = Number.MAX_SAFE_INTEGER
 		let xMax = Number.MIN_SAFE_INTEGER
 		
@@ -547,16 +577,9 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 		if(xMax == Number.MIN_SAFE_INTEGER) //happens when there is only one entry
 			xMax = xMin
 		
-		let data: DataPoint = []
-		if(xMin != Number.MAX_SAFE_INTEGER) {
-			for(; xMin <= xMax; ++xMin) {
-				if(this.forScatterPlot)
-					data.push({x: xValue, y: rawData[xMin]})
-				else
-					data.push(rawData[xMin]);
-				this.labels.push(xMin.toString())
-			}
-		}
+		const data: DataPoint = xMin != Number.MAX_SAFE_INTEGER
+			? this.createNumData(rawData, xValue, xMin, xMax, inPercent)
+			: []
 		
 		this.dataSets.push(this.createDataSet(
 			axisContainer.label.get(),
@@ -564,7 +587,7 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 			axisContainer.color.get()
 		))
 	}
-	private addNumVars(containerArray: AxisContainer[], statistics: StatisticsCollection): void {
+	private addNumVars(containerArray: AxisContainer[], statistics: StatisticsCollection, inPercent: boolean): void {
 		for(let i=containerArray.length-1; i>=0; --i) {
 			const axisContainer = containerArray[i]
 			const yAxis = axisContainer.yAxis
@@ -572,26 +595,48 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 			if(!statistics.hasOwnProperty(variableName) || yAxis.observedVariableIndex.get() == -1)
 				continue
 			const rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
-			this.addNumVar(rawData, axisContainer, i)
+			this.addNumVar(rawData, axisContainer, i, inPercent)
 		}
 	}
 	
-	private addStringVars(containerArray: AxisContainer[], statistics: StatisticsCollection): void {
-		const labelsMax = this.labels.length;
+	
+	private createStringPercentData(rawData: StatisticsEntryPerValue): DataPoint {
+		const labelsMax = this.labels.length
+		const data: DataPoint = []
+		
+		let sum = 0
+		for(let i=0; i < labelsMax; ++i) {
+			sum += rawData[this.labels[i]] ?? 0
+		}
+		for(let i=0; i < labelsMax; ++i) {
+			const key = this.labels[i]
+			const value = rawData.hasOwnProperty(key) ? 100 / (sum / rawData[key]) : 0
+			data.push(this.forScatterPlot ? {x: i, y: value} : value)
+		}
+		return data
+	}
+	private createStringCountData(rawData: StatisticsEntryPerValue): DataPoint {
+		const labelsMax = this.labels.length
+		const data: DataPoint = []
+		
+		for(let i=0; i < labelsMax; ++i) {
+			const key = this.labels[i]
+			const value = rawData.hasOwnProperty(key) ? rawData[key] : 0
+			data.push(this.forScatterPlot ? {x: i, y: value} : value)
+		}
+		return data
+	}
+	private addStringVars(containerArray: AxisContainer[], statistics: StatisticsCollection, inPercent: boolean): void {
+		const createData = inPercent ? this.createStringPercentData.bind(this) : this.createStringCountData.bind(this)
+		
 		for(const axisContainer of containerArray) {
 			const yAxis = axisContainer.yAxis
 			const variableName = yAxis.variableName.get()
 			if(!statistics.hasOwnProperty(variableName) || yAxis.observedVariableIndex.get() == -1)
 				continue
-			const rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
 			
-			//add data in order of labels:
-			let data: DataPoint = []
-			for(let i=0; i < labelsMax; ++i) {
-				const key = this.labels[i]
-				const value = rawData.hasOwnProperty(key) ? rawData[key] : 0
-				data.push(this.forScatterPlot ? {x: i, y: value} : value)
-			}
+			const rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
+			const data = createData(rawData)
 			
 			this.dataSets.push(this.createDataSet(
 				axisContainer.label.get(),
@@ -638,9 +683,9 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 	}
 	public create(personalStatistics: StatisticsCollection, publicStatistics: StatisticsCollection): ChartDataset[] {
 		if(this.chart.xAxisIsNumberRange.get()) {
-			this.addNumVars(this.chart.axisContainer.get(), personalStatistics)
+			this.addNumVars(this.chart.axisContainer.get(), personalStatistics, this.chart.inPercent.get())
 			if(this.chart.displayPublicVariable.get())
-				this.addNumVars(this.chart.publicVariables.get(), publicStatistics)
+				this.addNumVars(this.chart.publicVariables.get(), publicStatistics, this.chart.inPercent.get())
 		}
 		else {
 			//create labels first, so we know the order to add data in:
@@ -652,9 +697,9 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 			if(!this.noSort)
 				this.labels.sort(this.sortLabelComparator)
 			
-			this.addStringVars(this.chart.axisContainer.get(), personalStatistics)
+			this.addStringVars(this.chart.axisContainer.get(), personalStatistics, this.chart.inPercent.get())
 			if(this.chart.displayPublicVariable.get())
-				this.addStringVars(this.chart.publicVariables.get(), publicStatistics)
+				this.addStringVars(this.chart.publicVariables.get(), publicStatistics, this.chart.inPercent.get())
 			
 			//we do that last because this.labels is used in addStringVars()
 			for(let i=0; i < this.labels.length; ++i) {
