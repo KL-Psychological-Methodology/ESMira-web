@@ -73,9 +73,9 @@ export class StatisticsCreator {
 	private addFreqDistrEntryData(value: string, entry: StatisticsEntry): void {
 		const perValueEntryData = entry.data as StatisticsEntryPerValue
 		if(perValueEntryData.hasOwnProperty(value))
-			++perValueEntryData[value];
+			++perValueEntryData[value]
 		else
-			perValueEntryData[value] = 1;
+			perValueEntryData[value] = 1
 	}
 	private addPerDataEntryData(value: string, entry: StatisticsEntry): void {
 		const perDataEntryData = entry.data as StatisticsEntryPerData

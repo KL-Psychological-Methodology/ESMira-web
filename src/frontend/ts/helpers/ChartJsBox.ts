@@ -50,6 +50,7 @@ import {Point} from "chart.js/dist/types/geometric";
 const ONE_DAY = 86400 //in seconds: 60*60*24
 const BACKGROUND_ALPHA = 0.7
 const CHART_MIN_ENTRY_WIDTH = 35
+const MAX_VARIABLE_LABEL_LENGTH = 30
 export const CHART_COLORS = [
 	//Thanks to: https://sashamaps.net/docs/resources/20-colors/
 	'#e6194B',
@@ -534,8 +535,8 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 		let xMin = Number.MAX_SAFE_INTEGER
 		let xMax = Number.MIN_SAFE_INTEGER
 		
-		for(let key in rawData) {
-			let num = parseInt(key);
+		for(const key in rawData) {
+			const num = parseInt(key);
 			if(isNaN(num))
 				continue
 			if(num < xMin)
@@ -581,7 +582,7 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 			const yAxis = axisContainer.yAxis
 			const variableName = yAxis.variableName.get()
 			if(!statistics.hasOwnProperty(variableName) || yAxis.observedVariableIndex.get() == -1)
-				continue;
+				continue
 			const rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
 			
 			//add data in order of labels:
@@ -601,17 +602,16 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 	}
 	
 	private addStringLabels(containerArray: AxisContainer[], statistics: StatisticsCollection): void {
-		for(let i=containerArray.length-1; i>=0; --i) {
-			const axisContainer = containerArray[i]
+		for(const axisContainer of containerArray) {
 			const yAxis = axisContainer.yAxis
 			const variableName = yAxis.variableName.get()
 			if(!statistics.hasOwnProperty(variableName))
 				continue
 			if(yAxis.observedVariableIndex.get() == -1)
 				continue
-			let rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
+			const rawData = statistics[variableName][yAxis.observedVariableIndex.get()].data as StatisticsEntryPerValue
 			
-			for(let key in rawData) {
+			for(const key in rawData) {
 				if(!rawData.hasOwnProperty(key) || !key.length || this.labelsIndex.hasOwnProperty(key))
 					continue
 				
@@ -655,6 +655,11 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 			this.addStringVars(this.chart.axisContainer.get(), personalStatistics)
 			if(this.chart.displayPublicVariable.get())
 				this.addStringVars(this.chart.publicVariables.get(), publicStatistics)
+			
+			//we do that last because this.labels is used in addStringVars()
+			for(let i=0; i < this.labels.length; ++i) {
+				this.labels[i] = this.labels[i].substring(0, MAX_VARIABLE_LABEL_LENGTH)
+			}
 		}
 		
 		return this.dataSets
