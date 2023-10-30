@@ -89,7 +89,8 @@ export class CsvLoaderCollectionFromCharts {
 			else {
 				const currentVariable = this.personalStatistics[variableName]
 				newVariable.forEach((newEntry, index) => {
-					currentVariable[index] = newEntry
+					if(!currentVariable[index] || newEntry.entryCount != 0) //this could is probably a dry run and the target variable is loaded from another csvLoader
+						currentVariable[index] = newEntry
 				})
 			}
 		}
@@ -108,6 +109,7 @@ export class CsvLoaderCollectionFromCharts {
 	
 	public async loadStatisticsFromFiles(userName?: string, dontLoadPublicStatistics: boolean = false): Promise<LoadedStatistics> {
 		for(const i in this.csvLoaders) {
+			//Note: This runs through all csvLoaders with every chart and their variables. Even when a chart (or variable) does not need the csvLoader
 			const csvLoader = this.csvLoaders[i]
 			if(userName) {
 				await csvLoader.filterEntireColumn(false, "userId")
