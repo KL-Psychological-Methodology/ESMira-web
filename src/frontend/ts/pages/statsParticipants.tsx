@@ -83,12 +83,26 @@ export class Content extends SectionContent {
 		await this.csvLoader.filterByValue(true, "eventType", "questionnaire")
 		const fullList = await this.csvLoader.getValueCellList("userId")
 		
-		for(let value in fullList) {
+		for(const value in fullList) {
 			this.participantList.push({
 				name: value,
 				count: await this.csvLoader.getVisibleCount("userId", value)
 			})
 		}
+		this.participantList.sort((a, b) => {
+			if(a.count == b.count) {
+				if(a.name < b.name)
+					return -1
+				else if(a.name > b.name)
+					return 1
+				else
+					return 0
+			}
+			if(a.count < b.count)
+				return 1
+			else
+				return -1
+		})
 	}
 	
 	private async selectParticipant(userId: string): Promise<void> {
@@ -122,10 +136,16 @@ export class Content extends SectionContent {
 		this.section.loader.update(Lang.get("state_loading_file", Lang.get("statistics")))
 		
 		
-		const statisticsData = await this.personalStatisticsCsvLoaderCollection.loadStatisticsFromFiles(userId, !!this.publicStatistics)
-		if(statisticsData.additionalStatistics)
-			this.publicStatistics = statisticsData.additionalStatistics
+		const loadedStatisticsData = await this.personalStatisticsCsvLoaderCollection.loadStatisticsFromFiles(userId, !!this.publicStatistics)
 		
+		
+		//we only load public statistics when loading it the first time. For all the other times, we reuse the cached version:
+		if(loadedStatisticsData.additionalStatistics)
+			this.publicStatistics = loadedStatisticsData.additionalStatistics
+		const statisticsData = {
+			mainStatistics: loadedStatisticsData.mainStatistics,
+			additionalStatistics: this.publicStatistics
+		}
 		
 		this.personalChartPromises.forEach((promise) => {
 			promise.set(Promise.resolve(statisticsData))
@@ -133,7 +153,14 @@ export class Content extends SectionContent {
 		
 		this.currentParticipant = userId
 		this.isLoading = false
+		
 		m.redraw()
+		
+		window.setTimeout(() => {
+			const line = document.getElementsByClassName("currentParticipant")
+			if(line[0])
+				line[0].scrollIntoView({behavior: "smooth", block: "nearest"})
+		}, 300)
 	}
 	
 	public getView(): Vnode<any, any> {
@@ -144,7 +171,7 @@ export class Content extends SectionContent {
 					key: valueListInfo.name,
 					view:
 						<div
-							class={`clickable verticalPadding searchTarget smallText ${this.currentParticipant == valueListInfo.name ? "highlight" : ""}`}
+							class={`clickable verticalPadding searchTarget smallText ${this.currentParticipant == valueListInfo.name ? "highlight currentParticipant" : ""}`}
 							onclick={this.selectParticipant.bind(this, valueListInfo.name)}
 						>{Lang.get("text_with_questionnaireCount", valueListInfo.name, valueListInfo.count)}</div>
 				}
