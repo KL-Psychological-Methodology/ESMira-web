@@ -8,11 +8,11 @@ export class SiteTranslations extends TranslatableObject {
 	public privacyPolicy = this.translatable("privacyPolicy", "")
 	
 	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
-		const defaultLang = newLang ?? "en"
+		const defaultLang = newLang ?? (parent as TranslatableObject)?.currentLangCode.get() ?? "en"
 		const translationData = data as  Record<string, Record<string, string>>
 		super(translationData[defaultLang], parent, key, newLang)
 		
-		for(let langCode in translationData) {
+		for(const langCode in translationData) {
 			if(langCode != defaultLang)
 				this.addLanguage(langCode, translationData[langCode])
 		}

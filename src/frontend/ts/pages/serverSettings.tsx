@@ -166,15 +166,14 @@ export class Content extends SectionContent {
 		const settings = this.loader.getSettings()
 		
 		return <div>
-			<label class="vertical">
-				<small>{Lang.get("server_name")}</small>
-				<input type="text" {... BindObservable(settings.siteTranslations.serverName)}/>
-				{ObservableLangChooser(settings)}
-			</label>
 			
-			
-			{TitleRow(Lang.getWithColon("additional_languages"))}
-			{this.changeLanguageList.getView()}
+			<div class="center">
+				<label>
+					<small>{Lang.get("server_name")}</small>
+					<input type="text" {... BindObservable(settings.siteTranslations.serverName)}/>
+					{ObservableLangChooser(settings)}
+				</label>
+			</div>
 			
 			{TitleRow(Lang.getWithColon("server_update", this.section.siteData.packageVersion))}
 			
@@ -206,10 +205,15 @@ export class Content extends SectionContent {
 							<div>{m.trust(this.markdownRenderer.render(data.changeLog))}</div>
 						</div>
 					)}
-					
+				
 				</div>
 				: <div class="center highlight">{this.noConnection ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')}</div>
 			}
+			<br/><br/>
+			
+			
+			{TitleRow(Lang.getWithColon("additional_languages"))}
+			{this.changeLanguageList.getView()}
 			
 			{this.debuggingOn &&
 				<div>
