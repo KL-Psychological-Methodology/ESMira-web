@@ -5,6 +5,7 @@ namespace backend\fileSystem\subStores;
 use backend\Main;
 use backend\fileSystem\PathsFS;
 use backend\subStores\ServerStatisticsStore;
+use Throwable;
 
 class ServerStatisticsStoreFS extends ServerStatisticsStore {
 	public function getStatisticsAsJsonString(): string {
@@ -29,8 +30,15 @@ class ServerStatisticsStoreFS extends ServerStatisticsStore {
 		if(!flock($handle, LOCK_EX))
 			Main::report("Could not lock $pathServerStatistics. Data could be lost!");
 		
+		try {
+			$json = json_decode(fread($handle, filesize($pathServerStatistics)));
+		}
+		catch(Throwable $e) {
+			Main::report("Server statistics seem to be broken. Statistics were recreated. Error message:\n\n" .$e->getMessage());
+			$json = $this->createNewStatisticsDataObj();
+		}
 		$statistics = new StatisticsStoreWriterFS(
-			json_decode(fread($handle, filesize($pathServerStatistics)))
+			$json
 		);
 		
 		if($callback($statistics) === false) {
