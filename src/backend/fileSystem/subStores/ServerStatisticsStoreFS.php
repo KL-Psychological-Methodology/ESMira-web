@@ -47,13 +47,14 @@ class ServerStatisticsStoreFS extends ServerStatisticsStore {
 			return;
 		}
 		
+		$newJson = json_encode($statistics->getStatisticsObj());
 		
 		if(fseek($handle, 0) == -1)
-			Main::report("fseek() failed for server statistics. Server statistics were not updated");
+			Main::report("fseek() failed for server statistics. Server statistics were not updated.\n\nPrevious server statistics:\n$json\n\nNew server statistics: $newJson");
 		else if(!ftruncate($handle, 0))
-			Main::report("ftruncate() failed for server statistics. Server statistics were not updated");
-		else if(!fwrite($handle, json_encode($statistics->getStatisticsObj())))
-			Main::report("Could not write server statistics. Server statistics were not updated");
+			Main::report("ftruncate() failed for server statistics. Server statistics might be broken now and will automatically be recreated next time data is added.\n\nPrevious server statistics:\n$json\n\nNew server statistics: $newJson");
+		else if(!fwrite($handle, $newJson))
+			Main::report("Could not write server statistics. Server statistics might be broken now and will automatically be recreated next time data is added.\n\nPrevious server statistics:\n$json\n\nNew server statistics: $newJson");
 		fflush($handle);
 		flock($handle, LOCK_UN);
 		fclose($handle);
