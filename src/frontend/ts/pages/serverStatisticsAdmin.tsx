@@ -99,9 +99,9 @@ export class Content extends ServerStatisticsContent {
 	
 	private getReadableByteSize(bytes: number): string {
 		if(bytes > 1000000)
-			return `${Math.floor(bytes / 1000000)} Mb, ${this.getReadableByteSize(bytes % 1000000)}`
+			return `${Math.round(bytes / 10000) / 100} Mb`
 		
-		return `${Math.round(bytes / 100) / 10} Kb`
+		return `${Math.round(bytes / 1000)} Kb`
 	}
 	
 	public getView(): Vnode<any, any> {
@@ -135,7 +135,7 @@ export class Content extends ServerStatisticsContent {
 								<td class={study?.published.get() ? "" : "unPublishedStudy"}>
 									<a href={this.getUrl(`dataStatistics,id:${entry.id}`)}>{study?.title.get()}</a>
 								</td>
-								<td>{this.getReadableByteSize(entry.fileSize)}</td>
+								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{this.getReadableByteSize(entry.fileSize)}</td>
 							</tr>
 						}
 					)}
