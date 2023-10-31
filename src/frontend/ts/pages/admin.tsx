@@ -65,10 +65,10 @@ export class Content extends SectionContent {
 							href: this.getUrl("allStudies:data")
 						}),
 					
-					tools.permissions.read &&
+					tools?.isAdmin &&
 						DashElement(null, {
 							template: {title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg) },
-							href: this.getUrl("serverStatistics")
+							href: this.getUrl("serverStatisticsAdmin")
 						})
 				)
 			}

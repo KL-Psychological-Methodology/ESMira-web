@@ -2,11 +2,10 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Section} from "../site/Section";
-import {TitleRow} from "../widgets/TitleRow";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Requests} from "../singletons/Requests";
-import {FILE_ADMIN, FILE_SERVER_STATISTICS} from "../constants/urls";
+import {FILE_SERVER_STATISTICS} from "../constants/urls";
 import {ChartView} from "../widgets/ChartView";
 import {ChartData} from "../data/study/ChartData";
 import {ObservablePromise} from "../observable/ObservablePromise";
@@ -19,7 +18,6 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_STORAGE_TYPE_FREQ_DISTR, STATISTICS_STORAGE_TYPE_TIMED,
 	STATISTICS_VALUETYPES_COUNT, STATISTICS_VALUETYPES_SUM
 } from "../constants/statistics";
-import {getChartColor} from "../helpers/ChartJsBox";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {StatisticsEntry} from "../data/statistics/StatisticsEntry";
 import { StatisticsEntryTimed} from "../data/statistics/StatisticsDataRecord";
@@ -28,58 +26,32 @@ import {WeekEntry} from "../data/serverStatistics/WeekEntry";
 import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
 import {BtnReload} from "../widgets/BtnWidgets";
 
-const SECONDS_14_DAYS = 60*60*24*14
 const SMALLEST_TIMED_DISTANCE = 675
 export class Content extends SectionContent {
 	private readonly serverStatistics: ServerStatistics
-	private readonly lastActivitiesList?: { id: number, timestamp: number }[]
 	
 	private readonly appTypeChart: ChartData
-	private dailyAppVersionChart?: ChartData
+	protected dailyAppVersionChart?: ChartData //only written by serverStatisticsAdmin
 	private readonly dailyQuestionnaireChart: ChartData
 	private readonly dailyJoinedChart: ChartData
 	private readonly weekdaysQuestionnaireChart: ChartData
 	private readonly weekdaysJoinedChart: ChartData
 	
 	private readonly appTypePromise: ObservablePromise<LoadedStatistics>
-	private dailyAppVersionPromise?: ObservablePromise<LoadedStatistics>
+	protected dailyAppVersionPromise?: ObservablePromise<LoadedStatistics> //only written by serverStatisticsAdmin
 	private readonly dailyQuestionnairePromise: ObservablePromise<LoadedStatistics>
 	private readonly dailyJoinedPromise: ObservablePromise<LoadedStatistics>
 	private readonly weekdaysQuestionnairePromise: ObservablePromise<LoadedStatistics>
 	private readonly weekdaysJoinedPromise: ObservablePromise<LoadedStatistics>
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		if(section.getAdmin().isLoggedIn()) {
-			return [
-				Requests.loadJson(FILE_SERVER_STATISTICS),
-				Requests.loadJson(`${FILE_ADMIN}?type=GetLastActivities`),
-				section.getStrippedStudyListPromise()
-			]
-		}
-		else {
-			return [
-				Requests.loadJson(FILE_SERVER_STATISTICS)
-			]
-		}
-		
+	public static preLoad(_section: Section): Promise<any>[] {
+		return [
+			Requests.loadJson(FILE_SERVER_STATISTICS)
+		]
 	}
-	constructor(section: Section, serverStatistics: ServerStatistics, lastActivities?: Record<number, number>) {
+	constructor(section: Section, serverStatistics: ServerStatistics) {
 		super(section)
 		this.serverStatistics = serverStatistics
-		
-		if(lastActivities) {
-			const lastActivitiesList: { id: number, timestamp: number }[] = []
-			for(const studyId in lastActivities) {
-				lastActivitiesList.push({id: parseInt(studyId), timestamp: lastActivities[studyId]})
-			}
-			lastActivitiesList.sort(function(a, b) {
-				return b.timestamp - a.timestamp
-			})
-			this.lastActivitiesList = lastActivitiesList
-		}
-		
-		if(this.getAdmin().isLoggedIn())
-			this.setAppVersionChartAndPromise(serverStatistics)
 		
 		this.appTypeChart = this.createAppTypeChart()
 		this.dailyQuestionnaireChart = this.createDailyQuestionnaireChart()
@@ -108,48 +80,7 @@ export class Content extends SectionContent {
 		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
 	}
 	
-	private setAppVersionChartAndPromise(serverStatistics: ServerStatistics): void {
-		const appVersionLabels: Record<string, boolean> = {}
-		const days = serverStatistics.days
-		for(const timestamp in days) {
-			const appVersion = days[timestamp].appVersion
-			if(appVersion) {
-				for(const key in appVersion) {
-					if(!appVersionLabels.hasOwnProperty(key))
-						appVersionLabels[key] = true
-				}
-			}
-		}
-		const keys = Object.keys(appVersionLabels).sort()
-		
-		const appVersionAxisContainer: Record<string, JsonTypes>[] = []
-		const appVersionStatistics: StatisticsEntry[] = []
-		let i = 0
-		for(const key of keys) {
-			if(key.indexOf("_dev") != -1 || key.indexOf("wasDev") != -1)
-				continue
-			appVersionStatistics.push(this.createDailyStatisticsEntry(serverStatistics, "appVersion", key))
-			
-			appVersionAxisContainer.push({
-				xAxis: {
-					conditions: []
-				},
-				yAxis: {
-					conditions: [],
-					variableName: "appVersion",
-					observedVariableIndex: i
-				},
-				label: key,
-				color: getChartColor(i)
-			})
-			++i
-		}
-		
-		this.dailyAppVersionChart = this.createDailyAppVersionChart(appVersionAxisContainer)
-		this.dailyAppVersionPromise = this.createChartPromise("appVersion", appVersionStatistics)
-	}
-	
-	private createChartPromise(variable: string, entries: StatisticsEntry[]): ObservablePromise<LoadedStatistics> {
+	protected createChartPromise(variable: string, entries: StatisticsEntry[]): ObservablePromise<LoadedStatistics> {
 		return new ObservablePromise<LoadedStatistics>(
 			Promise.resolve({
 				mainStatistics: {[variable]: entries}
@@ -176,7 +107,7 @@ export class Content extends SectionContent {
 		}
 	}
 	
-	private createDailyStatisticsEntry(serverStatistics: ServerStatistics, variable: keyof DayEntry, subVariable: string = ""): StatisticsEntry {
+	protected createDailyStatisticsEntry(serverStatistics: ServerStatistics, variable: keyof DayEntry, subVariable: string = ""): StatisticsEntry {
 		const statisticsData: StatisticsEntryTimed = {}
 		let count = 0
 		const days = serverStatistics.days
@@ -223,7 +154,7 @@ export class Content extends SectionContent {
 			chartType: STATISTICS_CHARTTYPES_PIE
 		}, null, "chart")
 	}
-	private createDailyAppVersionChart(appVersionAxisContainer: Record<string, JsonTypes>[]): ChartData {
+	protected createDailyAppVersionChart(appVersionAxisContainer: Record<string, JsonTypes>[]): ChartData {
 		return new ChartData({
 			title: Lang.get("app_version"),
 			publicVariables: [],
@@ -331,36 +262,7 @@ export class Content extends SectionContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		const studies = this.section.siteData.studyLoader.getStudies()
 		return <div>
-			{this.getAdmin().isLoggedIn() &&
-				<div>
-					{TitleRow(Lang.getWithColon("last_activities"))}
-					{DashRow(
-						DashElement("stretched",
-							{
-								content:
-									<div class="scrollBox">
-										<table style="width: 100%">
-											{this.lastActivitiesList?.map((entry) => {
-												const study = studies.getEntry(entry.id)
-												return <tr>
-													<td style={`opacity: ${study?.published.get() ? 1 : 0.5}`}>
-														<a href={this.getUrl(`dataStatistics,id:${entry.id}`)}>{study?.title.get()}</a>
-													</td>
-													<td class={Date.now()/1000 - entry.timestamp < SECONDS_14_DAYS ? "highlight" : ""}>{new Date(entry.timestamp*1000).toLocaleString()}</td>
-												</tr>
-											}
-											)}
-										</table>
-									</div>
-							}
-						)
-					)}
-					
-					{TitleRow(Lang.getWithColon("server_statistics"))}
-				</div>
-			}
 			{DashRow(
 				DashElement("vertical",
 					{

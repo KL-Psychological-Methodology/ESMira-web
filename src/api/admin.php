@@ -65,6 +65,7 @@ $classIndex = [
 	
 	//admin
 	'GetLastActivities' => 'backend\admin\features\adminPermission\GetLastActivities',
+	'GetUsedSpacePerStudy' => 'backend\admin\features\adminPermission\GetUsedSpacePerStudy',
 	'GetServerConfig' => 'backend\admin\features\adminPermission\GetServerConfig',
 	'SaveServerConfigs' => 'backend\admin\features\adminPermission\SaveServerConfigs',
 	'ListErrors' => 'backend\admin\features\adminPermission\ListErrors',

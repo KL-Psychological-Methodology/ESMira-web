@@ -17,6 +17,8 @@ interface StudyStore {
 	public function getStudyLastChanged(int $studyId): int;
 	
 	public function getStudyIdList(): array;
+	
+	public function getDirectorySizeOfStudies(): array;
 	/**
 	 * @throws CriticalException
 	 */

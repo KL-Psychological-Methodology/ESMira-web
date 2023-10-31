@@ -16,6 +16,9 @@ use backend\fileSystem\loader\ResponsesIndexLoader;
 use backend\ResponsesIndex;
 use backend\subStores\StatisticsStoreWriter;
 use backend\subStores\StudyStore;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use stdClass;
 
 require_once DIR_BASE . 'backend/responseFileKeys.php';
@@ -196,6 +199,34 @@ class StudyStoreFS implements StudyStore {
 		}
 		closedir($handle);
 		return $studies;
+	}
+	
+	
+	private function getDirectorySize($path){
+		//thanks to https://stackoverflow.com/questions/478121/how-to-get-directory-size-in-php
+		$bytestotal = 0;
+		$path = realpath($path);
+		if($path!==false && $path!='' && file_exists($path)){
+			foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+				$bytestotal += $object->getSize();
+			}
+		}
+		return $bytestotal;
+	}
+	
+	public function getDirectorySizeOfStudies(): array {
+		$directorySize = [];
+		$folderStudies = PathsFS::folderStudies();
+		$handle = opendir($folderStudies);
+		while($folderName = readdir($handle)) {
+			$studyId = (int) $folderName;
+			if($studyId == 0)
+				continue;
+			
+			$directorySize[$studyId] = $this->getDirectorySize("$folderStudies/$studyId");
+		}
+		closedir($handle);
+		return $directorySize;
 	}
 	
 	public function getStudyLangConfigAsJson(int $studyId, string $lang) {

@@ -557,5 +557,6 @@
     "publications_using_esmira": "Publications using ESMira",
     "esmira_instances": "ESMira instances",
     "main_publication": "Main publication",
-    "download_source_for_publication": "Consider adding the study source code to your publication so others can replicate your study"
+    "download_source_for_publication": "Consider adding the study source code to your publication so others can replicate your study",
+    "disk_space": "Disk space"
 }
