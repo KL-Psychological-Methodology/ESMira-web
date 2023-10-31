@@ -16,6 +16,7 @@
 - Admin interface now only selectively loads studies, which decreases loading time.
 - Optimized caching and page reloading.
 - Improvements for statistics.
+- Study source code now incorporates all study language versions.
 - Added support for inPercent option (in combination with frequent distribution) for charts in web view.
 - Access keys that share the same study are now automatically combined in the study list. 
 - Bugfix: Fixed error in login history.
