@@ -9,6 +9,7 @@
 - Added copy buttons to pages, items, charts.
 - Added quick access buttons to message view, to quickly filter for participants data.
 - Added drop down menus to navigation bar.
+- Added used disk space overview in server statistics (for admins)
 
 ### ✏️ Changed
 - **Complete rewrite of all frontend components and migration to TypeScript.**
@@ -23,3 +24,4 @@
 - Bugfix: Added missing variable for bluetooth_devices.
 - Bugfix: Prevent deleting the parent directory files when update fails and automatically reverts update.
 - Bugfix: Automatically recreate server statistics instead of throwing an error when json file is corrupted.
+- Bugfix: Check for disk space before attempting to save data.
