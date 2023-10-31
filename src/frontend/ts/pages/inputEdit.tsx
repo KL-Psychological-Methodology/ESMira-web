@@ -38,12 +38,19 @@ export class Content extends SectionContent {
 		const inputName = atob(this.getStaticString("input") ?? "")
 		
 		study.questionnaires.get().forEach((questionnaire) => {
-			questionnaire.pages.get().forEach((page) => {
-				alternatives.push({
-					title: questionnaire.getTitle(),
-					header: true,
-					target: false
-				})
+			alternatives.push({
+				title: questionnaire.getTitle(),
+				header: true,
+				target: false
+			})
+			questionnaire.pages.get().forEach((page, index) => {
+				if(index != 0) {
+					alternatives.push({
+						title: "",
+						header: true,
+						target: false
+					})
+				}
 				page.inputs.get().forEach((input) => {
 					alternatives.push({
 						title: input.name.get(),
