@@ -393,7 +393,6 @@ class DataComponent implements Component<DataComponentInterface, any> {
 		}
 		
 		this.filterParentObservable.addObserver(() => m.redraw())
-		this.filterParentObservable.addObserver(() => console.log(234324234))
 		m.redraw()
 	}
 	public onupdate(): void {

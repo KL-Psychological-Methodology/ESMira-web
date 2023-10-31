@@ -22,7 +22,7 @@ export class Content extends SectionContent {
 		this.about = about
 		
 		window.setTimeout(() => {
-			const img = document.getElementById(`screenshots_${this.section.sectionValue}`);
+			const img = document.getElementById(`screenshots_${this.section.sectionValue}`)
 			if(img)
 				img.scrollIntoView({behavior: 'smooth'})
 		}, 500)
