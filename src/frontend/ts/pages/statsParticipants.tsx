@@ -69,6 +69,12 @@ export class Content extends SectionContent {
 		const userId = this.getStaticString("userId")
 		if(userId)
 			await this.selectParticipant(atob(userId))
+		
+		window.setTimeout(() => {
+			const line = document.getElementsByClassName("currentParticipant")
+			if(line[0])
+				line[0].scrollIntoView({behavior: "smooth", block: "nearest"})
+		}, 500)
 	}
 	
 	public title(): string {
@@ -155,12 +161,6 @@ export class Content extends SectionContent {
 		this.isLoading = false
 		
 		m.redraw()
-		
-		window.setTimeout(() => {
-			const line = document.getElementsByClassName("currentParticipant")
-			if(line[0])
-				line[0].scrollIntoView({behavior: "smooth", block: "nearest"})
-		}, 300)
 	}
 	
 	public getView(): Vnode<any, any> {
