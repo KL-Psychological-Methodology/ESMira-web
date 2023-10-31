@@ -340,13 +340,13 @@ export class Content extends SectionContent {
 											<td class="center">
 												<input type="checkbox" id="weekday_all" disabled="disabled" checked={schedule.weekdays.get() == 0}/>
 											</td>
-											<td class="center"><input type="checkbox" id="weekday_sun" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(0))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_mo" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(1))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_di" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(2))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_mi" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(3))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_do" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(4))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_fr" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(5))}/></td>
-											<td class="center"><input type="checkbox" id="weekdays_sa" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(6))}/></td>
+											<td class="center"><input type="checkbox" id="weekday_sun" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(0), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_mo" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(1), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_di" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(2), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_mi" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(3), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_do" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(4), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_fr" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(5), "checked")}/></td>
+											<td class="center"><input type="checkbox" id="weekdays_sa" {... BindObservable(schedule.weekdays, new CombinedValueTransformer(6), "checked")}/></td>
 										</tr>
 									</table>
 								</div>
