@@ -7,14 +7,14 @@ import {getMidnightMillis} from "../constants/methods";
 
 const ONE_DAY_MS = 1000 * 60 * 60* 24
 const MIN_SCHEDULE_DISTANCE = 60000
-const WEEKDAY_CODES = [
+const WEEKDAY_CODES = [ //Date.getDay() starts with Sunday
+	1,  //Sunday
 	2,  //Monday
 	4,  //Tuesday
 	8,  //Wednesday
 	16,  //Thursday
 	32,  //Friday
 	64, //Saturday
-	1  //Sunday
 ]
 
 class Alarm {
