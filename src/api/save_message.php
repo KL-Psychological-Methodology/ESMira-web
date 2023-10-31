@@ -11,6 +11,10 @@ if(!Configs::getDataStore()->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
+if(!Configs::getDataStore()->isReady()) {
+	echo JsonOutput::error('Server is not ready.');
+	return;
+}
 
 $rest_json = Main::getRawPostInput();
 if(!($json = json_decode($rest_json))) {

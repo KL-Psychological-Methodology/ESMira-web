@@ -12,6 +12,10 @@ if(!Configs::getDataStore()->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
+if(!Configs::getDataStore()->isReady()) {
+	echo JsonOutput::error('Server is not ready.');
+	return;
+}
 
 if(!isset($_POST['study_id']) || !isset($_POST['page_name'])) {
 	echo JsonOutput::error('Missing data');

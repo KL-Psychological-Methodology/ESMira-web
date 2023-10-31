@@ -13,6 +13,10 @@ if(!Configs::getDataStore()->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
+if(!Configs::getDataStore()->isReady()) {
+	echo JsonOutput::error('Server is not ready.');
+	return;
+}
 
 if(intval($_SERVER['CONTENT_LENGTH']) > 0 && empty($_POST)){
 	echo JsonOutput::error('File is too big for server');

@@ -12,6 +12,15 @@ use backend\QuestionnaireSaver;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
+if(!Configs::getDataStore()->isInit()) {
+	echo JsonOutput::error('ESMira is not initialized yet.');
+	return;
+}
+if(!Configs::getDataStore()->isReady()) {
+	echo JsonOutput::error('Server is not ready.');
+	return;
+}
+
 $studyStore = Configs::getDataStore()->getStudyStore();
 try {
 	if(isset($_GET['id']) && isset($_GET['qid']) && Permission::isLoggedIn()) {

@@ -40,6 +40,9 @@ class DataStoreFS implements DataStoreInterface {
 		$path = Configs::get('dataFolder_path');
 		return $path && file_exists($path);
 	}
+	public function isReady(): bool {
+		return disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
+	}
 	
 	public function getESMiraInitializer(): ESMiraInitializer {
 		return new ESMiraInitializerFS();

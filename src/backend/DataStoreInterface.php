@@ -21,6 +21,7 @@ use backend\subStores\AccountStore;
 
 interface DataStoreInterface {
 	public function isInit(): bool;
+	public function isReady(): bool;
 	
 	public function getESMiraInitializer(): ESMiraInitializer;
 	
