@@ -48,10 +48,10 @@ export class Content extends SectionContent {
 								
 							}
 						</a>
-						<small class="infoSticker">{new Date(entry.lastMsg.get()).toLocaleString()}</small>
 						{entry.unread.get() &&
 							<small class="infoSticker highlight">{Lang.get("unread")}</small>
 						}
+						<small class="infoSticker">{new Date(entry.lastMsg.get()).toLocaleString()}</small>
 					</div>
 				)}
 			</div>
