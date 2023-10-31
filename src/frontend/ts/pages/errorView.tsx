@@ -73,14 +73,15 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 	}
 	
 	public oncreate(vNode: VnodeDOM<ErrorReportComponentOptions, any>): void {
+		const infoView = vNode.dom.getElementsByClassName("errorReportHeader")[0] as HTMLElement
 		const rootView = vNode.dom.getElementsByClassName("errorReportList")[0] as HTMLElement
-		// const rootView = vNode.dom as HTMLElement
+		
 		const lines = vNode.attrs.report.split("\n\n")
 		this.rootViewOffset = rootView.getBoundingClientRect().top
 		
-		console.log(rootView.getBoundingClientRect(), rootView.offsetTop, rootView.clientTop)
+		infoView.innerText = lines[0]
 		
-		for(let i = 0; i < lines.length; i++) {
+		for(let i = 1; i < lines.length; i++) {
 			const line = lines[i]
 			let content = line.trim()
 			const view = document.createElement("div")
@@ -122,8 +123,8 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 	
 	public view(): Vnode<any, any> {
 		return <div>
-			<div class="errorReportInfo">
-				<div class="content smallText">
+			{(this.warningLines.length != 0 || this.errorLines.length != 0) &&
+				<div class="errorReportInfo smallText">
 					<div class="clickable" onclick={this.clickLineCategory.bind(this, this.logLines)}>
 						<span>Logs:&nbsp;</span>
 						<span>{this.logLines.length}</span>
@@ -139,8 +140,10 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 						<span style="color: red">{this.errorLines.length}</span>
 					</div>
 				</div>
-			</div>
+			}
 			
+			
+			<div class="errorReportHeader"></div>
 			<div class="errorReportList"></div>
 		</div>
 	}

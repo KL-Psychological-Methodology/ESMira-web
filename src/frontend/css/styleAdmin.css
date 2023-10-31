@@ -147,18 +147,21 @@ errorReportList
 
 .errorReportInfo {
 	position: sticky;
-	z-index: 1;
+	display: block;
+	float: right;
+	z-index: 2;
 	top: 0;
-	width: 100%;
 	text-align: end;
-}
-.errorReportInfo .content {
 	background-color: #ffffffcc;
+	border: 1px solid #eee;
 	padding: 5px;
-	display: inline-block;
 }
-.errorReportInfo .content .clickable {
+.errorReportInfo .clickable {
 	padding: 3px 0;
+}
+.errorReportHeader {
+	font-family: monospace;
+	padding-bottom: 15px;
 }
 
 .errorReportList .line {
