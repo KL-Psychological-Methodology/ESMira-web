@@ -98,10 +98,12 @@ export class Content extends ServerStatisticsContent {
 	}
 	
 	private getReadableByteSize(bytes: number): string {
-		if(bytes > 1000000)
+		if(bytes > 1000000000)
+			return `${Math.round(bytes / 10000000) / 100} Gb`
+		else if(bytes > 1000000)
 			return `${Math.round(bytes / 10000) / 100} Mb`
-		
-		return `${Math.round(bytes / 1000)} Kb`
+		else
+			return `${Math.round(bytes / 1000)} Kb`
 	}
 	
 	public getView(): Vnode<any, any> {
