@@ -3,13 +3,8 @@ import m, {Vnode} from "mithril";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
 import {Section} from "../site/Section";
-import {AboutESMiraInterface, AboutESMiraLoader, ESMiraPublicationsInterface} from "../loader/AboutESMiraLoader";
-import {URL_ABOUT_ESMIRA_SOURCE} from "../constants/urls";
-import {DropdownMenu} from "../widgets/DropdownMenu";
-import _default from "chart.js/dist/plugins/plugin.tooltip";
-import type = _default.defaults.animations.numbers.type;
+import {AboutESMiraLoader, ESMiraPublicationsInterface} from "../loader/AboutESMiraLoader";
 
 export class Content extends SectionContent {
 	private publications: ESMiraPublicationsInterface
@@ -31,8 +26,6 @@ export class Content extends SectionContent {
 	
 	
 	public getView(): Vnode<any, any> {
-		
-		
 		return <div>
 			<h2>{Lang.getWithColon("main_publication")}</h2>
 			{DashRow(
@@ -60,7 +53,7 @@ export class Content extends SectionContent {
 								content:
 									<div class="spacingLeft spacingRight">
 										<p class="hanging justify">
-											{!!pub.title && pub.title}
+											{!!pub.title && m.trust(pub.title)}
 											<br/>
 											{!!pub.url && <a class="showArrow" href={pub.url}>{pub.url}</a>}
 										</p>
