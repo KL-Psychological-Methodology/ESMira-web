@@ -337,7 +337,7 @@ export class Content extends SectionContent {
 					{message.pending &&
 						<span>{Lang.get("delivered_x_times", message.delivered)}</span>
 					}
-					{(!message.pending || message.read) &&
+					{(!message.pending && message.read) &&
 						<div>
 							<span>{Lang.getWithColon("confirmed")}</span>
 							<span>{new Date(message.read).toLocaleString()}</span>
