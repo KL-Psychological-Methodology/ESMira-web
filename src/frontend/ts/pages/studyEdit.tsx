@@ -37,12 +37,12 @@ export class Content extends SectionContent {
 		
 		this.studyObserverId = study.addObserver(this.updateSaveState.bind(this))
 		this.section.siteData.dynamicCallbacks.save = async () => {
-			await this.section.loader.showLoader(
+			await this.section.allSections[this.section.allSections.length-1].loader.showLoader(
 				this.section.siteData.studyLoader.saveStudy(this.getStudyOrThrow())
 			)
 		}
 		this.section.siteData.dynamicCallbacks.publish = async () => {
-			await this.section.loader.showLoader(
+			await this.section.allSections[this.section.allSections.length-1].loader.showLoader(
 				this.section.siteData.studyLoader.publishStudy(this.getStudyOrThrow())
 			)
 		}
