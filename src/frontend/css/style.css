@@ -685,3 +685,18 @@ login
 	top: 0;
 }
 
+
+/**********
+rewardCodes
+**********/
+
+.rewardCodes .searchBox {
+	display: flex;
+	flex-direction: column;
+	min-height: 285px;
+}
+.rewardCodes .searchBox .scrollBox {
+	flex: 1 1 0;
+	max-height: unset;
+}
+

@@ -136,7 +136,7 @@ input.big, select.big {
 	padding-left: 0;
 	padding-right: 0;
 }
-input.small, select.small {
+input.small, input[type="button"].small, input[type="submit"].small, select.small {
 	width: 75px;
 	min-width: 75px;
 	font-size: 9pt;

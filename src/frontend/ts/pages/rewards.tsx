@@ -7,7 +7,9 @@ import {BindObservable, OnBeforeChangeTransformer} from "../widgets/BindObservab
 import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
 import {RichText} from "../widgets/RichText";
 import warnSvg from "../../imgs/icons/warn.svg?raw"
+import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import {Section} from "../site/Section";
+import {BtnCustom} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	private faultyEmailContent = false
@@ -21,7 +23,9 @@ export class Content extends SectionContent {
 	}
 	public titleExtra(): Vnode<any, any> | null {
 		return this.getStudyOrThrow().enableRewardSystem.get()
-			? <a class="right" href={this.getUrl("rewardCodes")}>{Lang.get("validate_reward_code")}</a>
+			? <a href={this.getUrl("rewardCodes")}>
+				{BtnCustom(m.trust(rewardsSvg), undefined, Lang.get("validate_reward_code"))}
+			</a>
 			: null
 	}
 	

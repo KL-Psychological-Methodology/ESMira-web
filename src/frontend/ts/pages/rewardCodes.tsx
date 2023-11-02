@@ -94,7 +94,6 @@ export class Content extends SectionContent {
 			namedQuestionnaireEntryCount.push({title: questionnaireIndex[internalId], count: codeResponse.questionnaireDataSetCount[internalId]});
 		}
 		codeResponse.namedQuestionnaireDataSetCount = namedQuestionnaireEntryCount
-		console.log(codeResponse)
 	}
 	
 	private selectRewardCode(code: string): void {
@@ -102,24 +101,24 @@ export class Content extends SectionContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		return <div>
+		return <div class="rewardCodes">
 			{TitleRow(Lang.getWithColon("reward_codes"))}
 			{DashRow(
 				DashElement(null, {
 					content:
 						SearchBox(Lang.get("generated_reward_codes", this.rewardCodeData.rewardCodes.length), this.rewardCodeData.rewardCodes.map((code) => {
-							return {key: code, view: <span class="line clickable verticalPadding smallText" onclick={this.selectRewardCode.bind(this, code)}>{code}</span>}
+							return {key: code, view: <span class={`line clickable verticalPadding smallText ${this.currentCode.get() == code ? "highlight" : ""}`} onclick={this.selectRewardCode.bind(this, code)}>{code}</span>}
 						}))
 				}),
 				
 				DashElement("vertical", {
 					content:
-						<div class="horizontalPadding verticalPadding">
+						<div class="horizontalPadding verticalPadding center">
 							<label>
 								<small>{Lang.get("reward_code")}</small>
-								<input type="text" class={this.codeResponse != null ? (!this.codeResponse?.faultyCode ? "success" : "failed") : "nothing"} {... BindObservable(this.currentCode)}/>
-								
-								<input type="button" onclick={this.checkCode.bind(this)} value={Lang.get("check")}/>
+								<input type="text" class={`small ${this.codeResponse != null ? (!this.codeResponse?.faultyCode ? "success" : "failed") : "nothing"}`} {... BindObservable(this.currentCode)}/>
+								&nbsp;
+								<input class="small" type="button" onclick={this.checkCode.bind(this)} value={Lang.get("check")}/>
 							</label>
 						</div>
 				}, this.codeResponse != null && !this.codeResponse.faultyCode && {

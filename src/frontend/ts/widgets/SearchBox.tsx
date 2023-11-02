@@ -8,7 +8,7 @@ export interface SearchBoxEntry {
 }
 export function SearchBox(title: string, viewList: SearchBoxEntry[]): Vnode<any, any> {
 	return SearchWidget((tools) =>
-		<div>
+		<div class="searchBox">
 			<h2>{title}</h2>
 			<input placeholder={Lang.get("search")} class="search small vertical" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)}/>
 			<div class="scrollBox noBorder">
