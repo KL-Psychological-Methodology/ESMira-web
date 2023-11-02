@@ -28,13 +28,25 @@ export class Content extends SectionContent {
 	}
 	
 	private async loadPublicStatistics(): Promise<LoadedStatistics> {
-		const accessKey  = this.getDynamic("accessKey", "").get() || (this.getStudyOrThrow().accessKeys.get().length ? this.getStudyOrThrow().accessKeys.get()[0].get() : "")
-		const publicStatistics = await Requests.loadJson(
-			FILE_STATISTICS
-				.replace("%d", this.getStaticInt("id")?.toString() ?? "-1")
-				.replace("%s", accessKey)
-		)
-		return { mainStatistics: publicStatistics }
+		const study = this.getStudyOrNull()
+		let accessKey: string
+		if(study)
+			accessKey = study.accessKeys.get().length ? study.accessKeys.get()[0].get() : ""
+		else
+			accessKey = this.getDynamic("accessKey", "").get()
+		
+		try {
+			const publicStatistics = await Requests.loadJson(
+				FILE_STATISTICS
+					.replace("%d", this.getStaticInt("id")?.toString() ?? "-1")
+					.replace("%s", accessKey)
+			)
+			return { mainStatistics: publicStatistics }
+		}
+		catch(e: any) {
+			this.section.loader.error(e.message || e)
+			return { mainStatistics: {} }
+		}
 	}
 	
 	public getView(): Vnode<any, any> {
