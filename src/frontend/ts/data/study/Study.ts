@@ -6,6 +6,8 @@ import {EventUploadSettings} from "./EventUploadSettings";
 import {BaseObservable} from "../../observable/BaseObservable";
 import {TranslationRootInterface} from "../../observable/interfaces/TranslationRootInterface";
 import {Input, InputMediaTypes} from "./Input";
+import {RepairStudy} from "../../helpers/RepairStudy";
+import {Lang} from "../../singletons/Lang";
 
 export class Study extends TranslatableObject implements TranslationRootInterface {
 	public lastChanged: number
@@ -13,6 +15,7 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 	public version									= this.primitive<number>(		"version",									0)
 	public subVersion								= this.primitive<number>(		"subVersion",								0)
 	public packageVersion							= this.primitive<string>(		"packageVersion",							"0.0.0")
+	public serverVersion							= this.primitive<number>(		"serverVersion",						0)
 	public lang										= this.primitive<string>(		"lang",									"")
 	public newChanges								= this.primitive<boolean>(		"new_changes",								false)
 	public published								= this.primitive<boolean>(		"published",								false)
@@ -45,7 +48,10 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 	public publicStatistics							= this.object("publicStatistics", Statistics)
 	public personalStatistics						= this.object("personalStatistics", Statistics)
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number) {
+	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
+		if(repair != null && !repair.repairStudy(data))
+			throw Lang.get("error_study_not_compatible", data["title"]?.toString() ?? "Error")
+		
 		let defaultLang = data["defaultLang"] as string ?? "en"
 		if(data.hasOwnProperty("langCodes") && (data["langCodes"] as string[]).indexOf(defaultLang) == -1)
 			defaultLang = (data["langCodes"] as string[])[0]

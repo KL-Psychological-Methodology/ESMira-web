@@ -9,13 +9,12 @@ export class RepairStudy {
 	}
 	
 	private repairNotice(study: Record<string, any>) {
-		console.log(`Repairing study ${study.title} (from ${study.packageVersion} to ${this.packageVersion}`)
+		console.log(`Repairing study ${study.title} (from ${study.packageVersion} to ${this.packageVersion})`)
 	}
 	
 	public repairStudy(study: Record<string, any>): boolean {
 		let wasRepaired = false
-		
-		// old repair code. Our server is the only one that still needs it:
+		// old repair code. Our server is the only one that still needs it because of old studies:
 		if(study.serverVersion !== this.serverVersion) {
 			wasRepaired = true
 			switch(study.serverVersion) {//we make use of fallthrough so there is no break;

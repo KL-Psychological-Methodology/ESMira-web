@@ -8,7 +8,6 @@ import {Lang} from "../singletons/Lang";
 import {TranslatableObjectDataType} from "../observable/TranslatableObject";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {JsonTypes} from "../observable/types/JsonTypes";
-import {PackageVersionComparator} from "../singletons/PackageVersionComparator";
 import {ObserverId} from "../observable/BaseObservable";
 import {RepairStudy} from "../helpers/RepairStudy";
 
@@ -19,10 +18,13 @@ export class StudyLoader {
 	private readonly observerIds: Record<number, ObserverId> = {}
 	private readonly serverVersion: number
 	private readonly packageVersion: string
+	private readonly repair: RepairStudy
 	
 	constructor(serverVersion: number, packageVersion: string) {
 		this.serverVersion = serverVersion
 		this.packageVersion = packageVersion
+		this.repair = new RepairStudy(serverVersion, packageVersion)
+		
 		this.studyCache.addObserver(() => {
 			m.redraw() //redraw is asynchronous, so this should be executed after all other observers
 		})
@@ -35,7 +37,7 @@ export class StudyLoader {
 			
 			for(let studyData of studiesJson) {
 				const id = studyData["id"]
-				const study = new Study(studyData, this.studyCache, Date.now())
+				const study = new Study(studyData, this.studyCache, Date.now(), null)
 				if(!this.studyCache.exists(id))
 					this.studyCache.add(id, study)
 			}
@@ -56,18 +58,18 @@ export class StudyLoader {
 				throw new Error(Lang.get("error_wrong_accessKey"))
 			}
 			
-			const repair = new RepairStudy(this.serverVersion, this.packageVersion)
 			const filteredStudies: Record<number, Study> = {}
 			studiesJson.forEach((studyData: Record<string, any>) => {
-				if(!repair.repairStudy(studyData))
-					console.error(Lang.get("error_study_not_compatible", studyData.title));
-				else {
+				try {
 					const id = studyData["id"]
-					const study = new Study(studyData, this.studyCache, Date.now())
+					const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
 					filteredStudies[id] = study
 					if(this.studyCache.exists(id))
 						this.studyCache.remove(id) //remove stripped study
 					this.studyCache.add(id, study)
+				}
+				catch(e: any) {
+					console.error(e.message || e)
 				}
 			})
 			
@@ -87,7 +89,7 @@ export class StudyLoader {
 				languages: Record<string, any>
 			} = await Requests.loadJson(`${FILE_ADMIN}?type=full_study&study_id=${id}`)
 			
-			const study = new Study(studyData.config, this.studyCache, lastChanged)
+			const study = new Study(studyData.config, this.studyCache, lastChanged, this.repair)
 			for(const langCode in studyData.languages) {
 				study.addLanguage(langCode, studyData.languages[langCode])
 			}
@@ -149,7 +151,7 @@ export class StudyLoader {
 		studyData["serverVersion"] = this.serverVersion
 		studyData["packageVersion"] = this.packageVersion
 		
-		const study = new Study(studyData, this.studyCache, Date.now())
+		const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
 		this.studyCache.add(id, study)
 		PromiseCache.save(`study${id}`, Promise.resolve(study))
 		study.setDifferent(true)
@@ -166,7 +168,7 @@ export class StudyLoader {
 		const id = study.id.get()
 		this.studyCache.remove(id)
 		data[id] = id
-		const newStudy = new Study(data, this.studyCache, study.lastChanged)
+		const newStudy = new Study(data, this.studyCache, study.lastChanged, this.repair)
 		this.studyCache.add(id, newStudy)
 		return newStudy
 	}
