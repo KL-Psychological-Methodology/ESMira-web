@@ -13,15 +13,21 @@ import {DashElement} from "../widgets/DashElement";
 import {Section} from "../site/Section";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {BindObservable, DateTransformer, TimeTransformer} from "../widgets/BindObservable";
-import {BaseObservable} from "../observable/BaseObservable";
-import {PrimitiveType} from "../observable/types/PrimitiveType";
 import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
 import {BtnCollection} from "../widgets/BtnCollection";
 import {TabBar} from "../widgets/TabBar";
-import {BtnAdd, BtnChange, BtnCopy, BtnCustom, BtnOk, BtnRemove, BtnTrash} from "../widgets/BtnWidgets";
-import {Scheduler} from "../helpers/Scheduler";
+import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../widgets/BtnWidgets";
 import {getMidnightMillis, timeStampToTimeString} from "../constants/methods";
 
+
+
+interface FilterEntry {
+	title: string,
+	dropdownView?: Vnode<any, any>,
+	isActive: () => boolean
+	disable: () => void
+	enable?: () => void
+}
 
 /**
  * Note: Triggers are implemented so that each could hold MULTIPLE schedules, cues and actions.
@@ -116,10 +122,12 @@ export class Content extends SectionContent {
 	
 	
 	private getQuestionnaireView(questionnaire: Questionnaire): Vnode<any, any> {
+		const filterEntries = this.createFilterEntries(questionnaire)
+		
 		return <div class="spacingTop spacingBottom">
 			{DashRow(
 				DashElement(null, {
-					content: this.getFilterView(questionnaire)
+					content: this.getFilterView(filterEntries)
 				}),
 				DashElement(null, {
 					content: this.getActionTriggerView(questionnaire)
@@ -132,7 +140,7 @@ export class Content extends SectionContent {
 						small: true,
 						showAsClickable: true
 					}),
-					() => this.getFilterDropdownView(questionnaire),
+					() => this.getFilterDropdownView(filterEntries),
 					{connectedDropdowns: ["filterSubMenu"]}
 				),
 				DashElement("horizontal",
@@ -172,159 +180,178 @@ export class Content extends SectionContent {
 			}</div>
 	}
 	
-	private getFilterView(questionnaire: Questionnaire): Vnode<any, any> {
+	
+	private createFilterEntries(questionnaire: Questionnaire): FilterEntry[] {
+		const study = this.getStudyOrThrow()
+		const list: FilterEntry[] = [
+			{
+				title: questionnaire.durationStart.get() != 0
+					? `${Lang.getWithColon("start_date")} ${new Date(questionnaire.durationStart.get()).toLocaleDateString()}`
+					: Lang.get("start_date"),
+				isActive: () => questionnaire.durationStart.get() != 0,
+				dropdownView:
+					<label class="noDesc">
+						<small>{Lang.get("start_date")}</small>
+						<input type="date" {... BindObservable(questionnaire.durationStart, DateTransformer)}/>
+					</label>,
+				disable: () => questionnaire.durationStart.set(0)
+			},
+			{
+				title: questionnaire.durationEnd.get() != 0
+					? `${Lang.getWithColon("end_date")} ${new Date(questionnaire.durationEnd.get()).toLocaleDateString()}`
+					: Lang.get("end_date"),
+				isActive: () => questionnaire.durationEnd.get() != 0,
+				dropdownView:
+					<label class="noDesc">
+						<small>{Lang.get("end_date")}</small>
+						<input type="date" {... BindObservable(questionnaire.durationEnd, DateTransformer)}/>
+					</label>,
+				disable: () => questionnaire.durationEnd.set(0)
+			},
+			{
+				title: questionnaire.durationStartingAfterDays.get() != 0
+					? `${Lang.getWithColon("activation")} ${Lang.get("after_x_days", questionnaire.durationStartingAfterDays.get())}`
+					: Lang.get("activation_after"),
+				isActive: () => questionnaire.durationStartingAfterDays.get() != 0,
+				dropdownView:
+					<label>
+						<small>{Lang.get("activation_after")}</small>
+						<input type="number" {... BindObservable(questionnaire.durationStartingAfterDays)}/>
+						<span>{Lang.get("days")}</span>
+						<small>{Lang.get("after_joining_study")}</small>
+					</label>,
+				disable: () => questionnaire.durationStartingAfterDays.set(0)
+			},
+			{
+				title: questionnaire.durationPeriodDays.get() != 0
+					? `${Lang.getWithColon("expiration")} ${Lang.get("after_x_days", questionnaire.durationPeriodDays.get())}`
+					: Lang.get("expiration_after"),
+				isActive: () => questionnaire.durationPeriodDays.get() != 0,
+				dropdownView:
+					<label>
+						<small>{Lang.get("expiration_after")}</small>
+						<input type="number" {... BindObservable(questionnaire.durationPeriodDays)}/>
+						<span>{Lang.get("days")}</span>
+						<small>{Lang.get("after_joining_study")}</small>
+					</label>,
+				disable: () => questionnaire.durationPeriodDays.set(0)
+			},
+			{
+				title: Lang.get("questionnaires_can_only_be_completed_once"),
+				isActive: () => questionnaire.completableOnce.get(),
+				enable: () => questionnaire.completableOnce.set(true),
+				disable: () => questionnaire.completableOnce.set(false)
+			},
+			{
+				title: questionnaire.completableMinutesAfterNotification.get() != 0
+					? `${Lang.get("questionnaires_can_only_be_completed_per_notification")} (${questionnaire.completableMinutesAfterNotification.get()} ${Lang.get("minutes")})`
+					: Lang.get("questionnaires_can_only_be_completed_per_notification"),
+				isActive: () => questionnaire.completableOncePerNotification.get(),
+				dropdownView:
+					<label>
+						<span>{Lang.get("part_visibleFor")}</span>
+						<input type="number" {... BindObservable(questionnaire.completableMinutesAfterNotification)}/>
+						<span>{Lang.get("minutes")}</span>
+						<small>{Lang.get("info_zero_disables_timeout")}</small>
+					</label>,
+				enable: () => questionnaire.completableOncePerNotification.set(true),
+				disable: () => questionnaire.completableOncePerNotification.set(false)
+			},
+			{
+				title: questionnaire.limitCompletionFrequency.get()
+					? `${Lang.getWithColon("timeDistance_between_completion_of_questionnaire")} ${questionnaire.completionFrequencyMinutes.get()} ${Lang.get("minutes")}`
+					: Lang.get("timeDistance_between_completion_of_questionnaire"),
+				isActive: () => questionnaire.limitCompletionFrequency.get(),
+				dropdownView:
+					<label>
+						<input type="number" {... BindObservable(questionnaire.completionFrequencyMinutes)}/>
+						<span>{Lang.get("minutes")}</span>
+					</label>,
+				enable: () => questionnaire.limitCompletionFrequency.set(true),
+				disable: () => questionnaire.limitCompletionFrequency.set(false)
+			},
+			{
+				title: questionnaire.completableAtSpecificTime.get()
+					? `${Lang.getWithColon("only_at_specific_time")} ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeStart.get())} - ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeEnd.get())}`
+					: Lang.get("only_at_specific_time"),
+				isActive: () => questionnaire.completableAtSpecificTime.get(),
+				dropdownView:
+					<div class="center">
+						<label>
+							<small>{Lang.getWithColon("from")}</small>
+							<input type="time" {... BindObservable(questionnaire.completableAtSpecificTimeStart, TimeTransformer)}/>
+						</label>
+						<label>
+							<small>{Lang.getWithColon("until")}</small>
+							<input type="time" {... BindObservable(questionnaire.completableAtSpecificTimeEnd, TimeTransformer)}/>
+						</label>
+					</div>,
+				enable: () => questionnaire.completableAtSpecificTime.set(true),
+				disable: () => questionnaire.completableAtSpecificTime.set(false)
+			}
+		]
+		if(study.randomGroups.get() != 0) {
+			list.push({
+				title: questionnaire.limitToGroup.get() != 0
+					? `${Lang.getWithColon("group_availability")} ${questionnaire.limitToGroup.get()}`
+					: Lang.get("group_availability"),
+				isActive: () => questionnaire.limitToGroup.get() != 0,
+				dropdownView:
+					<select {...BindObservable(questionnaire.limitToGroup)}>
+						<option value="0">{Lang.get('in_all_groups')}</option>
+						{Array.from({length: study.randomGroups.get()}).map((_, index) =>
+							<option>{index+1}</option>
+						)}
+					</select>,
+				disable: () => questionnaire.limitToGroup.set(0)
+			})
+		}
+		return list
+	}
+	
+	private getFilterView(filterEntries: FilterEntry[]): Vnode<any, any> {
 		return <div>
 			<h2 class="center">{Lang.getWithColon("filter")}</h2>
-			{this.getFilterEntryView(questionnaire.limitToGroup, 0,
-				`${Lang.getWithColon("group_availability")} ${questionnaire.limitToGroup.get()}`
+			{filterEntries.map((entry) =>
+				entry.isActive() &&
+				<div class="line">
+					{BtnTrash(entry.disable.bind(this))}
+					{this.getFilterEntryView(entry, (dropdown) => <span class={`${dropdown ? "clickable" : ""} smallText`}>{entry.title}</span>)}
+				</div>
 			)}
 			
-			{this.getFilterEntryView(questionnaire.durationStart, 0,
-				`${Lang.getWithColon("start_date")} ${new Date(questionnaire.durationStart.get()).toLocaleDateString()}`
-			)}
-			
-			{this.getFilterEntryView(questionnaire.durationEnd, 0,
-				`${Lang.getWithColon("end_date")} ${new Date(questionnaire.durationEnd.get()).toLocaleDateString()}`
-			)}
-			
-			{this.getFilterEntryView(questionnaire.durationStartingAfterDays, 0,
-				`${Lang.getWithColon("activation")} ${Lang.get("after_x_days", questionnaire.durationStartingAfterDays.get())}`
-			)}
-			
-			{this.getFilterEntryView(questionnaire.durationPeriodDays, 0,
-				`${Lang.getWithColon("expiration")} ${Lang.get("after_x_days", questionnaire.durationPeriodDays.get())}`
-			)}
-			
-			{this.getFilterEntryView(questionnaire.completableOnce, false, Lang.get("questionnaires_can_only_be_completed_once"))}
-			
-			{questionnaire.completableMinutesAfterNotification.get() == 0
-				? this.getFilterEntryView(questionnaire.completableOncePerNotification, false, Lang.get("questionnaires_can_only_be_completed_per_notification"))
-				: this.getFilterEntryView(questionnaire.completableOncePerNotification, false,
-					`${Lang.get("questionnaires_can_only_be_completed_per_notification")} (${questionnaire.completableMinutesAfterNotification.get()} ${Lang.get("minutes")})`
-				)
-			}
-			
-			
-			{this.getFilterEntryView(questionnaire.limitCompletionFrequency, false,
-				`${Lang.getWithColon("timeDistance_between_completion_of_questionnaire")} ${questionnaire.completionFrequencyMinutes.get()} ${Lang.get("minutes")}`
-			)}
-			
-			{this.getFilterEntryView(questionnaire.completableAtSpecificTime, false,
-				`${Lang.getWithColon("only_at_specific_time")} ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeStart.get())} - ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeEnd.get())}`
-			)}
 		</div>
 	}
-	private getFilterEntryView<T extends PrimitiveType>(obs: BaseObservable<T>, emptyValue: T, title: string): Vnode<any, any> | false {
-		return obs.get() != emptyValue &&
-			<div class="line">{
-				BtnRemove(() => obs.set(emptyValue), title)
-			}</div>
+	
+	private getFilterEntryView(entry: FilterEntry, clickElement: (dropdown: boolean) => Vnode<any, any>): Vnode<any, any> {
+		return entry.dropdownView ?
+			DropdownMenu("filterSubMenu",
+				clickElement(true),
+				(close) =>
+					<div>
+						<div class="middle horizontal">{entry.dropdownView}</div>
+						<div class="middle horizontal spacingLeft">{BtnOk(() => {
+							if(entry.enable)
+								entry.enable()
+							window.setTimeout(() => close(), 10)
+						})}</div>
+					</div>,
+				{dontCenter: true}
+			)
+			: clickElement(false)
 	}
 	
-	private getFilterDropdownView(questionnaire: Questionnaire): Vnode<any, any> {
-		const study = this.getStudyOrThrow()
+	private getFilterDropdownView(filterEntries: FilterEntry[]): Vnode<any, any> {
 		return <div>
-			{study.randomGroups.get() != 0 && this.getDropdownFilterInputEntryView(Lang.get("group_availability"),
-				<select {...BindObservable(questionnaire.limitToGroup)}>
-					<option value="0">{Lang.get('in_all_groups')}</option>
-					{Array.from({length: study.randomGroups.get()}).map((_, index) =>
-						<option>{index+1}</option>
-					)}
-				</select>,
-				questionnaire.limitToGroup
-			)}
-			
-			{questionnaire.durationStartingAfterDays.get() == 0 && this.getDropdownFilterInputEntryView(Lang.get("start_date"),
-				<label class="noDesc">
-					<small>{Lang.get("start_date")}</small>
-					<input type="date" {... BindObservable(questionnaire.durationStart, DateTransformer)}/>
-				</label>,
-				questionnaire.durationStart
-			)}
-			
-			{questionnaire.durationPeriodDays.get() == 0 && this.getDropdownFilterInputEntryView(Lang.get("end_date"),
-				<label class="noDesc">
-					<small>{Lang.get("end_date")}</small>
-					<input type="date" {... BindObservable(questionnaire.durationEnd, DateTransformer)}/>
-				</label>,
-				questionnaire.durationEnd
-			)}
-			
-			{questionnaire.durationStart.get() == 0 && this.getDropdownFilterInputEntryView(Lang.get("activation_after"),
-				<label>
-					<small>{Lang.get("activation_after")}</small>
-					<input type="number" {... BindObservable(questionnaire.durationStartingAfterDays)}/>
-					<span>{Lang.get("days")}</span>
-					<small>{Lang.get("after_joining_study")}</small>
-				</label>,
-				questionnaire.durationStartingAfterDays
-			)}
-			
-			{questionnaire.durationEnd.get() == 0 && this.getDropdownFilterInputEntryView(Lang.get("expiration_after"),
-				<label>
-					<small>{Lang.get("expiration_after")}</small>
-					<input type="number" {... BindObservable(questionnaire.durationPeriodDays)}/>
-					<span>{Lang.get("days")}</span>
-					<small>{Lang.get("after_joining_study")}</small>
-				</label>,
-				questionnaire.durationPeriodDays
-			)}
-			
-			{!questionnaire.completableOnce.get() &&
-				BtnAdd(() => questionnaire.completableOnce.set(true), Lang.get("questionnaires_can_only_be_completed_once"))
-			}
-			
-			{this.getDropdownFilterInputEntryView(Lang.get("questionnaires_can_only_be_completed_per_notification"),
-				<label>
-					<span>{Lang.get("part_visibleFor")}</span>
-					<input type="number" {... BindObservable(questionnaire.completableMinutesAfterNotification)}/>
-					<span>{Lang.get("minutes")}</span>
-					<small>{Lang.get("info_zero_disables_timeout")}</small>
-				</label>,
-				questionnaire.completableOncePerNotification
-			)}
-			
-			{this.getDropdownFilterInputEntryView(Lang.get("timeDistance_between_completion_of_questionnaire"),
-				<label>
-					<input type="number" {... BindObservable(questionnaire.completionFrequencyMinutes)}/>
-					<span>{Lang.get("minutes")}</span>
-				</label>,
-				questionnaire.limitCompletionFrequency
-			)}
-			
-			{this.getDropdownFilterInputEntryView(Lang.get("only_at_specific_time"),
-				<div class="center">
-					<label>
-						<small>{Lang.getWithColon("from")}</small>
-						<input type="time" {... BindObservable(questionnaire.completableAtSpecificTimeStart, TimeTransformer)}/>
-					</label>
-					<label>
-						<small>{Lang.getWithColon("until")}</small>
-						<input type="time" {... BindObservable(questionnaire.completableAtSpecificTimeEnd, TimeTransformer)}/>
-					</label>
-				</div>,
-				questionnaire.completableAtSpecificTime
+			{filterEntries.map((entry) =>
+				<div>{
+					!entry.isActive() &&
+						this.getFilterEntryView(entry, (dropdown) => dropdown || !entry.enable
+							? BtnAdd(undefined, entry.title)
+							: BtnAdd(entry.enable, entry.title)
+						)
+				}</div>
 			)}
 		</div>
 	}
-	private getDropdownFilterInputEntryView(title: string, inputView: Vnode<any, any>, finishObs?: BaseObservable<PrimitiveType>): Vnode<any, any> {
-		return DropdownMenu("filterSubMenu",
-			<div class="line">{
-				finishObs?.get()
-					? BtnChange(undefined, title)
-					: BtnAdd(undefined, title)
-			}</div>,
-			(close) =>
-				<div>
-					<div class="middle horizontal">{inputView}</div>
-					<div class="middle horizontal spacingLeft">{BtnOk(() => {
-						if(finishObs?.get() === false)
-							finishObs.set(true)
-						close()
-					})}</div>
-				</div>,
-			{dontCenter: true}
-		)
-	}
-	
 }
