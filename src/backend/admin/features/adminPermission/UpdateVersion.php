@@ -40,20 +40,20 @@ class UpdateVersion extends DoUpdate {
 		
 		return $matchOld && $matchNew &&
 			(
-				$integersNew[1] > $integersOld[1] // e.g. 2.0.0 > 1.0.0
+				(int) $integersNew[1] > (int) $integersOld[1] // e.g. 2.0.0 > 1.0.0
 				|| (
 					$integersNew[1] === $integersOld[1]
 					&& (
-						$integersNew[2] > $integersOld[2] // e.g. 2.1.0 > 2.0.0
+						(int) $integersNew[2] > (int) $integersOld[2] // e.g. 2.1.0 > 2.0.0
 						|| (
 							$integersNew[2] === $integersOld[2]
 							&& (
-								$integersNew[3] > $integersOld[3] // e.g. 2.1.1 > 2.1.0
+								(int) $integersNew[3] > (int) $integersOld[3] // e.g. 2.1.1 > 2.1.0
 								|| (
 									$integersNew[3] === $integersOld[3]
 									&& (
 										($integersOld[4] !== '' && $integersNew[4] == '') // e.g. 2.1.1 > 2.1.1-alpha.1
-										|| ($integersOld[4] !== '' && $integersNew[4] !== '' && $integersNew[4] > $integersOld[4]) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
+										|| ($integersOld[4] !== '' && $integersNew[4] !== '' && (int) $integersNew[4] > (int) $integersOld[4]) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
 									)
 								)
 							)

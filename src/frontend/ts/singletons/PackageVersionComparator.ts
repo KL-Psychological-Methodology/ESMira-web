@@ -18,23 +18,22 @@ class PackageVersionComparatorImpl {
 		const [matchOld, majorOld, minorOld, patchOld, devNameOld, devBuiltOld] = this.regExpData ?? []
 		const [matchNew, majorNew, minorNew, patchNew, devNameNew, devBuiltNew] = newPackage.match(regExp) ?? []
 		
-		
 		const r = !!matchOld && !!matchNew &&
 			(
-				majorNew > majorOld // e.g. 2.0.0 > 1.0.0
+				parseInt(majorNew) > parseInt(majorOld) // e.g. 2.0.0 > 1.0.0
 				|| (
 					majorNew === majorOld
 					&& (
-						minorNew > minorOld // e.g. 2.1.0 > 2.0.0
+						parseInt(minorNew) > parseInt(minorOld) // e.g. 2.1.0 > 2.0.0
 						|| (
 							minorNew === minorOld
 							&& (
-								patchNew > patchOld // e.g. 2.1.1 > 2.1.0
+								parseInt(patchNew) > parseInt(patchOld) // e.g. 2.1.1 > 2.1.0
 								|| (
 									patchNew === patchOld
 									&& (
 										(devNameOld !== '' && devNameNew === '') // e.g. 2.1.1 > 2.1.1-alpha || 2.1.1 > 2.1.1-alpha.1
-										|| (devBuiltOld !== '' && devBuiltNew !== '' && devBuiltNew > devBuiltOld) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
+										|| (devBuiltOld !== '' && devBuiltNew !== '' && parseInt(devBuiltNew) > parseInt(devBuiltOld)) // e.g. 2.1.1-alpha.2 > 2.1.1-alpha.1
 									)
 								)
 							)
@@ -47,17 +46,6 @@ class PackageVersionComparatorImpl {
 	}
 }
 
-// export const PackageVersionComparator = {
-// 	isBelowThen(oldPackage: string, newPackage: string): boolean {
-// 		if(cache.hasOwnProperty(oldPackage))
-// 			return cache[oldPackage].isBelowThen(newPackage)
-// 		else {
-// 			const r = new PackageVersionComparatorImpl(oldPackage)
-// 			cache[oldPackage] = r
-// 			return r.isBelowThen(newPackage)
-// 		}
-// 	}
-// }
 export function PackageVersionComparator(oldPackage: string): PackageVersionComparatorImpl {
 	if(cache.hasOwnProperty(oldPackage))
 		return cache[oldPackage]
