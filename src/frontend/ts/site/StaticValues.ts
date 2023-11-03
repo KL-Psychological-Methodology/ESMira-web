@@ -14,4 +14,6 @@ export type StaticValues =
 	"filter" |
 	"accountI" |
 	"userId" |
-	"timestamp"
+	"timestamp" |
+	"username" |
+	"password"
