@@ -41,7 +41,7 @@ export class Content extends SectionContent {
 			<div class="stickerList">
 				{messageParticipantEntryList.map((entry) =>
 					<div class="line">
-						<a href={this.getUrl(`chat,userId:${btoa(entry.name.get())}`)}>
+						<a class="title" href={this.getUrl(`chat,userId:${btoa(entry.name.get())}`)}>
 							<span>{entry.name.get()}</span>
 							{entry.pending.get() &&
 								<span class="extraNote">{Lang.get('waiting')}</span>

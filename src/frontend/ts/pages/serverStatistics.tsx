@@ -314,6 +314,7 @@ export class Content extends SectionContent {
 			<br/>
 			<div class="smallText right">
 				<span>{Lang.getWithColon("data_collected_since")}</span>
+				&nbsp;
 				<span>{(new Date(this.serverStatistics.created*1000).toLocaleDateString())}</span>
 			</div>
 		</div>

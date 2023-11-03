@@ -20,7 +20,7 @@ type ReleaseType = {version: string, date: Date, changeLog: string, downloadUrl:
 
 export class Content extends SectionContent {
 	private loader: ServerSettingsLoader
-	private markdownRenderer = new MarkdownIt();
+	private markdownRenderer = new MarkdownIt()
 	private noConnection = false
 	private loadPreReleases = false
 	private selectedIndex = new ObservablePrimitive(0, null, "serverSettings")
