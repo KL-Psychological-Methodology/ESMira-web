@@ -11,28 +11,26 @@ import {JsonTypes} from "../observable/types/JsonTypes";
 import {BtnCustom} from "../widgets/BtnWidgets";
 
 interface SourceComponentOptions {
-	study: Study
+	getStudy: () => Study
 	setJson: (json: TranslatableObjectDataType) => void
 }
 class SourceComponent implements Component<SourceComponentOptions, any> {
 	private hasChanged: boolean = false
 	private editor?: JSONEditor
 	private setJson?: (json: TranslatableObjectDataType) => void
-	private study?: Study
+	private getStudy?: () => Study
 	private studyObserveId?: ObserverId
-	private langObserveId?: ObserverId
 	
 	private getJson(): JsonTypes {
-		const study = this.study
-		if(!study)
+		if(!this.getStudy)
 			return {}
-		const r = study.createJson()
+		const r = this.getStudy().createJson()
 		return r ?? {}
 	}
 	
 	public oncreate(vNode: VnodeDOM<SourceComponentOptions, any>): void {
 		this.setJson = vNode.attrs.setJson
-		this.study = vNode.attrs.study
+		this.getStudy = vNode.attrs.getStudy
 		
 		this.editor = new JSONEditor(
 			{
@@ -53,21 +51,17 @@ class SourceComponent implements Component<SourceComponentOptions, any> {
 				
 			})
 		
-		this.studyObserveId = this.study?.addObserver(() => {
-			this.editor?.set({json: this.getJson()})
-		})
-		this.langObserveId = this.study?.currentLangCode.addObserver(() => {
+		this.studyObserveId = this.getStudy().addObserver(() => {
 			this.editor?.set({json: this.getJson()})
 		})
 	}
 	
 	public onremove(): void {
 		this.studyObserveId?.removeObserver()
-		this.langObserveId?.removeObserver()
 	}
 	
 	private clickApply(): void {
-		if(!this.setJson)
+		if(!this.setJson || !this.getStudy)
 			return
 		let json;
 		try {
@@ -77,7 +71,7 @@ class SourceComponent implements Component<SourceComponentOptions, any> {
 			console.error(e);
 			return;
 		}
-		json.id = this.study?.id.get() ?? -1
+		json.id = this.getStudy().id.get()
 		this.setJson(json)
 		this.hasChanged = false
 	}
@@ -106,16 +100,15 @@ export class Content extends SectionContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		const study = this.getStudyOrThrow()
 		return m(SourceComponent, {
-			study: study,
+			getStudy: () => this.getStudyOrThrow(),
 			setJson: (json: TranslatableObjectDataType) => {
+				const study = this.getStudyOrThrow()
 				if(JSON.stringify(json) == JSON.stringify(study.createJson()))
 					return
 				
 				const newStudy = this.section.siteData.studyLoader.updateStudyJson(study, json)
-				console.log(study, newStudy)
-				// newStudy.setDifferent(true)
+				newStudy.setDifferent(true)
 			}
 		})
 	}
