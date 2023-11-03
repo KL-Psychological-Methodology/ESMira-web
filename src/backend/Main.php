@@ -78,12 +78,12 @@ class Main {
 	static function getAccessKey(): string {
 		if(isset($_GET['key']) && self::strictCheckInput($_GET['key'])) {
 			$key = strtolower(trim($_GET['key']));
-			self::setCookie('access_key', $key);
+			self::setCookie('accessKey', $key);
 			if(strlen($key))
 				return $key;
 		}
-		else if(isset($_COOKIE['access_key']) && self::strictCheckInput($_COOKIE['access_key'])) {
-			$key = strtolower($_COOKIE['access_key']);
+		else if(isset($_COOKIE['accessKey']) && self::strictCheckInput($_COOKIE['accessKey'])) {
+			$key = strtolower($_COOKIE['accessKey']);
 			if(strlen($key))
 				return $key;
 		}

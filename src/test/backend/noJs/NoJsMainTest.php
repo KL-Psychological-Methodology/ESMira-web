@@ -44,7 +44,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 	
 	public function setUp(): void {
 		parent::setUp();
-		Main::setCookie('access_key', '');
+		Main::setCookie('accessKey', '');
 	}
 	
 	

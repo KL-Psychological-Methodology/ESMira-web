@@ -51,12 +51,12 @@ class MainTest extends BaseTestSetup {
 		$this->assertEquals('key1', Main::getAccessKey());
 		$_GET['key'] = null;
 		
-		$_COOKIE['access_key'] = 'key2';
+		$_COOKIE['accessKey'] = 'key2';
 		$this->assertEquals('key2', Main::getAccessKey());
 		
-		$_COOKIE['access_key'] = 'illegal$%&';
+		$_COOKIE['accessKey'] = 'illegal$%&';
 		$this->assertEquals('', Main::getAccessKey());
-		$_COOKIE['access_key'] = null;
+		$_COOKIE['accessKey'] = null;
 		
 		$this->assertEquals('', Main::getAccessKey());
 	}
