@@ -202,12 +202,21 @@ export class Content extends SectionContent {
 								() =>
 									<ul>
 										<h2>{Lang.get("select_a_study")}</h2>
-										{this.section.siteData.studyLoader.getSortedStudyList().map((study) =>
-											<li
-												class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`}
-												onclick={this.addPermission.bind(this, account, permissionName, study.id.get())}
-											>{study.title.get()}</li>
-										)}
+										{this.section.siteData.studyLoader.getSortedStudyList()
+											.filter((study) => {
+												const id = study.id.get()
+												for(const obs of permission.get()) {
+													if(obs.get() == id)
+														return false
+												}
+												return true
+											})
+											.map((study) =>
+												<li
+													class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`}
+													onclick={this.addPermission.bind(this, account, permissionName, study.id.get())}
+												>{study.title.get()}</li>
+											)}
 									</ul>
 							)}
 						</div>
