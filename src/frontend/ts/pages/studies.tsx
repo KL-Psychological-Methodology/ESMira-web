@@ -12,15 +12,8 @@ export class Content extends SectionContent {
 	private readonly accessKey: ObservablePrimitive<string>
 	
 	protected studies: Study[] = []
-	private readonly destroyImpl: (() => void)
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		return [
-			section.getAvailableStudiesPromise(section.siteData.dynamicValues.getOrCreateObs("accessKey", "").get())
-		]
-	}
-	
-	constructor(section: Section, studiesObs: StudiesDataType) {
+	constructor(section: Section) {
 		super(section)
 		this.accessKey = this.getDynamic("accessKey", "")
 		
@@ -39,17 +32,9 @@ export class Content extends SectionContent {
 				this.titleString = Lang.get("select_a_study")
 				break
 		}
-		
-		this.updateSortedStudies(studiesObs)
-		
-		const studyObserverId = studiesObs.addObserver((_origin, bubbled) => {
-			if(!bubbled)
-				this.updateSortedStudies(studiesObs)
-		})
-		
-		this.destroyImpl = () => {
-			studyObserverId.removeObserver()
-		}
+	}
+	public preInit(): Promise<any> {
+		return this.loadStudies(this.accessKey.get())
 	}
 	
 	public title(): string {
@@ -82,14 +67,23 @@ export class Content extends SectionContent {
 	private async reloadAccessKey(e: SubmitEvent): Promise<void> {
 		e.preventDefault()
 		const formData = new FormData(e.target as HTMLFormElement)
-		this.accessKey.set(formData.get("accessKeyInput")?.toString() ?? "")
-		const studiesObs = await this.section.loader.showLoader(this.section.siteData.studyLoader.loadAvailableStudies(this.accessKey.get(), true))
-		this.section.loader.closeLoader() //this will not be run if there is an error
-		this.updateSortedStudies(studiesObs)
+		const accessKey = formData.get("accessKeyInput")?.toString() ?? ""
+		return this.loadStudies(accessKey)
+	}
+	private async loadStudies(accessKey: string): Promise<void> {
+		document.cookie = `accessKey=${accessKey}`
+		this.accessKey.set(accessKey)
+		try {
+			const studiesObs = await this.section.loader.showLoader(this.section.siteData.studyLoader.loadAvailableStudies(this.accessKey.get(), true))
+			this.section.loader.closeLoader() //this will not be run if there is an error
+			this.updateSortedStudies(studiesObs)
+		}
+		catch(e) {
+			this.studies = []
+		}
 	}
 	
 	public getView(): Vnode<any, any> {
-		
 		return (
 			<div>
 				<div class="accessKeyBox">{
@@ -115,10 +109,5 @@ export class Content extends SectionContent {
 	
 	protected getStudyLinkView(study: Study): Vnode<any, any> {
 		return <a href={this.getUrl(`${this.targetPage},id:${study.id.get()}`)}>{study.title.get()}</a>
-	}
-	
-	public destroy(): void {
-		super.destroy()
-		this.destroyImpl()
 	}
 }

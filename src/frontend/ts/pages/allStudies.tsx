@@ -27,7 +27,7 @@ export class Content extends StudiesContent {
 	}
 	
 	constructor(section: Section, studiesObs: StudiesDataType) {
-		super(section, studiesObs)
+		super(section)
 		this.selectedAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("accessKeyIndex", 0)
 		
 		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
@@ -49,21 +49,26 @@ export class Content extends StudiesContent {
 				break
 		}
 		
-		
+		this.updateSortedStudies(studiesObs)
 		this.initAccessKeyIndex(studiesObs)
 		
 		const messagesObserverId = this.getTools().messagesLoader.studiesWithNewMessagesCount?.addObserver(() => {
 			m.redraw()
 		})
 		const studyObserverId = studiesObs.addObserver((_origin, bubbled) => {
-			if(!bubbled)
+			if(!bubbled) {
 				this.initAccessKeyIndex(studiesObs)
+				this.updateSortedStudies(studiesObs)
+			}
 		})
 		
 		this.destroyImpl2 = () => {
 			messagesObserverId.removeObserver()
 			studyObserverId.removeObserver()
 		}
+	}
+	public preInit(): Promise<any> {
+		return Promise.resolve()
 	}
 	
 	
