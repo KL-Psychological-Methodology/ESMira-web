@@ -18,7 +18,7 @@ export class LoaderState {
 	
 	public getView(): Vnode<any, any> {
 		if(!this.isEnabled)
-			return (<div class="hidden"></div>);
+			return <div class="loader hidden"></div>
 		
 		let className = "loader"
 		if(this.isVisible)
@@ -51,8 +51,11 @@ export class LoaderState {
 		if(s)
 			this.stateMsg = s
 		
-		this.isVisible = true
 		this.updateView()
+		this.animationId = window.setTimeout(() => {
+			this.isVisible = true
+			this.updateView()
+		}, 10)
 	}
 	
 	private disable(ignoreError: boolean = false): void {
@@ -68,6 +71,7 @@ export class LoaderState {
 			this.animationId = window.setTimeout(() => {
 				this.isEnabled = false
 				this.isError = false
+				this.stateMsg = ""
 				this.updateView()
 			}, 200)
 		}, 10)

@@ -27,6 +27,7 @@ import {TitleRow} from "../widgets/TitleRow";
 interface FullcalendarComponentOptions {
 	study: Study
 	joinTimestamp: ObservablePrimitive<number>
+	onError: (msg: string) => void
 }
 
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -41,6 +42,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	private visibleCalendars: Record<number, Questionnaire> = {}
 	private colors: Record<number, string> = {}
 	private isLoading: boolean = false
+	private onError: (msg: string) => void = (msg) => console.error(msg)
 	
 	private getJoinTimestamp(): number {
 		return getMidnightMillis(this.joinDate.get()) + this.joinTime.get()
@@ -124,10 +126,17 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 		this.scheduler = new Scheduler()
 		const events: EventInput[] = []
 		
-		for(const qId in this.visibleCalendars) {
-			const questionnaire = this.visibleCalendars[qId]
-			events.push(this.getQuestionnaireEvent(questionnaire))
-			this.collectScheduleEvents(questionnaire)
+		try {
+			for(const qId in this.visibleCalendars) {
+				const questionnaire = this.visibleCalendars[qId]
+				events.push(this.getQuestionnaireEvent(questionnaire))
+				this.collectScheduleEvents(questionnaire)
+			}
+		}
+		catch(e: any) {
+			this.onError(e.message || e)
+			this.isLoading = false
+			return
 		}
 		this.addEventsFromScheduler(events)
 		
@@ -174,6 +183,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	}
 	
 	public oncreate(vNode: VnodeDOM<FullcalendarComponentOptions, any>): void {
+		this.onError = vNode.attrs.onError
 		const study = vNode.attrs.study
 		const joinTimestamp = vNode.attrs.joinTimestamp
 		this.joinDate.set(joinTimestamp.get())
@@ -200,6 +210,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 		this.initCalendar()
 	}
 	public onupdate(vNode: VnodeDOM<FullcalendarComponentOptions, any>): void {
+		this.onError = vNode.attrs.onError
 		this.calendarView = vNode.dom.getElementsByClassName("calendarView")[0] as HTMLElement
 		this.calendar?.updateSize()
 	}
@@ -284,7 +295,8 @@ export class Content extends SectionContent {
 		else
 			return m(FullcalendarComponent, {
 				study: study,
-				joinTimestamp: this.getDynamic("joinTimestamp", Date.now())
+				joinTimestamp: this.getDynamic("joinTimestamp", Date.now()),
+				onError: (msg) => this.section.loader.error(msg)
 			})
 	}
 }
