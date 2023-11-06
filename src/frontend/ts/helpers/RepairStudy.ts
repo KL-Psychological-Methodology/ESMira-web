@@ -160,9 +160,9 @@ export class RepairStudy {
 			}
 		}
 		
-		study.packageVersion = this.packageVersion
 		if(wasRepaired)
 			this.repairNotice(study)
+		study.packageVersion = this.packageVersion
 		return true
 	}
 }
