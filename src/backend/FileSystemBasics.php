@@ -60,6 +60,6 @@ class FileSystemBasics {
 	public static function writeServerConfigs(array $newValues) { //$pathConfig is used for testing
 		$saveValues = array_merge(Configs::getDefaultAll(), Configs::getAll(), $newValues);
 		self::writeFile(Paths::FILE_CONFIG, '<?php return ' . var_export($saveValues, true) . ';');
-		Configs::resetConfig();
+		Configs::resetConfig($saveValues);
 	}
 }

@@ -45,10 +45,10 @@ export class ServerSettingsLoader {
 		)
 		
 		
-		// this.settings = new ServerData(json, settings.currentLangCode.get())
 		this.settings = new ServerData(json, settings.defaultLang.get())
 		this.settings.importObserverData(settings)
 		this.settings.currentLangCode.set(settings.currentLangCode.get())
 		this.settings.hasMutated()
+		document.getElementById("headerServerName")!.innerText = this.settings.siteTranslations.serverName.get()
 	}
 }

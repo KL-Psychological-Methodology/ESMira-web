@@ -42,16 +42,16 @@ class Configs {
 		return $serverNameArray[$lang] ?? ($serverNameArray['en'] ?? '');
 	}
 	
-	static function resetConfig() {
+	static function resetConfig(array $newValues = null) {
 		//we dont need to load data now. It will automatically be loaded as soon as we ask for some data
-		self::$configs = null;
+		self::$configs = $newValues;
 	}
 	static function resetAll() {
 		self::resetConfig();
 		self::$dataStore = null;
 	}
 	
-	static function injectConfig($path) { //for testing
+	static function injectConfig($path) { //TODO: for testing. Can be replaced by resetConfig()
 		self::$configs = require DIR_BASE ."test/testConfigs/$path";
 	}
 	static function injectDataStore(DataStoreInterface $dataStore) { //for testing
