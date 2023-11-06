@@ -5,7 +5,7 @@ import downloadSvg from "../../imgs/icons/download.svg?raw"
 import {Study} from "../data/study/Study";
 import {ObserverId} from "../observable/BaseObservable";
 import {TranslatableObjectDataType} from "../observable/TranslatableObject";
-import {JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
+import {JSONContent, JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {Section} from "../site/Section";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {BtnCustom} from "../widgets/BtnWidgets";
@@ -37,7 +37,7 @@ class SourceComponent implements Component<SourceComponentOptions, any> {
 				target: vNode.dom,
 				props: {
 					content: {json: this.getJson()},
-					mode: Mode.text,
+					mode: Mode.tree,
 					onChange: () => {
 						this.hasChanged = true
 						m.redraw()
@@ -65,7 +65,7 @@ class SourceComponent implements Component<SourceComponentOptions, any> {
 			return
 		let json;
 		try {
-			json = JSON.parse((this.editor?.get() as TextContent).text);
+			json = (this.editor?.get() as JSONContent).json ?? JSON.parse((this.editor?.get() as TextContent).text)
 		}
 		catch(e) {
 			console.error(e);
