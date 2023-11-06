@@ -148,8 +148,8 @@ export class Scheduler {
 		const msBetween = signalTime.minutesBetween.get() * 60000
 		const period = (signalTime.random.get()) ? this.calculateRandomPeriod(questionnaire, signalTime) : 0
 		const block = period / frequency
-		if(signalTime.random && frequency > 1 && block < msBetween)
-			throw new Error(`${frequency} blocks with ${msBetween} ms do not fit into ${period} ms`)
+		if(signalTime.random.get() && frequency > 1 && block < msBetween)
+			throw new Error(`${frequency} blocks with ${msBetween} ms do not fit into ${period} ms for ${questionnaire.title.get()}.`)
 		
 		//
 		//correct timestamp:
