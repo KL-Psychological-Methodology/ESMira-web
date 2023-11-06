@@ -53,21 +53,25 @@ export class Content extends SectionContent {
 	}
 	
 	private autoValidateQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
-		questionnaire.pages.get().forEach((page) => {
+		for(const page of questionnaire.pages.get()) {
 			this.autoValidatePage(study, page, index)
-		})
+		}
 	}
 	private autoValidatePage(study: Study, page: Page, index: number): void {
-		page.inputs.get().forEach((input) => {
+		for(const input of page.inputs.get()) {
 			const newName = createUniqueName(study, input.name.get(), (oldName) => {
-				return oldName + "_2"
+				const match = oldName.match(/(.+)_(\d+)$/)
+				if(match == null)
+					return oldName + "_2"
+				else
+					return `${match[1]}_${parseInt(match[2])+1}`
 			})
 			if(newName == null) {
 				study.questionnaires.remove(index)
 				throw new Error(`Could not rename ${input.name.get()}. Reverting copy!`)
 			}
 			input.name.set(newName)
-		})
+		}
 	}
 	
 	
@@ -111,7 +115,7 @@ export class Content extends SectionContent {
 			return;
 		
 		questionnaire.pages.get()[pageI].inputs.push({name: name})
-		this.newSection(`inputEdit,input:${name}`)
+		this.newSection(`inputEdit,input:${btoa(name)}`)
 	}
 	private copyInput(input: Input, index: number): void {
 		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
@@ -271,7 +275,8 @@ export class Content extends SectionContent {
 							</div>
 							
 							<div class="flexGrow">
-								<div class="verticalPadding highlight smallText">{Lang.getDynamic(`input_${input.responseType.get()}`)+(input.required.get() ? '*' : '') + ` (${input.name.get()})`}</div>
+								<div class="verticalPadding highlight smallText">{`${Lang.getDynamic("input_" + input.responseType.get())} ${input.required.get() ? '*' : ''} (${input.name.get()})`}</div>
+								
 								<div class="verticalPadding">{m.trust(input.text.get())}</div>
 							</div>
 							

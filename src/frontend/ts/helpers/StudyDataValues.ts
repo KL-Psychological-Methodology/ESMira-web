@@ -35,13 +35,28 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 }
 
 export const StudyDataValues = {
+	getQuestionnaireVariableNames(questionnaire: Questionnaire): string[] {
+		const variables: string[] = []
+		for(const page of questionnaire.pages.get()) {
+			for(const input of page.inputs.get()) {
+				variables.push(input.name.get())
+			}
+		}
+		
+		for(const sumScore of questionnaire.sumScores.get()) {
+			variables.push(sumScore.name.get());
+		}
+		
+		return variables
+	},
+	
 	getQuestionnaireVariables(questionnaire: Questionnaire): string[] {
 		const variables: string[] = []
-		questionnaire.pages.get().forEach((page) => {
-			page.inputs.get().forEach((input) => {
+		for(const page of questionnaire.pages.get()) {
+			for(const input of page.inputs.get()) {
 				setResponseTypeValues(input, variables)
-			})
-		})
+			}
+		}
 		
 		questionnaire.sumScores.get().forEach((sumScore) => {
 			variables.push(sumScore.name.get());

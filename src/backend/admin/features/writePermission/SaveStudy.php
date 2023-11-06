@@ -334,11 +334,9 @@ class SaveStudy extends HasWritePermission {
 				if(!isset($input->name))
 					continue;
 				
-				if($input->responseType ?? 'text_input' != 'text') {
-					$this->uniqueNameOrThrow($input->name, $questionnaire->title);
-					$this->uniqueInputNames[$input->name] = $questionnaire->title;
-					$questionnaireIndex->addInput($input);
-				}
+				$this->uniqueNameOrThrow($input->name, $questionnaire->title);
+				$this->uniqueInputNames[$input->name] = $questionnaire->title;
+				$questionnaireIndex->addInput($input);
 			}
 		}
 		

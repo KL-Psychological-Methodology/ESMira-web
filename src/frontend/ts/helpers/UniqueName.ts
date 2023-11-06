@@ -7,7 +7,7 @@ import {StudyDataValues} from "./StudyDataValues";
 function isUnique(questionnaires: Questionnaire[], name: string): boolean {
 	for(let qI=questionnaires.length-1; qI>=0; --qI) {
 		const questionnaire = questionnaires[qI]
-		const names = StudyDataValues.getQuestionnaireVariables(questionnaire)
+		const names = StudyDataValues.getQuestionnaireVariableNames(questionnaire)
 		
 		let start = -1
 		do {
