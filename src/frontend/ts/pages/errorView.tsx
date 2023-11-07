@@ -79,7 +79,13 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 		const lines = vNode.attrs.report.split("\n\n")
 		this.rootViewOffset = rootView.getBoundingClientRect().top
 		
-		infoView.innerText = lines[0]
+		const firstLine = lines[0].split("\n")
+		for(let i = 1; i < firstLine.length; i++) {
+			const view = document.createElement("div")
+			view.classList.add("line")
+			view.innerText = firstLine[i]
+			infoView.appendChild(view)
+		}
 		
 		for(let i = 1; i < lines.length; i++) {
 			const line = lines[i]
