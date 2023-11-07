@@ -52,28 +52,6 @@ export class Content extends SectionContent {
 		</a>
 	}
 	
-	private autoValidateQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
-		for(const page of questionnaire.pages.get()) {
-			this.autoValidatePage(study, page, index)
-		}
-	}
-	private autoValidatePage(study: Study, page: Page, index: number): void {
-		for(const input of page.inputs.get()) {
-			const newName = createUniqueName(study, input.name.get(), (oldName) => {
-				const match = oldName.match(/(.+)_(\d+)$/)
-				if(match == null)
-					return oldName + "_2"
-				else
-					return `${match[1]}_${parseInt(match[2])+1}`
-			})
-			if(newName == null) {
-				study.questionnaires.remove(index)
-				throw new Error(`Could not rename ${input.name.get()}. Reverting copy!`)
-			}
-			input.name.set(newName)
-		}
-	}
-	
 	
 	private addQuestionnaire(e: MouseEvent): Promise<void> {
 		const study = this.getStudyOrThrow()
@@ -81,7 +59,7 @@ export class Content extends SectionContent {
 	}
 	private copyQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
 		const newQuestionnaire = study.questionnaires.addCopy(questionnaire, index)
-		this.autoValidateQuestionnaire(study, newQuestionnaire, index)
+		this.section.siteData.studyLoader.autoValidateQuestionnaire(study, newQuestionnaire)
 	}
 	private deleteQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
 		if(!safeConfirm(Lang.get("confirm_delete_questionnaire", questionnaire.getTitle())))
@@ -139,7 +117,7 @@ export class Content extends SectionContent {
 		const study = this.getStudyOrThrow()
 		const newPage = (page.parent as ObservableArray<TranslatableObjectDataType, Page>).addCopy(page, index)
 		
-		this.autoValidatePage(study, newPage, index)
+		this.section.siteData.studyLoader.autoValidatePage(study, newPage)
 	}
 	private transferPage(oldQuestionnaire: Questionnaire, oldPageIndex: number, newQuestionnaire: Questionnaire, close: () => void): void {
 		newQuestionnaire.pages.moveFromOtherList(oldQuestionnaire.pages, oldPageIndex, newQuestionnaire.pages.get().length)

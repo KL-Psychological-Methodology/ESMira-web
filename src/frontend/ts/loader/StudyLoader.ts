@@ -10,6 +10,8 @@ import {Questionnaire} from "../data/study/Questionnaire";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {ObserverId} from "../observable/BaseObservable";
 import {RepairStudy} from "../helpers/RepairStudy";
+import {Page} from "../data/study/Page";
+import {createUniqueName} from "../helpers/UniqueName";
 
 export type StudiesDataType = ObservableRecord<Study>
 
@@ -195,12 +197,35 @@ export class StudyLoader {
 	public async addQuestionnaire(study: Study, questionnaireData: TranslatableObjectDataType): Promise<Questionnaire> {
 		const questionnaires = study.questionnaires.get()
 		const filtered = []
-		for(let questionnaire of questionnaires) {
+		for(const questionnaire of questionnaires) {
 			filtered.push(questionnaire.internalId.get())
 		}
 		
 		questionnaireData["internalId"] = await Requests.loadJson(FILE_ADMIN + "?type=GetNewId&for=questionnaire&study_id=" + study.id.get(), "post", JSON.stringify(filtered))
-		return study.questionnaires.push(questionnaireData)
+		const newQuestionnaire = study.questionnaires.push(questionnaireData)
+		this.autoValidateQuestionnaire(study, newQuestionnaire)
+		return newQuestionnaire
+	}
+	
+	public autoValidateQuestionnaire(study: Study, questionnaire: Questionnaire): void {
+		for(const page of questionnaire.pages.get()) {
+			this.autoValidatePage(study, page)
+		}
+	}
+	public autoValidatePage(study: Study, page: Page): void {
+		for(const input of page.inputs.get()) {
+			const newName = createUniqueName(study, input.name.get(), (oldName) => {
+				const match = oldName.match(/(.+)_(\d+)$/)
+				if(match == null)
+					return oldName + "_2"
+				else
+					return `${match[1]}_${parseInt(match[2])+1}`
+			})
+			if(newName == null)
+				throw new Error(`Could not rename ${input.name.get()}. Reverting copy!`)
+			
+			input.name.set(newName)
+		}
 	}
 	
 	public async saveStudy(study: Study): Promise<void> {
