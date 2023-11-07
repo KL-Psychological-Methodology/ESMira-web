@@ -88,7 +88,7 @@ export class Content extends SectionContent {
 		await this.section.loader.loadJson(
 			`${FILE_ADMIN}?type=ToggleAccountPermission`,
 			"post",
-			`accountName=${account.accountName.get()}&create=${(account.admin.get() ? "1" : "0")}`
+			`accountName=${account.accountName.get()}&create=${(account.create.get() ? "1" : "0")}`
 		)
 		this.section.loader.info(Lang.get("info_successful"))
 	}
