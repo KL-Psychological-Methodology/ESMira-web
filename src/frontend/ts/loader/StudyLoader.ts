@@ -37,7 +37,7 @@ export class StudyLoader {
 			
 			for(let studyData of studiesJson) {
 				const id = studyData["id"]
-				const study = new Study(studyData, this.studyCache, Date.now(), null)
+				const study = new Study(studyData, this.studyCache, Math.round(Date.now() / 1000), null)
 				if(!this.studyCache.exists(id))
 					this.studyCache.add(id, study)
 			}
@@ -82,7 +82,7 @@ export class StudyLoader {
 		PromiseCache.remove(`study${id}`)
 	}
 	
-	public async loadFullStudy(id: number, lastChanged: number = Date.now()): Promise<Study> {
+	public async loadFullStudy(id: number, lastChanged: number = Math.round(Date.now() / 1000)): Promise<Study> {
 		return PromiseCache.get(`study${id}`, async () => {
 			const studyData: {
 				config: Record<string, any>,
@@ -100,14 +100,15 @@ export class StudyLoader {
 			this.studyCache.add(id, study)
 			
 			this.observerIds[id] = study.addObserver(async (_obs, turnedDifferent) => {
-				if(turnedDifferent) {
+				const currentStudy = this.studyCache.get()[id]
+				if(currentStudy && turnedDifferent) {
 					const lastChangedServer = await Requests.loadJson(`${FILE_ADMIN}?type=CheckChanged&study_id=${id}`)
 					
-					if(lastChangedServer > study.lastChanged) {
+					if(lastChangedServer > currentStudy.lastChanged) {
 						this.removeStudyFromCache(id)
 						const newStudy = await this.loadFullStudy(id, lastChangedServer)
-						this.updateStudy(study, newStudy)
-						alert(Lang.get("error_study_was_changed", study.title.get()));
+						this.updateStudy(currentStudy, newStudy)
+						alert(Lang.get("error_study_was_changed", currentStudy.title.get()));
 					}
 				}
 			}, this.observerIds[id])
@@ -219,7 +220,6 @@ export class StudyLoader {
 			"post",
 			JSON.stringify(studies)
 		)
-
 		study.lastChanged = lastChanged
 
 		//just in case the server changed something important in the json, we reload the study:
@@ -235,7 +235,7 @@ export class StudyLoader {
 	}
 	
 	public async publishStudy(study: Study): Promise<void> {
-		let studyId = study.id.get()
+		const studyId = study.id.get()
 		
 		const { lastChanged } = await Requests.loadJson(`${FILE_ADMIN}?type=MarkStudyAsUpdated`, "post", `study_id=${studyId}`)
 		study.lastChanged = lastChanged
