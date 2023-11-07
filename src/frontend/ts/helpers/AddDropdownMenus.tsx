@@ -139,6 +139,7 @@ export class AddDropdownMenus {
 	}
 	
 	private duplicateButton(title: string, drawContent: (study: Study, close: () => void) => Vnode<any, any> | void): Vnode<any, any> {
+		const tools = this.sectionContent.getTools()
 		return DropdownMenu("studyList",
 			DashElement(null, {
 				template: { title: title, icon: m.trust(copySvg) },
@@ -146,9 +147,13 @@ export class AddDropdownMenus {
 			}),
 			(close) => <ul style="min-width: 300px">
 				<h2>{Lang.get("select_a_study")}</h2>
-				{ this.sectionContent.section.siteData.studyLoader.getSortedStudyList().map((study) =>
-					drawContent(study, close)
-				)}
+				{ this.sectionContent.section.siteData.studyLoader.getSortedStudyList()
+					.filter((study) =>
+						tools.isAdmin || tools.permissions.write.indexOf(study.id.get()) != -1
+					)
+					.map((study) =>
+						drawContent(study, close)
+					)}
 			</ul>
 		)
 	}
