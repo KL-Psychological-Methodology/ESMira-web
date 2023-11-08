@@ -159,7 +159,7 @@ export class Content extends ChartEditSectionContent {
 									</div>
 								</div>
 						}),
-						DashElement(null, {
+						chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
 							content:
 								<div>
 									<label class="horizontalPadding">
@@ -169,7 +169,7 @@ export class Content extends ChartEditSectionContent {
 									</label>
 								</div>
 						}),
-						DashElement(null, {
+						chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
 							content:
 								<div>
 									<label class="horizontalPadding">
