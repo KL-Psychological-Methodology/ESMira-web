@@ -63,13 +63,13 @@ class SourceComponent implements Component<SourceComponentOptions, any> {
 	private clickApply(): void {
 		if(!this.setJson || !this.getStudy)
 			return
-		let json;
+		let json
 		try {
 			json = (this.editor?.get() as JSONContent).json ?? JSON.parse((this.editor?.get() as TextContent).text)
 		}
 		catch(e) {
-			console.error(e);
-			return;
+			console.error(e)
+			return
 		}
 		json.id = this.getStudy().id.get()
 		this.setJson(json)

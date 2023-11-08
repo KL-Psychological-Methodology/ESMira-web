@@ -87,29 +87,6 @@ export class Content extends SectionContent {
 	}
 	
 	
-	private addInput(questionnaire: Questionnaire, pageI: number): void {
-		const name = createUniqueName(this.getStudyOrThrow())
-		if(!name)
-			return;
-		
-		questionnaire.pages.get()[pageI].inputs.push({name: name})
-		this.newSection(`inputEdit,input:${btoa(name)}`)
-	}
-	private copyInput(input: Input, index: number): void {
-		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
-		if(!newName)
-			return
-		const newInput = (input.parent as ObservableArray<TranslatableObjectDataType, Input>).addCopy(input, index)
-		newInput.name.set(newName)
-	}
-	private deleteInput(page: Page, index: number): void {
-		if(!safeConfirm(Lang.get("confirm_delete_input")))
-			return
-		
-		page.inputs.remove(index)
-	}
-	
-	
 	private addPage(questionnaire: Questionnaire): void {
 		questionnaire.pages.push({})
 	}
@@ -148,6 +125,30 @@ export class Content extends SectionContent {
 	private movePageDown(questionnaire: Questionnaire, pIndex: number): void {
 		this.movePage(questionnaire, pIndex, +1)
 	}
+	
+	
+	private addInput(questionnaire: Questionnaire, pageI: number): void {
+		const name = createUniqueName(this.getStudyOrThrow())
+		if(!name)
+			return
+		
+		questionnaire.pages.get()[pageI].inputs.push({name: name})
+		this.newSection(`inputEdit,input:${btoa(name)}`)
+	}
+	private copyInput(input: Input, index: number): void {
+		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
+		if(!newName)
+			return
+		const newInput = (input.parent as ObservableArray<TranslatableObjectDataType, Input>).addCopy(input, index)
+		newInput.name.set(newName)
+	}
+	private deleteInput(page: Page, index: number): void {
+		if(!safeConfirm(Lang.get("confirm_delete_input")))
+			return
+		
+		page.inputs.remove(index)
+	}
+	
 	
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
