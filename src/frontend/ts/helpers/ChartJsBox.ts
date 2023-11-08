@@ -537,26 +537,25 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 		const data: DataPoint = []
 		if(inPercent) {
 			let sum = 0
-			for(; xMin <= xMax; ++xMin) {
-				sum += rawData[rawData[xMin]] ?? 0
+			for(let i=xMin; i <= xMax; ++i) {
+				sum += rawData[i] ?? 0
 			}
-			for(; xMin <= xMax; ++xMin) {
-				const value = rawData.hasOwnProperty(xMin) ? 100 / (sum / rawData[xMin]) : 0
-				
+			for(let i=xMin; i <= xMax; ++i) {
+				const value = rawData.hasOwnProperty(i) ? Math.round(100 / (sum / rawData[i])) : 0
 				data.push(this.forScatterPlot
 					? {x: xValue, y: value}
 					: value
 				)
-				this.labels.push(xMin.toString())
+				this.labels.push(i.toString())
 			}
 		}
 		else {
-			for(; xMin <= xMax; ++xMin) {
+			for(let i=xMin; i <= xMax; ++i) {
 				data.push(this.forScatterPlot
-					? {x: xValue, y: rawData[xMin]}
-					: rawData[xMin]
+					? {x: xValue, y: rawData[i]}
+					: rawData[i]
 				)
-				this.labels.push(xMin.toString())
+				this.labels.push(i.toString())
 			}
 		}
 		return data
@@ -610,7 +609,7 @@ class FreqDistrDataSetCreator extends DataSetCreator {
 		}
 		for(let i=0; i < labelsMax; ++i) {
 			const key = this.labels[i]
-			const value = rawData.hasOwnProperty(key) ? 100 / (sum / rawData[key]) : 0
+			const value = rawData.hasOwnProperty(key) ? Math.round(100 / (sum / rawData[key])) : 0
 			data.push(this.forScatterPlot ? {x: i, y: value} : value)
 		}
 		return data
