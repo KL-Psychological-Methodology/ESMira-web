@@ -55,6 +55,7 @@ class ChartComponent implements Component<ChartComponentOptions, any> {
 		const promise = vNode.attrs.promise
 		const chart = vNode.attrs.chart
 		if(chart != this.chart) {
+			this.chart = chart
 			this.drawGraph(chart, promise.get())
 			this.promiseObserverId?.removeObserver()
 			
