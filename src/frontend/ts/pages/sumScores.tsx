@@ -5,6 +5,7 @@ import {TitleRow} from "../widgets/TitleRow";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {Section} from "../site/Section";
 import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
+import {createUniqueName} from "../helpers/UniqueName";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -15,7 +16,11 @@ export class Content extends SectionContent {
 	}
 	
 	private addSumScore(questionnaire: Questionnaire): void {
-		questionnaire.sumScores.push({})
+		const name = createUniqueName(this.getStudyOrThrow())
+		if(!name)
+			return
+		questionnaire.sumScores.push({name: name})
+		this.newSection(`sumScoreEdit,qId:${questionnaire.internalId.get()},sumScoreI:${questionnaire.sumScores.get().length - 1}`)
 	}
 	private removeSumScore(questionnaire: Questionnaire, index: number): void {
 		questionnaire.sumScores.remove(index)
