@@ -172,9 +172,6 @@ export class Section {
 			return this.sectionContent?.getView()
 		}
 		catch(e: any) {
-			//Note: We need to be careful:
-			// LoaderView calls m.redraw(). It will cancel if the error message is the same.
-			// But if the error message is different every time, we would cause a death loop!
 			this.loader.error(e.message || e)
 			console.error(e)
 		}

@@ -145,8 +145,12 @@ export class LoaderState {
 	}
 	
 	public error(s: string, tryAgain?: () => void): void {
-		if(s == this.stateMsg) //if error() was called by a view, it could cause a death loop because showMessage() calls m.redraw()
+		if(this.isError) {
+			//if error() was called by a view, it could cause a death loop because showMessage() calls m.redraw()
+			if(s != this.stateMsg)
+				this.stateMsg = s //we will not call redraw because that would cause a death loop when two different errors are caused by views
 			return
+		}
 		this.isError = true
 		if(tryAgain) {
 			this.tryAgainCallback = tryAgain;
