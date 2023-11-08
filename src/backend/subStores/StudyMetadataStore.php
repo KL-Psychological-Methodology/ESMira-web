@@ -3,12 +3,13 @@
 namespace backend\subStores;
 
 use backend\exceptions\CriticalException;
+use stdClass;
 
 interface StudyMetadataStore {
 	/**
 	 * @throws CriticalException
 	 */
-	public function updateMetadata($study);
+	public function updateMetadata(stdClass $study);
 	/**
 	 * @throws CriticalException
 	 */
@@ -20,9 +21,13 @@ interface StudyMetadataStore {
 	/**
 	 * @throws CriticalException
 	 */
+	public function hasQuestionnaires(): bool;
+	/**
+	 * @throws CriticalException
+	 */
 	public function getAccessKeys(): array;
 	/**
 	 * @throws CriticalException
 	 */
-	public function getLastBackup(): int;
+	public function getTitle(): string;
 }

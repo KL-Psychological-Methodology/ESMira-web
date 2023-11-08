@@ -35,7 +35,6 @@ class StudyMetadataStoreFSTest extends BaseDataFolderTestSetup {
 		$this->assertEquals($version, $metadata->getVersion());
 		$this->assertTrue($metadata->isPublished());
 		$this->assertEquals($accessKeys, $metadata->getAccessKeys());
-		$this->assertGreaterThanOrEqual(time(), $metadata->getLastBackup());
 	}
 	
 	function test_metadata_for_non_existing_study() {

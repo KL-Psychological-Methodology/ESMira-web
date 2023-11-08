@@ -63,7 +63,6 @@ export class AddDropdownMenus {
 	public async addQuestionnaire(study: Study, target: Element): Promise<void> {
 		const loaderState = this.sectionContent.section.loader
 		const studyLoader = this.sectionContent.section.siteData.studyLoader
-		await this.sectionContent.section.getStrippedStudyListPromise()
 		await loaderState.showLoader(studyLoader.loadStrippedStudyList())
 		
 		openDropdown(
@@ -99,7 +98,8 @@ export class AddDropdownMenus {
 					if(study.questionnaires.get().length == 0)
 						return
 					const id = study.id.get()
-					return <li class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`} onclick={() => {
+					return <li class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`} onclick={ async () => {
+						await loaderState.showLoader(studyLoader.loadFullStudy(id)) //making sure, questionnaire titles have been loaded
 						openedStudies[id] = !openedStudies[id]
 					}}>
 						{study.title.get()}

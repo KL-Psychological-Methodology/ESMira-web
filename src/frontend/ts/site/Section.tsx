@@ -95,29 +95,30 @@ export class Section {
 	}
 	
 	private async getQuestionnairePromise(): Promise<Study> {
+		const studyLoader = this.siteData.studyLoader
 		const isLoggedIn = this.siteData.admin.isLoggedIn()
-		
-		let studies: StudiesDataType
-		if(isLoggedIn)
-			studies = await this.siteData.studyLoader.loadStrippedStudyList()
-		else {
-			const accessKey = this.siteData.dynamicValues.getOrCreateObs("accessKey", "").get()
-			studies = await this.siteData.studyLoader.loadAvailableStudies(accessKey)
-		}
-		
 		const qId = this.getStaticInt("qId")
 		if(qId == null)
 			throw new Error("Cannot load study. Missing id or qId")
 		
-		for(const studyId in studies.get()) {
-			const study = studies.getEntry(parseInt(studyId))!
+		if(isLoggedIn) {
+			const studyId = await studyLoader.getStudyIdFromQuestionnaireId(qId)
+			this.staticValues["id"] = studyId.toString()
+			return studyLoader.loadFullStudy(studyId)
+		}
+		
+		const accessKey = this.siteData.dynamicValues.getOrCreateObs("accessKey", "").get()
+		const studies = await studyLoader.loadAvailableStudies(accessKey)
+		
+		for(const currentStudyId in studies.get()) {
+			const study = studies.getEntry(parseInt(currentStudyId))!
 			const questionnaires = study.questionnaires.get()
 			
 			for(const questionnaire of questionnaires) {
 				if(questionnaire.internalId.get() == qId) {
-					const newId = study.id.get()
-					this.staticValues["id"] = newId.toString()
-					return isLoggedIn ? this.siteData.studyLoader.loadFullStudy(newId) : study
+					const studyId = study.id.get()
+					this.staticValues["id"] = studyId.toString()
+					return isLoggedIn ? studyLoader.loadFullStudy(studyId) : study
 				}
 			}
 		}

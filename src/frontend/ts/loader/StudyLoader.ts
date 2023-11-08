@@ -17,6 +17,7 @@ export type StudiesDataType = ObservableRecord<Study>
 
 export class StudyLoader {
 	private readonly studyCache = new ObservableRecord<Study>({}, "studies")
+	private readonly questionnaireRegister: Record<number, number> = {}
 	private readonly observerIds: Record<number, ObserverId> = {}
 	private readonly serverVersion: number
 	private readonly packageVersion: string
@@ -69,6 +70,10 @@ export class StudyLoader {
 					if(this.studyCache.exists(id))
 						this.studyCache.remove(id) //remove stripped study
 					this.studyCache.add(id, study)
+					
+					for(const questionnaire of study.questionnaires.get()) {
+						this.questionnaireRegister[questionnaire.internalId.get()] = id
+					}
 				}
 				catch(e: any) {
 					console.error(e.message || e)
@@ -89,7 +94,7 @@ export class StudyLoader {
 			const studyData: {
 				config: Record<string, any>,
 				languages: Record<string, any>
-			} = await Requests.loadJson(`${FILE_ADMIN}?type=full_study&study_id=${id}`)
+			} = await Requests.loadJson(`${FILE_ADMIN}?type=GetFullStudy&study_id=${id}`)
 			
 			const study = new Study(studyData.config, this.studyCache, lastChanged, this.repair)
 			for(const langCode in studyData.languages) {
@@ -115,7 +120,9 @@ export class StudyLoader {
 				}
 			}, this.observerIds[id])
 			
-			
+			for(const questionnaire of study.questionnaires.get()) {
+				this.questionnaireRegister[questionnaire.internalId.get()] = id
+			}
 			return study
 		})
 	}
@@ -127,6 +134,16 @@ export class StudyLoader {
 				return true
 		}
 		return false
+	}
+	
+	public async getStudyIdFromQuestionnaireId(qId: number): Promise<number> {
+		if(this.questionnaireRegister.hasOwnProperty(qId))
+			return this.questionnaireRegister[qId]
+		else {
+			const [studyId] = await Requests.loadJson(`${FILE_ADMIN}?type=GetStudyFromQuestionnaireId&qId=${qId}`)
+			this.questionnaireRegister[qId] = studyId
+			return studyId
+		}
 	}
 	
 	public getStudies(): StudiesDataType {

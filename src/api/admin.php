@@ -26,7 +26,8 @@ $classIndex = [
 	
 	//logged in:
 	'GetStrippedStudyList' => 'backend\admin\features\loggedIn\GetStrippedStudyList',
-	'full_study' => 'backend\admin\features\loggedIn\GetFullStudy',
+	'GetStudyFromQuestionnaireId' => 'backend\admin\features\loggedIn\GetStudyFromQuestionnaireId',
+	'GetFullStudy' => 'backend\admin\features\loggedIn\GetFullStudy',
 	'ChangePassword' => 'backend\admin\features\loggedIn\ChangePassword',
 	'ChangeAccountName' => 'backend\admin\features\loggedIn\ChangeAccountName',
 	'GetTokenList' => 'backend\admin\features\loggedIn\GetTokenList',
