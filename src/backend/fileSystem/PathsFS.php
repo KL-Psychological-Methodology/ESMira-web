@@ -178,6 +178,9 @@ class PathsFS {
 	static function fileStudyMetadata(int $studyId): string {
 		return self::folderStudies()."$studyId/.metadata";
 	}
+	static function fileStudyCreateMetadata(int $studyId): string {
+		return self::folderStudies()."$studyId/.create_metadata";
+	}
 	static function fileToken(string $accountName, string $hash): string {
 		return self::folderToken($accountName) .$hash;
 	}

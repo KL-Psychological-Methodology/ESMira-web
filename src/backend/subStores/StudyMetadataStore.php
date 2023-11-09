@@ -30,4 +30,8 @@ interface StudyMetadataStore {
 	 * @throws CriticalException
 	 */
 	public function getTitle(): string;
+	/**
+	 * @throws CriticalException
+	 */
+	public function getOwner(): string;
 }

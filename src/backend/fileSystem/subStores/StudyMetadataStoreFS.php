@@ -16,6 +16,10 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	 * @var array
 	 */
 	private $metadata = null;
+	/**
+	 * @var array
+	 */
+	private $createMetadata = null;
 	
 	/**
 	 * @var int
@@ -34,6 +38,18 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 		
 		$this->metadata = unserialize(file_get_contents($metadataPath));
 	}
+	/**
+	 * @throws CriticalException
+	 */
+	private function loadCreateMetadata() {
+		if($this->createMetadata)
+			return;
+		$path = PathsFS::fileStudyCreateMetadata($this->studyId);
+		if(!file_exists($path))
+			throw new CriticalException('Study does not exist');
+		
+		$this->createMetadata = unserialize(file_get_contents($path));
+	}
 	
 	public function __construct(int $studyId) {
 		$this->studyId = $studyId;
@@ -49,6 +65,15 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 			'lastSavedBy' => Permission::getAccountName()
 		];
 		FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($this->studyId), serialize($this->metadata));
+		
+		$path = PathsFS::fileStudyCreateMetadata($this->studyId);
+		if(!file_exists($path)) {
+			$this->createMetadata = [
+				'timestamp' => time(),
+				'owner' => Permission::getAccountName()
+			];
+			FileSystemBasics::writeFile($path, serialize($this->createMetadata));
+		}
 	}
 	
 	public function getVersion(): int {
@@ -74,5 +99,10 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	public function getTitle(): string {
 		$this->loadMetadata();
 		return $this->metadata['title'] ?? 'Error';
+	}
+	
+	public function getOwner(): string {
+		$this->loadCreateMetadata();
+		return $this->createMetadata['owner'] ?? 'undefined';
 	}
 }
