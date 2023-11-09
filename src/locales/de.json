@@ -557,5 +557,6 @@
     "esmira_instances": "ESMira-Instanzen",
     "main_publication": "Haupt-Publikation",
     "download_source_for_publication": "Fügen Sie den Studien-Quelltext zu Ihrer Publikation hinzu, damit andere Ihre Studie replizieren können",
-    "disk_space": "Speicherplatz"
+    "disk_space": "Speicherplatz",
+    "all_user": "Alle User"
 }

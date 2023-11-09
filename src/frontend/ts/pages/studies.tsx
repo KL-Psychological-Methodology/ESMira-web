@@ -48,8 +48,8 @@ export class Content extends SectionContent {
 		return this.titleString
 	}
 	
-	protected updateSortedStudies(studiesObs: StudiesDataType): void {
-		const studies = this.section.siteData.studyLoader.getSortedStudyList(Object.values(studiesObs.get()))
+	protected updateSortedStudies(unsortedStudies: Study[]): void {
+		const studies = this.section.siteData.studyLoader.getSortedStudyList(unsortedStudies)
 		switch(this.section.sectionValue) {
 			case "statistics":
 				this.studies = studies.filter((study) => study.publicStatistics.charts.get().length != 0)
@@ -76,7 +76,7 @@ export class Content extends SectionContent {
 		try {
 			const studiesObs = await this.section.loader.showLoader(this.section.siteData.studyLoader.loadAvailableStudies(this.accessKey.get(), true))
 			this.section.loader.closeLoader() //this will not be run if there is an error
-			this.updateSortedStudies(studiesObs)
+			this.updateSortedStudies(Object.values(studiesObs.get()))
 		}
 		catch(e) {
 			this.studies = []

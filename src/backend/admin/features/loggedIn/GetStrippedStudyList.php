@@ -19,7 +19,8 @@ class GetStrippedStudyList extends IsLoggedIn {
 			'published' => $studyMetadataStore->isPublished(),
 			'questionnaires' => $studyMetadataStore->hasQuestionnaires() ? [[]] : [],
 			'title' => $studyMetadataStore->getTitle(),
-			'accessKeys' => $studyMetadataStore->getAccessKeys()
+			'accessKeys' => $studyMetadataStore->getAccessKeys(),
+			'owner' => $studyMetadataStore->getOwner()
 		];
 	}
 	

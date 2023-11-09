@@ -22,6 +22,7 @@ export class StudyLoader {
 	private readonly serverVersion: number
 	private readonly packageVersion: string
 	private readonly repair: RepairStudy
+	public readonly ownerRegister: Record<string, Study[]> = {}
 	
 	constructor(serverVersion: number, packageVersion: string) {
 		this.serverVersion = serverVersion
@@ -38,11 +39,17 @@ export class StudyLoader {
 			PromiseCache.remove("availableStudies")
 			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_ADMIN}?type=GetStrippedStudyList`)
 			
-			for(let studyData of studiesJson) {
+			for(const studyData of studiesJson) {
 				const id = studyData["id"]
 				const study = new Study(studyData, this.studyCache, Math.round(Date.now() / 1000), null)
 				if(!this.studyCache.exists(id))
 					this.studyCache.add(id, study)
+				if(study.owner != null) {
+					if(!this.ownerRegister.hasOwnProperty(study.owner))
+						this.ownerRegister[study.owner] = [study]
+					else
+						this.ownerRegister[study.owner].push(study)
+				}
 			}
 			
 			return this.studyCache

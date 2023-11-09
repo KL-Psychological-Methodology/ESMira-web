@@ -11,4 +11,5 @@ export interface DynamicValues {
 	questionnaireIndex: number
 	pageIndex: number,
 	joinTimestamp: number,
+	owner: string,
 }

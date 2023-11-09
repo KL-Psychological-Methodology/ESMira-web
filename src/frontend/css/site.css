@@ -141,7 +141,6 @@ sectionsView
 	justify-content: space-between;
 	align-items: center;
 	background-color: #e6f9ff;
-	color: #dc4e9d;
 	border-top: 1px solid #9FE0F7;
 	border-bottom: 1px solid #9FE0F7;
 	box-shadow: 0 3px 3px #0002;
@@ -162,8 +161,6 @@ sectionsView
 	position: relative;
 	height: 25px;
 	padding: 10px 10px 10px 5px;
-	font-size: 16pt;
-	font-weight: bold;
 	white-space: nowrap;
 	overflow: hidden;
 }
@@ -178,6 +175,9 @@ sectionsView
 	margin-right: 20px;
 	cursor: pointer;
 	flex: 0 100 auto;
+	font-size: 16pt;
+	font-weight: bold;
+	color: #dc4e9d;
 }
 #sectionsView > .section .sectionTitle > .extra {
 	max-height: 25px;
@@ -188,7 +188,6 @@ sectionsView
 }
 
 #sectionsView > .section .sectionTitle > .extra input {
-	color: #dc4e9d !important;
 	max-height: 25px;
 	padding: 0;
 }

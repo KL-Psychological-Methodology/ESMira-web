@@ -8,6 +8,7 @@ import messageSvg from "../../imgs/icons/message.svg?raw";
 import {StudiesDataType} from "../loader/StudyLoader";
 import {Content as StudiesContent} from "../pages/studies";
 import {SectionAlternative} from "../site/SectionContent";
+import {BindObservable} from "../widgets/BindObservable";
 
 export class Content extends StudiesContent {
 	protected targetPage: string
@@ -15,10 +16,12 @@ export class Content extends StudiesContent {
 	
 	private readonly selectedTab: ObservablePrimitive<number>
 	private readonly selectedAccessKeyTab: ObservablePrimitive<number>
+	private readonly selectedOwner: ObservablePrimitive<string>
 	
+	private readonly ownerRegister: Record<string, Study[]>
 	private accessKeysTabs: TabContent[] = []
 	protected studies: Study[] = []
-	private readonly destroyImpl2: (() => void)
+	private readonly destroyImpl: (() => void)
 	
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
@@ -28,6 +31,8 @@ export class Content extends StudiesContent {
 	
 	constructor(section: Section, studiesObs: StudiesDataType) {
 		super(section)
+		this.ownerRegister = section.siteData.studyLoader.ownerRegister
+		this.selectedOwner = section.siteData.dynamicValues.getOrCreateObs("owner", "~")
 		this.selectedAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("accessKeyIndex", 0)
 		
 		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
@@ -49,20 +54,22 @@ export class Content extends StudiesContent {
 				break
 		}
 		
-		this.updateSortedStudies(studiesObs)
 		this.initAccessKeyIndex(studiesObs)
 		
+		this.selectedOwner.addObserver(() => {
+			this.selectedAccessKeyTab.set(0)
+			this.initAccessKeyIndex(studiesObs)
+		})
 		const messagesObserverId = this.getTools().messagesLoader.studiesWithNewMessagesCount?.addObserver(() => {
 			m.redraw()
 		})
 		const studyObserverId = studiesObs.addObserver((_origin, bubbled) => {
 			if(!bubbled) {
 				this.initAccessKeyIndex(studiesObs)
-				this.updateSortedStudies(studiesObs)
 			}
 		})
 		
-		this.destroyImpl2 = () => {
+		this.destroyImpl = () => {
 			messagesObserverId.removeObserver()
 			studyObserverId.removeObserver()
 		}
@@ -71,6 +78,21 @@ export class Content extends StudiesContent {
 		return Promise.resolve()
 	}
 	
+	public titleExtra(): Vnode<any, any> | null {
+		const ownerList = Object.keys(this.ownerRegister)
+		if(ownerList.length > 1) {
+			return <div>
+				<select class="ownerSelector" {...BindObservable(this.selectedOwner)}>
+					<option value="~">{Lang.get("all_user")}</option>
+					{ownerList.map((name) =>
+						<option>{name}</option>
+					)}
+				</select>
+			</div>
+		}
+		else
+			return null
+	}
 	
 	public hasAlternatives(): boolean {
 		return true
@@ -89,8 +111,8 @@ export class Content extends StudiesContent {
 		})
 	}
 	
-	protected updateSortedStudies(studiesObs: StudiesDataType): void {
-		const studies = this.section.siteData.studyLoader.getSortedStudyList(Object.values(studiesObs.get()))
+	protected updateSortedStudies(unsortedStudies: Study[]): void {
+		const studies = this.section.siteData.studyLoader.getSortedStudyList(unsortedStudies)
 		switch(this.section.sectionValue) {
 			case "data":
 				this.studies = studies.filter((study) => this.hasPermission("read", study.id.get()))
@@ -145,7 +167,7 @@ export class Content extends StudiesContent {
 		}
 	}
 	private initAccessKeyIndex(studiesObs: StudiesDataType): void {
-		this.updateSortedStudies(studiesObs)
+		this.updateSortedStudies(this.selectedOwner.get() == "all" ? Object.values(studiesObs.get()) : this.ownerRegister[this.selectedOwner.get()])
 		
 		const accessKeyTabs: TabContent[] = [{
 			title: Lang.get("all"),
@@ -277,6 +299,6 @@ export class Content extends StudiesContent {
 	
 	public destroy(): void {
 		super.destroy()
-		this.destroyImpl2()
+		this.destroyImpl()
 	}
 }
