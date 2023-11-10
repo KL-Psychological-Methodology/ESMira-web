@@ -21,7 +21,7 @@ foreach($studies as $studyId) {
 		'accessKeys' => $study->accessKeys ?? [],
 		'lastSavedBy' => Permission::getAccountName()
 	];
-	FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($this->studyId), serialize($metadata));
+	FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($studyId), serialize($metadata));
 
 	$createMetadata = [
 		'timestamp' => time(),
