@@ -163,6 +163,8 @@ class DoUpdate extends HasAdminPermission {
 			if(!@copy($this->folderPathBackup . Paths::SUB_PATH_CONFIG, Paths::FILE_CONFIG))
 				throw $this->revertUpdate('Could not restore settings. Reverting...');
 			FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
+			if(function_exists('opcache_reset')) //for servers using Zend bytecode cache
+				opcache_reset();
 		}
 		catch(Throwable $e) {
 			throw $this->revertUpdate($e->getMessage());

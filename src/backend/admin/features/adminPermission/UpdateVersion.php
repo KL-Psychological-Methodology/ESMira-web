@@ -67,6 +67,8 @@ class UpdateVersion extends DoUpdate {
 		
 		$this->fromVersion = $_GET['fromVersion'];
 		try {
+			if(function_exists('opcache_reset')) //for servers using Zend bytecode cache
+				opcache_reset();
 			$this->runUpdateScript();
 		}
 		catch(Throwable $e) {
