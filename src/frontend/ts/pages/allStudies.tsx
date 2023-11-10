@@ -85,7 +85,7 @@ export class Content extends StudiesContent {
 				<select class="ownerSelector" {...BindObservable(this.selectedOwner)}>
 					<option value="~">{Lang.get("all_user")}</option>
 					{ownerList.map((name) =>
-						<option>{name}</option>
+						<option value={name}>{name} ({this.ownerRegister[name].length})</option>
 					)}
 				</select>
 			</div>
