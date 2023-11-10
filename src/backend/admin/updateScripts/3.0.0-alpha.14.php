@@ -22,12 +22,16 @@ foreach($studies as $studyId) {
 		'lastSavedBy' => Permission::getAccountName()
 	];
 	FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($studyId), serialize($metadata));
-
-	$createMetadata = [
-		'timestamp' => time(),
-		'owner' => Permission::getAccountName()
-	];
-	FileSystemBasics::writeFile(PathsFS::folderStudies()."$studyId/.create_metadata", serialize($createMetadata));
+	
+	
+	$createPath = PathsFS::folderStudies()."$studyId/.create_metadata";
+	if(!file_exists($createPath)) {
+		$createMetadata = [
+			'timestamp' => time(),
+			'owner' => Permission::getAccountName()
+		];
+		FileSystemBasics::writeFile($createPath, serialize($createMetadata));
+	}
 	
 	//Cannot use this:
 //	$studyMetadataStore = Configs::getDataStore()->getStudyMetadataStore($studyId);
