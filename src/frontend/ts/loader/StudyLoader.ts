@@ -15,7 +15,7 @@ import {createUniqueName} from "../helpers/UniqueName";
 
 export type StudiesDataType = ObservableRecord<Study>
 
-interface StudyMetadata {
+export interface StudyMetadata {
 	owner: string
 	lastSavedBy: string,
 	createdTimestamp: number
@@ -195,6 +195,12 @@ export class StudyLoader {
 		this.studyCache.add(id, study)
 		PromiseCache.save(`study${id}`, Promise.resolve(study))
 		study.setDifferent(true)
+		
+		this.studyMetadata[id] = {
+			owner: "",
+			createdTimestamp: Math.round(Date.now() / 1000),
+			lastSavedBy: ""
+		}
 		return id
 	}
 	

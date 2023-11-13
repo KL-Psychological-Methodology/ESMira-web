@@ -11,6 +11,7 @@ import {Section} from "../site/Section";
 import {BtnTrash} from "../widgets/BtnWidgets";
 import {DashRow} from "../widgets/DashRow";
 import { DashElement } from "../widgets/DashElement";
+import {StudyMetadata} from "../loader/StudyLoader";
 
 export class Content extends SectionContent {
 	private isFrozen: boolean = false
@@ -49,7 +50,7 @@ export class Content extends SectionContent {
 	
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
-		const studyMetadata = this.section.siteData.studyLoader.studyMetadata[study.id.get()]
+		const studyMetadata: StudyMetadata | null = this.section.siteData.studyLoader.studyMetadata[study.id.get()]
 		const uploadSettings = study.eventUploadSettings
 		return <div>
 			{DashRow(
@@ -69,7 +70,7 @@ export class Content extends SectionContent {
 									<td>{Lang.getWithColon("creation_date")}</td>
 									{studyMetadata && <td>{new Date(studyMetadata.createdTimestamp * 1000).toLocaleString()}</td>}
 								</tr>
-								{studyMetadata.owner != studyMetadata.lastSavedBy && <tr>
+								{studyMetadata && studyMetadata.owner != studyMetadata.lastSavedBy && <tr>
 									<td>{Lang.getWithColon("last_saved_by")}</td>
 									{studyMetadata && <td>{studyMetadata.lastSavedBy}</td>}
 								</tr>}
