@@ -18,7 +18,7 @@ export class Content extends StudiesContent {
 	private readonly selectedAccessKeyTab: ObservablePrimitive<number>
 	private readonly selectedOwner: ObservablePrimitive<string>
 	
-	private readonly ownerRegister: Record<string, Study[]>
+	private readonly ownerRegister: Record<string, number[]>
 	private accessKeysTabs: TabContent[] = []
 	protected studies: Study[] = []
 	private readonly destroyImpl: (() => void)
@@ -128,7 +128,17 @@ export class Content extends StudiesContent {
 				break
 		}
 	}
-	
+	private getStudies(studiesObs: StudiesDataType): Study[] {
+		if(this.selectedOwner.get() == "~")
+			return Object.values(studiesObs.get())
+		else {
+			const studies: Study[] = []
+			for(const studyId of this.ownerRegister[this.selectedOwner.get()]) {
+				studies.push(studiesObs.get()[studyId])
+			}
+			return studies
+		}
+	}
 	private createAccessKeyIndex(): Record<string, Study[]> {
 		const accessKeyIndex: Record<string, Study[]> = {}
 		for(const id in this.studies) {
@@ -167,14 +177,14 @@ export class Content extends StudiesContent {
 		}
 	}
 	private initAccessKeyIndex(studiesObs: StudiesDataType): void {
-		this.updateSortedStudies(this.selectedOwner.get() == "all" ? Object.values(studiesObs.get()) : this.ownerRegister[this.selectedOwner.get()])
+		this.updateSortedStudies(this.getStudies(studiesObs))
 		
 		const accessKeyTabs: TabContent[] = [{
 			title: Lang.get("all"),
 			highlight: true,
-			view: () => this.getStudyListView(this.studies.filter((study) => {
-				return study.published.get() && study.accessKeys.get().length
-			}))
+			view: () => this.getStudyListView(this.studies.filter((study) =>
+				study.published.get() && study.accessKeys.get().length
+			))
 		}]
 		
 		//create an index to count number of studies using each accessKey:

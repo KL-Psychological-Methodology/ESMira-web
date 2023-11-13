@@ -526,7 +526,7 @@
     "visible_after": "Sichtbar nach",
     "minimal_number_of_entries_required": "Mindestens notwendige Einträge",
     "validate_reward_code": "Überprüfe Belohnungscode",
-    "creation_date": "Erzeugungsdatum",
+    "creation_date": "Erstellungsdatum",
     "code_does_not_exist": "Code existiert nicht",
     "entries_at_creation_time": "Einträge zum Generierungszeitpunkt",
     "email_content": "E-Mail-Inhalt",
@@ -558,5 +558,7 @@
     "main_publication": "Haupt-Publikation",
     "download_source_for_publication": "Fügen Sie den Studien-Quelltext zu Ihrer Publikation hinzu, damit andere Ihre Studie replizieren können",
     "disk_space": "Speicherplatz",
-    "all_user": "Alle User"
+    "all_user": "Alle User",
+    "created_by": "Erstellt von",
+    "last_saved_by": "Zuletzt gespeichert von"
 }

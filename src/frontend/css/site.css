@@ -14,6 +14,7 @@ Site elements
 	position: absolute;
 	left: 50%;
 	margin-top: -15px;
+	margin-left: -40px;
 	word-break: keep-all;
 	color: #2b98ca;
 	font-weight: bold;
@@ -90,10 +91,13 @@ sectionsView
 	margin: auto auto 2%;
 	top: 90px;
 	bottom: 0;
-	min-height: 100px;
+	min-height: 200px;
 	overflow: visible;
 	transition: transform 0.3s;
 	white-space: nowrap;
+}
+.smallScreen #sectionsView {
+	top: 70px;
 }
 
 #sectionsView > .section {
@@ -103,7 +107,7 @@ sectionsView
 	flex-direction: column;
 	width: 98%;
 	height: 98%;
-	min-height:100px;
+	min-height: 200px;
 	max-height: 100%;
 	margin-left: 1%;
 	margin-right: 1%;

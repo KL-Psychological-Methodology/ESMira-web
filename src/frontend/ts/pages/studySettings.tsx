@@ -49,15 +49,31 @@ export class Content extends SectionContent {
 	
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
+		const studyMetadata = this.section.siteData.studyLoader.studyMetadata[study.id.get()]
 		const uploadSettings = study.eventUploadSettings
 		return <div>
 			{DashRow(
 				DashElement("stretched", {
 					content:
 						<div class="center">
-							<span>{Lang.getWithColon("study_version")}</span>
-							&nbsp;
-							<span>{`${study.version.get()}.${study.subVersion.get()}`}</span>
+							<table class="studyInfoTable">
+								<tr>
+									<td>{Lang.getWithColon("study_version")}</td>
+									<td>{`${study.version.get()}.${study.subVersion.get()}`}</td>
+								</tr>
+								<tr>
+									<td>{Lang.getWithColon("created_by")}</td>
+									{studyMetadata && <td>{studyMetadata.owner}</td>}
+								</tr>
+								<tr>
+									<td>{Lang.getWithColon("creation_date")}</td>
+									{studyMetadata && <td>{new Date(studyMetadata.createdTimestamp * 1000).toLocaleString()}</td>}
+								</tr>
+								{studyMetadata.owner != studyMetadata.lastSavedBy && <tr>
+									<td>{Lang.getWithColon("last_saved_by")}</td>
+									{studyMetadata && <td>{studyMetadata.lastSavedBy}</td>}
+								</tr>}
+							</table>
 						</div>
 				}),
 				DashElement(null, {

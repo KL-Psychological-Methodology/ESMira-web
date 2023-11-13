@@ -100,9 +100,17 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 		$this->loadMetadata();
 		return $this->metadata['title'] ?? 'Error';
 	}
+	public function getLastSavedBy(): string {
+		$this->loadMetadata();
+		return $this->metadata['lastSavedBy'] ?? 'undefined';
+	}
 	
 	public function getOwner(): string {
 		$this->loadCreateMetadata();
 		return $this->createMetadata['owner'] ?? 'undefined';
+	}
+	public function getCreatedTimestamp(): string {
+		$this->loadCreateMetadata();
+		return $this->createMetadata['timestamp'] ?? '0';
 	}
 }

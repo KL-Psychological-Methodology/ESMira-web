@@ -15,6 +15,12 @@ import {createUniqueName} from "../helpers/UniqueName";
 
 export type StudiesDataType = ObservableRecord<Study>
 
+interface StudyMetadata {
+	owner: string
+	lastSavedBy: string,
+	createdTimestamp: number
+}
+
 export class StudyLoader {
 	private readonly studyCache = new ObservableRecord<Study>({}, "studies")
 	private readonly questionnaireRegister: Record<number, number> = {}
@@ -22,7 +28,8 @@ export class StudyLoader {
 	private readonly serverVersion: number
 	private readonly packageVersion: string
 	private readonly repair: RepairStudy
-	public readonly ownerRegister: Record<string, Study[]> = {}
+	public readonly ownerRegister: Record<string, number[]> = {}
+	public readonly studyMetadata: Record<number, StudyMetadata> = {}
 	
 	constructor(serverVersion: number, packageVersion: string) {
 		this.serverVersion = serverVersion
@@ -40,15 +47,21 @@ export class StudyLoader {
 			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_ADMIN}?type=GetStrippedStudyList`)
 			
 			for(const studyData of studiesJson) {
-				const id = studyData["id"]
+				const id: number = studyData["id"]
 				const study = new Study(studyData, this.studyCache, Math.round(Date.now() / 1000), null)
+				const owner = studyData.hasOwnProperty("owner") ? studyData["owner"].toString() : null
 				if(!this.studyCache.exists(id))
 					this.studyCache.add(id, study)
-				if(study.owner != null) {
-					if(!this.ownerRegister.hasOwnProperty(study.owner))
-						this.ownerRegister[study.owner] = [study]
+				if(owner != null) {
+					this.studyMetadata[id] = {
+						owner: owner,
+						lastSavedBy: studyData["lastSavedBy"] ?? "",
+						createdTimestamp: studyData.hasOwnProperty("createdTimestamp") ? parseInt(studyData["createdTimestamp"]) : 0
+					}
+					if(!this.ownerRegister.hasOwnProperty(owner))
+						this.ownerRegister[owner] = [id]
 					else
-						this.ownerRegister[study.owner].push(study)
+						this.ownerRegister[owner].push(id)
 				}
 			}
 			

@@ -11,7 +11,6 @@ import {Lang} from "../../singletons/Lang";
 
 export class Study extends TranslatableObject implements TranslationRootInterface {
 	public lastChanged: number
-	public owner: string | null
 	
 	public id										= this.primitive<number>(		"id",										0)
 	public version									= this.primitive<number>(		"version",									0)
@@ -60,7 +59,6 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 		
 		super(data, parent, data["id"] as string ?? "-1", defaultLang)
 		this.lastChanged = lastChanged
-		this.owner = data.hasOwnProperty("owner") ? data["owner"].toString() : null
 	}
 	
 	public updateKeyName(_keyName: string, parent?: BaseObservable<ObservableTypes>) {
