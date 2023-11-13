@@ -66,13 +66,9 @@ export class AddDropdownMenus {
 						showAsClickable: true
 					}),
 					(close) => {
-						const study = new Study({title: "Unnamed"}, null, 0, null)
 						return <div class="content">
 							{m(JsonSourceComponent, {
-								getStudy: () => study,
 								setJson: (json: TranslatableObjectDataType) => {
-									if(JSON.stringify(json) == JSON.stringify(study.createJson()))
-										return
 									addStudy(json)
 									close()
 								},

@@ -7,7 +7,7 @@ import {JsonTypes} from "../observable/types/JsonTypes";
 import {Lang} from "../singletons/Lang";
 
 interface JsonSourceComponentOptions {
-	getStudy: () => Study
+	getStudy?: () => Study
 	setJson: (json: TranslatableObjectDataType) => void
 	showMainMenuBar?: boolean
 	mode?: Mode
@@ -24,8 +24,12 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 	private getJson(): JsonTypes {
 		if(!this.getStudy)
 			return {}
-		const r = this.getStudy().createJson()
-		return r ?? {}
+		return this.getStudy().createJson()
+	}
+	private getJsonContent(): JSONContent | TextContent {
+		if(this.getStudy)
+			return {json: this.getStudy().createJson()}
+		return {text: ""}
 	}
 	
 	public oncreate(vNode: VnodeDOM<JsonSourceComponentOptions, any>): void {
@@ -37,7 +41,7 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 			{
 				target: vNode.dom,
 				props: {
-					content: {json: this.getJson()},
+					content: this.getJsonContent(),
 					mode: vNode.attrs.mode ?? Mode.tree,
 					mainMenuBar: vNode.attrs.showMainMenuBar ?? true,
 					onChange: () => {
@@ -53,9 +57,11 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 				
 			})
 		
-		this.studyObserveId = this.getStudy().addObserver(() => {
-			this.editor?.set({json: this.getJson()})
-		})
+		if(this.getStudy) {
+			this.studyObserveId = this.getStudy().addObserver(() => {
+				this.editor?.set(this.getJsonContent())
+			})
+		}
 	}
 	
 	public onremove(): void {
@@ -63,7 +69,7 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 	}
 	
 	private clickApply(): void {
-		if(!this.setJson || !this.getStudy)
+		if(!this.setJson)
 			return
 		let json
 		try {
@@ -73,7 +79,8 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 			console.error(e)
 			return
 		}
-		json.id = this.getStudy().id.get()
+		if(this.getStudy)
+			json.id = this.getStudy().id.get()
 		this.setJson(json)
 		this.hasChanged = false
 	}
