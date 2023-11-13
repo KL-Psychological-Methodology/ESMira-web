@@ -133,6 +133,8 @@
     "delete": "Löschen",
     "delete_study": "Studie löschen",
     "delivered_x_times": "%d mal versendet",
+    "desc_schedule_planned": "Wenn die Aktion eines Zeitplanes im Smartphone auf eine bestimmte Zeit gesetzt worden ist.",
+    "desc_schedule_removed": "Wenn ein bereits festgelegter Zeitplan entfernt wurde (ist meist gefolgt von einem neuen \"schedule_planned\" event)",
     "desc_actions_executed": "Wenn die Aktionen des Triggers ausgeführt wurden (Wird nur unter iOS ausgelöst).",
     "desc_invitation": "Wenn eine Benachrichtigung, die zu einem Fragebogen einlädt, erzeugt wurde (Wird nur unter Android ausgelöst).",
     "desc_invitation_missed": "Wenn eine Einladung zu einem Fragebogen verpasst wurde.",

@@ -133,6 +133,8 @@
     "delete": "Delete",
     "delete_study": "Delete study",
     "delivered_x_times": "sent %d times",
+    "desc_schedule_planned": "When the smartphone was set to execute the action of a schedule at a specific time",
+    "desc_schedule_removed": "When an already defined schedule was removed (is usually followed by a new \"schedule_planned\" event)",
     "desc_actions_executed": "When the actions of a trigger are executed (Only fired on iOS).",
     "desc_invitation": "When a notification, that leads to a questionnaire, was created (only fired on Android).",
     "desc_invitation_missed": "When an invitation to a questionnaire was missed.",

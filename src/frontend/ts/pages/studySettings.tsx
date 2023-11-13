@@ -181,6 +181,16 @@ export class Content extends SectionContent {
 						<small>{Lang.get("desc_reminder")}</small>
 				</label>
 				<label class="noTitle vertical">
+					<input type="checkbox" checked="checked" {... BindObservable(uploadSettings.schedule_planned)}/>
+					<span>schedule_planned</span>
+					<small>{Lang.get("desc_schedule_planned")}</small>
+				</label>
+				<label class="noTitle vertical">
+					<input type="checkbox" checked="checked" {... BindObservable(uploadSettings.schedule_removed)}/>
+					<span>schedule_removed</span>
+					<small>{Lang.get("desc_schedule_removed")}</small>
+				</label>
+				<label class="noTitle vertical">
 					<input type="checkbox" {... BindObservable(uploadSettings.schedule_changed)}/>
 						<span>schedule_changed</span>
 						<small>{Lang.get("desc_schedule_changed")}</small>
