@@ -562,5 +562,6 @@
     "disk_space": "Speicherplatz",
     "all_user": "Alle User",
     "created_by": "Erstellt von",
-    "last_saved_by": "Zuletzt gespeichert von"
+    "last_saved_by": "Zuletzt gespeichert von",
+    "from_study_source": "Von Studien-Quelltext"
 }

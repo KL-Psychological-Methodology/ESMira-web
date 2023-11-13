@@ -8,6 +8,10 @@ import editSvg from "../../imgs/icons/change.svg?raw"
 import copySvg from "../../imgs/icons/copy.svg?raw"
 import {SectionContent} from "../site/SectionContent";
 import {Study} from "../data/study/Study";
+import {BtnOk} from "../widgets/BtnWidgets";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {JsonSourceComponent} from "./JsonSourceComponent";
+import {Mode} from "vanilla-jsoneditor";
 
 export class AddDropdownMenus {
 	private sectionContent: SectionContent
@@ -33,7 +37,7 @@ export class AddDropdownMenus {
 						this.sectionContent.newSection(`allStudies:edit/studyEdit,id:${id}`)
 				}),
 			{
-				connectedDropdowns: ["studyList"]
+				connectedDropdowns: ["studyList", "newSource"]
 			}
 		)
 	}
@@ -42,7 +46,7 @@ export class AddDropdownMenus {
 		const loaderState = this.sectionContent.section.loader
 		const studyLoader = this.sectionContent.section.siteData.studyLoader
 		
-		return <div style="min-width: 500px">
+		return <div class="content">
 			{DashRow(
 				this.newButton(Lang.get("empty_study"), Lang.get("prompt_studyName"),
 					(title) => addStudy({ title: title })
@@ -55,6 +59,29 @@ export class AddDropdownMenus {
 							addStudy(fullStudy.createJson())
 						}
 					}>{study.title.get()}</li>
+				),
+				DropdownMenu("newSource",
+					DashElement("stretched", {
+						template: { title: Lang.get("from_study_source") },
+						showAsClickable: true
+					}),
+					(close) => {
+						const study = new Study({title: "Unnamed"}, null, 0, null)
+						return <div class="content">
+							{m(JsonSourceComponent, {
+								getStudy: () => study,
+								setJson: (json: TranslatableObjectDataType) => {
+									if(JSON.stringify(json) == JSON.stringify(study.createJson()))
+										return
+									addStudy(json)
+									close()
+								},
+								showMainMenuBar: false,
+								mode: Mode.text,
+								saveBtnLabel: Lang.get("create")
+							})}
+						</div>
+					}
 				)
 			)}
 		</div>
@@ -89,7 +116,7 @@ export class AddDropdownMenus {
 		const studyLoader = this.sectionContent.section.siteData.studyLoader
 		const openedStudies: Record<number, boolean> = {}
 		
-		return <div style="min-width: 500px">
+		return <div class="content">
 			{DashRow(
 				this.newButton(Lang.get("empty_questionnaire"), Lang.get("prompt_newQuestionnaire"),
 					(title) => addSQuestionnaire({ title: title, pages: [{}]})
@@ -145,7 +172,7 @@ export class AddDropdownMenus {
 				template: { title: title, icon: m.trust(copySvg) },
 				showAsClickable: true
 			}),
-			(close) => <ul style="min-width: 300px">
+			(close) => <ul class="content">
 				<h2>{Lang.get("select_a_study")}</h2>
 				{ this.sectionContent.section.siteData.studyLoader.getSortedStudyList()
 					.filter((study) =>
