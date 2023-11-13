@@ -18,6 +18,7 @@ export class Content extends ServerStatisticsContent {
 	
 	private readonly lastActivitiesList: { id: number, timestamp: number }[]
 	private readonly usedSpaceList: { id: number, fileSize: number }[]
+	private readonly totalUsedSpace: number
 	
 	
 	public static preLoad(section: Section): Promise<any>[] {
@@ -44,14 +45,17 @@ export class Content extends ServerStatisticsContent {
 		
 		//usedSpace:
 		const usedSpaceList: { id: number, fileSize: number }[] = []
+		let totalUsedSpace = 0
 		for(const studyId in usedSpace) {
-			usedSpaceList.push({id: parseInt(studyId), fileSize: usedSpace[studyId]})
+			const fileSize = usedSpace[studyId]
+			totalUsedSpace += fileSize
+			usedSpaceList.push({id: parseInt(studyId), fileSize: fileSize})
 		}
 		usedSpaceList.sort(function(a, b) {
 			return b.fileSize - a.fileSize
 		})
 		this.usedSpaceList = usedSpaceList
-		
+		this.totalUsedSpace = totalUsedSpace
 		
 		this.setAppVersionChartAndPromise(serverStatistics)
 	}
@@ -130,8 +134,14 @@ export class Content extends ServerStatisticsContent {
 			},
 			{
 				title: Lang.get("disk_space"),
-				view: () => <table style="width: 100%">
-					{this.usedSpaceList.map((entry) => {
+				view: () => {
+					return <table style="width: 100%">
+						<tr class="highlight">
+							<td>{Lang.getWithColon("total")}</td>
+							<td>{this.getReadableByteSize(this.totalUsedSpace)}</td>
+						</tr>
+						<tr><td colspan="2"><hr/></td></tr>
+						{this.usedSpaceList.map((entry) => {
 							const study = studies.getEntry(entry.id)
 							return <tr>
 								<td class={study?.published.get() ? "" : "unPublishedStudy"}>
@@ -139,9 +149,9 @@ export class Content extends ServerStatisticsContent {
 								</td>
 								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{this.getReadableByteSize(entry.fileSize)}</td>
 							</tr>
-						}
-					)}
-				</table>
+						})}
+					</table>
+				}
 			},
 		])
 	}
