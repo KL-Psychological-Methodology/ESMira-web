@@ -82,7 +82,7 @@ class QuestionnaireSaver {
 		$this->participant = $_POST['participant'];
 		if(isset($_POST['new_participant'])) {
 			try {
-				$this->saveDataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, false, 'Web-NoJs');
+				$this->saveDataset(CreateDataSet::DATASET_TYPE_JOINED, $this->participant, false);
 			}
 			catch(CriticalException $e) {
 				$this->errorMsg = $e->getMessage();

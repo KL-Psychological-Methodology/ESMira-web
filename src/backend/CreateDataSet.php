@@ -408,7 +408,7 @@ class CreateDataSet {
 						$statistics->incrementIos($newUserCount);
 						break;
 					case 'Web':
-					case 'Web-NOJS':
+					case 'Web-NoJs':
 						$statistics->incrementWeb($newUserCount);
 						break;
 					default:
