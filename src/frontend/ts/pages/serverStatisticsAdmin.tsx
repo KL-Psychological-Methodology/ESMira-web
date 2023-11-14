@@ -135,9 +135,14 @@ export class Content extends ServerStatisticsContent {
 			{
 				title: Lang.get("disk_space"),
 				view: () => {
+					const tools = this.section.getTools()
 					return <table style="width: 100%">
 						<tr class="highlight">
-							<td>{Lang.getWithColon("total")}</td>
+							<td>{Lang.getWithColon("disk_space")}</td>
+							<td>{this.getReadableByteSize(tools.totalDiskSpace - tools.freeDiskSpace)} / {this.getReadableByteSize(tools.totalDiskSpace)}</td>
+						</tr>
+						<tr class="highlight">
+							<td>{Lang.getWithColon("studies")}</td>
 							<td>{this.getReadableByteSize(this.totalUsedSpace)}</td>
 						</tr>
 						<tr><td colspan="2"><hr/></td></tr>
@@ -145,7 +150,7 @@ export class Content extends ServerStatisticsContent {
 							const study = studies.getEntry(entry.id)
 							return <tr>
 								<td class={study?.published.get() ? "" : "unPublishedStudy"}>
-									<a href={this.getUrl(`dataStatistics,id:${entry.id}`)}>{study?.title.get()}</a>
+									<a href={this.getUrl(`dataStatistics,id:${entry.id}`)}>{Lang.get("colon", study?.title.get() ?? "Error")}</a>
 								</td>
 								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{this.getReadableByteSize(entry.fileSize)}</td>
 							</tr>

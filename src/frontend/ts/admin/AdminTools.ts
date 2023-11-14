@@ -12,27 +12,31 @@ export class AdminTools implements AdminToolsInterface {
 	public readonly messagesLoader: MessagesLoader
 	public hasErrors: boolean = false
 	
-	public isAdmin = false
-	public canCreate = false
-	public permissions: AccountPermissions
+	public readonly isAdmin: boolean = false
+	public readonly canCreate: boolean = false
+	public readonly permissions: AccountPermissions
 	public accountName: string = ""
-	private loginTime: number = -1
+	public readonly freeDiskSpace: number
+	public readonly totalDiskSpace: number
 	
 	constructor(data: LoginDataInterface) {
 		this.hasErrors = data.hasErrors
 		this.messagesLoader = new MessagesLoader(data)
 		
-		this.loginTime = data.loginTime
 		this.accountName = data.accountName
 		this.canCreate = data.canCreate
 		
 		if(data.isAdmin) {
 			this.isAdmin = true
 			this.permissions = {publish: [], msg: [], read: [], write: []}
+			this.freeDiskSpace = data.freeDiskSpace
+			this.totalDiskSpace = data.totalDiskSpace
 		}
 		else {
 			this.isAdmin = false
 			this.permissions = data.permissions
+			this.freeDiskSpace = 0
+			this.totalDiskSpace = 0
 		}
 	}
 	

@@ -12,6 +12,8 @@ export interface AdminToolsInterface {
 	isAdmin: boolean
 	canCreate: boolean
 	permissions: AccountPermissions
+	freeDiskSpace: number
+	totalDiskSpace: number
 	
 	hasPermission(name: keyof AccountPermissions, studyId: number): boolean
 }

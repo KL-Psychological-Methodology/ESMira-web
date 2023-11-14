@@ -9,4 +9,6 @@ export interface LoginDataInterface {
 	isAdmin: boolean
 	canCreate: boolean
 	hasErrors: boolean
+	totalDiskSpace: number
+	freeDiskSpace: number
 }
