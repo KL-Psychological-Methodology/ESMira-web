@@ -17,7 +17,8 @@ class GetServerConfig extends HasAdminPermission {
 			$translationData[$code] = [
 				'serverName' => $serverName[$code] ?? '',
 				'impressum' => $serverStore->getImpressum($code),
-				'privacyPolicy' => $serverStore->getPrivacyPolicy($code)
+				'privacyPolicy' => $serverStore->getPrivacyPolicy($code),
+				'homeMessage' => $serverStore->getHomeMessage($code)
 			];
 		}
 		return [

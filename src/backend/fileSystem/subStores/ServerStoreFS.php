@@ -50,4 +50,23 @@ class ServerStoreFS implements ServerStore {
 	public function getMediaFolderPath(int $studyId): string {
 		return PathsFS::folderMedia($studyId);
 	}
+	
+	public function getHomeMessage(string $langCode): string {
+		$path = PathsFS::fileLangHomeMessage($langCode);
+		return file_exists($path)
+			? file_get_contents($path)
+			: '';
+	}
+	public function saveHomeMessage(string $homeMessage, string $langCode) {
+		$path = PathsFS::fileLangHomeMessage($langCode);
+		FileSystemBasics::writeFile($path, $homeMessage);
+	}
+	
+	public function deleteHomeMessage(string $langCode) {
+		$path = PathsFS::fileLangHomeMessage($langCode);
+		if(!file_exists($path))
+			return;
+		if(!unlink($path))
+			throw new CriticalException("Could not delete $path");
+	}
 }

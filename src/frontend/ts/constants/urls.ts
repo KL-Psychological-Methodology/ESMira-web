@@ -11,7 +11,7 @@ export const FILE_MEDIA = FILE_ADMIN+"?type=CreateMediaZip&study_id=%1"
 export const FILE_IMAGE = FILE_ADMIN+"?type=GetMedia&study_id=%1&userId=%2&entryId=%3&key=%4&media_type=image"
 export const FILE_AUDIO = FILE_ADMIN+"?type=GetMedia&study_id=%1&userId=%2&entryId=%3&key=%4&media_type=audio"
 export const FILE_SAVE_ACCESS = 'api/access.php'
-export const FILE_LEGAL = 'api/legal.php'
+export const FILE_SETTINGS = 'api/settings.php'
 export const FILE_APP_INSTALL_INSTRUCTIONS = 'api/app_install_instructions.php?id=%d1&access_key=%s1&lang=%s2'
 export const FILE_GET_QUESTIONNAIRE = 'api/questionnaire.php?id=%d1&qid=%d2&access_key=%s1&lang=%s2&%s3'
 export const FILE_SERVER_STATISTICS = 'api/server_statistics.php'

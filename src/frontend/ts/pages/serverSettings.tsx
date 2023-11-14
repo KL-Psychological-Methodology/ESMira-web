@@ -152,6 +152,10 @@ export class Content extends SectionContent {
 				view: this.getGeneralView.bind(this)
 			},
 			{
+				title: Lang.get("home_message"),
+				view: this.getHomeMessageView.bind(this)
+			},
+			{
 				title: Lang.get("impressum"),
 				view: this.getImpressumView.bind(this)
 			},
@@ -223,6 +227,15 @@ export class Content extends SectionContent {
 				</div>
 			}
 			
+		</div>
+	}
+	private getHomeMessageView(): Vnode<any, any> {
+		const settings = this.loader.getSettings()
+		return <div>
+			<div class="line fakeLabel spacingBottom">
+				{RichText(settings.siteTranslations.homeMessage)}
+				{ObservableLangChooser(settings)}
+			</div>
 		</div>
 	}
 	private getImpressumView(): Vnode<any, any> {

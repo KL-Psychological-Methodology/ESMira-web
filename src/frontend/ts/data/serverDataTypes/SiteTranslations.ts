@@ -6,6 +6,7 @@ export class SiteTranslations extends TranslatableObject {
 	public serverName = this.translatable("serverName", "")
 	public impressum = this.translatable("impressum", "")
 	public privacyPolicy = this.translatable("privacyPolicy", "")
+	public homeMessage = this.translatable("homeMessage", "")
 	
 	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
 		const defaultLang = newLang ?? (parent as TranslatableObject)?.currentLangCode.get() ?? "en"

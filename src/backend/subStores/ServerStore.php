@@ -15,6 +15,7 @@ interface ServerStore {
 	 */
 	public function deleteImpressum(string $langCode);
 	
+	
 	public function getPrivacyPolicy(string $langCode): string;
 	/**
 	 * @throws CriticalException
@@ -24,6 +25,17 @@ interface ServerStore {
 	 * @throws CriticalException
 	 */
 	public function deletePrivacyPolicy(string $langCode);
+	
+	
+	public function getHomeMessage(string $langCode): string;
+	/**
+	 * @throws CriticalException
+	 */
+	public function saveHomeMessage(string $homeMessage, string $langCode);
+	/**
+	 * @throws CriticalException
+	 */
+	public function deleteHomeMessage(string $langCode);
 	
 	public function getMediaFolderPath(int $studyId): string;
 }

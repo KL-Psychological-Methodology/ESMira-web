@@ -108,6 +108,9 @@ class PathsFS {
 	static function fileLangPrivacyPolicy(string $code): string {
 		return $code === '_' ? self::folderLegal().'privacy_policy.html' : self::folderLegal(). "privacy_policy.$code.html";
 	}
+	static function fileLangHomeMessage(string $code): string {
+		return $code === '_' ? self::folderLegal().'home_message.html' : self::folderLegal(). "home_message.$code.html";
+	}
 	static function fileLock(int $studyId): string {
 		return self::folderStudies()."$studyId/.locked";
 	}

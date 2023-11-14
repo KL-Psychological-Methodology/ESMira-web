@@ -50,6 +50,12 @@ class SaveServerConfigs extends HasAdminPermission {
 				$serverStore->savePrivacyPolicy($privacyPolicy, $code);
 			else
 				$serverStore->deletePrivacyPolicy($code);
+			
+			$homeMessage = urldecode($obj['homeMessage'] ?? '');
+			if(strlen($homeMessage))
+				$serverStore->saveHomeMessage($homeMessage, $code);
+			else
+				$serverStore->deleteHomeMessage($code);
 		}
 		
 		$settingsCollection['serverName'] = $serverNames;

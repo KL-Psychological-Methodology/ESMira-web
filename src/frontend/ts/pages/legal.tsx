@@ -14,7 +14,7 @@ import ktorPng from "../../imgs/libFavicons/ktor.png"
 import markwonIco from "../../imgs/libFavicons/markwon.ico"
 import {Section} from "../site/Section";
 import {PromiseCache} from "../singletons/PromiseCache";
-import {FILE_LEGAL} from "../constants/urls";
+import {FILE_SETTINGS} from "../constants/urls";
 import {Requests} from "../singletons/Requests";
 import {TabBar} from "../widgets/TabBar";
 import {TitleRow} from "../widgets/TitleRow";
@@ -28,8 +28,8 @@ export class Content extends SectionContent {
 	
 	public static preLoad(_section: Section): Promise<any>[] {
 		return [
-			PromiseCache.get(FILE_LEGAL, () => {
-				return Requests.loadJson(FILE_LEGAL)
+			PromiseCache.get("legal", () => {
+				return Requests.loadJson(FILE_SETTINGS + "?type=legal")
 			})
 		]
 	}
