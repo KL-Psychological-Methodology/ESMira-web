@@ -9,7 +9,7 @@ export interface RequestType {
 export const Requests = {
 	loadRaw(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<string> {
 		return new Promise<XMLHttpRequest>((resolve) => {
-			let r = new XMLHttpRequest()
+			const r = new XMLHttpRequest()
 			if(!r)
 				throw new Error(Lang.get("error_create_request_failed"))
 			
@@ -32,13 +32,14 @@ export const Requests = {
 		})
 	},
 	loadJson(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<any> {
-		return this.loadRaw(url, type, requestData).then((response) => {
-			let obj = JSON.parse(response)
-			
-			if(obj.success)
-				return obj.dataset
-			else
-				throw Lang.get("error_from_server", obj.error || response)
-		})
+		return this.loadRaw(url, type, requestData)
+			.then((response) => {
+				const obj = JSON.parse(response)
+				
+				if(obj.success)
+					return obj.dataset
+				else
+					throw Lang.get("error_from_server", obj.error || response)
+			})
 	}
 }
