@@ -16,6 +16,7 @@ import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import {TitleRow} from "../widgets/TitleRow";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 
+const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
  * This section needs to be the very first section to make sure that {@link Admin.tools} is loaded
  * {@link Site.constructor()} check for "admin" in the url hash
@@ -39,8 +40,15 @@ export class Content extends SectionContent {
 		return <div>
 			{
 				DashRow(
-					tools.permissions.write
-					&& DashElement(null,
+					tools.freeDiskSpace < MINIMAL_DISK_SPACE &&
+					DashElement("stretched", {
+						highlight: true,
+						small: true,
+						content: <div class="highlight">{Lang.get("info_low_disk_space", Math.round(tools.freeDiskSpace / 1000 / 1000))}</div>
+					}),
+					
+					tools.permissions.write &&
+					DashElement(null,
 						{
 							template: { title: Lang.get("edit_studies"), icon: m.trust(editSvg) },
 							href: this.getUrl("allStudies:edit")

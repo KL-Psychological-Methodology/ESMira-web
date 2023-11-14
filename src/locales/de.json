@@ -563,5 +563,6 @@
     "all_user": "Alle User",
     "created_by": "Erstellt von",
     "last_saved_by": "Zuletzt gespeichert von",
-    "from_study_source": "Von Studien-Quelltext"
+    "from_study_source": "Von Studien-Quelltext",
+    "info_low_disk_space": "ESMira hat nur mehr %d Mb Speicherplatz verfügbar!"
 }

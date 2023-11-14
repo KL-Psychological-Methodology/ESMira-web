@@ -15,6 +15,7 @@
 
 .dashRow .dashEl.highlight {
 	background: #ffdfea;
+	border-color: #dc4e9d;
 }
 
 .dashRow > .multipleChildren.vertical {
