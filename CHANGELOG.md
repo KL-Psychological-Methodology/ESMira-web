@@ -1,3 +1,9 @@
+Be aware that when the page reloads after the update finished, the page will show the following error: "**Cannot find module './settings.tsx'**".
+
+**This error is expected and harmless.**
+
+The settings page was renamed which means the page you have currently opened, will not exist anymore after the update.
+
 ### 🚀 Added
 - **Added "publications" view that be accessed from the public website.**
 - **New Calendar view for previewing questionnaire runtimes and scheduled events.**
@@ -14,6 +20,7 @@
 - Added the option to only show studies by specific users
   - Be aware that this feature relies on data (creator of a study) that was not saved prior to this update. As a workaround, all existing studies (at the time of updating ESMira) will have the user, which updated ESMira, saved as their creator. 
 - Added the events "schedule_planned" and "schedule_removed".
+- Add the option to create a welcome message that is shown on the front page.
 
 
 ### ✏️ Changed
