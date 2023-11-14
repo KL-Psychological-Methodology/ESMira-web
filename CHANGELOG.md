@@ -9,9 +9,12 @@
 - Added copy buttons to pages, items, charts.
 - Added quick access buttons to message view, to quickly filter for participants data.
 - Added drop down menus to navigation bar.
-- Added used disk space overview in server statistics (for admins)
+- Added used disk space overview in server statistics (for admins).
+- Added a warning when disk space is running low.
 - Added the option to only show studies by specific users
   - Be aware that this feature relies on data (creator of a study) that was not saved prior to this update. As a workaround, all existing studies (at the time of updating ESMira) will have the user, which updated ESMira, saved as their creator. 
+- Added the events "schedule_planned" and "schedule_removed".
+
 
 ### ✏️ Changed
 - **Complete rewrite of all frontend components and migration to TypeScript.**
