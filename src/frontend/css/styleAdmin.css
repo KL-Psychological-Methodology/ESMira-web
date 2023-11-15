@@ -433,6 +433,10 @@ source
 .source .applyBtn:hover {
 	color: #ff8fce;
 }
+label.jse-hidden-input-label {
+	padding: unset;
+	min-height: unset;
+}
 
 /*
 Workarounds for version 0.18.12

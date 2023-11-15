@@ -203,7 +203,7 @@ Label
 **********/
 
 
-label:not([for]):not(.jse-hidden-input-label), .fakeLabel {
+label:not([for]), .fakeLabel {
 	display: inline-block;
 	padding: 12px 1px;
 	vertical-align: top;
