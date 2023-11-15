@@ -40,7 +40,7 @@ export class Content extends SectionContent {
 		return <div>
 			{
 				DashRow(
-					tools.freeDiskSpace < MINIMAL_DISK_SPACE &&
+					tools.isAdmin && tools.freeDiskSpace < MINIMAL_DISK_SPACE &&
 					DashElement("stretched", {
 						highlight: true,
 						small: true,
