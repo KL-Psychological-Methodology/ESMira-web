@@ -8,10 +8,10 @@ class PackageVersionComparatorImpl {
 	private readonly regExpData: RegExpMatchArray | null
 	
 	constructor(oldPackage: string) {
-		this.regExpData = oldPackage.match(regExp)
+		this.regExpData = oldPackage ? oldPackage.match(regExp) : null
 	}
 	
-	isBelowThen(newPackage: string): boolean {
+	public isBelowThen(newPackage: string): boolean {
 		if(this.saved.hasOwnProperty(newPackage))
 			return this.saved[newPackage]
 		

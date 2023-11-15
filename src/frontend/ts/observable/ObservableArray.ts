@@ -14,7 +14,7 @@ export class ObservableArray<
 	private readonly constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes>, key: string) => ObsT
 	private backingField: ObsT[]
 	private readonly defaultField: ObsT[]
-
+	
 	constructor(
 		defaultFields: InputT[],
 		parent: BaseObservable<ObservableTypes> | null,
@@ -27,14 +27,16 @@ export class ObservableArray<
 		this.backingField = values
 		this.defaultField = defaultObsValues
 		this.constructObservable = constructObservable
-
+		
 		defaultFields.forEach((value, index) => {
+			if(value == null) //happens when value has the wrong type (source was faulty)
+				return
 			const obs = constructObservable(value, this, index.toString())
 			values.push(obs)
 			defaultObsValues.push(obs)
 		})
 	}
-
+	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
 		return this.backingField.map((obs) => { return obs.createJson(options)})
 	}
@@ -82,7 +84,7 @@ export class ObservableArray<
 		super.updateKeyName(keyName, parent)
 		this.backingField.forEach((obs) => obs.updateKeyName())
 	}
-
+	
 	public addCopy(original: ObsT, index: number = this.backingField.length): ObsT {
 		const jsonObj = original.createJson()
 		const newObs = this.constructObservable(jsonObj as InputT, this, index.toString())

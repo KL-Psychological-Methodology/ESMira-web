@@ -15,7 +15,7 @@ export class TranslatablePrimitive<T extends PrimitiveType> extends BaseTranslat
 	constructor(value: T | LanguageData<T>, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
 		super(parent, key, newLang)
 		
-		if(typeof value == "object") {
+		if(value != null && typeof value == "object") {  // value will be null when it has the wrong type (source was faulty)
 			for(let langCode in value) {
 				this.observables[langCode] = new ObservablePrimitive<T>(value[langCode], this.parent, this.keyName)
 				++this.langCount
