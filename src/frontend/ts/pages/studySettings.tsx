@@ -193,23 +193,23 @@ export class Content extends SectionContent {
 				</label>
 				<label class="noTitle vertical">
 					<input type="checkbox" {... BindObservable(uploadSettings.schedule_changed)}/>
-						<span>schedule_changed</span>
-						<small>{Lang.get("desc_schedule_changed")}</small>
+					<span>schedule_changed</span>
+					<small>{Lang.get("desc_schedule_changed")}</small>
 				</label>
 				<label class="noTitle vertical">
 					<input type="checkbox" {... BindObservable(uploadSettings.statistic_viewed)}/>
-						<span>statistic_viewed</span>
-						<small>{Lang.get("desc_statistic_viewed")}</small>
+					<span>statistic_viewed</span>
+					<small>{Lang.get("desc_statistic_viewed")}</small>
 				</label>
 				<label class="noTitle vertical">
 					<input type="checkbox" {... BindObservable(uploadSettings.study_message)}/>
-						<span>study_message</span>
-						<small>{Lang.get("desc_study_message")}</small>
+					<span>study_message</span>
+					<small>{Lang.get("desc_study_message")}</small>
 				</label>
 				<label class="noTitle vertical">
 					<input type="checkbox" {... BindObservable(uploadSettings.study_updated)}/>
-						<span>study_updated</span>
-						<small>{Lang.get("desc_study_updated")}</small>
+					<span>study_updated</span>
+					<small>{Lang.get("desc_study_updated")}</small>
 				</label>
 			</div>
 			

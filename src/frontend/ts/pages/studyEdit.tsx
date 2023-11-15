@@ -19,7 +19,7 @@ import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
 import {ObserverId} from "../observable/BaseObservable";
 import {Section} from "../site/Section";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
-import {UrlAlternatives} from "../helpers/UrlAlternatives";
+import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
 
 export class Content extends SectionContent {
 	private readonly studyObserverId: ObserverId
@@ -49,7 +49,7 @@ export class Content extends SectionContent {
 	}
 	
 	public title(): string {
-		return Lang.get("edit_studies")
+		return Lang.get("edit_x", this.getStudyOrThrow().title.get())
 	}
 	public titleExtra(): Vnode<any, any> | null {
 		const study = this.getStudyOrThrow()
@@ -62,7 +62,7 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] {
-		return UrlAlternatives.studyAlternatives(this, "edit")
+		return SharedUrlAlternatives.studyAlternatives(this, "edit")
 	}
 	
 	private updateSaveState(): void {

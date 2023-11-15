@@ -1,13 +1,14 @@
 import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import {Lang} from "../singletons/Lang";
 
-export class UrlAlternatives {
+export class SharedUrlAlternatives {
 	public static studyAlternatives(sectionContent: SectionContent, indexName: "edit" | "msgs" | "data"): SectionAlternative[] {
-		const studyId = sectionContent.getStudyOrThrow().id.get()
+		const study = sectionContent.getStudyOrThrow()
+		const studyId = study.id.get()
 		const depth = sectionContent.section.depth - 1
 		return [
 			{
-				title: Lang.get("edit_studies"),
+				title: Lang.get("edit_x", study.title.get()),
 				target: indexName != "edit" &&
 					sectionContent
 						.getUrl(`studyEdit,id:${studyId}`, depth)

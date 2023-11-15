@@ -158,14 +158,14 @@ export class Content extends SectionContent {
 			)}
 			
 			
-			<label class="vertical">
-				<span>{Lang.getWithColon("permissions_admin")}</span>
+			<label class="vertical noTitle noDesc">
 				<input type="checkbox" {... BindObservable(account.admin)}/>
+				<span>{Lang.get("permissions_admin")}</span>
 			</label>
 			{!account.admin.get() &&
-				<label class="vertical">
-					<span>{Lang.getWithColon("permissions_create")}</span>
+				<label class="vertical noTitle noDesc">
 					<input type="checkbox" {...BindObservable(account.create)}/>
+					<span>{Lang.get("permissions_create")}</span>
 				</label>
 			}
 			
@@ -186,15 +186,17 @@ export class Content extends SectionContent {
 					? m.trust("&#10004;")
 					: <div>
 						<div class="listChild">
-							{ permission.get().map((obs) =>
-									<div>
-										{BtnTrash(this.removePermission.bind(this, account, permissionName, obs.get()))}
-										<span>{this.getStudyOrNull(obs.get())?.title.get() ?? `${Lang.get('unknown')} (${obs.get()})`}</span>
-									</div>
-								)
-							}
+							{ permission.get().map((obs) => {
+								const studyId = obs.get()
+								return <div>
+									{BtnTrash(this.removePermission.bind(this, account, permissionName, studyId))}
+									<a class="middle" href={this.getUrl(`studyEdit,id:${studyId}`)}>{this.getStudyOrNull(studyId)?.title.get() ?? `${Lang.get('unknown')} (${studyId})`}</a>
+								</div>
+							})}
 							
 						</div>
+						<br/>
+						<br/>
 						<div>
 							{DropdownMenu(
 								"addPermission",

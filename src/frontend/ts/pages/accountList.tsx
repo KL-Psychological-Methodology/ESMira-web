@@ -53,7 +53,7 @@ export class Content extends SectionContent {
 						<tr>
 							<td class="accountName">
 								{BtnTrash(this.deleteAccount.bind(this, account, index))}
-								<span>{account.accountName.get()}</span>
+								<a href={this.getUrl(`accountView,accountI:${index}`)}>{account.accountName.get()}</a>
 							</td>
 							<td>
 								{account.admin.get() &&

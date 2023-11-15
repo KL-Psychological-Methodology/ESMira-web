@@ -11,7 +11,7 @@ import webAccessSvg from "../../imgs/devices/web.svg?raw"
 import publicStatisticsSvg from "../../imgs/dashIcons/publicStatistics.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import {Section} from "../site/Section";
-import {UrlAlternatives} from "../helpers/UrlAlternatives";
+import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -25,7 +25,7 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] | null {
-		return UrlAlternatives.studyAlternatives(this, "data")
+		return SharedUrlAlternatives.studyAlternatives(this, "data")
 	}
 	
 	public getView(): Vnode<any, any> {

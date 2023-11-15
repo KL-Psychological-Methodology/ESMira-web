@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Section} from "../site/Section";
 import {TitleRow} from "../widgets/TitleRow";
-import {UrlAlternatives} from "../helpers/UrlAlternatives";
+import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
 import {BtnReload} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
@@ -26,7 +26,7 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] | null {
-		return UrlAlternatives.studyAlternatives(this, "msgs")
+		return SharedUrlAlternatives.studyAlternatives(this, "msgs")
 	}
 	
 	public getView(): Vnode<any, any> {
