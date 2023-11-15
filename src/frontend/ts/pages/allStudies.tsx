@@ -15,11 +15,13 @@ export class Content extends StudiesContent {
 	protected titleString: string
 	
 	private readonly selectedTab: ObservablePrimitive<number>
-	private readonly selectedAccessKeyTab: ObservablePrimitive<number>
+	private readonly selectedPublicAccessKeyTab: ObservablePrimitive<number>
+	private readonly selectedDisabledAccessKeyTab: ObservablePrimitive<number>
 	private readonly selectedOwner: ObservablePrimitive<string>
 	
 	private readonly ownerRegister: Record<string, number[]>
-	private accessKeysTabs: TabContent[] = []
+	private publicAccessKeysTabs: TabContent[] = []
+	private disabledAccessKeysTabs: TabContent[] = []
 	protected studies: Study[] = []
 	private readonly destroyImpl: (() => void)
 	
@@ -33,7 +35,8 @@ export class Content extends StudiesContent {
 		super(section)
 		this.ownerRegister = section.siteData.studyLoader.ownerRegister
 		this.selectedOwner = section.siteData.dynamicValues.getOrCreateObs("owner", "~")
-		this.selectedAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("accessKeyIndex", 0)
+		this.selectedPublicAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("publicAccessKeyIndex", 0)
+		this.selectedDisabledAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("disabledAccessKeyIndex", 0)
 		
 		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
 		switch(section.sectionValue) {
@@ -54,18 +57,21 @@ export class Content extends StudiesContent {
 				break
 		}
 		
-		this.initAccessKeyIndex(studiesObs)
+		this.updateSortedStudies(this.getStudiesFromObservable(studiesObs))
+		this.createAccessKeyTabLists()
 		
 		this.selectedOwner.addObserver(() => {
-			this.selectedAccessKeyTab.set(0)
-			this.initAccessKeyIndex(studiesObs)
+			this.selectedPublicAccessKeyTab.set(0)
+			this.updateSortedStudies(this.getStudiesFromObservable(studiesObs))
+			this.createAccessKeyTabLists()
 		})
 		const messagesObserverId = this.getTools().messagesLoader.studiesWithNewMessagesCount?.addObserver(() => {
 			m.redraw()
 		})
 		const studyObserverId = studiesObs.addObserver((_origin, bubbled) => {
 			if(!bubbled) {
-				this.initAccessKeyIndex(studiesObs)
+				this.updateSortedStudies(this.getStudiesFromObservable(studiesObs))
+				this.createAccessKeyTabLists()
 			}
 		})
 		
@@ -128,7 +134,7 @@ export class Content extends StudiesContent {
 				break
 		}
 	}
-	private getStudies(studiesObs: StudiesDataType): Study[] {
+	private getStudiesFromObservable(studiesObs: StudiesDataType): Study[] {
 		if(this.selectedOwner.get() == "~")
 			return Object.values(studiesObs.get())
 		else {
@@ -139,11 +145,12 @@ export class Content extends StudiesContent {
 			return studies
 		}
 	}
-	private createAccessKeyIndex(): Record<string, Study[]> {
+	
+	private getStudiesPerAccessKey(published: boolean): Record<string, Study[]> {
 		const accessKeyIndex: Record<string, Study[]> = {}
 		for(const id in this.studies) {
 			const study = this.studies[id];
-			if(!study.published.get())
+			if(study.published.get() != published)
 				continue
 			
 			let studyAccessKeys = study.accessKeys.get();
@@ -157,13 +164,11 @@ export class Content extends StudiesContent {
 		}
 		return accessKeyIndex
 	}
-	
-	private createAccessKeyTab(title: string, accessKey: string): TabContent {
+	private getAccessKeyTab(title: string, studies: Study[], highlight: boolean = false): TabContent {
 		return {
+			highlight: highlight,
 			title: title,
-			view: () => this.getStudyListView(this.studies.filter((study) => {
-				return study.accessKeys.indexOf(accessKey) != -1
-			}))
+			view: () => this.getStudyListView(studies)
 		}
 	}
 	private getAccessKeyTitle(indexedAccessKeys: string[]): string {
@@ -176,46 +181,44 @@ export class Content extends StudiesContent {
 				return `${indexedAccessKeys[0]} ... ${indexedAccessKeys[indexedAccessKeys.length-1]}`
 		}
 	}
-	private initAccessKeyIndex(studiesObs: StudiesDataType): void {
-		this.updateSortedStudies(this.getStudies(studiesObs))
-		
-		const accessKeyTabs: TabContent[] = [{
-			title: Lang.get("all"),
-			highlight: true,
-			view: () => this.getStudyListView(this.studies.filter((study) =>
-				study.published.get() && study.accessKeys.get().length
-			))
-		}]
+	private getAccessKeyTabList(published: boolean): TabContent[] {
+		const accessKeyTabs: TabContent[] = [this.getAccessKeyTab(
+			Lang.get("all"),
+			this.studies.filter((study) =>
+				study.published.get() == published && study.accessKeys.get().length
+			),
+			true
+		)]
 		
 		//create an index to count number of studies using each accessKey:
-		const accessKeyIndex = this.createAccessKeyIndex()
+		const studiesPerAccessKey = this.getStudiesPerAccessKey(published)
 		
 		
 		//For accessKey's with a single study:
 		// Create an index to count how many accessKeys this study is using
 		//For accessKey's for multiple studies:
 		// Add them to the array
-		const studyAccessKeyIndex: Record<number, string[]> = {}
-		for(const accessKey in accessKeyIndex) {
-			const indexedStudies = accessKeyIndex[accessKey]
-			if(indexedStudies.length > 1) {
-				accessKeyTabs.push(this.createAccessKeyTab(accessKey, accessKey))
-				continue
+		const exclusiveAccessKeysPerStudy: Record<number, string[]> = {}
+		for(const accessKey in studiesPerAccessKey) {
+			const indexedStudies = studiesPerAccessKey[accessKey]
+			if(indexedStudies.length > 1)
+				accessKeyTabs.push(this.getAccessKeyTab(accessKey, indexedStudies))
+			else {
+				//Note: Studies can have shared and exclusive accessKeys at the same time
+				const id = indexedStudies[0].id.get()
+				if(!exclusiveAccessKeysPerStudy.hasOwnProperty(id))
+					exclusiveAccessKeysPerStudy[id] = [accessKey]
+				else
+					exclusiveAccessKeysPerStudy[id].push(accessKey)
 			}
-			
-			const id = indexedStudies[0].id.get()
-			if(!studyAccessKeyIndex.hasOwnProperty(id))
-				studyAccessKeyIndex[id] = [accessKey]
-			else
-				studyAccessKeyIndex[id].push(accessKey)
 		}
 		
 		// Add remaining accessKey's to array but combine the ones leading to the same study:
-		for(const id in studyAccessKeyIndex) {
-			const indexedAccessKeys = studyAccessKeyIndex[id]
+		for(const id in exclusiveAccessKeysPerStudy) {
+			const indexedAccessKeys = exclusiveAccessKeysPerStudy[id]
 			
 			accessKeyTabs.push(
-				this.createAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys), indexedAccessKeys[0])
+				this.getAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys), [this.getStudyOrThrow(parseInt(id))])
 			)
 		}
 		accessKeyTabs.sort(function(a, b) {
@@ -228,7 +231,11 @@ export class Content extends StudiesContent {
 			else
 				return -1
 		})
-		this.accessKeysTabs = accessKeyTabs
+		return accessKeyTabs
+	}
+	private createAccessKeyTabLists(): void {
+		this.publicAccessKeysTabs = this.getAccessKeyTabList(true)
+		this.disabledAccessKeysTabs = this.getAccessKeyTabList(false)
 	}
 	
 	private getStudyListView(studies: Study[]): Vnode<any, any> {
@@ -292,18 +299,28 @@ export class Content extends StudiesContent {
 				title: Lang.get("hidden_studies"),
 				view: () => {
 					return TabBar(
-						this.selectedAccessKeyTab,
-						this.accessKeysTabs,
+						this.selectedPublicAccessKeyTab,
+						this.publicAccessKeysTabs,
 						true
 					)
 				}
 			},
 			{
 				title: Lang.get("disabled"),
-				view: () => this.getStudyListView(this.studies.filter((study) => {
-					return !study.published.get()
-				}))
-			}
+				view: () => {
+					return TabBar(
+						this.selectedDisabledAccessKeyTab,
+						this.disabledAccessKeysTabs,
+						true
+					)
+				}
+			},
+			// {
+			// 	title: Lang.get("disabled"),
+			// 	view: () => this.getStudyListView(this.studies.filter((study) => {
+			// 		return !study.published.get()
+			// 	}))
+			// }
 		])
 	}
 	

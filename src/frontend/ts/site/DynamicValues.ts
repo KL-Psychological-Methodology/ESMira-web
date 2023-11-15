@@ -6,7 +6,8 @@ export interface DynamicValues {
 	showSaveButton: boolean
 	showPublishButton: boolean
 	accessKey: string
-	accessKeyIndex: number
+	publicAccessKeyIndex: number
+	disabledAccessKeyIndex: number
 	studiesIndex: number
 	questionnaireIndex: number
 	pageIndex: number,
