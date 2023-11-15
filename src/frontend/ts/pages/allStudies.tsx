@@ -178,8 +178,14 @@ export class Content extends StudiesContent {
 			case 2:
 				return `${indexedAccessKeys[0]}, ${indexedAccessKeys[indexedAccessKeys.length-1]}`
 			default:
+				indexedAccessKeys.sort()
 				return `${indexedAccessKeys[0]} ... ${indexedAccessKeys[indexedAccessKeys.length-1]}`
 		}
+	}
+	private getStudyBundleKey(studies: Study[]): string {
+		const list = studies.map((study) => study.id.get())
+		list.sort((a, b) => (a - b))
+		return list.join(",")
 	}
 	private getAccessKeyTabList(published: boolean): TabContent[] {
 		const accessKeyTabs: TabContent[] = [this.getAccessKeyTab(
@@ -193,34 +199,54 @@ export class Content extends StudiesContent {
 		//create an index to count number of studies using each accessKey:
 		const studiesPerAccessKey = this.getStudiesPerAccessKey(published)
 		
+		//make sure each access key shows a different list of studies,
+		//If not, we combine them in [exclusiveAccessKeyAndStudyCombinations]
+		const exclusiveAccessKeyAndStudyCombinations: Record<string, {accessKeys: string[], studies: Study[]}> = {}
+		for(const accessKey in studiesPerAccessKey) {
+			const indexedStudies = studiesPerAccessKey[accessKey]
+			const key = this.getStudyBundleKey(indexedStudies)
+			if(!exclusiveAccessKeyAndStudyCombinations.hasOwnProperty(key))
+				exclusiveAccessKeyAndStudyCombinations[key] = {accessKeys: [accessKey], studies: indexedStudies}
+			else
+				exclusiveAccessKeyAndStudyCombinations[key].accessKeys.push(accessKey)
+		}
+		
+		//go through all combinations and create a tab (with according title)
+		for(const id in exclusiveAccessKeyAndStudyCombinations) {
+			const indexedAccessKeys = exclusiveAccessKeyAndStudyCombinations[id]
+			
+			accessKeyTabs.push(
+				this.getAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys.accessKeys), indexedAccessKeys.studies)
+			)
+		}
 		
 		//For accessKey's with a single study:
 		// Create an index to count how many accessKeys this study is using
 		//For accessKey's for multiple studies:
 		// Add them to the array
-		const exclusiveAccessKeysPerStudy: Record<number, string[]> = {}
-		for(const accessKey in studiesPerAccessKey) {
-			const indexedStudies = studiesPerAccessKey[accessKey]
-			if(indexedStudies.length > 1)
-				accessKeyTabs.push(this.getAccessKeyTab(accessKey, indexedStudies))
-			else {
-				//Note: Studies can have shared and exclusive accessKeys at the same time
-				const id = indexedStudies[0].id.get()
-				if(!exclusiveAccessKeysPerStudy.hasOwnProperty(id))
-					exclusiveAccessKeysPerStudy[id] = [accessKey]
-				else
-					exclusiveAccessKeysPerStudy[id].push(accessKey)
-			}
-		}
-		
-		// Add remaining accessKey's to array but combine the ones leading to the same study:
-		for(const id in exclusiveAccessKeysPerStudy) {
-			const indexedAccessKeys = exclusiveAccessKeysPerStudy[id]
-			
-			accessKeyTabs.push(
-				this.getAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys), [this.getStudyOrThrow(parseInt(id))])
-			)
-		}
+		// const exclusiveAccessKeysPerStudy: Record<number, string[]> = {}
+		// for(const accessKey in studiesPerAccessKey) {
+		// 	const indexedStudies = studiesPerAccessKey[accessKey]
+		// 	if(indexedStudies.length > 1)
+		// 		accessKeyTabs.push(this.getAccessKeyTab(accessKey, indexedStudies))
+		// 	else {
+		// 		//Note: Studies can have shared and exclusive accessKeys at the same time
+		// 		const id = indexedStudies[0].id.get()
+		// 		if(!exclusiveAccessKeysPerStudy.hasOwnProperty(id))
+		// 			exclusiveAccessKeysPerStudy[id] = [accessKey]
+		// 		else
+		// 			exclusiveAccessKeysPerStudy[id].push(accessKey)
+		// 	}
+		// }
+		//
+		// // Add remaining accessKey's to array but combine the ones leading to the same study:
+		// for(const id in exclusiveAccessKeysPerStudy) {
+		// 	const indexedAccessKeys = exclusiveAccessKeysPerStudy[id]
+		//
+		// 	accessKeyTabs.push(
+		// 		this.getAccessKeyTab(this.getAccessKeyTitle(indexedAccessKeys), [this.getStudyOrThrow(parseInt(id))])
+		// 	)
+		// }
 		accessKeyTabs.sort(function(a, b) {
 			if(a.highlight)
 				return -1
