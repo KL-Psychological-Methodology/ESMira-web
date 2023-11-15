@@ -54,7 +54,7 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 	
 	public add(key: number, value: T): void {
 		if(this.exists(key))
-			throw new Error(`${key} already exists!`)
+			delete this.backingField[key]
 		
 		this.backingField[key] = value
 		this.hasMutated(!this._isDifferent)

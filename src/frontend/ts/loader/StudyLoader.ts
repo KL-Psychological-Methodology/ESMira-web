@@ -87,8 +87,7 @@ export class StudyLoader {
 					const id = studyData["id"]
 					const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
 					filteredStudies[id] = study
-					if(this.studyCache.exists(id))
-						this.studyCache.remove(id) //remove stripped study
+					
 					this.studyCache.add(id, study)
 					
 					for(const questionnaire of study.questionnaires.get()) {
@@ -120,9 +119,6 @@ export class StudyLoader {
 			for(const langCode in studyData.languages) {
 				study.addLanguage(langCode, studyData.languages[langCode])
 			}
-			
-			if(this.studyCache.exists(id))
-				this.studyCache.remove(id) //remove stripped study
 			
 			this.studyCache.add(id, study)
 			
