@@ -567,5 +567,5 @@
     "from_study_source": "From study source code",
     "info_low_disk_space": "ESMira has less only %d Mb disk space left!",
     "home_message": "Front page message",
-    "edit_x": "Edit %s"
+    "edit_study": "Edit study"
 }

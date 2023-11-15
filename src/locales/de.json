@@ -566,5 +566,5 @@
     "from_study_source": "Von Studien-Quelltext",
     "info_low_disk_space": "ESMira hat nur mehr %d Mb Speicherplatz verfügbar!",
     "home_message": "Start-Seiten-Nachricht",
-    "edit_x": "%s bearbeiten"
+    "edit_study": "Studie bearbeiten"
 }

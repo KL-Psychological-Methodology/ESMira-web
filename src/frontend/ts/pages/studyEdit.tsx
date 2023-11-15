@@ -49,7 +49,7 @@ export class Content extends SectionContent {
 	}
 	
 	public title(): string {
-		return Lang.get("edit_x", this.getStudyOrThrow().title.get())
+		return Lang.get("edit_study")
 	}
 	public titleExtra(): Vnode<any, any> | null {
 		const study = this.getStudyOrThrow()

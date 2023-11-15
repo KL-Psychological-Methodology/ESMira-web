@@ -8,7 +8,7 @@ export class SharedUrlAlternatives {
 		const depth = sectionContent.section.depth - 1
 		return [
 			{
-				title: Lang.get("edit_x", study.title.get()),
+				title: Lang.get("edit_study"),
 				target: indexName != "edit" &&
 					sectionContent
 						.getUrl(`studyEdit,id:${studyId}`, depth)
