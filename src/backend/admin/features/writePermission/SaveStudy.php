@@ -199,23 +199,29 @@ class SaveStudy extends HasWritePermission {
 	 * @throws PageFlowException
 	 */
 	private function updateStudyIndex() {
-		if(!isset($this->mainStudy->accessKeys) || !count($this->mainStudy->accessKeys))
+		if(!isset($this->mainStudy->accessKeys) || !count($this->mainStudy->accessKeys)) {
 			$this->studyAccessIndexStore->add($this->studyId);
-		else {
-			foreach($this->mainStudy->accessKeys as $key => $value) {
-				$value = strtolower($value);
-				foreach($this->studyCollection as $langStudy) {
-					$langStudy->accessKeys[$key] = $value;
-				}
-				if(empty($value))
-					throw new PageFlowException("Access key is empty");
-				else if(!Main::strictCheckInput($value))
-					throw new PageFlowException("No special characters are allowed in access keys:\n'$value'");
-				else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
-					throw new PageFlowException("Access keys need to start with a character.");
-				else
-					$this->studyAccessIndexStore->add($this->studyId, $value);
+			return;
+		}
+		
+		$alreadyExistingKeys = [];
+		foreach($this->mainStudy->accessKeys as $key => $value) {
+			$value = strtolower($value);
+			if(isset($alreadyExistingKeys[$value]))
+				throw new PageFlowException("The access key \"$value\" was added several times to this study.");
+			
+			$alreadyExistingKeys[$value] = true;
+			foreach($this->studyCollection as $langStudy) {
+				$langStudy->accessKeys[$key] = $value;
 			}
+			if(empty($value))
+				throw new PageFlowException("Access key is empty");
+			else if(!Main::strictCheckInput($value))
+				throw new PageFlowException("No special characters are allowed in access keys:\n'$value'");
+			else if(!preg_match("/^([a-zA-Z][a-zA-Z0-9]*)$/", $value))
+				throw new PageFlowException("Access keys need to start with a character.");
+			else
+				$this->studyAccessIndexStore->add($this->studyId, $value);
 		}
 	}
 	

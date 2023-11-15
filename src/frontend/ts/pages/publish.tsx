@@ -36,8 +36,10 @@ export class Content extends SectionContent {
 		if(accessKey == null)
 			return
 		
-		if(this.checkAccessKeyFormat(accessKey))
-			study.accessKeys.push(accessKey)
+		if(this.checkAccessKeyFormat(accessKey)) {
+			if(study.accessKeys.indexOf(accessKey) == -1)
+				study.accessKeys.push(accessKey)
+		}
 		else
 			Lang.get("error_accessKey_wrong_format")
 	}
