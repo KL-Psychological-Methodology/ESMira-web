@@ -12,6 +12,8 @@ import {DashElement} from "../widgets/DashElement";
 import {Section} from "../site/Section";
 import {SearchWidget} from "../widgets/SearchWidget";
 import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {BtnCustom} from "../widgets/BtnWidgets";
+import questionSvg from "../../imgs/icons/question.svg?raw"
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 
@@ -143,8 +145,9 @@ export class Content extends SectionContent {
 											highlight: isActive,
 											content:
 												<div class="smallText">
-													{entry.title}
-													{entry.notCompatible && NotCompatibleIcon(... entry.notCompatible)}
+													<span class="flexGrow">{entry.title}</span>
+													<span>{entry.notCompatible && NotCompatibleIcon(... entry.notCompatible)}</span>
+													{<a href={entry.helpUrl} target="_blank">{BtnCustom(m.trust(questionSvg), (e) => {e.stopPropagation()})}</a>}
 												</div>,
 											onclick: onclick
 										})

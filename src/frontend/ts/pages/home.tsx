@@ -4,7 +4,7 @@ import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Lang} from "../singletons/Lang";
 import participateSvg from "../../imgs/dashIcons/participate.svg?raw"
-import questionSvg from "../../imgs/dashIcons/question.svg?raw"
+import questionSvg from "../../imgs/icons/question.svg?raw"
 import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import {Section} from "../site/Section";

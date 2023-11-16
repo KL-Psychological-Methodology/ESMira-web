@@ -43,7 +43,7 @@ export class InputOptionDesigner {
 	private readonly inputTypes: InputType = {
 		"app_usage": {
 			title: Lang.get("input_app_usage"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#App-usage-tracking",
 			category: "sensor",
 			notCompatible: ["Web", "iOS"],
 			view: () => [
@@ -62,7 +62,7 @@ export class InputOptionDesigner {
 		},
 		"binary": {
 			title: Lang.get("input_binary"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Binary-item",
 			category: "classic",
 			view: () => [
 				<div>
@@ -74,14 +74,14 @@ export class InputOptionDesigner {
 		},
 		"bluetooth_devices": {
 			title: Lang.get("input_bluetooth_devices"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-of-bluetooth-devices",
 			category: "sensor",
 			notCompatible: ["Web"],
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
 		"compass": {
 			title: Lang.get("input_compass"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Compass-item",
 			category: "sensor",
 			notCompatible: ["Web"],
 			view: () => [
@@ -94,7 +94,7 @@ export class InputOptionDesigner {
 		},
 		"countdown": {
 			title: Lang.get("input_countdown"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Countdown-item",
 			category: "special",
 			notCompatible: ["Web"],
 			view: () => [
@@ -116,13 +116,13 @@ export class InputOptionDesigner {
 		},
 		"date": {
 			title: Lang.get("input_date"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Date-input",
 			category: "classic",
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
 		"dynamic_input": {
 			title: Lang.get("input_dynamic_input"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Dynamic-item",
 			category: "special",
 			view: () => {
 				const removeSubInput = (index: number) => {
@@ -169,13 +169,13 @@ export class InputOptionDesigner {
 		},
 		"file_upload": {
 			title: Lang.get("input_file_upload"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Image-upload",
 			category: "media",
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
 		"image": {
 			title: Lang.get("input_image"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Image",
 			category: "passive",
 			view: () =>
 				[ this.urlOption() ]
@@ -183,7 +183,7 @@ export class InputOptionDesigner {
 		},
 		"likert": {
 			title: Lang.get("input_likert"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Likert-scale",
 			category: "classic",
 			view: () => [
 				<div>
@@ -198,7 +198,7 @@ export class InputOptionDesigner {
 		},
 		"list_multiple": {
 			title: Lang.get("input_list_multiple"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-multiple-choice",
 			category: "classic",
 			view: () => [
 				this.requiredOption(),
@@ -208,7 +208,7 @@ export class InputOptionDesigner {
 		},
 		"list_single": {
 			title: Lang.get("input_list_single"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-single-choice",
 			category: "classic",
 			view: () => [
 				<div>
@@ -222,7 +222,7 @@ export class InputOptionDesigner {
 		},
 		"number": {
 			title: Lang.get("input_number"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Number-input",
 			category: "classic",
 			view: () => [
 				<div>
@@ -234,20 +234,20 @@ export class InputOptionDesigner {
 		},
 		"photo": {
 			title: Lang.get("input_photo"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Take-a-picture",
 			category: "media",
 			view: () => [ this.requiredOption() ]
 		},
 		"record_audio": {
 			title: Lang.get("input_record_audio"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Record-audio",
 			category: "media",
 			notCompatible: ["Web"],
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
 		"share": {
 			title: Lang.get("input_share"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Share-item",
 			category: "special",
 			view: () => [
 				this.requiredOption(),
@@ -256,19 +256,19 @@ export class InputOptionDesigner {
 		},
 		"text": {
 			title: Lang.get("input_text"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Simple-text-view",
 			category: "passive",
 			view: () => []
 		},
 		"text_input": {
 			title: Lang.get("input_text_input"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Text-input",
 			category: "classic",
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
 		"time": {
 			title: Lang.get("input_time"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Time-input",
 			category: "classic",
 			view: () => [
 				<div>
@@ -280,7 +280,7 @@ export class InputOptionDesigner {
 		},
 		"va_scale": {
 			title: Lang.get("input_va_scale"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Visual-analogue-scale",
 			category: "classic",
 			view: () => [
 				<div>
@@ -300,7 +300,7 @@ export class InputOptionDesigner {
 		},
 		"video": {
 			title: Lang.get("input_video"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Video",
 			category: "passive",
 			view: () => [
 				this.requiredOption(),
