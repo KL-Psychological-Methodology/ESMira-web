@@ -122,7 +122,7 @@ export abstract class SectionContent {
 		window.location.hash = "#"+target;
 	}
 	public newSection(target: string, depth: number = this.section.depth): void {
-		window.location.hash = `${this.section.getHash(depth)}/${target}`
+		window.location.hash = depth == -1 ? target : `${this.section.getHash(depth)}/${target}`
 	}
 	
 	

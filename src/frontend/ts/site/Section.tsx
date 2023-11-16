@@ -94,7 +94,7 @@ export class Section {
 		return section.load()
 	}
 	
-	private async getQuestionnairePromise(): Promise<Study> {
+	private async getStudyPromiseFromQuestionnaire(): Promise<Study> {
 		const studyLoader = this.siteData.studyLoader
 		const isLoggedIn = this.siteData.admin.isLoggedIn()
 		const qId = this.getStaticInt("qId")
@@ -124,22 +124,35 @@ export class Section {
 		}
 		throw new Error(`Cannot find questionnaire ${qId}`)
 	}
+	public async getStudyPromiseFromAccessKey(id: number): Promise<Study> {
+		const accessKey = this.getDynamic("accessKey", "").get()
+		const studies = await this.siteData.studyLoader.loadAvailableStudies(accessKey)
+		if(id != -1) {
+			if(!studies.contains(id))
+				throw new Error(`Study ${id} does not exist`)
+			return studies.getEntry(id)!
+		}
+		else {
+			if(studies.getCount() == 1) {
+				const study = studies.getFirst()
+				if(study) {
+					this.staticValues["id"] = study.id.get().toString()
+					return study
+				}
+			}
+			
+			throw new Error("Could not find study")
+		}
+	}
 	public async getStudyPromise(id: number = this.getStaticInt("id") ?? -1): Promise<Study> {
 		const isLoggedIn = this.siteData.admin.isLoggedIn()
 		
-		if(id == -1)
-			return this.getQuestionnairePromise()
-		else {
-			if(isLoggedIn)
-				return this.siteData.studyLoader.loadFullStudy(id)
-			else {
-				const accessKey = this.siteData.dynamicValues.getOrCreateObs("accessKey", "").get()
-				const studies = await this.siteData.studyLoader.loadAvailableStudies(accessKey)
-				if(!studies.contains(id))
-					throw new Error(`Study ${id} does not exist`)
-				return studies.getEntry(id)!
-			}
-		}
+		if(id == -1 && this.getStaticInt("qId") != null)
+			return this.getStudyPromiseFromQuestionnaire()
+		else if(isLoggedIn && id != -1)
+			return this.siteData.studyLoader.loadFullStudy(id)
+		else
+			return this.getStudyPromiseFromAccessKey(id)
 	}
 	
 	public getAvailableStudiesPromise(accessKey: string): Promise<StudiesDataType> {
@@ -162,6 +175,9 @@ export class Section {
 	}
 	public getStaticString<T extends StaticValues>(key: T): string {
 		return this.staticValues[key]?.toString()
+	}
+	public setStatic(key: string, value: number | string): void {
+		this.staticValues[key] = value.toString()
 	}
 	
 	public getDynamic<T extends PrimitiveType>(key: keyof DynamicValues, defaultValue: T): ObservablePrimitive<T> {

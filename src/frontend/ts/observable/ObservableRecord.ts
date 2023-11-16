@@ -6,6 +6,7 @@ import { JsonTypes } from "./types/JsonTypes";
 export class ObservableRecord<T extends TranslatableObject> extends BaseObservable<Record<number, T>> {
 	protected _isDifferent = false
 	private backingField: Record<number, T>
+	private count: number = 0
 	private defaultKeys: string[]
 	
 	constructor(data: Record<number, T>, key: string = "") {
@@ -29,6 +30,12 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 	}
 	public getEntry(key: number): T | undefined {
 		return this.backingField[key]
+	}
+	public getFirst(): T | undefined {
+		for(const key in this.backingField) {
+			return this.backingField[key]
+		}
+		return undefined
 	}
 	
 	public get(): Record<number, T> {
@@ -55,6 +62,8 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 	public add(key: number, value: T): void {
 		if(this.exists(key))
 			delete this.backingField[key]
+		else
+			++this.count
 		
 		this.backingField[key] = value
 		this.hasMutated(!this._isDifferent)
@@ -62,8 +71,12 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 	public remove(key: number): void {
 		if(this.backingField.hasOwnProperty(key)) {
 			delete this.backingField[key]
+			--this.count
 			this.hasMutated(!this._isDifferent)
 		}
+	}
+	public getCount(): number {
+		return this.count
 	}
 	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
