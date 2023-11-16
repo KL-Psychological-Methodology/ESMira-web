@@ -37,7 +37,7 @@ export class Content extends SectionContent {
 			</div>
 			
 			<label class="spacingTop line">
-				<small>{Lang.getWithColon("informedConsent")}</small>
+				<small>{Lang.getWithColon("informed_consent")} ({Lang.getWithColon("can_be_left_empty")})</small>
 				<textarea {...BindObservable(study.informedConsentForm)}></textarea>
 				{ObservableLangChooser(this.getStudyOrThrow())}
 			</label>

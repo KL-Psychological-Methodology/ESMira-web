@@ -69,7 +69,6 @@
     "event": "Подія",
     "from": "З",
     "group": "Група",
-    "informedConsent": "Інформована згода (можна не заповнювати)",
     "last_used": "Востаннє використано",
     "model": "Модель",
     "months": "Місяці",
@@ -487,5 +486,6 @@
     "email_content": "Зміст електронної пошти",
     "info_reward_email_content": "Має містити [[CODE]], який буде замінено фактичним кодом винагороди.",
     "state_finish_installing": "Завершення оновлення…",
-    "reward_code_instructions": "Інструкції коду винагороди"
+    "reward_code_instructions": "Інструкції коду винагороди",
+    "can_be_left_empty": "можна не заповнювати"
 }

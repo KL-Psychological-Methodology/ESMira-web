@@ -77,7 +77,6 @@
     "fitToShowLinearProgression_label": "Shor linear regression when r2 fit is bigger as",
     "from": "From",
     "group": "Group",
-    "informedConsent": "Informed Consent (can be left empty)",
     "last_used": "Last used",
     "model": "Model",
     "months": "Months",
@@ -568,5 +567,6 @@
     "from_study_source": "From study source code",
     "info_low_disk_space": "ESMira has less only %d Mb disk space left!",
     "home_message": "Front page message",
-    "edit_study": "Edit study"
+    "edit_study": "Edit study",
+    "can_be_left_empty": "Can be left empty"
 }
