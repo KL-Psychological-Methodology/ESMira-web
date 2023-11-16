@@ -37,9 +37,13 @@ interface StudyMetadataStore {
 	/**
 	 * @throws CriticalException
 	 */
+	public function getLastSavedAt(): int;
+	/**
+	 * @throws CriticalException
+	 */
 	public function getOwner(): string;
 	/**
 	 * @throws CriticalException
 	 */
-	public function getCreatedTimestamp(): string;
+	public function getCreatedTimestamp(): int;
 }

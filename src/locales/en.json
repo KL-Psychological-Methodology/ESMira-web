@@ -564,6 +564,7 @@
     "all_user": "All user",
     "created_by": "Created by",
     "last_saved_by": "Last saved by",
+    "last_saved_at": "Last saved at",
     "from_study_source": "From study source code",
     "info_low_disk_space": "ESMira has less only %d Mb disk space left!",
     "home_message": "Front page message",

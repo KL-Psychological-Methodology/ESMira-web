@@ -72,7 +72,11 @@ export class Content extends SectionContent {
 								</tr>
 								{studyMetadata && studyMetadata.owner != studyMetadata.lastSavedBy && <tr>
 									<td>{Lang.getWithColon("last_saved_by")}</td>
-									{studyMetadata && <td>{studyMetadata.lastSavedBy}</td>}
+									{<td>{studyMetadata.lastSavedBy}</td>}
+								</tr>}
+								{studyMetadata && studyMetadata.lastSavedAt != studyMetadata.createdTimestamp && <tr>
+									<td>{Lang.getWithColon("last_saved_at")}</td>
+									{<td>{new Date(studyMetadata.lastSavedAt * 1000).toLocaleString()}</td>}
 								</tr>}
 							</table>
 						</div>
@@ -128,7 +132,7 @@ export class Content extends SectionContent {
 			
 			
 			{TitleRow(Lang.getWithColon("inform_server_about_events"))}
-			<div class="scrollBox">
+			<div class="scrollBox big">
 				<label class="noTitle vertical">
 					<input type="checkbox" checked="checked" disabled="disabled"/>
 						<span>joined</span>

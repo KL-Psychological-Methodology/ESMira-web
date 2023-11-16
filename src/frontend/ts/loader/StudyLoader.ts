@@ -18,6 +18,7 @@ export type StudiesDataType = ObservableRecord<Study>
 export interface StudyMetadata {
 	owner: string
 	lastSavedBy: string,
+	lastSavedAt: number,
 	createdTimestamp: number
 }
 
@@ -56,6 +57,7 @@ export class StudyLoader {
 					this.studyMetadata[id] = {
 						owner: owner,
 						lastSavedBy: studyData["lastSavedBy"] ?? "",
+						lastSavedAt: studyData["lastSavedAt"] ?? 0,
 						createdTimestamp: studyData.hasOwnProperty("createdTimestamp") ? parseInt(studyData["createdTimestamp"]) : 0
 					}
 					if(!this.ownerRegister.hasOwnProperty(owner))
@@ -195,7 +197,8 @@ export class StudyLoader {
 		this.studyMetadata[id] = {
 			owner: "",
 			createdTimestamp: Math.round(Date.now() / 1000),
-			lastSavedBy: ""
+			lastSavedBy: "",
+			lastSavedAt: Math.round(Date.now() / 1000)
 		}
 		return id
 	}
