@@ -63,8 +63,9 @@ function DashElementView(options: DashViewOptions): Vnode<any, any> {
 	else
 		view = <div class="highlight">Missing Dash Information</div>
 	
-	if(options.href)
-		return <a class={`${classString} dashLink`} href={options.href}>{view}</a>
+	if(options.href) {
+		return <a target={options.href.startsWith("http") ? "_blank" : ""} class={`${classString} dashLink`} href={options.href}>{view}</a>
+	}
 	else if(options.onclick)
 		return <a class={`${classString} dashLink`} onclick={options.onclick}>{view}</a>
 	else if(options.showAsClickable)

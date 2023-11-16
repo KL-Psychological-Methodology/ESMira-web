@@ -2,7 +2,6 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {BindObservable} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
 import {Study} from "../data/study/Study";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {TabBar, TabContent} from "../widgets/TabBar";
@@ -14,6 +13,7 @@ import {DashRow} from "../widgets/DashRow";
 import {DashElement, DashViewOptions} from "../widgets/DashElement";
 import {closeDropdown, openDropdown} from "../widgets/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
+import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
 
 export class Content extends SectionContent {
 	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
@@ -144,6 +144,14 @@ export class Content extends SectionContent {
 							<div class="spacingTop">{Lang.getWithColon("more_information")}</div>
 							<div class="spacingLeft"><a class="showArrow" href="https://github.com/KL-Psychological-Methodology/ESMira/wiki/Conditions-for-using-ESMira" target="_blank">Conditions for using ESMira</a></div>
 						</div>
+				}),
+				
+				DashElement("stretched", {
+					template: {
+						icon: m.trust(studyDesc),
+						title: Lang.get("hint_to_best_practices")
+					},
+					href: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-problems"
 				}),
 				
 				DashElement("stretched", {

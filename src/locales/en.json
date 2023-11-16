@@ -568,5 +568,6 @@
     "info_low_disk_space": "ESMira has less only %d Mb disk space left!",
     "home_message": "Front page message",
     "edit_study": "Edit study",
-    "can_be_left_empty": "Can be left empty"
+    "can_be_left_empty": "Can be left empty",
+    "hint_to_best_practices": "Before you start your study, we recommend taking a look at the best practices in our wiki"
 }
