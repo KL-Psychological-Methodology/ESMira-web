@@ -132,90 +132,94 @@ export class Content extends SectionContent {
 			
 			
 			{TitleRow(Lang.getWithColon("inform_server_about_events"))}
-			<div class="scrollBox big">
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" disabled="disabled"/>
-						<span>joined</span>
-						<small>{Lang.get("desc_joined")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" disabled="disabled"/>
-						<span>questionnaire</span>
-						<small>{Lang.get("desc_questionnaire")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" disabled="disabled" />
-						<span>quit</span>
-						<small>{Lang.get("desc_quit")}</small>
-				</label>
-				
-				
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" {... BindObservable(uploadSettings.actions_executed)}/>
-						<span>actions_executed</span>
-						<small>{Lang.get("desc_actions_executed")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.invitation)}/>
-						<span>invitation</span>
-						<small>{Lang.get("desc_invitation")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.invitation_missed)}/>
-						<span>invitation_missed</span>
-						<small>{Lang.get("desc_invitation_missed")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.message)}/>
-						<span>message</span>
-						<small>{Lang.get("desc_message")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.notification)}/>
-						<span>notification</span>
-						<small>{Lang.get("desc_notification")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.rejoined)}/>
-						<span>rejoined</span>
-						<small>{Lang.get("desc_rejoined")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.reminder)}/>
-						<span>reminder</span>
-						<small>{Lang.get("desc_reminder")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" {... BindObservable(uploadSettings.schedule_planned)}/>
-					<span>schedule_planned</span>
-					<small>{Lang.get("desc_schedule_planned")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" checked="checked" {... BindObservable(uploadSettings.schedule_removed)}/>
-					<span>schedule_removed</span>
-					<small>{Lang.get("desc_schedule_removed")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.schedule_changed)}/>
-					<span>schedule_changed</span>
-					<small>{Lang.get("desc_schedule_changed")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.statistic_viewed)}/>
-					<span>statistic_viewed</span>
-					<small>{Lang.get("desc_statistic_viewed")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.study_message)}/>
-					<span>study_message</span>
-					<small>{Lang.get("desc_study_message")}</small>
-				</label>
-				<label class="noTitle vertical">
-					<input type="checkbox" {... BindObservable(uploadSettings.study_updated)}/>
-					<span>study_updated</span>
-					<small>{Lang.get("desc_study_updated")}</small>
-				</label>
-			</div>
+			{DashRow(
+				DashElement("stretched", {
+				content:
+					<div>
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" disabled="disabled"/>
+							<span>joined</span>
+							<small>{Lang.get("desc_joined")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" disabled="disabled"/>
+							<span>questionnaire</span>
+							<small>{Lang.get("desc_questionnaire")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" disabled="disabled"/>
+							<span>quit</span>
+							<small>{Lang.get("desc_quit")}</small>
+						</label>
+						
+						
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" {...BindObservable(uploadSettings.actions_executed)}/>
+							<span>actions_executed</span>
+							<small>{Lang.get("desc_actions_executed")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.invitation)}/>
+							<span>invitation</span>
+							<small>{Lang.get("desc_invitation")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.invitation_missed)}/>
+							<span>invitation_missed</span>
+							<small>{Lang.get("desc_invitation_missed")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.message)}/>
+							<span>message</span>
+							<small>{Lang.get("desc_message")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.notification)}/>
+							<span>notification</span>
+							<small>{Lang.get("desc_notification")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.rejoined)}/>
+							<span>rejoined</span>
+							<small>{Lang.get("desc_rejoined")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.reminder)}/>
+							<span>reminder</span>
+							<small>{Lang.get("desc_reminder")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" {...BindObservable(uploadSettings.schedule_planned)}/>
+							<span>schedule_planned</span>
+							<small>{Lang.get("desc_schedule_planned")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" checked="checked" {...BindObservable(uploadSettings.schedule_removed)}/>
+							<span>schedule_removed</span>
+							<small>{Lang.get("desc_schedule_removed")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.schedule_changed)}/>
+							<span>schedule_changed</span>
+							<small>{Lang.get("desc_schedule_changed")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.statistic_viewed)}/>
+							<span>statistic_viewed</span>
+							<small>{Lang.get("desc_statistic_viewed")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.study_message)}/>
+							<span>study_message</span>
+							<small>{Lang.get("desc_study_message")}</small>
+						</label>
+						<label class="noTitle vertical">
+							<input type="checkbox" {...BindObservable(uploadSettings.study_updated)}/>
+							<span>study_updated</span>
+							<small>{Lang.get("desc_study_updated")}</small>
+						</label>
+					</div>
+			}))}
 			
 			{TitleRow(Lang.getWithColon("delete_study"))}
 			<div class="center">
