@@ -12,6 +12,9 @@ export class AddJsToServerHtml {
 		const type = view.getAttribute("js-action")
 		
 		switch(type) {
+			case "internalUrl":
+				view.setAttribute("href", sectionContent.getUrl(view.getAttribute("href")?.substring(1) ?? ""))
+				break
 			case "shown":
 				view.classList.remove("hidden")
 				break

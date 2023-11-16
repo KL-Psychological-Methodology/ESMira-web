@@ -21,26 +21,27 @@ class AppInstallComponent implements Component<AppInstallComponentOptions, any> 
 }
 
 export class Content extends SectionContent {
-	private pageHtml: string
-	private pageTitle: string
+	private readonly pageHtml: string
+	private readonly pageTitle: string
 	
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			Requests.loadJson(
 				FILE_APP_INSTALL_INSTRUCTIONS
-					.replace("%d1", (section.getStaticInt("id") ?? -1).toString())
+					.replace("%d1", (section.getStaticInt("id") ?? 0).toString())
 					.replace("%s1", section.getDynamic("accessKey", "")?.get())
 					.replace("%s2", Lang.code)
-			),
-			section.getStudyPromise()
+			)
 		]
 	}
 	
-	constructor(section: Section, html: { pageHtml: string, pageTitle: string }) {
+	constructor(section: Section, html: { pageHtml: string, pageTitle: string, forwarded: boolean }) {
 		super(section)
+		if(html.forwarded)
+			this.newSection("studies:appInstall", this.section.depth - 1)
+		
 		this.pageHtml = html.pageHtml
 		this.pageTitle = html.pageTitle
-		
 	}
 	
 	public title(): string {

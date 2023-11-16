@@ -62,7 +62,7 @@ class AppInstall implements Page {
 		if(isset($this->study->contactEmail))
 			$output .= '<a class="left" href="mailto:'.$this->study->contactEmail.'">'.Lang::get('contactEmail').'</a>';
 		if(isset($this->study->informedConsentForm))
-			$output .= '<a class="right" href="#informed_consent">'.Lang::get('informed_consent').'</a>';
+			$output .= '<a class="right" js-action="internalUrl" href="#informedConsent">'.Lang::get('informed_consent').'</a>';
 		
 		$output .= '<br/><br/>
 		<div class="titleRow">' .Lang::get('how_to_participate') .'</div>
@@ -177,8 +177,8 @@ class AppInstall implements Page {
 		</ol>';
 		
 		if(isset($this->study->informedConsentForm))
-			$output .= '<div class="titleRow"><a id="informed_consent"></a>'.Lang::get('informed_consent').'</div>
-				<p class="justify">'.$this->study->informedConsentForm.'</p>';
+			$output .= '<div class="titleRow" js-action="hidden"><a id="informedConsent"></a>'.Lang::get('informed_consent').'</div>
+				<p class="justify" js-action="hidden">'.$this->study->informedConsentForm.'</p>';
 	
 		return $output;
 	}

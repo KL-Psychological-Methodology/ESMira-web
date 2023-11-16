@@ -49,7 +49,7 @@ class NoJsMain {
 		else if(isset($_GET['qid']))
 			$targetStudyId = $studyAccessIndexStore->getStudyIdForQuestionnaireId((int) $_GET['qid']);
 		
-		if(isset($targetStudyId)) {
+		if(isset($targetStudyId) && $targetStudyId) {
 			foreach($idsForAccessKey as $studyId) {
 				if($studyId == $targetStudyId) {
 					$study = $studyStore->getStudyLangConfig($studyId, $lang);
@@ -61,23 +61,14 @@ class NoJsMain {
 			$study = $studyStore->getStudyLangConfig($idsForAccessKey[0], $lang);
 		
 		if(!isset($study)) {
-			throw new PageFlowException(Lang::get('error_wrong_accessKey'));
-//			if(!empty($accessKey)) //provided access key is valid but for the wrong study
-//				throw new PageFlowException(Lang::get('error_wrong_accessKey'));
-//			else
-//				throw new ForwardingException(new StudiesList());
+			if(empty($idsForAccessKey) && !empty($accessKey))
+				throw new PageFlowException(Lang::get('error_wrong_accessKey'));
+			else
+				throw new ForwardingException(new StudiesList());
 		}
 		
 		return (!isset($_GET['qid']) || !($questionnaire = self::getQuestionnaire($study, (int)$_GET['qid'])))
 			? new StudyData($accessKey, $study)
 			: new StudyData($accessKey, $study, $questionnaire);
-	}
-	
-	
-	private static function extractInputValue($v): string {
-		if(is_array($v))
-			return implode(',', $v);
-		else
-			return $v;
 	}
 }
