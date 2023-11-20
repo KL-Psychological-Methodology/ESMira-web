@@ -47,7 +47,7 @@ export class Content extends SectionContent {
 						content: <div class="highlight">{Lang.get("info_low_disk_space", Math.round(tools.freeDiskSpace / 1000 / 1000))}</div>
 					}),
 					
-					tools.permissions.write &&
+					(tools.permissions.write || tools.canCreate) &&
 					DashElement(null,
 						{
 							template: { title: Lang.get("edit_studies"), icon: m.trust(editSvg) },
