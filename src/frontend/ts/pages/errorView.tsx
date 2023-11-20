@@ -80,10 +80,10 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 		this.rootViewOffset = rootView.getBoundingClientRect().top
 		
 		const firstLine = lines[0].split("\n")
-		for(let i = 1; i < firstLine.length; i++) {
+		for(const element of firstLine) {
 			const view = document.createElement("div")
 			view.classList.add("line")
-			view.innerText = firstLine[i]
+			view.innerText = element
 			infoView.appendChild(view)
 		}
 		
