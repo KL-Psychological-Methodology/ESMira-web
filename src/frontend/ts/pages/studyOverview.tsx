@@ -19,24 +19,30 @@ export class Content extends SectionContent {
 		super(section)
 		const count = studies.getCount()
 		
+		let study
 		if(count == 0)
 			throw new Error(`Could not find study`)
 		else if(count == 1) {
-			const study = studies.getFirst()
-			if(study) {
-				this.section.setStatic("id", study.id.get())
-				Requests.loadJson(FILE_SAVE_ACCESS, "post", `study_id=${study.id.get()}&page_name=${this.section.depth ? "study" : "navigatedFromHome"}`)
-			}
-		}
-		else {
-			const study = this.getStudyOrNull()
+			study = studies.getFirst()
 			if(study)
-				Requests.loadJson(FILE_SAVE_ACCESS, "post", `study_id=${study.id.get()}&page_name=${this.section.depth ? "study" : "navigatedFromHome"}`)
-			else {
-				this.newSection("studies:studyOverview", this.section.depth - 1)
-				this.isRedirected = true
-			}
+				this.section.setStatic("id", study.id.get())
 		}
+		else
+			study = this.getStudyOrNull()
+		
+		
+		if(!study) {
+			this.newSection("studies:studyOverview", this.section.depth - 1)
+			this.isRedirected = true
+			return
+		}
+		else if(!study.publishedWeb.get()) {
+			this.newSection("appInstall", this.section.depth - 1)
+			this.isRedirected = true
+			return
+		}
+		
+		Requests.loadJson(FILE_SAVE_ACCESS, "post", `study_id=${study.id.get()}&page_name=${this.section.depth ? "study" : "navigatedFromHome"}`)
 	}
 	
 	public title(): string {

@@ -78,7 +78,11 @@ export abstract class SectionContent {
 		return this.section.getStaticString(key)
 	}
 	protected getStudyOrNull(id: number = this.getStaticInt("id") ?? -1): Study | null {
-		return this.section.siteData.studyLoader.getStudies().getEntry(id) ?? null
+		const studies = this.section.siteData.studyLoader.getStudies()
+		if(id == -1)
+			return studies.getCount() == 1 ? (studies.getFirst() || null) : null
+		
+		return studies.getEntry(id) ?? null
 	}
 	public getStudyOrThrow(id: number = this.getStaticInt("id") ?? -1): Study {
 		const study = this.getStudyOrNull(id)
