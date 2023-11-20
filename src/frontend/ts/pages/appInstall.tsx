@@ -12,7 +12,13 @@ interface AppInstallComponentOptions {
 
 class AppInstallComponent implements Component<AppInstallComponentOptions, any> {
 	public oncreate(vNode: VnodeDOM<AppInstallComponentOptions, any>): void {
-		AddJsToServerHtml.process(vNode.dom as HTMLElement, vNode.attrs.sectionContent)
+		const sectionContent = vNode.attrs.sectionContent
+		try {
+			AddJsToServerHtml.process(vNode.dom as HTMLElement, sectionContent)
+		}
+		catch(e: any) {
+			sectionContent.section.loader.error(e.message || e)
+		}
 	}
 	
 	public view(vNode: Vnode<AppInstallComponentOptions, any>): Vnode<any, any> {
@@ -25,13 +31,15 @@ export class Content extends SectionContent {
 	private readonly pageTitle: string
 	
 	public static preLoad(section: Section): Promise<any>[] {
+		const accessKey = section.getDynamic("accessKey", "").get()
 		return [
 			Requests.loadJson(
 				FILE_APP_INSTALL_INSTRUCTIONS
 					.replace("%d1", (section.getStaticInt("id") ?? 0).toString())
-					.replace("%s1", section.getDynamic("accessKey", "")?.get())
+					.replace("%s1", accessKey)
 					.replace("%s2", Lang.code)
-			)
+			),
+			section.getAvailableStudiesPromise(accessKey)
 		]
 	}
 	
