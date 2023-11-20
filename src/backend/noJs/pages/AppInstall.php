@@ -82,8 +82,7 @@ class AppInstall implements Page {
 		
 		
 		<div class="appInstallAlternative" js-action="clickable" click-show="alternative1">
-			<h1>' .Lang::get('studyTut_participate_method_x_header', 1) .'</h1>
-			<h2>' .Lang::get('studyTut_participate_method_onPhone') .'</h2>
+			<h1 class="center">' .Lang::get('studyTut_participate_method_onPhone') .'</h1>
 		</div>
 		<ol id="alternative1" js-action="hidden">
 			<li><div>
@@ -106,8 +105,7 @@ class AppInstall implements Page {
 		
 		<div class="hidden" js-action="shown">
 			<div class="appInstallAlternative" js-action="clickable" click-show="alternative2">
-				<h1>' .Lang::get('studyTut_participate_method_x_header', 2) .'</h1>
-				<h2>' .Lang::get('studyTut_participate_method_notOnPhone') .'</h2>
+				<h1 class="center">' .Lang::get('studyTut_participate_method_notOnPhone') .'</h1>
 			</div>
 			<ol id="alternative2" js-action="hidden">
 				<li><div>
@@ -138,8 +136,7 @@ class AppInstall implements Page {
 		
 		
 		<div class="appInstallAlternative" js-action="clickable" click-show="alternative3">
-			<h1 click-show="alternative3">' .Lang::get('studyTut_participate_method_x_header', 3) .'</h1>
-			<h2>' .Lang::get('studyTut_participate_method_manual') .'</h2>
+			<h1 class="center">' .Lang::get('studyTut_participate_method_manual') .'</h1>
 		</div>
 		<ol id="alternative3" js-action="hidden">
 			<li><div>
