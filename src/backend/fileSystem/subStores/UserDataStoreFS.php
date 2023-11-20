@@ -42,7 +42,19 @@ class UserDataStoreFS extends UserDataStore {
 				$this->fileHandles[$studyId] = $handle;
 				$filesize = filesize($pathUserData);
 				
-				$userData = UserDataLoader::import(fread($handle, $filesize));
+				try {
+					$userData = UserDataLoader::import(fread($handle, $filesize));
+				}
+				catch(CriticalException $e) {
+					Main::reportError($e,
+						"The userData file seems to be corrupt (happened in getUserDataForWriting)!\n"
+						."The file $pathUserData will be recreated (the userData file does not contain vital information)\n"
+						."Study: $studyId\n"
+						."User-Id: $this->userId"
+					);
+					$userData = $this->createNewUserData($studyId);
+				}
+				
 			}
 			else {
 				Main::report("Could not open token for user \"$this->userId\" in study $studyId");
@@ -78,13 +90,12 @@ class UserDataStoreFS extends UserDataStore {
 		}
 		catch(CriticalException $e) {
 			Main::reportError($e,
-				"The userData file seems to be corrupt!\n"
-				."This user will probably not be able to save any new data!\n\n"
-				."To resolve, either fix or delete $pathUserData (the userData file does not contain vital information)\n"
+				"The userData file seems to be corrupt (happened in getUserData)!\n"
+				."The file $pathUserData will be recreated (the userData file does not contain vital information)\n"
 				."Study: $studyId\n"
 				."User-Id: $this->userId"
 			);
-			throw $e;
+			return $this->createNewUserData($studyId);
 		}
 	}
 	
