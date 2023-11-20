@@ -47,7 +47,10 @@ class AppInstall implements Page {
 			.(($this->study->publishedIOS ?? true) ? '<p><a href="https://apps.apple.com/gb/app/esmira/id1538774594" target="_blank">' .Lang::get('for_iOSSmartphones') .'</a></p>' : '')
 			.'</li></ul>';
 		
-		$scriptName = substr($_SERVER['SCRIPT_NAME'], 0, -14); //NOTE: 14 is the length of "index_nojs.php"
+		
+		$scriptName = preg_match("/^(.+\/)[^\/]+$/", $_SERVER['SCRIPT_NAME'], $matches) ? $matches[1] : 'Error';
+		if(substr_compare($scriptName, 'api/', -4) == 0) //is false if it was called by fallback
+			$scriptName = substr($scriptName, 0, -4);
 		
 		$output = '';
 		if(isset($this->study->webInstallInstructions))
