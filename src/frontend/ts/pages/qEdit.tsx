@@ -260,7 +260,7 @@ export class Content extends SectionContent {
 							</div>
 							
 							<div class="nowrap flexCenter">
-								{BtnTrash(this.deleteInput.bind(this, page, qIndex))}
+								{BtnTrash(this.deleteInput.bind(this, page, inputIndex))}
 								{BtnCopy(this.copyInput.bind(this, input, inputIndex+1))}
 								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${btoa(input.name.get())}`)}>
 									{BtnEdit()}
