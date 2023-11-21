@@ -100,7 +100,7 @@ class Main {
 		if(version_compare(phpversion(), '7.3', '<'))
 			setcookie($key, $value, $expires);
 		else
-			setcookie($key, $value, ['expires' => $expires, 'sameSite' => 'Strict']);
+			setcookie($key, $value, ['expires' => $expires, 'samesite' => 'Strict']);
 	}
 	static function deleteCookie($name) {
 		self::setCookie($name, '', 1);
