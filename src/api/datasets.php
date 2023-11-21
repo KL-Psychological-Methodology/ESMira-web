@@ -40,7 +40,7 @@ catch(CriticalException $e) {
 }
 catch(Throwable $e) {
 	$dataSet->close();
-	Main::reportError($e, "There was an unexpected error when trying to save data.\nJson: $json\n");
+	Main::reportError($e, "There was an unexpected error when trying to save data.\nJson:\n" .Main::getRawPostInput());
 	echo JsonOutput::error($e->getMessage());
 	return;
 }
