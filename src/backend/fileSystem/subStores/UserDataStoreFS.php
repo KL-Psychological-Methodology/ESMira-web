@@ -105,7 +105,9 @@ class UserDataStoreFS extends UserDataStore {
 				."Study: $studyId\n"
 				."User-Id: $this->userId"
 			);
-			return $this->createNewUserData($studyId);
+			$userData = $this->createNewUserData($studyId);
+			UserDataLoader::export($userData);
+			return $userData;
 		}
 	}
 	
