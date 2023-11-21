@@ -101,7 +101,7 @@ export class Content extends StudiesContent {
 	}
 	
 	public hasAlternatives(): boolean {
-		return true
+		return this.studies.length > 1
 	}
 	public getAlternatives(): SectionAlternative[] | null {
 		const allSections = this.section.allSections
