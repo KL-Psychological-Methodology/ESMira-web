@@ -4,6 +4,9 @@ import {ObservablePrimitive} from "./ObservablePrimitive";
 
 export type TranslatableJsonCreatorOptions = { dontIncludeAllLanguages?: boolean } & JsonCreatorOptions
 
+/**
+ * A {@link BaseObservable} that can store multiple versions under a langCode
+ */
 export abstract class BaseTranslatable<T extends ObservableTypes> extends BaseObservable<T> {
 	public readonly currentLangCode: ObservablePrimitive<string>
 	

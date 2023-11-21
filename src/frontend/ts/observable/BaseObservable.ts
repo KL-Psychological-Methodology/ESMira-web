@@ -24,6 +24,10 @@ export type ObserverCallbackType<T extends ObservableTypes> = (obj: BaseObservab
 
 export type JsonCreatorOptions = { dontFilterDefaults?: boolean }
 
+/**
+ * Note that observers are stored in {@link shared} which is copied from root-parent container (see code in {@link constructor}).
+ * That means that the observable structure can be replaced entirely without observers being lost (as long as the root parent is preserved or its {@link shared} is reused).
+ */
 export abstract class BaseObservable<T extends ObservableTypes>{
 	public readonly shared: SharedForObservable
 	public parent: BaseObservable<ObservableTypes> | null
@@ -53,8 +57,8 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 	
 	/**
 	 * Runs {@param callback} whenever {@link runObservers()} is called (by {@link hasMutated()} or {@link set()})
-	 * Note that observers are stored in {@link shared} which is stored in the root-parent container (see {@link constructor}).
-	 * That means that the observable structure can be replaced entirely (as long as the root parent is preserved or its {@link shared} is reused).
+	 * Note that observers are stored in {@link shared} which is copied from the root-parent container (see code in {@link constructor}).
+	 * That means that the observable structure can be replaced entirely without observers being lost (as long as the root parent is preserved or its {@link shared} is reused).
 	 * As long as {@link address} stays the same, observers will still function
 	 * @param callback Runs whenever {@link runObservers()} is called (by {@link hasMutated()} or {@link set()})
 	 * @param existingId only save this {@param callback} if {@param existingId} does not exist yet

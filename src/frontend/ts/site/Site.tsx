@@ -17,8 +17,9 @@ const SECTION_MIN_WIDTH = 650;
  * The content is dynamically loaded and inherits from {@link SectionContent}.
  *
  * Each {@link Section} is fully independent of each other. Their main source of data comes from
- * - {@link SiteData}: Holds the {@link StudyLoader} and convenience methods. It is shared between all sections
- * - {@link DynamicValues}: A Record with observables that are shared between all sections - he only means of communicating between sections
+ * - {@link SiteData}: Holds the {@link StudyLoader} and other data and convenience methods. It is shared between all sections.
+ * - {@link DynamicValues}: A Record with observables that are shared between all sections - the only means of communicating between sections.
+ * 		Should not be cached. That means the value needs to be reloaded every time the view gets recreated
  * - {@link StaticValues}: Values that are not changed (for the section) after initialisation of a section.
  * 		Each section has their own copy which includes copies of values from all previous sections.
  * 		It is not meant to store data but only as a way of accessing variables from the url hash

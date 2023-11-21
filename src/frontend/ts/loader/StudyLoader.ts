@@ -22,6 +22,12 @@ export interface StudyMetadata {
 	createdTimestamp: number
 }
 
+/**
+ * Holds all available study information.
+ * Be aware that study objects can be removed ore recreated at any point.
+ * They should not be cached (or, if they are, an observer needs to make sure they are reloaded)
+ * Note, that because of how {@link BaseObservable} work, all observers are stored in {@link studyCache} which means, when a study gets replaced, its observer will persist
+ */
 export class StudyLoader {
 	private readonly studyCache = new ObservableRecord<Study>({}, "studies")
 	private readonly questionnaireRegister: Record<number, number> = {}
