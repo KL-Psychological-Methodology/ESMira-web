@@ -29,7 +29,7 @@ export class Content extends SectionContent {
 	public static preLoad(_section: Section): Promise<any>[] {
 		return [
 			PromiseCache.get("legal", () => {
-				return Requests.loadJson(FILE_SETTINGS + "?type=legal")
+				return Requests.loadJson(FILE_SETTINGS.replace("%1", Lang.code).replace("%2", "legal"))
 			})
 		]
 	}

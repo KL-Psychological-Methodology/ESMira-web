@@ -1,6 +1,5 @@
 <?php
 
-use backend\Main;
 use backend\Configs;
 use backend\JsonOutput;
 
@@ -11,8 +10,8 @@ if(!Configs::getDataStore()->isInit()) {
 	return;
 }
 
-$lang = Main::getLang(false);
 $defaultLangCode = Configs::get('defaultLang');
+$lang = $_GET['lang'] ?? $defaultLangCode;
 $serverStore = Configs::getDataStore()->getServerStore();
 
 $type = $_GET['type'] ?? '';
@@ -23,9 +22,10 @@ switch($type) {
 			'privacyPolicy' => $serverStore->getPrivacyPolicy($lang) ?: $serverStore->getPrivacyPolicy($defaultLangCode)
 		];
 		break;
+	case 'homeMessage':
 	default:
 		$obj = [
-			'homeMessage' => $serverStore->getHomeMessage($lang) ?: $serverStore->getHomeMessage($defaultLangCode),
+			'homeMessage' => $serverStore->getHomeMessage($lang) ?: $serverStore->getHomeMessage($defaultLangCode)
 		];
 		break;
 }

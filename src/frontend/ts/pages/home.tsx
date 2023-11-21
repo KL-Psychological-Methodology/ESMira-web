@@ -13,15 +13,15 @@ import {Requests} from "../singletons/Requests";
 import {FILE_SETTINGS} from "../constants/urls";
 
 export class Content extends SectionContent {
-	private homeMessage: string
+	private readonly homeMessage: string
 	
 	public title(): string {
 		return Lang.get("home")
 	}
 	public static preLoad(_section: Section): Promise<any>[] {
 		return [
-			PromiseCache.get("legal", () => {
-				return Requests.loadJson(FILE_SETTINGS)
+			PromiseCache.get("homeSettings", () => {
+				return Requests.loadJson(FILE_SETTINGS.replace("%1", Lang.code).replace("%2", "homeMessage"))
 			})
 		]
 	}
