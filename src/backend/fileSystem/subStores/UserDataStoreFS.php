@@ -43,7 +43,17 @@ class UserDataStoreFS extends UserDataStore {
 				$filesize = filesize($pathUserData);
 				
 				try {
-					$userData = UserDataLoader::import(fread($handle, $filesize));
+					if($filesize == 0) {
+						Main::report(
+							"The userData file seems to be empty (happened in getUserDataForWriting)!\n"
+							."The file $pathUserData will be recreated (the userData file does not contain vital information)\n"
+							."Study: $studyId\n"
+							."User-Id: $this->userId"
+						);
+						$userData = $this->createNewUserData($studyId);
+					}
+					else
+						$userData = UserDataLoader::import(fread($handle, $filesize));
 				}
 				catch(CriticalException $e) {
 					Main::reportError($e,
