@@ -235,6 +235,15 @@ class DataComponent implements Component<DataComponentInterface, any> {
 					imageA.href = imageUrl
 					imageA.target = "_blank"
 					imageA.innerText = cell.value
+					createNativeDropdown("dataImage", imageA, () => {
+						const img = document.createElement("img")
+						img.src = imageUrl
+						return img
+					}, {eventName: "mouseenter"})
+					
+					imageA.addEventListener("mouseleave", () => {
+						closeDropdown("dataImage")
+					})
 					td.appendChild(imageA)
 					
 					const imageView = document.createElement("img")
@@ -269,7 +278,7 @@ class DataComponent implements Component<DataComponentInterface, any> {
 			}
 			
 			if(hoverInfo != null) {
-				createNativeDropdown("dataHoverInfo", td, () => hoverInfo!, undefined, "mouseenter")
+				createNativeDropdown("dataHoverInfo", td, () => hoverInfo!, {eventName: "mouseenter"})
 				td.addEventListener("mouseleave", () => { closeDropdown("dataHoverInfo") })
 			}
 			tr.appendChild(td);

@@ -5,7 +5,7 @@ const MIN_HEIGHT = 20
 
 const openedMenus: Record<string, DropdownMenuImpl> = {}
 
-interface DropDownOptions {
+interface DropdownOptions {
 	dontCenter?: boolean
 	fullScreen?: boolean
 	connectedDropdowns?: string[]
@@ -18,7 +18,7 @@ class DropdownMenuImpl {
 	private readonly openerView: Element
 	private readonly connectedDropdowns?: string[]
 	
-	constructor(id: string, openerView: Element, options?: DropDownOptions) {
+	constructor(id: string, openerView: Element, options?: DropdownOptions) {
 		this.clickOutsideImpl = this.clickOutside.bind(this)
 		this.connectedDropdowns = options?.connectedDropdowns
 		this.id = id
@@ -28,7 +28,7 @@ class DropdownMenuImpl {
 			document.addEventListener("click", this.clickOutsideImpl)
 		}, 200)
 	}
-	private createView(id: string, options?: DropDownOptions): HTMLElement {
+	private createView(id: string, options?: DropdownOptions): HTMLElement {
 		const view = document.createElement("div")
 		view.classList.add("dropdown")
 		view.classList.add(id)
@@ -106,7 +106,7 @@ class DropdownMenuImpl {
 	}
 }
 
-function createDropdown(id: string, openerView: Element, options?: DropDownOptions): DropdownMenuImpl | null {
+function createDropdown(id: string, openerView: Element, options?: DropdownOptions): DropdownMenuImpl | null {
 	if(openedMenus.hasOwnProperty(id)) {
 		openedMenus[id].close()
 		return null
@@ -122,7 +122,7 @@ interface DropdownComponentOptions {
 	id: string
 	clickElement: Vnode<any, any>
 	menuContent: (close: () => void) => Vnode<any, any>
-	options?: DropDownOptions,
+	options?: DropdownOptions,
 	className?: string //in case the parent has added a className that we need to include
 }
 class DropdownComponent implements Component<DropdownComponentOptions, any> {
@@ -152,7 +152,7 @@ class DropdownComponent implements Component<DropdownComponentOptions, any> {
 	}
 }
 
-export function openDropdown(id: string, openerView: Element, menuContent: (close: () => void) => Vnode<any, any>, options?: DropDownOptions): void {
+export function openDropdown(id: string, openerView: Element, menuContent: (close: () => void) => Vnode<any, any>, options?: DropdownOptions): void {
 	const dropDownMenuImpl = createDropdown(id, openerView, options)
 	if(dropDownMenuImpl)
 		m.mount(dropDownMenuImpl.view, {
@@ -169,7 +169,7 @@ export function DropdownMenu(
 	id: string,
 	clickElement: Vnode<any, any>,
 	menuContent: (close: () => void) => Vnode<any, any>,
-	options?: DropDownOptions
+	options?: DropdownOptions
 ): Vnode<any, any> {
 	return m(DropdownComponent, {
 		id: id,
@@ -179,14 +179,17 @@ export function DropdownMenu(
 	})
 }
 
+interface NativeDropdownOptions extends DropdownOptions{
+	eventName?: string
+}
+
 export function createNativeDropdown(
 	id: string,
 	clickElement: HTMLElement,
 	menuContent: (close: () => void) => HTMLElement,
-	options?: DropDownOptions,
-	eventName: keyof DocumentEventMap = "click"
+	options?: NativeDropdownOptions,
 ): void {
-	clickElement.addEventListener(eventName, () => {
+	clickElement.addEventListener(options?.eventName ?? "click" , () => {
 		const dropDownMenuImpl = createDropdown(id, clickElement, options)
 		if(dropDownMenuImpl)
 			dropDownMenuImpl.view.appendChild(menuContent(() => closeDropdown(id)))

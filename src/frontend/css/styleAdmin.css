@@ -120,6 +120,16 @@ dataTable
 	position: fixed;
 }
 
+.dropdown.dataImage {
+	text-align: center;
+}
+.dropdown.dataImage img {
+	max-width: 500px;
+	max-height: 500px;
+	object-fit: contain;
+	vertical-align: middle;
+}
+
 
 /**********
 errorReportList
