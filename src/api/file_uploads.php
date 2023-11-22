@@ -68,6 +68,8 @@ if ($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
 switch($dataType) {
 	case 'Image':
 		try {
+			if(empty($fileData['tmp_name']))
+				throw new CriticalException('tmp_name is faulty. The file might be too big?');
 			if(!getimagesize($fileData['tmp_name']))
 				throw new CriticalException('getimagesize() failed');
 		}
