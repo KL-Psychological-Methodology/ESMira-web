@@ -11,8 +11,8 @@ import {
 	CONDITION_OPERATOR_GREATER,
 	CONDITION_OPERATOR_LESS,
 	CONDITION_TYPE_AND,
-	STATISTICS_CHARTTYPES_BARS, STATISTICS_CHARTTYPES_PIE, STATISTICS_DATATYPES_DAILY,
-	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM,
+	STATISTICS_CHARTTYPES_BARS, STATISTICS_CHARTTYPES_PIE,
+	STATISTICS_DATATYPES_FREQ_DISTR,
 	STATISTICS_VALUETYPES_COUNT
 } from "../constants/statistics";
 import {getChartColor} from "../helpers/ChartJsBox";
@@ -24,7 +24,6 @@ import {SearchBox, SearchBoxEntry} from "../widgets/SearchBox";
 import {ValueListInfo} from "../loader/csv/ValueListInfo";
 import {BindObservable} from "../widgets/BindObservable";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {AxisContainer} from "../data/study/AxisContainer";
 import {BtnReload} from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
@@ -36,11 +35,9 @@ export class Content extends SectionContent {
 	private userAgentList: ValueListInfo[] = []
 	
 	
-	private readonly perDayChart: ChartData
 	private readonly totalChart: ChartData
 	private readonly perMonthsChart: ChartData
 	
-	private readonly perDayChartPromise: ObservablePromise<LoadedStatistics>
 	private readonly totalChartPromise: ObservablePromise<LoadedStatistics>
 	private readonly perMonthsPromise: ObservablePromise<LoadedStatistics>
 	
@@ -56,12 +53,10 @@ export class Content extends SectionContent {
 		super(section)
 		this.csvLoader = csvLoader
 		
-		this.perDayChart = ChartData.createPerDayChartData(Lang.get("questionnaires"))
 		this.totalChart = this.createPieChartData(Lang.get("total_pageViews"))
 		this.perMonthsChart = this.createPerMonthChartData(Lang.get("monthly_pageViews"), this.monthsCount.get())
 		
 		const tempPromise = Promise.resolve({mainStatistics: {}})
-		this.perDayChartPromise = new ObservablePromise<LoadedStatistics>(tempPromise, null, "perDayChartPromise")
 		this.totalChartPromise = new ObservablePromise<LoadedStatistics>(tempPromise, null, "totalChartPromise")
 		this.perMonthsPromise = new ObservablePromise<LoadedStatistics>(tempPromise, null, "perMonthsPromise")
 		
@@ -183,10 +178,7 @@ export class Content extends SectionContent {
 	}
 	
 	private async reloadDynamicStatistics(): Promise<void> {
-		this.perDayChart.axisContainer.replace(await AxisContainer.getPerDayAxisCodeFromValueList(this.csvLoader, "page"))
 		this.perMonthsChart.axisContainer.replace(this.getDayPerMonthAxisContainerCode(this.monthsCount.get()))
-		
-		this.perDayChartPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.perDayChart))
 		this.perMonthsPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.perMonthsChart))
 	}
 	
