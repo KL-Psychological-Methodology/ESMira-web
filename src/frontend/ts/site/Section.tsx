@@ -71,7 +71,15 @@ export class Section {
 				else
 					actualPageName = this.sectionName
 				
-				const { Content } = await import(`../pages/${actualPageName}.tsx`)
+				let Content
+				try {
+					const importedContent = await import(`../pages/${actualPageName}.tsx`)
+					Content = importedContent.Content
+				}
+				catch(e: any) {
+					reject(Lang.get("error_pageNotFound", actualPageName))
+					return
+				}
 				
 				const loadResponses = await Promise.all(Content.preLoad(this))
 				
