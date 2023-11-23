@@ -244,7 +244,7 @@ class RichTextComponent implements Component<RichTextComponentOptions, any> {
 								const url = window.prompt(Lang.get("prompt_url"), "https://");
 								
 								if(url)
-									chain?.toggleLink({href: url}).run();
+									chain?.toggleLink({href: url, target: url.startsWith("#") || url.startsWith("/") ? "_self" : "_blank"}).run();
 							}
 						}})}
 				</div>
