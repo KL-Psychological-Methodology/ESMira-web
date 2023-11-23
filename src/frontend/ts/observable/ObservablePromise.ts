@@ -33,4 +33,7 @@ export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
 		if(!silently)
 			this.hasMutated(true)
 	}
+	public setValue(value: T, silently: boolean = false) {
+		this.set(Promise.resolve(value), silently)
+	}
 }

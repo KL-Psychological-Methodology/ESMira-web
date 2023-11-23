@@ -209,7 +209,6 @@ export class Content extends SectionContent {
 	}
 	
 	private async createFixedStatistics(): Promise<void> {
-		
 		const eventTypeValueCount = await this.csvLoader.getValueCount("eventType", ["questionnaire", "joined", "quit"])
 		this.questionnairesTotalCount = eventTypeValueCount.questionnaire
 		await this.csvLoader.filterEntireColumn(false, "eventType")
@@ -218,7 +217,7 @@ export class Content extends SectionContent {
 		if(this.enableGroupStatistics)
 			this.questionnairesPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.questionnairesChart!))
 		else {
-			this.joinedTotalCount = eventTypeValueCount.questionnaire
+			this.joinedTotalCount = eventTypeValueCount.joined
 			this.quitTotalCount = eventTypeValueCount.quit
 		}
 
@@ -233,35 +232,35 @@ export class Content extends SectionContent {
 		const day = Date.now() - (ONE_DAY_MS * this.days.get())
 		await this.csvLoader.filterRowsByResponseTime(false, day)
 		
-		this.questionnairePerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.questionnairePerDayChart))
-		
-		this.questionnairePerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.groupQuestionnairePerDayChart))
+		this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.questionnairePerDayChart))
+		if(this.enableGroupStatistics)
+			this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.groupQuestionnairePerDayChart))
 		
 		await this.csvLoader.filterByValue(false, "eventType", "questionnaire")
 		await this.csvLoader.filterByValue(true, "eventType", "joined")
 		
 		if(this.enableGroupStatistics) {
-			this.joinedPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
-			this.groupJoinedPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.groupJoinedChart!))
+			this.joinedPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
+			this.groupJoinedPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.groupJoinedChart!))
 		}
 		else
-			this.joinedPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
+			this.joinedPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
 		
 		await this.csvLoader.filterByValue(false, "eventType", "joined")
 		await this.csvLoader.filterByValue(true, "eventType", "quit")
 		
 		if(this.enableGroupStatistics) {
-			this.quitPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.quitPerDayChart))
-			this.groupQuitPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.groupQuitChart!))
+			this.quitPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.quitPerDayChart))
+			this.groupQuitPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.groupQuitChart!))
 		}
 		else
-			this.quitPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.quitPerDayChart))
+			this.quitPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.quitPerDayChart))
 		
 		await this.csvLoader.filterByValue(false, "eventType", "quit")
 		await this.csvLoader.filterEntireColumn(true, "eventType")
 		
-		this.appVersionPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.appVersionPerDayChart))
-		this.studyVersionPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.studyVersionPerDayChart))
+		this.appVersionPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.appVersionPerDayChart))
+		this.studyVersionPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.studyVersionPerDayChart))
 	}
 	
 	

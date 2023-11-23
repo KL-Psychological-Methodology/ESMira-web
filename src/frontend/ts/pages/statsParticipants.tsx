@@ -128,7 +128,7 @@ export class Content extends SectionContent {
 		await this.csvLoader.filterByValue(true, "eventType", "questionnaire")
 		
 		this.joinedPerDayChart.axisContainer.replace(await AxisContainer.getPerDayAxisCodeFromValueList(this.csvLoader, "questionnaireName"))
-		this.joinedPerDayPromise.set(this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
+		this.joinedPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.joinedPerDayChart))
 		
 		
 		await this.csvLoader.filterByValue(false, "eventType", "questionnaire")
