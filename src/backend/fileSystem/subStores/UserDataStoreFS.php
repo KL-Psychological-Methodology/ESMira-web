@@ -51,6 +51,7 @@ class UserDataStoreFS extends UserDataStore {
 							."User-Id: $this->userId"
 						);
 						$userData = $this->createNewUserData($studyId);
+						$userData->joinedTime = filectime($pathUserData); //on unix, this will be the last-changed time. Which is less than ideal
 					}
 					else
 						$userData = UserDataLoader::import(fread($handle, $filesize));
@@ -63,6 +64,7 @@ class UserDataStoreFS extends UserDataStore {
 						."User-Id: $this->userId"
 					);
 					$userData = $this->createNewUserData($studyId);
+					$userData->joinedTime = filectime($pathUserData); //on unix, this will be the last-changed time. Which is less than ideal
 				}
 				
 			}
@@ -106,6 +108,7 @@ class UserDataStoreFS extends UserDataStore {
 				."User-Id: $this->userId"
 			);
 			$userData = $this->createNewUserData($studyId);
+			$userData->joinedTime = filectime($pathUserData); //on unix this will be the last-changed time. Which is less than ideal
 			UserDataLoader::export($userData);
 			return $userData;
 		}
