@@ -25,7 +25,7 @@ jobs:
         run: npm run prod
       
       - name: Create tag
-        uses: butlerlogic/action-autotag@master
+        uses: butlerlogic/action-autotag@v1.1.2
         id: autotag
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
