@@ -35,8 +35,8 @@ $studyStore = $dataStore->getStudyStore();
 $messagesStore = $dataStore->getMessagesStore();
 $lang = Main::getLang(false);
 
-foreach($data as $studyId => $line) {
-	if(!isset($line->version) || !isset($line->msgTimestamp)) {
+foreach($data as $studyId => $entry) {
+	if(!isset($entry->version) || !isset($entry->msgTimestamp)) {
 		echo JsonOutput::error('Missing line data');
 		return;
 	}
@@ -47,16 +47,9 @@ foreach($data as $studyId => $line) {
 	try {
 		$metadata = $dataStore->getStudyMetadataStore($studyId);
 		
-		$version = $line->version;
-		$forceStudyUpdate = isset($line->forceStudyUpdate) && $line->forceStudyUpdate;
-		$lastMessageTimestamp = $line->msgTimestamp;
-		
-		$accessKeys = $metadata->getAccessKeys();
-		if(!empty($accessKeys) && !in_array(trim(strtolower($line->accessKey ?? '')), $accessKeys)) {
-			echo JsonOutput::error('Wrong accessKey: ' .($line->accessKey ?? ''));
-			return;
-		}
-		
+		$version = $entry->version;
+		$forceStudyUpdate = isset($entry->forceStudyUpdate) && $entry->forceStudyUpdate;
+		$lastMessageTimestamp = $entry->msgTimestamp;
 		$line = [];
 		
 		
@@ -78,8 +71,13 @@ foreach($data as $studyId => $line) {
 			$line['msgs'] = $outputMessages;
 		
 		
-		//studies:
-		if($forceStudyUpdate || $metadata->getVersion() > $version) {
+		//accessKey:
+		$accessKeys = $metadata->getAccessKeys();
+		if(!empty($accessKeys) && !in_array(trim(strtolower($entry->accessKey ?? '')), $accessKeys))
+			$line['errorCode'] = 'wrongAccessKey';
+		
+		//studies (only if accessKey is correct):
+		else if($forceStudyUpdate || $metadata->getVersion() > $version) {
 			//TODO: $study_json is a String, so we need to turn it into an object first or JSON will format it as a string.
 			// This is a waste of performance. So a better solution would be to just concat the JSON string manually which is ugly
 			$line['study'] = $studyStore->getStudyLangConfig($studyId, $lang);
