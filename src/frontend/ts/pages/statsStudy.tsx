@@ -31,7 +31,7 @@ const ONE_DAY_MS = 86400000
 export class Content extends SectionContent {
 	private csvLoader: CsvLoader
 	private readonly enableGroupStatistics: boolean
-	private days: ObservablePrimitive<number> = new ObservablePrimitive<number>(3, null, "days")
+	private days: ObservablePrimitive<number> = new ObservablePrimitive<number>(7, null, "days")
 	
 	private questionnairesTotalCount: number = 0
 	private joinedTotalCount: number = 0
@@ -231,12 +231,8 @@ export class Content extends SectionContent {
 		
 		const day = Date.now() - (ONE_DAY_MS * this.days.get())
 		await this.csvLoader.filterRowsByResponseTime(false, day)
+		await this.csvLoader.filterEntireColumn(false, "eventType")
 		
-		this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.questionnairePerDayChart))
-		if(this.enableGroupStatistics)
-			this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.groupQuestionnairePerDayChart))
-		
-		await this.csvLoader.filterByValue(false, "eventType", "questionnaire")
 		await this.csvLoader.filterByValue(true, "eventType", "joined")
 		
 		if(this.enableGroupStatistics) {
@@ -257,6 +253,13 @@ export class Content extends SectionContent {
 			this.quitPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.quitPerDayChart))
 		
 		await this.csvLoader.filterByValue(false, "eventType", "quit")
+		await this.csvLoader.filterByValue(true, "eventType", "questionnaire")
+		
+		this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.questionnairePerDayChart))
+		if(this.enableGroupStatistics)
+			this.questionnairePerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.groupQuestionnairePerDayChart))
+		
+		
 		await this.csvLoader.filterEntireColumn(true, "eventType")
 		
 		this.appVersionPerDayPromise.setValue(await this.csvLoader.getPersonalStatisticsFromChart(this.appVersionPerDayChart))
