@@ -57,7 +57,8 @@ export class Content extends SectionContent {
 	}
 	
 	public titleExtra(): Vnode<any, any> | null {
-		if(this.userId && this.getTools().hasPermission("read", this.getStaticInt("id") ?? -1))
+		if(this.userId && this.getTools().hasPermission("read", this.getStaticInt("id") ?? -1)) {
+			const userIdAddition = this.getStaticString("userId") ? "" : `,userId:${btoa(this.userId)}`
 			return <div>
 				{BtnReload(
 					() => this.section.loader.showLoader(this.loadParticipantMessages()),
@@ -66,16 +67,18 @@ export class Content extends SectionContent {
 				{DropdownMenu("fileOptions",
 					BtnCustom(m.trust(dataSvg), undefined, Lang.get("data")),
 					(close) => <div>
-						<a class="line" href={this.getUrl("dataView:general,file:events,filter:userId")} onclick={close}>Events.csv</a>
+						<a class="line" href={this.getUrl(`dataView:general,file:events,filter:userId${userIdAddition}`)} onclick={close}>Events.csv</a>
 						{this.getStudyOrThrow().questionnaires.get().map((questionnaire) =>
-							<a class="line" href={this.getUrl(`dataView:questionnaire,qId:${questionnaire.internalId.get()},filter:userId`)} onclick={close}>{questionnaire.getTitle()}.csv</a>
+							<a class="line" href={this.getUrl(`dataView:questionnaire,qId:${questionnaire.internalId.get()},filter:userId${userIdAddition}`)}
+							   onclick={close}>{questionnaire.getTitle()}.csv</a>
 						)}
 					</div>
 				)}
-				<a href={this.getUrl("statsParticipants")}>
+				<a href={this.getUrl(`statsParticipants${userIdAddition}`)}>
 					{BtnCustom(m.trust(participantsSvg), undefined, Lang.get("participants"))}
 				</a>
 			</div>
+		}
 		else
 			return null
 	}
@@ -322,6 +325,7 @@ export class Content extends SectionContent {
 		return <div class={className}>
 			<div class="headline">
 				<span>{Lang.getWithColon("from")}</span>
+				&nbsp;
 				<span>{message.from}</span>
 			</div>
 			
@@ -340,6 +344,7 @@ export class Content extends SectionContent {
 					{(!message.pending && message.read != 0) &&
 						<div>
 							<span>{Lang.getWithColon("confirmed")}</span>
+							&nbsp;
 							<span>{new Date(message.read).toLocaleString()}</span>
 						</div>
 					}
