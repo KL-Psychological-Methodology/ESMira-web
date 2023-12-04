@@ -5,6 +5,12 @@ import {LoginDataInterface} from "./LoginDataInterface";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Site} from "../site/Site";
 
+/**
+ * Loaded by {@link Site}
+ * {@link isEnabled} will be true if the hash starts with "admin"
+ * (or will be constructed as enabled if the startHash starts with "admin" - when using "?admin", see in index.php).
+ * Each {@link Section.load()} first calls {@link Admin.init()} before loading, which will - if {@link isEnabled} is true - make sure the user is logged in and {@link AdminTools} is loaded
+ */
 export class Admin {
 	private isEnabled: boolean
 	private isLoggedInState: boolean = false

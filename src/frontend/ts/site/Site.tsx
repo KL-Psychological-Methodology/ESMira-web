@@ -28,6 +28,9 @@ const SECTION_MIN_WIDTH = 650;
  * Each section is separated by "/". Each section has the same structure:
  * [sectionName]:[sectionValue?],[firstKey]:[firstValue],[secondKey]:[secondValue]...
  * See implementation in {@link onhashchange()}, {@link addSectionToIndex()} and {@link Section.constructor()}
+ *
+ * Admin-Panel:
+ * See description of {@link Admin} for more information
  */
 
 export class Site {

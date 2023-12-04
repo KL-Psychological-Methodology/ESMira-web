@@ -6,6 +6,9 @@ import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import {AccountsLoader} from "../loader/AccountsLoader";
 import {MessagesLoader} from "../loader/MessagesLoader";
 
+/**
+ * See description of {@link Admin}
+ */
 export class AdminTools implements AdminToolsInterface {
 	public readonly settingsLoader = new ServerSettingsLoader()
 	public readonly accountsLoader = new AccountsLoader()
