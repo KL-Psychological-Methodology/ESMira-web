@@ -215,8 +215,6 @@ export class Site {
 		
 		if(hash.startsWith("admin"))
 			this.siteData.admin.enableAdmin()
-		else
-			this.siteData.admin.disableAdmin()
 		
 		const newSectionData = hash.split("/")
 		if(hash.slice(-1) === "/")
