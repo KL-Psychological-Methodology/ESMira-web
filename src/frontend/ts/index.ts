@@ -14,7 +14,7 @@ export function init(startHash: string, serverName: string, serverVersion: numbe
 	
 	const check = new CompatibilityCheck()
 	if(!check.isCompatible()) { //detect IE, very old browsers or IE. It also detects IE
-		console.log("You shall not pass!")
+		console.warn("You shall not pass!")
 		check.toggleUrl()
 		return
 	}
@@ -23,5 +23,7 @@ export function init(startHash: string, serverName: string, serverVersion: numbe
 	site = new Site(serverName, startHash, serverVersion, PACKAGE_VERSION, serverAccessKey)
 	
 	document.body.classList.add("isInit")
-	document.getElementById("legalLink")!.innerText = Lang.get("impressum")
+	Lang.awaitPromise().then(() => {
+		document.getElementById("legalLink")!.innerText = Lang.get("impressum")
+	})
 }
