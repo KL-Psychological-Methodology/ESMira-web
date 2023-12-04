@@ -58,7 +58,7 @@ export class Content extends SectionContent {
 	
 	
 	public title(): string {
-		return Lang.get("study_description")
+		return Lang.get("reward_codes")
 	}
 	
 	private async checkCode(): Promise<void> {
