@@ -92,7 +92,7 @@ export class Content extends SectionContent {
 					<span class="highlight">{study.published.get() ? Lang.get("published") :  Lang.get("published_not")}</span>
 				</label>
 			</div>
-			{study.published.get() &&
+			{(study.published.get() || study.accessKeys.get().length != 0) &&
 				<div>
 					{DashRow(
 						DashElement("stretched", {
@@ -118,13 +118,14 @@ export class Content extends SectionContent {
 							})
 					)}
 					<br/>
-					
-					{
-						study.accessKeys.get().length >= 2
-							? TabBar(this.selectedIndex,
-								study.accessKeys.get().map((accessKey) => this.getPublishView(study, accessKey.get()))
-							)
-							: this.getPublishView(study, study.accessKeys.get()[0]?.get() ?? "").view()
+					{study.published.get() &&
+						<div>{
+							study.accessKeys.get().length >= 2
+								? TabBar(this.selectedIndex,
+									study.accessKeys.get().map((accessKey) => this.getPublishView(study, accessKey.get()))
+								)
+								: this.getPublishView(study, study.accessKeys.get()[0]?.get() ?? "").view()
+						}</div>
 					}
 				</div>
 			}
