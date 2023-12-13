@@ -21,7 +21,6 @@ interface DropDownOptions {
 	updateTableContent: () => void
 	csvLoader: CsvLoader
 	columnName: string
-	columnIndex: number
 	showFilterForHeader: ObservablePrimitive<boolean>
 }
 class DropDownComponent implements Component<DropDownOptions, any> {
@@ -35,12 +34,13 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 	private updateTableContent: () => void = () => {/*will be replaced in oncreate()*/}
 	
 	public async oncreate(vNode: VnodeDOM<DropDownOptions, any>): Promise<void> {
+		const columnName = vNode.attrs.columnName
 		this.updateTableContent = vNode.attrs.updateTableContent
 		this.csvLoader = vNode.attrs.csvLoader
 		this.showFilterForHeader = vNode.attrs.showFilterForHeader
-		this.columnIndex = vNode.attrs.columnIndex
+		this.columnIndex = this.csvLoader?.getColumnNum(columnName)
 		
-		const valueListInfo = await this.csvLoader.getValueListInfo(vNode.attrs.columnName, false, true)
+		const valueListInfo = await this.csvLoader.getValueListInfo(columnName, false, true)
 		this.valueListInfo = valueListInfo
 		let isAllUnchecked = true
 		valueListInfo.forEach((entry) => {
@@ -314,13 +314,12 @@ class DataComponent implements Component<DataComponentInterface, any> {
 		})
 	}
 	
-	private getHeaderDropDown(csvLoader: CsvLoader, columnIndex: number, columnName: string): Vnode<any, any> {
+	private getHeaderDropDown(csvLoader: CsvLoader, columnName: string, filterIndex: number): Vnode<any, any> {
 		return m(DropDownComponent, {
 			updateTableContent: this.updateTableContent.bind(this),
 			csvLoader: csvLoader,
 			columnName: columnName,
-			columnIndex: columnIndex,
-			showFilterForHeader: this.showFilterForHeaderArray[columnIndex]
+			showFilterForHeader: this.showFilterForHeaderArray[filterIndex]
 		})
 	}
 	
@@ -332,12 +331,13 @@ class DataComponent implements Component<DataComponentInterface, any> {
 			<table class="dataTable">
 				<thead class="dataHeader">
 				<th style={`min-width: ${this.columnWidths[0] ?? 0}px`}></th>
-				{this.shownHeaderNames.map((columnName, columnIndex) =>
+				{this.shownHeaderNames.map((columnName, shownColumnIndex) =>
+					//Note: shownHeaderNames does not have all headers. So shownColumnIndex is NOT columnIndex
 					DropdownMenu("dataHeaderMenu",
-						<th style={`min-width: ${this.columnWidths[columnIndex + 1] ?? 0}px`}>
-							<span class={this.showFilterForHeaderArray[columnIndex].get() ? "highlight clickable" : "clickable"} style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
+						<th style={`min-width: ${this.columnWidths[shownColumnIndex + 1] ?? 0}px`}>
+							<span class={this.showFilterForHeaderArray[shownColumnIndex].get() ? "highlight clickable" : "clickable"} style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
 						</th>,
-						() => this.getHeaderDropDown(csvLoader, columnIndex, columnName)
+						() => this.getHeaderDropDown(csvLoader, columnName, shownColumnIndex)
 					)
 				)}
 				</thead>
