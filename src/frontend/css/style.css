@@ -684,3 +684,12 @@ login
 	position: sticky;
 	top: 0;
 }
+
+
+/**********
+questionnaireInputImage
+**********/
+
+.questionnaireInputImage {
+	max-width: 100%;
+}
