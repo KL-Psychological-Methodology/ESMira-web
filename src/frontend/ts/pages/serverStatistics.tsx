@@ -303,10 +303,10 @@ export class Content extends SectionContent {
 					content: ChartView(this.dailyJoinedChart, this.dailyJoinedPromise)
 				}),
 				DashElement(null, {
-					content: ChartView(this.weekdaysQuestionnaireChart, this.weekdaysQuestionnairePromise)
+					content: ChartView(this.weekdaysQuestionnaireChart, this.weekdaysQuestionnairePromise, true)
 				}),
 				DashElement(null, {
-					content: ChartView(this.weekdaysJoinedChart, this.weekdaysJoinedPromise)
+					content: ChartView(this.weekdaysJoinedChart, this.weekdaysJoinedPromise, true)
 				})
 			)}
 			
