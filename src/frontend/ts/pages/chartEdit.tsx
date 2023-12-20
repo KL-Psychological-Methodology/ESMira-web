@@ -11,7 +11,7 @@ import {
 	STATISTICS_CHARTTYPES_PIE,
 	STATISTICS_CHARTTYPES_SCATTER,
 	STATISTICS_DATATYPES_DAILY,
-	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_XY
+	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM, STATISTICS_DATATYPES_XY
 } from "../constants/statistics";
 import {DATA_MAIN_KEYS} from "../constants/data";
 import {TranslatableObjectDataType} from "../observable/TranslatableObject";
@@ -217,7 +217,7 @@ export class Content extends ChartEditSectionContent {
 							</label>
 						</div>
 				}),
-				chart.dataType.get() == STATISTICS_DATATYPES_DAILY && DashElement(null, {
+				(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
 					content:
 						<div>
 							<label class="horizontal">

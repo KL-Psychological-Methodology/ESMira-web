@@ -16,7 +16,7 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 	public version									= this.primitive<number>(		"version",									0)
 	public subVersion								= this.primitive<number>(		"subVersion",								0)
 	public packageVersion							= this.primitive<string>(		"packageVersion",							"0.0.0")
-	public serverVersion							= this.primitive<number>(		"serverVersion",						0)
+	public serverVersion							= this.primitive<number>(		"serverVersion",							0)
 	public lang										= this.primitive<string>(		"lang",									"")
 	public newChanges								= this.primitive<boolean>(		"new_changes",								false)
 	public published								= this.primitive<boolean>(		"published",								false)
@@ -43,9 +43,9 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 	public rewardEmailContent						= this.translatable(			"rewardEmailContent",						"")
 	public rewardInstructions						= this.translatable(			"rewardInstructions",						"")
 	
-	public questionnaires							= this.objectArray(				"questionnaires", Questionnaire)
+	public questionnaires							= this.objectArray("questionnaires", Questionnaire)
 	
-	public eventUploadSettings						= this.object(				"eventUploadSettings", EventUploadSettings)
+	public eventUploadSettings						= this.object("eventUploadSettings", EventUploadSettings)
 	public publicStatistics							= this.object("publicStatistics", Statistics)
 	public personalStatistics						= this.object("personalStatistics", Statistics)
 	
