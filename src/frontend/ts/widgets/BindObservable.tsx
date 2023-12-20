@@ -20,7 +20,7 @@ const OptimusPrimeNumberTransformer: Transformer = {
 		return value
 	},
 	toObs(value: string): PrimitiveType {
-		return parseInt(value)
+		return parseInt(value) || 0
 	}
 }
 
@@ -46,7 +46,7 @@ export const BooleanTransformer: Transformer = {
 }
 export const DateTransformer: Transformer = {
 	toAttribute(value: PrimitiveType): string {
-		const intValue = typeof value == "number" ? value : parseInt(value.toString())
+		const intValue = typeof value == "number" ? value : (parseInt(value.toString()) || 0)
 		if(intValue == 0)
 			return ""
 		return (new Date(intValue)).toISOString().split("T")[0]
@@ -60,7 +60,7 @@ export const DateTransformer: Transformer = {
 }
 export const TimeTransformer: Transformer = {
 	toAttribute(value: PrimitiveType): string {
-		const intValue = typeof value == "number" ? value : parseInt(value.toString())
+		const intValue = typeof value == "number" ? value : (parseInt(value.toString()) || 0)
 		if(intValue == -1)
 			return ""
 		else {
@@ -77,8 +77,8 @@ export const TimeTransformer: Transformer = {
 			const midnight = getMidnightMillis()
 			
 			const date = new Date()
-			date.setHours(parseInt(parts[0]))
-			date.setMinutes(parseInt(parts[1]))
+			date.setHours(parseInt(parts[0]) || 0)
+			date.setMinutes(parseInt(parts[1]) || 0)
 			
 			return date.getTime() - midnight
 		}
