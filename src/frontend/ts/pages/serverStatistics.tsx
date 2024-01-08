@@ -102,7 +102,7 @@ export class Content extends SectionContent {
 				[Lang.get("weekday_thu")]: serverStatistics.week[type][4],
 				[Lang.get("weekday_fri")]: serverStatistics.week[type][5],
 				[Lang.get("weekday_sat")]: serverStatistics.week[type][6],
-				[Lang.get("weekday_sun")]: serverStatistics.week[type][7]
+				[Lang.get("weekday_sun")]: serverStatistics.week[type][0]
 			}
 		}
 	}
