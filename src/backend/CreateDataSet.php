@@ -170,6 +170,7 @@ class CreateDataSet {
 		
 		else if(isset($dataSet->responses->{$key}))
 			return self::stripOneLineInput((string) $dataSet->responses->{$key});
+		
 		else
 			return '';
 	}
@@ -191,7 +192,10 @@ class CreateDataSet {
 		else
 			return '';
 	}
-	private function getQuestionnaireAnswer(stdClass $dataSet, string $key, array $types): string {
+	private function getQuestionnaireAnswer(stdClass $dataSet, string $key, array $types, array $backwardsAliases): string {
+		if(isset($backwardsAliases[$key])) {
+			$key = $backwardsAliases[$key];
+		}
 		if(isset($types[$key])) {
 			switch($types[$key]) {
 				case 'image':
@@ -246,11 +250,12 @@ class CreateDataSet {
 			throw new DataSetException("Study $studyId seems to be broken");
 		}
 		$types = $questionnaireIndex->types;
+		$backwardsAliases = $questionnaireIndex->backwardsAliases;
 		$questionnaireData = [];
 		
 		
 		foreach($questionnaireIndex->keys as $key) {
-			$answer = $this->getQuestionnaireAnswer($dataSet, $key, $types);
+			$answer = $this->getQuestionnaireAnswer($dataSet, $key, $types, $backwardsAliases);
 			$questionnaireData[$key] = $answer;
 			
 			//statistics:

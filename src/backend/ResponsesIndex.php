@@ -6,10 +6,12 @@ require_once DIR_BASE .'/backend/responseFileKeys.php';
 class ResponsesIndex {
 	public $keys;
 	public $types = [];
+	public $backwardsAliases = []; // This associative array holds name aliases to preserve backwards compatibility, in cases where variable name changes are necessary
 	
-	public function __construct(array $keys = [], array $types = []) {
+	public function __construct(array $keys = [], array $types = [], array $backwardsAliases = []) {
 		$this->keys = $keys;
 		$this->types = $types;
+		$this->backwardsAliases = $backwardsAliases;
 	}
 	
 	public function addInput(\stdClass $input) {
@@ -34,8 +36,10 @@ class ResponsesIndex {
 				break;
 			case 'list_multiple':
 				$this->addName($name);
-				foreach($input->listChoices ?? [] as $entry) {
-					$this->addName("$name~$entry");
+				for($i = 1; $i <= count($input->listChoices ?? []); $i++) {
+					$this->addName("$name~$i");
+					$itemName = $input->listChoices[$i-1];
+					$this->backwardsAliases["$name~$itemName"] = "$name~$i";
 				}
 				break;
 			case 'file_upload':

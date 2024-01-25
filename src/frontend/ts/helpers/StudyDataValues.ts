@@ -24,9 +24,10 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 			return
 		case "list_multiple":
 			variables.push(name)
-			input.listChoices.get().forEach((listChoice) => {
-				variables.push(name + "~" + listChoice.get())
-			})
+			input.listChoices.get()
+			for(let i = 1; i <= input.listChoices.get().length; i++) {
+				variables.push(name + "~" + i.toString())
+			}
 			return
 		default:
 			variables.push(name)
