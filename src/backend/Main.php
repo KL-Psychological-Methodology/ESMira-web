@@ -8,7 +8,7 @@ use Throwable;
 const IS_TEST_INSTANCE = PHP_SAPI == 'cli';
 
 class Main {
-	const SERVER_VERSION = 11,
+	const SERVER_VERSION = 12,
 		ACCEPTED_SERVER_VERSION = 7;
 	public static $defaultPostInput = ''; //only used for testing
 	
