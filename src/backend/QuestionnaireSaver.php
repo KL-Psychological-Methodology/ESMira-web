@@ -138,8 +138,10 @@ class QuestionnaireSaver {
 				break;
 			case "list_multiple":
 				$subResponses = $newResponses[$input->name] ?? [];
+				$i = 1;
 				foreach($input->listChoices as $choice) {
-					$_SESSION[$this->cacheId]['responses']["$input->name~$choice"] = in_array($choice, $subResponses);
+					$_SESSION[$this->cacheId]['responses']["$input->name~$i"] = in_array($choice, $subResponses);
+					$i++;
 				}
 				break;
 			default:
