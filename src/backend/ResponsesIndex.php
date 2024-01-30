@@ -39,7 +39,7 @@ class ResponsesIndex {
 				for($i = 1; $i <= count($input->listChoices ?? []); $i++) {
 					$this->addName("$name~$i");
 					$itemName = $input->listChoices[$i-1];
-					$this->backwardsAliases["$name~$itemName"] = "$name~$i";
+					$this->backwardsAliases["$name~$i"] = "$name~$itemName";
 				}
 				break;
 			case 'file_upload':

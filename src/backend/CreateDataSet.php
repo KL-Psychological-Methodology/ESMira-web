@@ -164,15 +164,23 @@ class CreateDataSet {
 		return true;
 	}
 	
-	private function getAnswer(stdClass $dataSet, string $key) {
+	private function getAnswer(stdClass $dataSet, string $key, array $backwardsAliases = []) {
 		if(isset($dataSet->{$key}))
 			return self::stripOneLineInput((string) $dataSet->{$key});
 		
 		else if(isset($dataSet->responses->{$key}))
 			return self::stripOneLineInput((string) $dataSet->responses->{$key});
 		
-		else
-			return '';
+		if(isset($backwardsAliases[$key])) {
+			$oldKey = $backwardsAliases[$key];
+			if(isset($dataSet->{$oldKey}))
+				return self::stripOneLineInput((string) $dataSet->{$oldKey});
+		
+			else if(isset($dataSet->responses->{$oldKey}))
+				return self::stripOneLineInput((string) $dataSet->responses->{$oldKey});		
+		}
+		
+		return '';
 	}
 	
 	private function prepareFile(stdClass $dataSet, string $key, callable $getInternalPath, callable $getPublicPath): string {
@@ -193,9 +201,6 @@ class CreateDataSet {
 			return '';
 	}
 	private function getQuestionnaireAnswer(stdClass $dataSet, string $key, array $types, array $backwardsAliases): string {
-		if(isset($backwardsAliases[$key])) {
-			$key = $backwardsAliases[$key];
-		}
 		if(isset($types[$key])) {
 			switch($types[$key]) {
 				case 'image':
@@ -213,11 +218,11 @@ class CreateDataSet {
 						function($userId, $entryId, $key) { return Paths::publicFileAudioFromData($userId, $entryId, $key); }
 					);
 				default:
-					return $this->getAnswer($dataSet, $key);
+					return $this->getAnswer($dataSet, $key, $backwardsAliases);
 			}
 		}
 		else
-			return $this->getAnswer($dataSet, $key);
+			return $this->getAnswer($dataSet, $key, $backwardsAliases);
 	}
 	
 	/**
