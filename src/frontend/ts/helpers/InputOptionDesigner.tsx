@@ -88,6 +88,7 @@ export class InputOptionDesigner {
 				<div>
 					{this.requiredOption()}
 					{this.showValueOption()}
+					{this.checkedOptionElement(this.input.numberHasDecimal, Lang.get("allow_decimal_input"))}
 				</div>,
 				this.defaultValueOption()
 			]
