@@ -14,6 +14,7 @@ import {DashElement, DashViewOptions} from "../widgets/DashElement";
 import {closeDropdown, openDropdown} from "../widgets/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
+import {safeConfirm} from "../constants/methods";
 
 export class Content extends SectionContent {
 	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
@@ -43,7 +44,10 @@ export class Content extends SectionContent {
 		else
 			Lang.get("error_accessKey_wrong_format")
 	}
-	private removeAccessKey(study: Study, index: number): void {
+	private async removeAccessKey(study: Study, index: number): Promise<void> {
+		const accessKey = study.accessKeys.get()[index].get()
+		if(study.published.get() && !safeConfirm(Lang.get("confirm_delete_access_key", accessKey)))
+			return
 		study.accessKeys.remove(index)
 	}
 	

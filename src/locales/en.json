@@ -569,5 +569,6 @@
     "home_message": "Front page message",
     "edit_study": "Edit study",
     "can_be_left_empty": "Can be left empty",
-    "hint_to_best_practices": "Before you start your study, we recommend taking a look at the best practices in our wiki"
+    "hint_to_best_practices": "Before you start your study, we recommend taking a look at the best practices in our wiki",
+    "confirm_delete_access_key": "Do you really want to delete the access key '%s'?\n\nUnless all access keys are deleted (i.e., study is made public), active participants using this access key will loose access to the study!"
 }

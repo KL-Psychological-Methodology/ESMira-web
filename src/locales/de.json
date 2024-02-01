@@ -568,5 +568,6 @@
     "home_message": "Start-Seiten-Nachricht",
     "edit_study": "Studie bearbeiten",
     "can_be_left_empty": "Kann leer bleiben",
-    "hint_to_best_practices": "Vor dem Start der Studie, empfehlen wir sich die Best Practices in unserem Wiki durchzulesen"
+    "hint_to_best_practices": "Vor dem Start der Studie, empfehlen wir sich die Best Practices in unserem Wiki durchzulesen",
+    "confirm_delete_access_key": "Soll der Zugangsschlüssl '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!"
 }
