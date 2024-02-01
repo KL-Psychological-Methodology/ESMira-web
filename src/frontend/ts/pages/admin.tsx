@@ -96,7 +96,7 @@ export class Content extends SectionContent {
 									template: {title: Lang.get("server_settings"), icon: m.trust(serverSettingsSvg) },
 									href: this.getUrl("serverSettings")
 								}),
-								DashElement(null, {
+								window.location.origin.includes("esmira.kl.ac.at") && DashElement(null, {
 									highlight: tools?.hasErrors,
 									template: {title: Lang.get("show_errorReports"), icon: m.trust(errorReportsSvg) },
 									href: this.getUrl("errorList")
