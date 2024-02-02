@@ -3,6 +3,7 @@ export const URL_ABOUT_ESMIRA_STRUCTURE_JSON = URL_ABOUT_ESMIRA_SOURCE+"structur
 export const URL_ABOUT_ESMIRA_PUBLICATIONS_JSON = URL_ABOUT_ESMIRA_SOURCE+"publications.json"
 export const URL_ABOUT_ESMIRA_JSON = URL_ABOUT_ESMIRA_SOURCE+"langs/%s.json"
 export const URL_RELEASES_LIST = "https://api.github.com/repos/KL-Psychological-Methodology/ESMira-web/releases?per_page=50"
+export const URL_DEV_SERVER = "esmira.kl.ac.at"
 
 export const FILE_CHECK_HTACCESS = 'api/checkHtaccess/check.php'
 export const FILE_ADMIN = 'api/admin.php'

@@ -124,7 +124,6 @@ foreach($studyStore->getStudyIdList() as $studyId) {
         $configJsonText = strtr($configJsonText, $matchTable);
         $configJson = json_decode($configJsonText);
         $configJson->version = $configJson->version + 1;
-        $configJson->serverVersion = 12;
         $configJson->newChanges = false;
         $configJsonText = json_encode($configJson);
         FileSystemBasics::writeFile($configPath, $configJsonText);
