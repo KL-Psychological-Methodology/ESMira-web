@@ -36,7 +36,7 @@ export class Content extends SectionContent {
 		return this.pageTitle
 	}
 	public titleExtra(): Vnode<any, any> | null {
-		return <a class="smallText" href={this.getStudyOrThrow().contactEmail.get()}>{Lang.get("contactEmail")}</a>
+		return <a class="smallText" href={"mailto: " + this.getStudyOrThrow().contactEmail.get()}>{Lang.get("contactEmail")}</a>
 	}
 	
 	protected getAttendQuestionnaire(): Questionnaire {
