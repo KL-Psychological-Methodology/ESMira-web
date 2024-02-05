@@ -80,7 +80,7 @@ $studyStore = Configs::getDataStore()->getStudyStore();
 
 foreach($studyStore->getStudyIdList() as $studyId) {
     $studyJson = $studyStore->getStudyConfigAsJson($studyId);
-    $containsMcInput = str_contains($studyJson, "list_multiple");
+    $containsMcInput = strpos($studyJson, "list_multiple") != false;
     if(!$containsMcInput) {
         continue;
     }
