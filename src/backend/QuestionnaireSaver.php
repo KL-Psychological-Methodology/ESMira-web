@@ -207,20 +207,24 @@ class QuestionnaireSaver {
 		$output = '<form class="questionnaireBox coloredLines" method="post">';
 		
 		if(isset($page->header))
-			$output .= "<div class=\"line horizontalPadding verticalPadding\">$page->header</div>";
-		
+		$output .= "<div class=\"line horizontalPadding verticalPadding\">$page->header</div>";
+	
+		$anyRequiredInputs = false;
 		foreach($inputs as $input) {
 			if(!isset($input->name))
 				continue;
 			$output .= $this->drawInput($input);
+			if($input->required ?? false) {
+				$anyRequiredInputs = true;
+			}
 		}
 		
 		if(isset($page->footer))
 			$output .= "<div class=\"line horizontalPadding verticalPadding\">$page->footer</div>";
 		
 		$output .= '<input type="hidden" name="participant" value="' .$this->participant .'"/>
-			<input type="hidden" name="informed_consent" value="1"/>
-			<p class="smallText spacingTop">* input required</p>'
+			<input type="hidden" name="informed_consent" value="1"/>'
+			.($anyRequiredInputs ? '<p class="smallText spacingTop">'.Lang::get('info_required').'</p>' : '')
 			.($this->currentPageInt > 0
 				? '<input type="submit" id="pagePrevious" name="previous" class="left" value="'.Lang::get('previous').'"/>'
 				: ''
