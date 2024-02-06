@@ -12,7 +12,7 @@ use ZipArchive;
 
 class DoUpdate extends HasAdminPermission {
 	//we dont want to blindly copy everything over in case there are non ESMira-files in our main folder:
-	const NEEDS_BACKUP = ['api', 'backend',  'locales', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
+	const NEEDS_BACKUP = ['api', 'backend',  'frontend', 'locales', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
 	
 	/**
 	 * @var string
