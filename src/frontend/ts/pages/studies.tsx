@@ -108,6 +108,11 @@ export class Content extends SectionContent {
 	}
 	
 	protected getStudyLinkView(study: Study): Vnode<any, any> {
-		return <a href={this.getUrl(`${this.targetPage},id:${study.id.get()}`)}>{study.title.get()}</a>
+		return <a href={this.getUrl(`${this.targetPage},id:${study.id.get()}`)}>{study.title.get()} <i>{this.getStudyTagInParentheses(study)}</i></a>
+	}
+
+	protected getStudyTagInParentheses(study: Study): string {
+		let studyTag = study.studyTag.get()
+		return studyTag == "" ? "" : ("(" + studyTag + ")")
 	}
 }

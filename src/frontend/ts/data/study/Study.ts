@@ -34,6 +34,7 @@ export class Study extends TranslatableObject implements TranslationRootInterfac
 	
 	public title									= this.translatable(			"title",									"Study title")
 	public studyDescription							= this.translatable(			"studyDescription",						"")
+	public studyTag									= this.translatable(			"studyTag",								"")
 	public informedConsentForm						= this.translatable(			"informedConsentForm",						"")
 	public postInstallInstructions					= this.translatable(			"postInstallInstructions",					"")
 	public chooseUsernameInstructions				= this.translatable(			"chooseUsernameInstructions",				"")

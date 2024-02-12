@@ -63,7 +63,8 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 			'title' => $study->title ?? 'Error',
 			'accessKeys' => $study->accessKeys ?? [],
 			'lastSavedBy' => Permission::getAccountName(),
-			'lastSavedAt' => time()
+			'lastSavedAt' => time(),
+			'studyTag' => $study->studyTag ?? ''
 		];
 		FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($this->studyId), serialize($this->metadata));
 		
@@ -117,5 +118,10 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
 	public function getCreatedTimestamp(): int {
 		$this->loadCreateMetadata();
 		return $this->createMetadata['timestamp'] ?? filemtime(PathsFS::fileStudyCreateMetadata($this->studyId)) ?: 0;
+	}
+
+	public function getStudyTag(): string {
+		$this->loadMetadata();
+		return $this->metadata['studyTag'] ?? '';
 	}
 }

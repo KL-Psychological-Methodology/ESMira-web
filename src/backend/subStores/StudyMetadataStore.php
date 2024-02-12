@@ -46,4 +46,8 @@ interface StudyMetadataStore {
 	 * @throws CriticalException
 	 */
 	public function getCreatedTimestamp(): int;
+	/**
+	 * @throws CriticalException
+	 */
+	public function getStudyTag(): string;
 }
