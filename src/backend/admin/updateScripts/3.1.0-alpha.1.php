@@ -20,9 +20,7 @@ Procedure:
     2. For questionnaires containing multiple choice items:
         2.1. Backing up existing response files.
         2.2. Updating the header of existing response files.
-    3. Replacing any occurrences of affected multiple choice variables in chart definitions for public and personal statistics.
-    4. Replacing any occurrences of affected multiple choice variables in sum scores.
-    5. Update the ResponseIndex of the study.
+    3. Update the ResponseIndex of the study, including the matching array.
 Note:
     This update works mostly by using search and replace in both the response files and the study config files. In edge cases this could technically lead to broken files.
     However, the replaced strings are specific enough that this is highly unlikely, as this would require very unusual text input / variable naming (the replaced strings contain a '~', which is unlikely to occur in the files outside of the specific searched contexts).
@@ -107,27 +105,4 @@ foreach($studyStore->getStudyIdList() as $studyId) {
         }
         ResponsesIndexLoader::exportFile($studyId, $questionnaireId, new ResponsesIndex($responseIndex->keys, $responseIndex->types, $buildReverseMatchTable($questionnaire, $study->defaultLang ?? "")));
     }
-
-    // Update study config. This should take care of both sum scores and statistics charts.
-    $paths = [PathsFS::fileStudyConfig($studyId)];
-    $configPath = PathsFS::fileStudyConfig($studyId);
-    if(isset($study->defaultLang)){
-        foreach($study->langCodes as $langCode) {
-            if($langCode != $study->defaultLang) {
-                array_push($paths, PathsFS::fileLangConfig($studyId, $langCode));
-            }
-        }
-    }
-
-    foreach($paths as $configPath) {
-        $configJsonText = file_get_contents($configPath);
-        $configJsonText = strtr($configJsonText, $matchTable);
-        $configJson = json_decode($configJsonText);
-        $configJson->version = $configJson->version + 1;
-        $configJson->newChanges = false;
-        $configJsonText = json_encode($configJson);
-        FileSystemBasics::writeFile($configPath, $configJsonText);
-    }
-
-    Configs::getDataStore()->getStudyMetadataStore($studyId)->updateMetadata($studyStore->getStudyConfig($studyId));
 }
