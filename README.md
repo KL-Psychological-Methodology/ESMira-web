@@ -27,7 +27,7 @@ For more general information about ESMira have a look at the [main Readme](https
 We have set up a platform were you can help us translate ESMira:
 <https://translate.jodli.dev/projects/esmira/>
 
-If you need ESMira in a language that is not listed, please inform us in [the discussions](https://github.com/KL-Psychological-Methodology/ESMira/discussions), and we will add your language.
+If you want to translate ESMira into a language that is not listed, please inform us in [the discussions](https://github.com/KL-Psychological-Methodology/ESMira/discussions), so we can add it.
 
 ## :link: Resources
 - [Main repository](https://github.com/KL-Psychological-Methodology/ESMira)
