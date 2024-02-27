@@ -5,11 +5,10 @@ require_once '../../backend/autoload.php';
 use backend\Configs;
 use backend\JsonOutput;
 
-
 if(Configs::getDataStore()->isInit())
 	echo JsonOutput::error('Disabled');
 else
 	echo JsonOutput::successObj([
-		'htaccess' => $_SERVER['HTACCESS_ENABLED'],
+		'htaccess' => $_SERVER['HTACCESS_ENABLED'] ?? false,
 		'modRewrite' => false
 	]);
