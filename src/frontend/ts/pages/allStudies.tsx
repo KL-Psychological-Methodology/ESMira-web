@@ -140,7 +140,10 @@ export class Content extends StudiesContent {
 		else {
 			const studies: Study[] = []
 			for(const studyId of this.ownerRegister[this.selectedOwner.get()]) {
-				studies.push(studiesObs.get()[studyId])
+				const study = studiesObs.get()[studyId]
+				if(study !== undefined) {
+					studies.push(studiesObs.get()[studyId])
+				}
 			}
 			return studies
 		}
