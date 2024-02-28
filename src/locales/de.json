@@ -250,6 +250,7 @@
     "input_likert": "Likert-Skala",
     "input_list_multiple": "Liste (Multiple Choice)",
     "input_list_single": "Liste (Single Choice)",
+    "input_location": "Standort",
     "input_number": "Zahlen-Eingabe",
     "input_photo": "Foto aufnehmen",
     "input_record_audio": "Audio aufnehmen",
@@ -571,5 +572,6 @@
     "hint_to_best_practices": "Vor dem Start der Studie, empfehlen wir sich die Best Practices in unserem Wiki durchzulesen",
     "confirm_delete_access_key": "Soll der Zugangsschlüssl '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
     "study_tag": "Studienkennzeichnung",
-    "show_data": "Zeige Daten"
+    "show_data": "Zeige Daten",
+    "input_location_resolution": "H3 Auflösung (0-9)"
 }

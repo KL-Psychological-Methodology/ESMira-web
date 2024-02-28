@@ -250,6 +250,7 @@
     "input_likert": "Likert scale",
     "input_list_multiple": "List (multiple choice)",
     "input_list_single": "List (single choice)",
+    "input_location": "Location",
     "input_number": "Number input",
     "input_photo": "Take a picture",
     "input_record_audio": "Record audio",
@@ -571,5 +572,6 @@
     "can_be_left_empty": "Can be left empty",
     "hint_to_best_practices": "Before you start your study, we recommend taking a look at the best practices in our wiki",
     "confirm_delete_access_key": "Do you really want to delete the access key '%s'?\n\nUnless all access keys are deleted (i.e., study is made public), active participants using this access key will loose access to the study!",
-    "study_tag": "Study tag"
+    "study_tag": "Study tag",
+    "input_location_resolution": "H3 Resolution (0-9)"
 }

@@ -221,6 +221,19 @@ export class InputOptionDesigner {
 				this.itemsOption()
 			]
 		},
+		"location": {
+			title: Lang.get("input_location"),
+			helpUrl: "",
+			category: "classic",
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>,
+				<div>
+					{this.inputOptionElement(this.input.resolution, Lang.get("input_location_resolution"))}
+				</div>
+			]
+		},
 		"number": {
 			title: Lang.get("input_number"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Number-input",

@@ -13,6 +13,7 @@ export type InputResponseType =
 	"likert" |
 	"list_multiple" |
 	"list_single" |
+	"location" |
 	"number" |
 	"photo" |
 	"record_audio" |
@@ -38,7 +39,8 @@ export class Input extends TranslatableObject {
 	public timeoutSec				= this.primitive<number>(		"timeoutSec",				0)
 	public playSound				= this.primitive<number>(		"playSound",				0)
 	public showValue				= this.primitive<boolean>(		"showValue",				false)
-	public maxValue					= this.primitive<number>(		"maxValue",				0)
+	public maxValue					= this.primitive<number>(		"maxValue",					0)
+	public resolution				= this.primitive<number>(		"resolution",				0)
 	
 	public defaultValue				= this.translatable(			"defaultValue",			"")
 	public text						= this.translatable(			"text",					"")
