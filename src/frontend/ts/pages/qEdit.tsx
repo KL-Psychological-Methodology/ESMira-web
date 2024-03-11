@@ -105,6 +105,7 @@ export class Content extends SectionContent {
 			return
 		
 		questionnaire.pages.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	private movePage(questionnaire: Questionnaire, pIndex: number, direction: number): void {
 		const pagesObs = questionnaire.pages;
@@ -147,6 +148,7 @@ export class Content extends SectionContent {
 			return
 		
 		page.inputs.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	
 	

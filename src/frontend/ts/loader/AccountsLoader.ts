@@ -34,12 +34,13 @@ export class AccountsLoader {
 		accounts.push(accountJson)
 		return accounts.get().length - 1
 	}
-	public async deleteAccount(account: Account, index: number): Promise<void> {
+	public async deleteAccount(account: Account, index: number): Promise<boolean> {
 		const accountName = account.accountName.get()
 		if(!safeConfirm(Lang.get("confirm_delete_account", accountName)))
-			return
+			return false
 		const accounts = this.accounts!
 		await Requests.loadJson(`${FILE_ADMIN}?type=DeleteAccount`, "post", `accountName=${accountName}`)
 		accounts.remove(index)
+		return true
 	}
 }
