@@ -68,6 +68,26 @@ notCompatibleIcon
 	rotate: 45deg;
 }
 
+/**********
+inlineIcon
+**********/
+
+.inlineIcon{
+	display: inline;
+	position: relative;
+	margin: 0 3px;
+	vertical-align: middle;
+}
+
+.inlineIcon > span {
+	line-height: unset;
+	font-size: 9pt;
+}
+
+.inlineIcon svg {
+	width: 15px !important;
+	height: 15px !important;
+}
 
 /**********
 tabBar

@@ -573,5 +573,6 @@
     "confirm_delete_access_key": "Soll der Zugangsschlüssl '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
     "study_tag": "Studienkennzeichnung",
     "show_data": "Zeige Daten",
-    "input_location_resolution": "H3 Auflösung (0-9)"
+    "input_location_resolution": "H3 Auflösung (0-9)",
+    "questionnaire_no_inputs": "Fragebogen hat keine Items!"
 }

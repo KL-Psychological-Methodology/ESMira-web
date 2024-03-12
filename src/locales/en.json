@@ -573,5 +573,6 @@
     "hint_to_best_practices": "Before you start your study, we recommend taking a look at the best practices in our wiki",
     "confirm_delete_access_key": "Do you really want to delete the access key '%s'?\n\nUnless all access keys are deleted (i.e., study is made public), active participants using this access key will loose access to the study!",
     "study_tag": "Study tag",
-    "input_location_resolution": "H3 Resolution (0-9)"
+    "input_location_resolution": "H3 Resolution (0-9)",
+    "questionnaire_no_inputs": "Questionnaire has no items!"
 }
