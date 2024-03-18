@@ -574,5 +574,7 @@
     "confirm_delete_access_key": "Do you really want to delete the access key '%s'?\n\nUnless all access keys are deleted (i.e., study is made public), active participants using this access key will loose access to the study!",
     "study_tag": "Study tag",
     "input_location_resolution": "H3 Resolution (0-9)",
-    "questionnaire_no_inputs": "Questionnaire has no items!"
+    "questionnaire_no_inputs": "Questionnaire has no items!",
+    "image_input_quality": "Image Quality",
+    "image_input_quality_desc": "Value from 0 (smallest file size) to 100 (best quality)."
 }

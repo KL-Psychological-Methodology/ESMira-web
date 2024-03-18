@@ -37,10 +37,11 @@ export class Input extends TranslatableObject {
 	public forceInt					= this.primitive<boolean>(		"forceInt",				false)
 	public packageId				= this.primitive<string>(		"packageId",				"")
 	public timeoutSec				= this.primitive<number>(		"timeoutSec",				0)
-	public playSound				= this.primitive<number>(		"playSound",				0)
+	public playSound				= this.primitive<boolean>(		"playSound",				false)
 	public showValue				= this.primitive<boolean>(		"showValue",				false)
 	public maxValue					= this.primitive<number>(		"maxValue",					0)
 	public resolution				= this.primitive<number>(		"resolution",				0)
+	public quality					= this.primitive<number>(		"quality",					100)
 	
 	public defaultValue				= this.translatable(			"defaultValue",			"")
 	public text						= this.translatable(			"text",					"")

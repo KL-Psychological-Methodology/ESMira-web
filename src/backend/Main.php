@@ -62,6 +62,7 @@ class Main {
 			switch($lang) {
 				case 'de':
 				case 'en':
+				case 'it':
 				case 'uk':
 					return $lang;
 				default:
