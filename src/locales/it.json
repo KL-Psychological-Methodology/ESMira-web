@@ -574,5 +574,7 @@
     "study_tag": "Etichetta dello studio",
     "input_location_resolution": "H3 Risoluzione (0-9)",
     "screenshot_appInstall_android": "frontend/screenshot/store_install-android-it.png",
-    "calendar_description": "Questo calendario mostra gli eventi e il tempo di esecuzione dei questionari dal punto di vista di un partecipante, a seconda del momento in cui si è unito allo studio"
+    "calendar_description": "Questo calendario mostra gli eventi e il tempo di esecuzione dei questionari dal punto di vista di un partecipante, a seconda del momento in cui si è unito allo studio",
+    "image_input_quality": "Qualità dell'immagine",
+    "image_input_quality_desc": "Valore da 0 (dimensione minima del file) a 100 (migliore qualità)."
 }
