@@ -573,7 +573,8 @@
     "confirm_delete_access_key": "Soll der Zugangsschlüssl '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
     "study_tag": "Studienkennzeichnung",
     "show_data": "Zeige Daten",
-    "input_location_resolution": "H3 Auflösung (0-9)",
+    "input_location_resolution": "H3 Auflösung",
+    "input_location_resolution_desc": "Auflösung zwischen 0 und 15. 9 stellt einen guten Kompromiss zwischen Anonymität der Versuchsperson und Genauigkeit dar.",
     "questionnaire_no_inputs": "Fragebogen hat keine Items!",
     "image_input_quality": "Bildqualität (0-100)",
     "image_input_quality_desc": "Wert von 0 (kleinste Dateigröße) bis 100 (beste Qualität)."
