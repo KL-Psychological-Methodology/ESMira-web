@@ -6,6 +6,7 @@ import copySvg from "../../imgs/icons/copy.svg?raw"
 import downSvg from "../../imgs/icons/moveDown.svg?raw"
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import deleteSvg from "../../imgs/icons/trash.svg?raw"
+import warnSvg from "../../imgs/icons/warn.svg?raw"
 import {TabBar} from "../widgets/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Section} from "../site/Section";
@@ -105,6 +106,7 @@ export class Content extends SectionContent {
 			return
 		
 		questionnaire.pages.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	private movePage(questionnaire: Questionnaire, pIndex: number, direction: number): void {
 		const pagesObs = questionnaire.pages;
@@ -126,6 +128,13 @@ export class Content extends SectionContent {
 		this.movePage(questionnaire, pIndex, +1)
 	}
 	
+	private hasPages(questionnaire: Questionnaire): boolean {
+		return questionnaire.pages.get().length > 0
+	}
+
+	private hasInputs(questionnaire: Questionnaire): boolean {
+		return questionnaire.pages.get().some(value => value.inputs.get().length > 0)
+	}
 	
 	private addInput(questionnaire: Questionnaire, pageI: number): void {
 		const name = createUniqueName(this.getStudyOrThrow())
@@ -147,6 +156,7 @@ export class Content extends SectionContent {
 			return
 		
 		page.inputs.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	
 	
@@ -157,7 +167,7 @@ export class Content extends SectionContent {
 		
 		return  TabBar(this.questionnaireIndex, study.questionnaires.get().map((questionnaire, index) => {
 			return {
-				title: questionnaire.getTitle(),
+				title: <div>{this.hasInputs(questionnaire) ? <div>{questionnaire.getTitle()}</div> : <div><div class="inlineIcon">{m.trust(warnSvg)}</div>{questionnaire.getTitle()}</div>}</div>,
 				draggableList: study.questionnaires,
 				view: () => this.getQuestionnaireView(study, questionnaire, index)
 			}
@@ -185,6 +195,11 @@ export class Content extends SectionContent {
 										<input type="checkbox" {...BindObservable(questionnaire.isBackEnabled)}/>
 										<span>{Lang.get("allow_back_button")}</span>
 									</label>
+									{!this.hasInputs(questionnaire)?
+									<label>
+										<div class="inlineIcon">{m.trust(warnSvg)}</div><span>{Lang.get("questionnaire_no_inputs")}</span>
+									</label>:<div></div>
+									}
 								</div>
 							</div>
 					})

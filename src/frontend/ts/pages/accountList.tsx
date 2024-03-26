@@ -31,7 +31,10 @@ export class Content extends SectionContent {
 	}
 	
 	private async deleteAccount(account: Account, index: number) {
-		await this.section.loader.showLoader(this.accountsLoader.deleteAccount(account, index))
+		const deleted = await this.section.loader.showLoader(this.accountsLoader.deleteAccount(account, index))
+		if(deleted) {
+			window.location.hash = `${this.section.getHash(this.section.depth)}`
+		}
 	}
 	
 	public getView(): Vnode<any, any> {

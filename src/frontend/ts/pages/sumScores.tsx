@@ -24,6 +24,7 @@ export class Content extends SectionContent {
 	}
 	private removeSumScore(questionnaire: Questionnaire, index: number): void {
 		questionnaire.sumScores.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	
 	public getView(): Vnode<any, any> {

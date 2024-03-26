@@ -97,7 +97,7 @@ export class Content extends SectionContent {
 									template: {title: Lang.get("server_settings"), icon: m.trust(serverSettingsSvg) },
 									href: this.getUrl("serverSettings")
 								}),
-								window.location.origin.includes(URL_DEV_SERVER) && DashElement(null, {
+								DashElement(null, {
 									highlight: tools?.hasErrors,
 									template: {title: Lang.get("show_errorReports"), icon: m.trust(errorReportsSvg) },
 									href: this.getUrl("errorList")

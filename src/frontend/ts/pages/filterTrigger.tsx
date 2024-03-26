@@ -44,6 +44,7 @@ export class Content extends SectionContent {
 	
 	private removeActionTrigger(questionnaire: Questionnaire, index: number): void {
 		questionnaire.actionTriggers.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	private copyActionTrigger(questionnaire: Questionnaire, actionTrigger: ActionTrigger, index: number): void {
 		questionnaire.actionTriggers.addCopy(actionTrigger, index)

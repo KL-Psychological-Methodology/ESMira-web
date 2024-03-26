@@ -22,6 +22,7 @@ export class Content extends SectionContent {
 		if(!confirm())
 			return
 		list.remove(index)
+		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
 	private addChart(list: ArrayInterface<TranslatableObjectDataType, ChartData>, url: string): void {
 		list.push({})

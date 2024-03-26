@@ -100,7 +100,8 @@ export class InputOptionDesigner {
 			notCompatible: ["Web"],
 			view: () => [
 				<div>
-					{ this.requiredOption() }
+					{this.requiredOption()}
+					{this.showValueOption()}
 				</div>,
 				<div>
 					<label class="vertical noDesc">
@@ -221,6 +222,24 @@ export class InputOptionDesigner {
 				this.itemsOption()
 			]
 		},
+		"location": {
+			title: Lang.get("input_location"),
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#location-item",
+			category: "classic",
+			notCompatible: ["Web"],
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>,
+				<div>
+					<label class="spacingTop">
+						<small>{Lang.get("input_location_resolution")}</small>
+						<input type="number" { ... BindObservable(this.input.resolution) }/>
+						<small>{Lang.get("input_location_resolution_desc")}</small>
+					</label>
+				</div>
+			]
+		},
 		"number": {
 			title: Lang.get("input_number"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Number-input",
@@ -237,7 +256,18 @@ export class InputOptionDesigner {
 			title: Lang.get("input_photo"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Take-a-picture",
 			category: "media",
-			view: () => [ this.requiredOption() ]
+			view: () => [ 
+				<div>
+					{this.requiredOption()}
+				</div>,
+				<div>
+					<label class="spacingTop">
+						<small>{Lang.get("image_input_quality")}</small>
+						<input type="number" { ... BindObservable(this.input.quality) }/>
+						<small>{Lang.get("image_input_quality_desc")}</small>
+					</label>
+				</div>
+			]
 		},
 		"record_audio": {
 			title: Lang.get("input_record_audio"),
