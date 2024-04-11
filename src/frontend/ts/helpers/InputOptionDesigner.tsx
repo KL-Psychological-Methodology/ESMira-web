@@ -472,7 +472,18 @@ export class InputOptionDesigner {
 				}),
 			...views.map((view) => {
 				return DashElement("stretched", {content: view})
-			})
+			}),
+			DashElement("stretched",
+				{
+					content:
+						<div>
+							<div class="fakeLabel line">
+								<small>{Lang.get("input_relevance")}</small>
+								<textarea {... BindObservable(this.input.relevance) }></textarea>
+							</div>
+						</div>
+				}
+			)
 		)
 	}
 	public createTypesView(

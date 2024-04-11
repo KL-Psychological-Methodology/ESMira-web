@@ -42,6 +42,7 @@ export class Input extends TranslatableObject {
 	public maxValue					= this.primitive<number>(		"maxValue",					0)
 	public resolution				= this.primitive<number>(		"resolution",				0)
 	public quality					= this.primitive<number>(		"quality",					100)
+	public relevance				= this.primitive<string>(		"relevance",				"")
 	
 	public defaultValue				= this.translatable(			"defaultValue",			"")
 	public text						= this.translatable(			"text",					"")
