@@ -15,6 +15,7 @@
 	"main": "index.js",
 	"browser": "commonjs",
 	"dependencies": {
+		"@codemirror/view": "^6.26.3",
 		"@fullcalendar/core": "^6.1.9",
 		"@fullcalendar/daygrid": "^6.1.9",
 		"@fullcalendar/list": "^6.1.9",
@@ -44,6 +45,7 @@
 		"@types/papaparse": "^5.3.9",
 		"chart.js": "^4.2.0",
 		"chartjs-plugin-datalabels": "^2.2.0",
+		"codemirror": "^6.0.1",
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.7.3",
 		"css-minimizer-webpack-plugin": "^4.2.2",
