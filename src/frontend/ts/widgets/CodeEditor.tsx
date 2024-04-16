@@ -2,8 +2,9 @@ import m, { Component, Vnode, VnodeDOM } from "mithril"
 import { BaseObservable } from "../observable/BaseObservable"
 import { basicSetup, EditorView } from "codemirror"
 import { EditorState } from "@codemirror/state"
-import { ViewUpdate } from "@codemirror/view"
+import { ViewUpdate, keymap } from "@codemirror/view"
 import { linter, Diagnostic, lintGutter } from "@codemirror/lint"
+import { indentWithTab } from "@codemirror/commands"
 import { MerlinScanner } from "../merlin/merlinScanner"
 import { MerlinParser } from "../merlin/merlinParser"
 
@@ -18,6 +19,7 @@ class CodeEditorComponent implements Component<CodeEditorComponentOptions, any> 
 
     private extensions = [
             basicSetup,
+            keymap.of([indentWithTab]),
             EditorView.updateListener.of((update: ViewUpdate) => {
                 this.obs?.set(update.state.doc.toString())
             }),

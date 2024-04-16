@@ -580,5 +580,6 @@
     "image_input_quality_desc": "Wert von 0 (kleinste Dateigröße) bis 100 (beste Qualität).",
     "input_relevance": "Relevanz",
     "previous": "Zurück",
-    "page_relevance": "Relevanz"
+    "page_relevance": "Relevanz",
+    "questionnaire_end_script": "Scripting Endblock"
 }
