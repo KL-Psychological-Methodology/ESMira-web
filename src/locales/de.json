@@ -579,5 +579,6 @@
     "image_input_quality": "Bildqualität (0-100)",
     "image_input_quality_desc": "Wert von 0 (kleinste Dateigröße) bis 100 (beste Qualität).",
     "input_relevance": "Relevanz",
-    "previous": "Zurück"
+    "previous": "Zurück",
+    "page_relevance": "Relevanz"
 }

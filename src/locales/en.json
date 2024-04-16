@@ -579,5 +579,6 @@
     "questionnaire_no_inputs": "Questionnaire has no items!",
     "image_input_quality": "Image Quality",
     "image_input_quality_desc": "Value from 0 (smallest file size) to 100 (best quality).",
-    "input_relevance": "Relevance"
+    "input_relevance": "Relevance",
+    "page_relevance": "Relevance"
 }

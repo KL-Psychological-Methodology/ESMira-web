@@ -7,6 +7,7 @@ import {RichText} from "../widgets/RichText";
 import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
 import {DashElement} from "../widgets/DashElement";
 import {Section} from "../site/Section";
+import { CodeEditor } from "../widgets/CodeEditor";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -62,6 +63,15 @@ export class Content extends SectionContent {
 							<small>{Lang.get("footer")}</small>
 							{RichText(page.footer)}
 							{ObservableLangChooser(study)}
+						</div>
+					</div>
+			}),
+			DashElement("stretched", {
+				content:
+					<div>
+						<div class="label">
+							<small>{Lang.get("page_relevance")}</small>
+							{CodeEditor(page.relevance)}
 						</div>
 					</div>
 			})
