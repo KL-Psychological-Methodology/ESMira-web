@@ -1,4 +1,4 @@
-class MerlinToken {
+export class MerlinToken {
     type: MerlinTokenType
     lexeme: string
     line: number
@@ -10,7 +10,7 @@ class MerlinToken {
     }
 }
 
-enum MerlinTokenType {
+export enum MerlinTokenType {
     // Single character tokens
     LEFT_PAREN,
     RIGHT_PAREN,

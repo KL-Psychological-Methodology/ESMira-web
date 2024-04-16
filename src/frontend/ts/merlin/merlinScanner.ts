@@ -1,7 +1,7 @@
-class MerlinScanner {
-    
+import { MerlinToken, MerlinTokenType } from "./merlinTokens"
 
-    private source: string
+export class MerlinScanner {
+    constructor(public source: string) {}
     private start = 0
     private current = 0
     private line = 1
@@ -9,9 +9,6 @@ class MerlinScanner {
 
     public errors = Array<ScanningError>()
 
-    constructor(source: string) {
-        this.source = source
-    }
 
     public scanTokens(): Array<MerlinToken> {
         while (!this.isAtEnd()) {
@@ -181,8 +178,8 @@ class MerlinScanner {
 
 }
 
-class ScanningError {
-    constructor(public line: number, public message: String) {}
+export class ScanningError {
+    constructor(public line: number, public message: string) {}
 }
 
 const keywords: { [key: string]: MerlinTokenType} = {
