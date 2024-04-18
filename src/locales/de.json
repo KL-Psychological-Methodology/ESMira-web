@@ -581,5 +581,7 @@
     "input_relevance": "Relevanz",
     "previous": "Zurück",
     "page_relevance": "Relevanz",
-    "questionnaire_end_script": "Scripting Endblock"
+    "questionnaire_end_script": "Scripting Endblock",
+    "sum_scores": "Summenscores",
+    "virtual_inputs": "Virtuelle Items"
 }

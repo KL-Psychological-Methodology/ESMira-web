@@ -354,6 +354,16 @@ class SaveStudy extends HasWritePermission {
 			$this->uniqueInputNames[$score->name] = $questionnaire->title;
 			$questionnaireIndex->addName($score->name);
 		}
+
+		foreach($questionnaire->virtualInputs ?? [] as $virtualInput) {
+			if(!is_string($virtualInput))
+				continue;
+
+			$this->uniqueNameOrThrow($virtualInput, $questionnaire->title);
+			$this->uniqueInputNames[$virtualInput] = $questionnaire->title;
+			$questionnaireIndex->addName($virtualInput);
+		}
+
 		return $questionnaireIndex;
 	}
 	

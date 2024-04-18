@@ -31,6 +31,7 @@ export class Questionnaire extends TranslatableObject {
 	public minDataSetsForReward						= this.primitive<number>(	"minDataSetsForReward",					0)
 	public isBackEnabled							= this.primitive<boolean>(	"isBackEnabled",							true)
 	public endScriptBlock							= this.primitive<string>(	"endScriptBlock",							"")
+	public virtualInputs							= this.primitiveArray<string>("virtualInputs",							[])
 	
 	public title									= this.translatable(		"title",									"")
 	

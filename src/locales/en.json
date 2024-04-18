@@ -581,5 +581,7 @@
     "image_input_quality_desc": "Value from 0 (smallest file size) to 100 (best quality).",
     "input_relevance": "Relevance",
     "page_relevance": "Relevance",
-    "questionnaire_end_script": "Scripting end block"
+    "questionnaire_end_script": "Scripting end block",
+    "sum_scores": "Sum scores",
+    "virtual_inputs": "Virtual Items"
 }
