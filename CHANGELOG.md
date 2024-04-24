@@ -1,10 +1,10 @@
+> [!CAUTION]
+> This update introduces scripting. To find out more on this upcoming feature, head on over to the wiki page for [Scripting](https://github.com/KL-Psychological-Methodology/ESMira/wiki/Scripting-in-ESMira).
+> Note that the currently published version of the smartphone apps do not yet support this feature.
+
 ### 🚀 Added
 
-- Added a location item (see https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#location-item for details).
-- Added Italian translation.
-- Added a warning label for empty questionnaires.
-
-### ✏️ Changed
-
-- Countdown items now have the "show value" option. Note that this is unchecked by default.
-- Fixed a bug where deleting list entries that were edited in the current section would leave an empty section with an error message.
+- A code editor for ESMira's new scripting language, Merlin. This editor includes a linter, allowing you to detect syntax errors during study creation.
+- _Relevance_ scripts for both items and pages. These scripts allow to dynamically show or hide the respective item or page depending on the conditions specified in the script.
+- _Virtual Items_. These are similar to the sum scores already part of ESMira (and can be found in the same location). However, they only define a name that is expected and will be part of the data set. These value of these items can be programmatically set within scripts.
+- _Scripting End Block_. A script that gets executed right before a questionnaire is saved. This script can be used to, e.g., calculate statistics derived from items in the questionnaire and save these into virtual items.

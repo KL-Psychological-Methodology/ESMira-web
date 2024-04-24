@@ -1,3 +1,7 @@
+/*
+Class to represent Tokens in the Merlin scripting language. Used by the Scanner and Parser.
+*/
+
 export class MerlinToken {
     type: MerlinTokenType
     lexeme: string
@@ -9,6 +13,10 @@ export class MerlinToken {
         this.line = line
     }
 }
+
+/*
+Enum to represent the possible token types of a MerlinToken.
+*/
 
 export enum MerlinTokenType {
     // Single character tokens

@@ -1,5 +1,11 @@
 import { MerlinToken, MerlinTokenType } from "./merlinTokens"
 
+/*
+A Scanner/Tokenizer for the Merlin scripting language.
+It can take in the source code as a string in its constructor turn it into an array of Tokens.
+Also keeps track of scanning errors. This is modeled directly after the Kotlin Scanner implementation in ESMira-apps.
+*/
+
 export class MerlinScanner {
     constructor(public source: string) {}
     private start = 0
@@ -169,7 +175,7 @@ export class MerlinScanner {
     }
 
     private isLetter(c: string): boolean {
-        return /[a-z]|[A-Z]|\_/.test(c)
+        return /[a-z]|[A-Z]|_/.test(c)
     }
 
     private isDigit(c: string): boolean {

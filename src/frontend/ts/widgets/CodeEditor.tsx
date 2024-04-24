@@ -8,6 +8,11 @@ import { indentWithTab } from "@codemirror/commands"
 import { MerlinScanner } from "../merlin/merlinScanner"
 import { MerlinParser } from "../merlin/merlinParser"
 
+/*
+This is a Code Editor component that is intended for writing Merlin code.
+The linter used in this editor can use the TS-implementation of the Merlin Scanner and Parser from ESMira-apps to find scanning/parsing errors and display them in the editor.
+*/
+
 interface CodeEditorComponentOptions {
     obs: BaseObservable<string>
 }
