@@ -306,6 +306,7 @@
     "please_select": "Please select",
     "prefilledValue": "Pre-filled value",
     "preview": "Preview",
+    "previous": "Previous",
     "privacyPolicy": "Privacy Policy",
     "prompt_comment": "Please select a comment:",
     "prompt_image_fileSize": "\"%s\" is a very big file. Are you sure that you want it embed into the studyfile? It could increase the download and processing time of the study.",
@@ -577,5 +578,10 @@
     "input_location_resolution_desc": "Resolution from 0 to 15. Use resolution 9 for a good tradeoff between participant anonymity and precision.",
     "questionnaire_no_inputs": "Questionnaire has no items!",
     "image_input_quality": "Image Quality",
-    "image_input_quality_desc": "Value from 0 (smallest file size) to 100 (best quality)."
+    "image_input_quality_desc": "Value from 0 (smallest file size) to 100 (best quality).",
+    "input_relevance": "Relevance",
+    "page_relevance": "Relevance",
+    "questionnaire_end_script": "Scripting end block",
+    "sum_scores": "Sum scores",
+    "virtual_inputs": "Virtual Items"
 }

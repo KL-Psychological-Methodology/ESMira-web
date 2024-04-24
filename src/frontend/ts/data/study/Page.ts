@@ -9,4 +9,5 @@ export class Page extends TranslatableObject {
 	public footer							= this.translatable(		"footer",						"")
 	
 	public inputs							= this.objectArray(			"inputs", Input)
+	public relevance 					= this.primitive<string>(		"relevance",					"")
 }

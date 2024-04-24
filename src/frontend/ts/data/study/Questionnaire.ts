@@ -30,13 +30,14 @@ export class Questionnaire extends TranslatableObject {
 	public limitToGroup								= this.primitive<number>(	"limitToGroup",							0)
 	public minDataSetsForReward						= this.primitive<number>(	"minDataSetsForReward",					0)
 	public isBackEnabled							= this.primitive<boolean>(	"isBackEnabled",							true)
+	public endScriptBlock							= this.primitive<string>(	"endScriptBlock",							"")
+	public virtualInputs							= this.primitiveArray<string>("virtualInputs",							[])
 	
 	public title									= this.translatable(		"title",									"")
 	
 	public actionTriggers							= this.objectArray(			"actionTriggers", ActionTrigger)
 	public pages									= this.objectArray(			"pages", Page)
 	public sumScores								= this.objectArray(			"sumScores", SumScore)
-	
 	
 	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null) {
 		super(data, parent, data["internalId"] as string)

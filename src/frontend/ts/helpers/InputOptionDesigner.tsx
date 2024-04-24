@@ -12,6 +12,7 @@ import {DashElement} from "../widgets/DashElement";
 import {BaseObservable} from "../observable/BaseObservable";
 import {PossibleDevices} from "../widgets/NotCompatibleIcon";
 import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
+import { CodeEditor } from "../widgets/CodeEditor";
 
 
 const InputCategories = {
@@ -472,7 +473,18 @@ export class InputOptionDesigner {
 				}),
 			...views.map((view) => {
 				return DashElement("stretched", {content: view})
-			})
+			}),
+			DashElement("stretched",
+				{
+					content:
+						<div>
+							<div class="fakeLabel line">
+								<small>{Lang.get("input_relevance")}</small>
+								{ CodeEditor(this.input.relevance) }
+							</div>
+						</div>
+				}
+			)
 		)
 	}
 	public createTypesView(

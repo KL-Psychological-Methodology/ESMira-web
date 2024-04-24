@@ -28,6 +28,7 @@ import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
+import { CodeEditor } from "../widgets/CodeEditor";
 
 export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
@@ -202,7 +203,16 @@ export class Content extends SectionContent {
 									}
 								</div>
 							</div>
-					})
+					}),
+				DashElement("stretched", {
+					content:
+						<div>
+							<div>
+								<small>{Lang.get("questionnaire_end_script")}</small>
+								{CodeEditor(questionnaire.endScriptBlock)}
+							</div>
+						</div>
+				})
 			)}
 			
 			{
