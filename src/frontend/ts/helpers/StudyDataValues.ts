@@ -62,6 +62,10 @@ export const StudyDataValues = {
 		questionnaire.sumScores.get().forEach((sumScore) => {
 			variables.push(sumScore.name.get());
 		})
+
+		questionnaire.virtualInputs.get().forEach((virtualInput) => {
+			variables.push(virtualInput.get())
+		})
 		
 		return variables
 	},
