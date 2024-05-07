@@ -28,12 +28,14 @@ use backend\subStores\StudyStatisticsStore;
 use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\fileSystem\subStores\AccountStoreFS;
+use backend\fileSystem\subStores\MerlinLogsStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
 use backend\fileSystem\subStores\UserDataStoreFS;
 use backend\fileSystem\subStores\StudyMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsStoreFS;
+use backend\subStores\MerlinLogsStore;
 
 class DataStoreFS implements DataStoreInterface {
 	public function isInit(): bool {
@@ -53,6 +55,9 @@ class DataStoreFS implements DataStoreInterface {
 	}
 	public function getLoginTokenStore(): LoginTokenStore {
 		return new LoginTokenStoreFS();
+	}
+	public function getMerlinLogsStore(): MerlinLogsStore{
+		return new MerlinLogsStoreFS();
 	}
 	public function getMessagesStore(): MessagesStore {
 		return new MessagesStoreFS();

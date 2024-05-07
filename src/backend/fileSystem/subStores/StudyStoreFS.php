@@ -310,6 +310,7 @@ class StudyStoreFS implements StudyStore {
 		FileSystemBasics::createFolder(PathsFS::folderMessagesPending($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderMessagesUnread($studyId));
 		FileSystemBasics::createFolder(PathsFS::folderRewardCodes($studyId));
+		FileSystemBasics::createFolder(PathsFS::folderMerlinLogs($studyId));
 		
 		
 		Configs::getDataStore()->getStudyStore()->lockStudy($studyId);

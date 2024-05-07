@@ -18,6 +18,7 @@ use backend\subStores\StudyStatisticsStore;
 use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
+use backend\subStores\MerlinLogsStore;
 
 interface DataStoreInterface {
 	public function isInit(): bool;
@@ -28,6 +29,7 @@ interface DataStoreInterface {
 	public function getAccountStore(): AccountStore;
 	public function getLoginTokenStore(): LoginTokenStore;
 	public function getMessagesStore(): MessagesStore;
+	public function getMerlinLogsStore(): MerlinLogsStore;
 	public function getStudyAccessIndexStore(): StudyAccessIndexStore;
 	public function getStudyStore(): StudyStore;
 	public function getResponsesStore(): ResponsesStore;

@@ -52,6 +52,9 @@ class PathsFS {
 	static function folderMedia(int $studyId): string {
 		return self::folderStudies() ."$studyId/media/";
 	}
+	static function folderMerlinLogs(int $studyId): string {
+		return self::folderStudies() ."$studyId/.merlin_logs/";
+	}
 	static function folderMessages(int $studyId): string {
 		return self::folderStudies() ."$studyId/.messages/";
 	}
@@ -113,6 +116,12 @@ class PathsFS {
 	}
 	static function fileLock(int $studyId): string {
 		return self::folderStudies()."$studyId/.locked";
+	}
+	static function fileMerlinLog(int $studyId, int $timestamp): string {
+		return self::folderMerlinLogs($studyId) .$timestamp;
+	}
+	static function fileMerlinLogInfo(int $studyId): string {
+		return self::folderMerlinLogs($studyId) .".merlin_logs_info";
 	}
 	static function fileMessageArchive(int $studyId, string $userId): string {
 		return self::folderMessagesArchive($studyId) . Paths::makeUrlFriendly($userId);
