@@ -14,6 +14,10 @@ interface MerlinLogsStore {
     /**
      * @throws CriticalException
      */
+    public function getMerlinLog(int $studyId, int $timestamp): string;
+    /**
+     * @throws CriticalException
+     */
     public function receiveMerlinLog(int $studyId, string $msg): bool;
     /**
      * @throws CriticalException

@@ -49,6 +49,10 @@ $classIndex = [
 	'GetData' => 'backend\admin\features\readPermission\GetData',
 	'CreateMediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',
 	'GetMedia' => 'backend\admin\features\readPermission\GetMedia',
+	'ListMerlinLogs' => 'backend\admin\features\readPermission\ListMerlinLogs',
+	'DeleteMerlinLog' => 'backend\admin\features\readPermission\DeleteMerlinLog',
+	'ChangeMerlinLog' => 'backend\admin\features\readPermission\ChangeMerlinLog',
+	'GetMerlinLog' => 'backend\admin\features\readPermission\GetMerlinLog',
 	
 	//write
 	'IsFrozen' => 'backend\admin\features\writePermission\IsFrozen',

@@ -583,5 +583,8 @@
     "page_relevance": "Relevance",
     "questionnaire_end_script": "Scripting end block",
     "sum_scores": "Sum scores",
-    "virtual_inputs": "Virtual Items"
+    "virtual_inputs": "Virtual Items",
+    "merlin_logs": "Script Logs",
+    "confirm_delete_merlin_log": "Do you really want to delete the script log '%s'?",
+    "no_merlin_logs": "No script logs present."
 }

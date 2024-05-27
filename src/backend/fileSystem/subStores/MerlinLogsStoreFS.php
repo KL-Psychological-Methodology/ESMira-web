@@ -63,6 +63,15 @@ class MerlinLogsStoreFS implements MerlinLogsStore {
         return $list;
     }
 
+    public function getMerlinLog(int $studyId, int $timestamp): string {
+        $path = PathsFS::fileMerlinLog($studyId, $timestamp);
+        if(file_exists($path)) {
+            return file_get_contents($path);
+        } else {
+            throw new CriticalException('Not found');
+        }
+    }
+
     public function receiveMerlinLog(int $studyId, string $msg): bool {
         $time = Main::getMilliseconds();
 
