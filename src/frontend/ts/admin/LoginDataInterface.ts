@@ -6,6 +6,7 @@ export interface LoginDataInterface {
 	loginTime: number
 	permissions: AccountPermissions
 	newMessages: number[]
+	newMerlinLogs: number[]
 	isAdmin: boolean
 	canCreate: boolean
 	hasErrors: boolean

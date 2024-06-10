@@ -31,6 +31,7 @@ export class Content extends SectionContent {
     private async reloadMerlinLogs(): Promise<void> {
         const logs = await this.section.loader.loadJson(`${FILE_ADMIN}?type=ListMerlinLogs&study_id=${this.section.getStaticInt("id") ?? 0}`)
         this.sortMerlinLogs(logs)
+        this.getTools().merlinLogsLoader.setStudyNewLogsRemaining(this.section.getStaticInt("id") ?? 0, this.unreadLogs.length > 0)
     }
 
     private sortMerlinLogs(merlinLogs: MerlinLogInfo[]) {
@@ -49,7 +50,6 @@ export class Content extends SectionContent {
             else
                 this.unreadLogs.push(merlinLog)
         }
-        // TODO: Update tools
     }
 
     private getName(merlinLog: MerlinLogInfo): string {

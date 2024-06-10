@@ -30,7 +30,7 @@ class GetPermissions extends NoPermission {
 			$obj['accountName'] = Permission::getAccountName();
 			$obj['isLoggedIn'] = true;
 			$obj['newMessages'] = Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission();
-			
+			$obj['newMerlinLogs'] = Configs::getDataStore()->getMerlinLogsStore()->getStudiesWithUnreadMerlinLogsForPermission();
 			return $obj;
 		}
 	}

@@ -196,7 +196,14 @@ export class InputOptionDesigner {
 				<div>
 					{this.inputOptionElement(this.input.likertSteps, Lang.get("likert_number_of_points"))}
 				</div>,
-				this.leftRightLabelOption()
+				this.leftRightLabelOption(),
+				<div>
+				<label class="spacingTop">
+					<small>{Lang.get("vertical")}</small>
+					<input type="checkbox" { ... BindObservable(this.input.vertical) }/>
+					<small>{Lang.get("likert_vertical_explanation")}</small>
+				</label>
+			</div>
 			]
 		},
 		"list_multiple": {
@@ -226,7 +233,7 @@ export class InputOptionDesigner {
 		"location": {
 			title: Lang.get("input_location"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#location-item",
-			category: "classic",
+			category: "sensor",
 			notCompatible: ["Web"],
 			view: () => [
 				<div>

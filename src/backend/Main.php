@@ -64,6 +64,7 @@ class Main {
 				case 'en':
 				case 'it':
 				case 'uk':
+				case 'tl':
 					return $lang;
 				default:
 					return 'en';

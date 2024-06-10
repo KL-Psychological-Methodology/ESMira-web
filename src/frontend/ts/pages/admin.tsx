@@ -70,6 +70,7 @@ export class Content extends SectionContent {
 					
 					tools.permissions.read &&
 						DashElement(null, {
+							highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
 							template: {title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },
 							href: this.getUrl("allStudies:data")
 						}),

@@ -5,6 +5,7 @@ import {TabBar, TabContent} from "../widgets/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Study} from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
+import merlinLogsSvg from "../../imgs/icons/merlinLogs.svg?raw";
 import {StudiesDataType} from "../loader/StudyLoader";
 import {Content as StudiesContent} from "../pages/studies";
 import {SectionAlternative} from "../site/SectionContent";
@@ -42,6 +43,8 @@ export class Content extends StudiesContent {
 		switch(section.sectionValue) {
 			case "data":
 				this.targetPage = "dataStatistics"
+				if(section.getTools().merlinLogsLoader.studiesWithNewMerlinLogsCount.get())
+					this.selectedTab.set(2)
 				this.titleString = Lang.get("data")
 				break
 			case "msgs":
@@ -289,6 +292,12 @@ export class Content extends StudiesContent {
 								<span class="infoSticker highlight">{Lang.get("newMessages")}</span>
 							</span>
 						}
+						{
+							this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[study.id.get()] &&
+								<span>
+									<span class="infoSticker highlight">{Lang.get("new_merlin_logs")}</span>
+								</span>
+						}
 					</span>
 					
 				</div>
@@ -305,6 +314,8 @@ export class Content extends StudiesContent {
 		
 		const hasNewMessages = !!this.getTools().messagesLoader.studiesWithNewMessagesCount.get()
 		const newMessagesList = this.getTools().messagesLoader.studiesWithNewMessagesList || {}
+		const hasNewMerlinLogs = !!this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsCount.get()
+		const newMerlinLogsList = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList || {}
 		return TabBar(this.selectedTab, [
 			{
 				title: Lang.get("all"),
@@ -316,6 +327,13 @@ export class Content extends StudiesContent {
 				highlight: hasNewMessages,
 				view: () => this.getStudyListView(this.studies.filter((study) => {
 					return newMessagesList[study.id.get()]
+				}))
+			},
+			{
+				title: m.trust(merlinLogsSvg),
+				highlight: hasNewMerlinLogs,
+				view: () => this.getStudyListView(this.studies.filter((study) => {
+					return newMerlinLogsList[study.id.get()]
 				}))
 			},
 			{

@@ -5,6 +5,7 @@ import "../../css/styleAdmin.css";
 import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import {AccountsLoader} from "../loader/AccountsLoader";
 import {MessagesLoader} from "../loader/MessagesLoader";
+import { MerlinLogsLoader } from "../loader/MerlinLogsLoader";
 
 /**
  * See description of {@link Admin}
@@ -13,6 +14,7 @@ export class AdminTools implements AdminToolsInterface {
 	public readonly settingsLoader = new ServerSettingsLoader()
 	public readonly accountsLoader = new AccountsLoader()
 	public readonly messagesLoader: MessagesLoader
+	public readonly merlinLogsLoader: MerlinLogsLoader
 	public hasErrors: boolean = false
 	
 	public readonly isAdmin: boolean = false
@@ -25,7 +27,8 @@ export class AdminTools implements AdminToolsInterface {
 	constructor(data: LoginDataInterface) {
 		this.hasErrors = data.hasErrors
 		this.messagesLoader = new MessagesLoader(data)
-		
+		this.merlinLogsLoader = new MerlinLogsLoader(data)
+
 		this.accountName = data.accountName
 		this.canCreate = data.canCreate
 		

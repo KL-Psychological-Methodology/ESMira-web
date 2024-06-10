@@ -586,5 +586,8 @@
     "virtual_inputs": "Virtuelle Items",
     "merlin_logs": "Script Logs",
     "confirm_delete_merlin_log": "Soll der Skriptlog '%s' wirklich gelöscht werden?",
-    "no_merlin_logs": "Keine Scriptlogs vorhanden"
+    "no_merlin_logs": "Keine Scriptlogs vorhanden",
+    "vertical": "vertikal",
+    "likert_vertical_explanation": "Die Verwendung einer vertikalen Likert-Skala kann Darstellungsproblemen vorbeugen, wenn die Anzal der Stufen groß ist (mehr als ~7)",
+    "new_merlin_logs": "Neue Logs"
 }

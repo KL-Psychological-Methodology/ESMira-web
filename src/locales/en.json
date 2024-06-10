@@ -586,5 +586,8 @@
     "virtual_inputs": "Virtual Items",
     "merlin_logs": "Script Logs",
     "confirm_delete_merlin_log": "Do you really want to delete the script log '%s'?",
-    "no_merlin_logs": "No script logs present."
+    "no_merlin_logs": "No script logs present.",
+    "vertical": "vertical",
+    "likert_vertical_explanation": "Use of a vertical Likert scale can prevent display problems when the number of steps is high (more than ~7).",
+    "new_merlin_logs": "New logs"
 }

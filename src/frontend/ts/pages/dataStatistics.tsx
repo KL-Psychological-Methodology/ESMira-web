@@ -30,6 +30,7 @@ export class Content extends SectionContent {
 	}
 	
 	public getView(): Vnode<any, any> {
+		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.section.getStaticInt("id") || 0] || false
 		return <div>
 			<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
 			{DashRow(
@@ -76,6 +77,7 @@ export class Content extends SectionContent {
 					href: this.getUrl("publicStatistics")
 				}),
 				DashElement(null, {
+					highlight: hasNewMerlinLogs,
 					template: {
 						title: Lang.get("merlin_logs"),
 						icon: m.trust(merlinLogsSvg)
