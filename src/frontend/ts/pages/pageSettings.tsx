@@ -8,6 +8,7 @@ import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
 import {DashElement} from "../widgets/DashElement";
 import {Section} from "../site/Section";
 import { CodeEditor } from "../widgets/CodeEditor";
+import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -69,8 +70,8 @@ export class Content extends SectionContent {
 			DashElement("stretched", {
 				content:
 					<div>
-						<div class="label">
-							<small>{Lang.get("page_relevance")}</small>
+						<div class="fakeLabel line noDesc">
+							<small>{Lang.get("page_relevance")}{NotCompatibleIcon("Web")}</small>
 							{CodeEditor(page.relevance)}
 						</div>
 					</div>

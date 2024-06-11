@@ -10,7 +10,7 @@ import {RichText} from "../widgets/RichText";
 import {PrimitiveType} from "../observable/types/PrimitiveType";
 import {DashElement} from "../widgets/DashElement";
 import {BaseObservable} from "../observable/BaseObservable";
-import {PossibleDevices} from "../widgets/NotCompatibleIcon";
+import {NotCompatibleIcon, PossibleDevices} from "../widgets/NotCompatibleIcon";
 import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
 import { CodeEditor } from "../widgets/CodeEditor";
 
@@ -486,22 +486,15 @@ export class InputOptionDesigner {
 					content:
 						<div>
 							<div class="fakeLabel line">
-								<small>{Lang.get("text_script")}</small>
+								<small>{Lang.get("text_script")}{NotCompatibleIcon("Web")}</small>
 								{ CodeEditor(this.input.textScript) }
 								<small>{Lang.get("text_script_explanation")}</small>
 							</div>
-						</div>
-				}
-			),
-			DashElement("stretched",
-				{
-					content:
-						<div>
-							<div class="fakeLabel line">
-								<small>{Lang.get("input_relevance")}</small>
-								{ CodeEditor(this.input.relevance) }
+							<div class="fakeLabel">
+							<small>{Lang.get("input_relevance")}{NotCompatibleIcon("Web")}</small>
+							{ CodeEditor(this.input.relevance) }
 							</div>
-						</div>
+					</div>
 				}
 			)
 		)

@@ -29,6 +29,7 @@ import {DropdownMenu} from "../widgets/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
 import { CodeEditor } from "../widgets/CodeEditor";
+import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
 
 export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
@@ -207,8 +208,8 @@ export class Content extends SectionContent {
 				DashElement("stretched", {
 					content:
 						<div>
-							<div>
-								<small>{Lang.get("questionnaire_end_script")}</small>
+							<div class="fakeLabel line">
+								<small>{Lang.get("questionnaire_end_script")}{NotCompatibleIcon("Web")}</small>
 								{CodeEditor(questionnaire.endScriptBlock)}
 							</div>
 						</div>
