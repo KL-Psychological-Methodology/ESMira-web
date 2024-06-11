@@ -589,5 +589,7 @@
     "no_merlin_logs": "No script logs present.",
     "vertical": "vertical",
     "likert_vertical_explanation": "Use of a vertical Likert scale can prevent display problems when the number of steps is high (more than ~7).",
-    "new_merlin_logs": "New logs"
+    "new_merlin_logs": "New logs",
+    "text_script": "Text Script",
+    "text_script_explanation": "If present, the result of this script will replace the shown text of this item."
 }

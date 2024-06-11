@@ -486,6 +486,18 @@ export class InputOptionDesigner {
 					content:
 						<div>
 							<div class="fakeLabel line">
+								<small>{Lang.get("text_script")}</small>
+								{ CodeEditor(this.input.textScript) }
+								<small>{Lang.get("text_script_explanation")}</small>
+							</div>
+						</div>
+				}
+			),
+			DashElement("stretched",
+				{
+					content:
+						<div>
+							<div class="fakeLabel line">
 								<small>{Lang.get("input_relevance")}</small>
 								{ CodeEditor(this.input.relevance) }
 							</div>

@@ -44,6 +44,7 @@ export class Input extends TranslatableObject {
 	public quality					= this.primitive<number>(		"quality",					100)
 	public relevance				= this.primitive<string>(		"relevance",				"")
 	public vertical					= this.primitive<boolean>(		"vertical",					false)
+	public textScript				= this.primitive<string>(		"textScript",				"")
 	
 	public defaultValue				= this.translatable(			"defaultValue",			"")
 	public text						= this.translatable(			"text",					"")

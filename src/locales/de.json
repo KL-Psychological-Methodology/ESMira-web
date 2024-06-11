@@ -589,5 +589,7 @@
     "no_merlin_logs": "Keine Scriptlogs vorhanden",
     "vertical": "vertikal",
     "likert_vertical_explanation": "Die Verwendung einer vertikalen Likert-Skala kann Darstellungsproblemen vorbeugen, wenn die Anzal der Stufen groß ist (mehr als ~7)",
-    "new_merlin_logs": "Neue Logs"
+    "new_merlin_logs": "Neue Logs",
+    "text_script": "Text Script",
+    "text_script_explanation": "Wenn vorhanden ersetzt das Ergebnis dieses Scripts den angezeigten Text des Items."
 }
