@@ -67,6 +67,7 @@ export class Content extends SectionContent {
             `timestamp=${merlinLog.timestamp}`
         )
         await this.reloadMerlinLogs()
+        window.location.hash = `${this.section.getHash(this.section.depth)}`
     }
 
     private async markMerlinLogAsSeen(merlinLog: MerlinLogInfo): Promise<void> {

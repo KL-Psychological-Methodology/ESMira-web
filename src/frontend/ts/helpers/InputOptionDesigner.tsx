@@ -490,7 +490,7 @@ export class InputOptionDesigner {
 								{ CodeEditor(this.input.textScript) }
 								<small>{Lang.get("text_script_explanation")}</small>
 							</div>
-							<div class="fakeLabel">
+							<div class="fakeLabel line">
 							<small>{Lang.get("input_relevance")}{NotCompatibleIcon("Web")}</small>
 							{ CodeEditor(this.input.relevance) }
 							</div>
