@@ -15,7 +15,10 @@ import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import {TitleRow} from "../widgets/TitleRow";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
-import {URL_DEV_SERVER} from "../constants/urls";
+import { RssFetcher, RssItem } from "../singletons/RssFetcher";
+import { NewsItem } from "../widgets/NewsItem";
+import { Section } from "../site/Section";
+import { Requests } from "../singletons/Requests";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -24,6 +27,19 @@ const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
  */
 export class Content extends SectionContent {
 	private readonly addDropdownMenus = new AddDropdownMenus(this)
+	private rssItems: RssItem[]
+
+	public static preLoad(section: Section): Promise<any>[] {
+		return [
+			RssFetcher.loadFeed(3)
+		]
+	}
+
+	constructor(section: Section, rssItems: RssItem[]) {
+		super(section)
+		this.rssItems = rssItems
+	}
+
 	public title(): string {
 		return Lang.get("admin")
 	}
@@ -122,6 +138,22 @@ export class Content extends SectionContent {
 					})
 				)
 			}
+			<br/>
+			{
+				<div>
+					{
+						TitleRow(Lang.getWithColon("news"))
+					}
+					<div>
+					{
+						this.rssItems.map(item => {
+							return NewsItem(item)
+						})
+					}
+					</div>
+				</div>
+			}
 		</div>
+		
 	}
 }

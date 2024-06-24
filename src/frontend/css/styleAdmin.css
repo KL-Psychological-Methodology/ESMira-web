@@ -530,3 +530,19 @@ AddDropdownMenus
 	min-width: 500px;
 	height: 400px;
 }
+
+/**********
+NewsItems
+**********/
+
+.newsItem {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.newsItem > * {
+	background-color: #e6f9ff;
+	width: 100%;
+	padding: 5px 15px;
+}
