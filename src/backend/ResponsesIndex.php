@@ -43,6 +43,7 @@ class ResponsesIndex {
 				}
 				if($input->other) {
 					$this->addName("$name~other");
+					$this->addName("$name~other_text");
 				}
 				break;
 			case 'list_single':
@@ -50,6 +51,7 @@ class ResponsesIndex {
 				if($input->other) {
 					$this->addName("$name~other");
 				}
+				break;
 			case 'file_upload':
 			case 'photo':
 				$this->addName($name);
