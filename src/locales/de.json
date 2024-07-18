@@ -593,5 +593,6 @@
     "text_script": "Text Script",
     "text_script_explanation": "Wenn vorhanden ersetzt das Ergebnis dieses Scripts den angezeigten Text des Items.",
     "news": "Neuigkeiten",
-    "input_duration": "Dauer"
+    "input_duration": "Dauer",
+    "option_other": "Erlaube Option \"Andere\""
 }

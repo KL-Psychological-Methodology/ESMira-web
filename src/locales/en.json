@@ -593,5 +593,6 @@
     "text_script": "Text Script",
     "text_script_explanation": "If present, the result of this script will replace the shown text of this item.",
     "news": "News",
-    "input_duration": "Duration"
+    "input_duration": "Duration",
+    "option_other": "Allow option \"other\""
 }  
