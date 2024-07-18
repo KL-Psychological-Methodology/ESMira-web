@@ -592,5 +592,6 @@
     "new_merlin_logs": "Neue Logs",
     "text_script": "Text Script",
     "text_script_explanation": "Wenn vorhanden ersetzt das Ergebnis dieses Scripts den angezeigten Text des Items.",
-    "news": "Neuigkeiten"
+    "news": "Neuigkeiten",
+    "input_duration": "Dauer"
 }

@@ -7,6 +7,7 @@ export type InputResponseType =
 	"compass" |
 	"countdown" |
 	"date" |
+	"duration" |
 	"dynamic_input" |
 	"file_upload" |
 	"image" |

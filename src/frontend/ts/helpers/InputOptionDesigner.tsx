@@ -123,6 +123,12 @@ export class InputOptionDesigner {
 			category: "classic",
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
+		"duration": {
+			title: Lang.get("input_duration"),
+			helpUrl: "",
+			category: "classic",
+			view: () => this.onlyRequiredAndDefaultOptions()
+		},
 		"dynamic_input": {
 			title: Lang.get("input_dynamic_input"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Dynamic-item",
