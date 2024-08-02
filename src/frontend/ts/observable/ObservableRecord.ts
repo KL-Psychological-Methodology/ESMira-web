@@ -57,11 +57,17 @@ export class ObservableRecord<K extends number | string, T extends TranslatableO
 		this.backingField = data
 		this.defaultKeys = Object.keys(data)
 		this.hasMutated(!this._isDifferent)
+		
+		let count = 0
+		for(const id in data) {
+			++count
+		}
+		this.count = count
 	}
 	
 	public add(key: K, value: T): void {
 		if(this.exists(key))
-			delete this.backingField[key]
+			delete this.backingField[key] // existing entry will essentially be overwritten
 		else
 			++this.count
 		
