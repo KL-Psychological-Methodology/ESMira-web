@@ -27,82 +27,82 @@ Note:
 */
 
 $buildMatchTable = function(stdClass $questionnaire): array {
-    $matchTable = [];
-    foreach($questionnaire->pages as $page) {
-        foreach($page->inputs as $input) {
-            if(isset($input->responseType) && $input->responseType == "list_multiple") {
-                $index = 1;
-                $inputName = $input->name;
-                foreach($input->listChoices as $choice) {
-                    if(is_string($choice)) {
-                        $matchTable["$inputName~$choice"] = "$inputName~$index";
-                    } elseif(is_array($choice)) {
-                        foreach($choice as $choiceLangVariant) {
-                            $matchTable["$inputName~$choiceLangVariant"] = "$inputName~$index";
-                        }
-                    }
-                    $index++;
-                }
-            }
-        }
-    }
-    return $matchTable;
+	$matchTable = [];
+	foreach($questionnaire->pages as $page) {
+		foreach($page->inputs as $input) {
+			if(isset($input->responseType) && $input->responseType == "list_multiple") {
+				$index = 1;
+				$inputName = $input->name;
+				foreach($input->listChoices as $choice) {
+					if(is_string($choice)) {
+						$matchTable["$inputName~$choice"] = "$inputName~$index";
+					} elseif(is_array($choice)) {
+						foreach($choice as $choiceLangVariant) {
+							$matchTable["$inputName~$choiceLangVariant"] = "$inputName~$index";
+						}
+					}
+					$index++;
+				}
+			}
+		}
+	}
+	return $matchTable;
 };
 
 $buildReverseMatchTable = function(stdClass $questionnaire, string $defaultLang): array {
-    $matchTable = [];
-    foreach($questionnaire->pages as $page) {
-        foreach($page->inputs as $input) {
-            if(isset($input->responseType) && $input->responseType == "list_multiple") {
-                $index = 1;
-                $inputName = $input->name;
-                foreach($input->listChoices as $choice) {
-                    if(is_string($choice)) {
-                        $matchTable["$inputName~$index"] = "$inputName~$choice";
-                    } elseif(is_array($choice)) {
-                        foreach($choice as $lang => $choiceLangVariant) {
-                            if($lang == $defaultLang) {
-                                $matchTable["$inputName~$index"] = "$inputName~$choiceLangVariant";
-                            }
-                        }
-                    }
-                    $index++;
-                }
-            }
-        }
-    }
-    return $matchTable;
+	$matchTable = [];
+	foreach($questionnaire->pages as $page) {
+		foreach($page->inputs as $input) {
+			if(isset($input->responseType) && $input->responseType == "list_multiple") {
+				$index = 1;
+				$inputName = $input->name;
+				foreach($input->listChoices as $choice) {
+					if(is_string($choice)) {
+						$matchTable["$inputName~$index"] = "$inputName~$choice";
+					} elseif(is_array($choice)) {
+						foreach($choice as $lang => $choiceLangVariant) {
+							if($lang == $defaultLang) {
+								$matchTable["$inputName~$index"] = "$inputName~$choiceLangVariant";
+							}
+						}
+					}
+					$index++;
+				}
+			}
+		}
+	}
+	return $matchTable;
 };
 
 $studyStore = Configs::getDataStore()->getStudyStore();
 
 foreach($studyStore->getStudyIdList() as $studyId) {
-    $studyJson = $studyStore->getStudyConfigAsJson($studyId);
-    $containsMcInput = strpos($studyJson, "list_multiple") != false;
-    if(!$containsMcInput) {
-        continue;
-    }
-    $study = $studyStore->getStudyConfig($studyId);
-    $studyStore->backupStudy($studyId);
-    $csvSeparator = Configs::get('csv_delimiter');
-    
-    foreach($study->questionnaires as $questionnaire) {
-        // Update response file headers
-        
-        $matchTable = $buildMatchTable($questionnaire);
-        $questionnaireId = $questionnaire->internalId;
-        $responsePath = PathsFS::fileResponses($studyId, $questionnaireId);
-        $questionnaireResponse = file_get_contents($responsePath);
-        $questionnaireResponse = strtr($questionnaireResponse, $matchTable);
-        FileSystemBasics::writeFile($responsePath, $questionnaireResponse);
-
-
-        // Update ResponsesIndex
-
-        $responseIndex = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, (string)$questionnaireId)));
-        foreach($responseIndex->keys as &$key) {
-            $key = strtr($key, $matchTable);
-        }
-        ResponsesIndexLoader::exportFile($studyId, $questionnaireId, new ResponsesIndex($responseIndex->keys, $responseIndex->types, $buildReverseMatchTable($questionnaire, $study->defaultLang ?? "")));
-    }
+	$studyJson = $studyStore->getStudyConfigAsJson($studyId);
+	$containsMcInput = strpos($studyJson, "list_multiple") != false;
+	if(!$containsMcInput) {
+		continue;
+	}
+	$study = $studyStore->getStudyConfig($studyId);
+	$studyStore->backupStudy($studyId);
+	$csvSeparator = Configs::get('csv_delimiter');
+	
+	foreach($study->questionnaires as $questionnaire) {
+		// Update response file headers
+		
+		$matchTable = $buildMatchTable($questionnaire);
+		$questionnaireId = $questionnaire->internalId;
+		$responsePath = PathsFS::fileResponses($studyId, $questionnaireId);
+		$questionnaireResponse = file_get_contents($responsePath);
+		$questionnaireResponse = strtr($questionnaireResponse, $matchTable);
+		FileSystemBasics::writeFile($responsePath, $questionnaireResponse);
+		
+		
+		// Update ResponsesIndex
+		
+		$responseIndex = unserialize(file_get_contents(PathsFS::fileResponsesIndex($studyId, (string)$questionnaireId)));
+		foreach($responseIndex->keys as &$key) {
+			$key = strtr($key, $matchTable);
+		}
+		ResponsesIndexLoader::exportFile($studyId, $questionnaireId, new ResponsesIndex($responseIndex->keys, $responseIndex->types, $buildReverseMatchTable($questionnaire, $study->defaultLang ?? "")));
+	}
 }

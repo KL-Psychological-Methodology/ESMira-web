@@ -2,7 +2,7 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once dirname(__FILE__, 2) .'/backend/autoload.php';
+require_once dirname(__FILE__, 2) . '/backend/autoload.php';
 
 use backend\exceptions\CriticalException;
 use backend\FileUploader;
@@ -18,7 +18,7 @@ if(!Configs::getDataStore()->isReady()) {
 	return;
 }
 
-if(intval($_SERVER['CONTENT_LENGTH']) > 0 && empty($_POST)){
+if(intval($_SERVER['CONTENT_LENGTH']) > 0 && empty($_POST)) {
 	echo JsonOutput::error('File is too big for server');
 	return;
 }
@@ -29,7 +29,7 @@ if(!isset($_POST['studyId']) || !isset($_POST['userId']) || !isset($_POST['dataT
 }
 
 
-$studyId = (int) $_POST['studyId'];
+$studyId = (int)$_POST['studyId'];
 $userId = $_POST['userId'];
 $dataType = $_POST['dataType'];
 
@@ -52,12 +52,12 @@ if(!isset($fileData['name'])) {
 }
 
 
-$identifier = (int) $fileData['name'];
+$identifier = (int)$fileData['name'];
 
 
 //check size:
 
-if ($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
+if($fileData['size'] > Configs::get('max_filesize_for_uploads')) {
 	echo JsonOutput::error('File is too big for settings');
 	return;
 }
@@ -72,19 +72,18 @@ switch($dataType) {
 				throw new CriticalException('tmp_name is faulty. The file might be too big?');
 			if(!getimagesize($fileData['tmp_name']))
 				throw new CriticalException('getimagesize() failed');
-		}
-		catch(Throwable $e) {
+		} catch(Throwable $e) {
 			echo JsonOutput::error('Not an image');
 			return;
 		}
 		
 		break;
-    case 'Audio':
-        if(!preg_match('/video/i', mime_content_type($fileData['tmp_name']))) {
-            echo JsonOutput::error('Wrong format');
-            return;
-        }
-        break;
+	case 'Audio':
+		if(!preg_match('/video/i', mime_content_type($fileData['tmp_name']))) {
+			echo JsonOutput::error('Wrong format');
+			return;
+		}
+		break;
 	default:
 		echo JsonOutput::error('Unknown type');
 		return;
@@ -92,8 +91,7 @@ switch($dataType) {
 
 try {
 	Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $userId, $identifier, new FileUploader($fileData));
-}
-catch(CriticalException $e) {
+} catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
 }

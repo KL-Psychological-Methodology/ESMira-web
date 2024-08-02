@@ -13,8 +13,8 @@ use backend\FileSystemBasics;
 
 $handle = opendir(PathsFS::folderStudies());
 while($studyId = readdir($handle)) {
-    if($studyId[0] === '.' || $studyId === PathsFS::FILENAME_STUDY_INDEX)
-        continue;
-    $path = PathsFS::folderMerlinLogs($studyId);
-    FileSystemBasics::createFolder($path);
+	if($studyId[0] === '.' || $studyId === PathsFS::FILENAME_STUDY_INDEX)
+		continue;
+	$path = PathsFS::folderMerlinLogs($studyId);
+	FileSystemBasics::createFolder($path);
 }
