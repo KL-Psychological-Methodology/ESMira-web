@@ -21,6 +21,10 @@ export interface StudyMetadata {
 	lastSavedAt: number,
 	createdTimestamp: number
 }
+export interface StudyDataFromServer extends StudyMetadata {
+	id: number,
+	[key: string]: JsonTypes
+}
 
 /**
  * Holds all available study information.
@@ -43,34 +47,66 @@ export class StudyLoader {
 		this.packageVersion = packageVersion
 		this.repair = new RepairStudy(serverVersion, packageVersion)
 		
-		this.studyCache.addObserver(() => {
+		this.studyCache.addObserver((_origin, bubbled) => {
 			m.redraw() //redraw is asynchronous, so this should be executed after all other observers
 		})
+	}
+	
+	private updateMetadata(studyId: number, metadata: StudyMetadata) {
+		const ownerName = metadata.hasOwnProperty("owner") ? metadata.owner.toString() : ""
+		
+		this.studyMetadata[studyId] = {
+			owner: ownerName,
+			lastSavedBy: metadata.lastSavedBy ?? "",
+			lastSavedAt: metadata.hasOwnProperty("lastSavedAt")
+				? parseInt(metadata.lastSavedAt.toString()) //server sends the wrong datatype?
+				: Math.round(Date.now() / 1000),
+			createdTimestamp: metadata.hasOwnProperty("createdTimestamp")
+				? parseInt(metadata.createdTimestamp.toString()) //server sends the wrong datatype?
+				: Math.round(Date.now() / 1000)
+		}
+		if(ownerName) {
+			if (!this.ownerRegister.hasOwnProperty(ownerName))
+				this.ownerRegister[ownerName] = [studyId]
+			else
+				this.ownerRegister[ownerName].push(studyId)
+		}
+	}
+	private removeFromMetadata(study: Study) {
+		const studyId = study.id.get()
+		const ownerName = this.studyMetadata[studyId]?.owner
+		
+		if(ownerName) {
+			const ownerEntry = this.ownerRegister[ownerName]
+			if(ownerEntry.length) {
+				let index = 0
+				for (const entry of ownerEntry) {
+					if (entry == studyId) {
+						this.ownerRegister[ownerName].splice(index, 1)
+						break
+					}
+					++index
+				}
+			}
+			else
+				delete this.ownerRegister[ownerName]
+			
+			delete this.studyMetadata[studyId]
+		}
 	}
 	
 	public loadStrippedStudyList(): Promise<StudiesDataType> {
 		return PromiseCache.get("strippedStudies", async () => {
 			PromiseCache.remove("availableStudies")
-			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_ADMIN}?type=GetStrippedStudyList`)
+			const studiesJson: StudyDataFromServer[] = await Requests.loadJson(`${FILE_ADMIN}?type=GetStrippedStudyList`)
 			
 			for(const studyData of studiesJson) {
-				const id: number = studyData["id"]
+				const id = studyData.id
 				const study = new Study(studyData, this.studyCache, Math.round(Date.now() / 1000), null)
-				const owner = studyData.hasOwnProperty("owner") ? studyData["owner"].toString() : null
+				
 				if(!this.studyCache.exists(id))
 					this.studyCache.add(id, study)
-				if(owner != null) {
-					this.studyMetadata[id] = {
-						owner: owner,
-						lastSavedBy: studyData["lastSavedBy"] ?? "",
-						lastSavedAt: studyData["lastSavedAt"] ?? 0,
-						createdTimestamp: studyData.hasOwnProperty("createdTimestamp") ? parseInt(studyData["createdTimestamp"]) : 0
-					}
-					if(!this.ownerRegister.hasOwnProperty(owner))
-						this.ownerRegister[owner] = [id]
-					else
-						this.ownerRegister[owner].push(id)
-				}
+				this.updateMetadata(id, studyData)
 			}
 			
 			return this.studyCache
@@ -191,21 +227,17 @@ export class StudyLoader {
 	public async addStudy(studyData: TranslatableObjectDataType): Promise<number | null> {
 		const id: number = await Requests.loadJson(`${FILE_ADMIN}?type=GetNewId&for=study&study_id=-1`)
 		
-		studyData["id"] = id
-		studyData["serverVersion"] = this.serverVersion
-		studyData["packageVersion"] = this.packageVersion
+		studyData.id = id
+		studyData.serverVersion = this.serverVersion
+		studyData.packageVersion = this.packageVersion
+		
+		this.updateMetadata(id, {} as StudyMetadata)
 		
 		const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
 		this.studyCache.add(id, study)
-		PromiseCache.save(`study${id}`, Promise.resolve(study))
+		PromiseCache.save(`study${id}`, Promise.resolve(study)) // studies are loaded through the PromiseCache
 		study.setDifferent(true)
 		
-		this.studyMetadata[id] = {
-			owner: "",
-			createdTimestamp: Math.round(Date.now() / 1000),
-			lastSavedBy: "",
-			lastSavedAt: Math.round(Date.now() / 1000)
-		}
 		return id
 	}
 	
@@ -235,6 +267,8 @@ export class StudyLoader {
 			throw new Error(Lang.get("error_unknown"))
 		
 		study.removeAllConnectedObservers()
+		
+		this.removeFromMetadata(study)
 		
 		//make sure the study is removed after the page got a chance to clear. If not, several getStudy() calls would cause exceptions!
 		window.setTimeout(() => {
@@ -288,19 +322,21 @@ export class StudyLoader {
 		}
 		
 		const saveType = study.version.get() == 0 ? "CreateStudy" : "SaveStudy";
-		const {lastChanged, json} = await Requests.loadJson(
+		const response = await Requests.loadJson(
 			`${FILE_ADMIN}?type=${saveType}&study_id=${study.id.get()}&lastChanged=${study.lastChanged}`,
 			"post",
 			JSON.stringify(studies)
-		)
-		study.lastChanged = lastChanged
-
+		) as { metaData: StudyMetadata, json: Record<string, TranslatableObjectDataType> }
+		
+		study.lastChanged = response.metaData.lastSavedAt
+		this.updateMetadata(study.id.get(), response.metaData)
+		
 		//just in case the server changed something important in the json, we reload the study:
 		study.currentLangCode.set(study.defaultLang.get())
-		const newStudy = this.updateStudyJson(study, json["_"])
-		for(let langCode in json) {
+		const newStudy = this.updateStudyJson(study, response.json["_"])
+		for(let langCode in response.json) {
 			if(langCode != "_")
-				newStudy.addLanguage(langCode, json[langCode])
+				newStudy.addLanguage(langCode, response.json[langCode])
 		}
 		newStudy.currentLangCode.set(currentLang)
 		newStudy.hasMutated()

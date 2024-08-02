@@ -514,6 +514,15 @@ class SaveStudy extends HasWritePermission {
 		//
 		$this->save();
 		
-		return ['lastChanged' => time(), 'json' => $this->studyCollection];
+        $studyMetadataStore = Configs::getDataStore()->getStudyMetadataStore($study->id);
+		return [
+            'metaData' => [
+                'owner' => $studyMetadataStore->getOwner(),
+                'lastSavedBy' => $studyMetadataStore->getLastSavedBy(),
+                'lastSavedAt' => $studyMetadataStore->getLastSavedAt(),
+                'createdTimestamp' => $studyMetadataStore->getCreatedTimestamp(),
+            ],
+            'json' => $this->studyCollection
+        ];
 	}
 }
