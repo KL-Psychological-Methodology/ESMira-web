@@ -32,6 +32,10 @@ export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			RssFetcher.loadFeed(3)
+				.catch(() => {
+					section.loader.error(Lang.get("error_news"))
+					return []
+				})
 		]
 	}
 
@@ -139,7 +143,7 @@ export class Content extends SectionContent {
 				)
 			}
 			<br/>
-			{
+			{ !!this.rssItems.length &&
 				<div>
 					{
 						TitleRow(Lang.getWithColon("news"))
