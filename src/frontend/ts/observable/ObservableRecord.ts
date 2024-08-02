@@ -3,13 +3,13 @@ import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
 import {TranslatableObject, TranslatableObjectDataType} from "./TranslatableObject";
 import { JsonTypes } from "./types/JsonTypes";
 
-export class ObservableRecord<T extends TranslatableObject> extends BaseObservable<Record<number, T>> {
+export class ObservableRecord<K extends number | string, T extends TranslatableObject> extends BaseObservable<Record<number, T>> {
 	protected _isDifferent = false
-	private backingField: Record<number, T>
+	private backingField: Record<K, T>
 	private count: number = 0
 	private defaultKeys: string[]
 	
-	constructor(data: Record<number, T>, key: string = "") {
+	constructor(data: Record<K, T>, key: string = "") {
 		super(null, key)
 		this.keyName = key
 		this.backingField = data
@@ -25,10 +25,10 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 		return this._isDifferent
 	}
 	
-	public contains(key: number): boolean {
+	public contains(key: K): boolean {
 		return this.backingField.hasOwnProperty(key)
 	}
-	public getEntry(key: number): T | undefined {
+	public getEntry(key: K): T | undefined {
 		return this.backingField[key]
 	}
 	public getFirst(): T | undefined {
@@ -38,28 +38,28 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 		return undefined
 	}
 	
-	public get(): Record<number, T> {
+	public get(): Record<K, T> {
 		return this.backingField
 	}
-	public filter(callback: (id: number, entry: T) => boolean): Record<number, T> {
-		const entries :Record<number, T> = {}
+	public filter(callback: (id: K, entry: T) => boolean): Record<K, T> {
+		const entries :Record<K, T> = {} as Record<K, T>
 		for(const id in this.backingField) {
-			if(callback(parseInt(id), this.backingField[id]))
+			if(callback(id, this.backingField[id]))
 				entries[id] = this.backingField[id]
 		}
 		return entries
 	}
 	
-	public exists(key: number): boolean {
+	public exists(key: K): boolean {
 		return this.backingField.hasOwnProperty(key)
 	}
-	public set(data: Record<number, T>, _silently?: boolean): void {
+	public set(data: Record<K, T>, _silently?: boolean): void {
 		this.backingField = data
 		this.defaultKeys = Object.keys(data)
 		this.hasMutated(!this._isDifferent)
 	}
 	
-	public add(key: number, value: T): void {
+	public add(key: K, value: T): void {
 		if(this.exists(key))
 			delete this.backingField[key]
 		else
@@ -68,7 +68,7 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 		this.backingField[key] = value
 		this.hasMutated(!this._isDifferent)
 	}
-	public remove(key: number): void {
+	public remove(key: K): void {
 		if(this.backingField.hasOwnProperty(key)) {
 			delete this.backingField[key]
 			--this.count
@@ -80,8 +80,8 @@ export class ObservableRecord<T extends TranslatableObject> extends BaseObservab
 	}
 	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
-		const json: Record<number, TranslatableObjectDataType> = {}
-		for(let key in this.backingField) {
+		const json: Record<K, TranslatableObjectDataType> = {} as Record<K, TranslatableObjectDataType>
+		for(const key in this.backingField) {
 			json[key] = this.backingField[key].createJson(options)
 		}
 		return json

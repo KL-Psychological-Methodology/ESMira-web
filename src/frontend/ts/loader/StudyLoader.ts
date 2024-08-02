@@ -13,7 +13,7 @@ import {RepairStudy} from "../helpers/RepairStudy";
 import {Page} from "../data/study/Page";
 import {createUniqueName} from "../helpers/UniqueName";
 
-export type StudiesDataType = ObservableRecord<Study>
+export type StudiesDataType = ObservableRecord<number, Study>
 
 export interface StudyMetadata {
 	owner: string
@@ -29,7 +29,7 @@ export interface StudyMetadata {
  * Note, that because of how {@link BaseObservable} work, all observers are stored in {@link studyCache} which means, when a study gets replaced, its observer will persist
  */
 export class StudyLoader {
-	private readonly studyCache = new ObservableRecord<Study>({}, "studies")
+	private readonly studyCache = new ObservableRecord<number, Study>({}, "studies")
 	private readonly questionnaireRegister: Record<number, number> = {}
 	private readonly observerIds: Record<number, ObserverId> = {}
 	private readonly serverVersion: number
