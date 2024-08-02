@@ -50,6 +50,7 @@ export class Content extends SectionContent {
 			"post",
 			`new_account=${accountName}&pass=${password}&data_location=${this.folderData.dirBase}&reuseFolder=${this.reuseFolder ? "1" : "0"}`
 		)
+		this.goTo("admin")
 		window.location.reload()
 		return true
 	}
