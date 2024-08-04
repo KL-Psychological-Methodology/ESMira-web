@@ -87,11 +87,11 @@ export class Content extends SectionContent {
 					<div class="center">
 						<label>
 							<small>{Lang.get("no")}</small>
-							<input type="radio" checked={this.reuseFolder} onchange={() => {this.reuseFolder = true}}/>
+							<input type="radio" checked={!this.reuseFolder} onchange={() => {this.reuseFolder = false}}/>
 						</label>
 						<label class="spacingLeft">
 							<small>{Lang.get("yes")}</small>
-							<input type="radio" checked={!this.reuseFolder} onchange={() => {this.reuseFolder = false}}/>
+							<input type="radio" checked={this.reuseFolder} onchange={() => {this.reuseFolder = true}}/>
 						</label>
 					</div>
 				</div>

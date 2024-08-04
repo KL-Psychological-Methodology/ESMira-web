@@ -73,7 +73,7 @@ class ESMiraInitializerFSTest extends BaseTestSetup {
 		$password2 = 'pass2';
 		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password1);
 		
-		$_POST['reuseFolder'] = true;
+		$_POST['reuseFolder'] = false;
 		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password2);
 		
 		$accountStore = Configs::getDataStore()->getAccountStore();

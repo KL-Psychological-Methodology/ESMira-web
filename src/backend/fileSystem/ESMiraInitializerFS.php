@@ -32,7 +32,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	private function moveExistingDataFolder($pathDataFolder) {
 		$reuseFolder = isset($_POST['reuseFolder']) && $_POST['reuseFolder'];
 		
-		if(file_exists($pathDataFolder) && $reuseFolder) {
+		if(file_exists($pathDataFolder) && !$reuseFolder) {
 			$count = 2;
 			
 			do {
