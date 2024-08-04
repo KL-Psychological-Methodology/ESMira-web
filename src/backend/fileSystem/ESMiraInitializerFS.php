@@ -96,9 +96,10 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	}
 	
 	public function getInfoArray(string $dataFolderBase = DIR_BASE): array {
+	    $folder = $this::assembleDataFolderPath($dataFolderBase);
 		return [
 			'dirBase' => DIR_BASE,
-			'dataFolderExists' => file_exists($this::assembleDataFolderPath($dataFolderBase))
+			'dataFolderExists' => file_exists($folder) && (new \FilesystemIterator($folder))->valid() //check if dir is empty
 		];
 	}
 }
