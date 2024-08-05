@@ -5,6 +5,8 @@ namespace backend\fileSystem;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\ESMiraInitializer;
+use backend\exceptions\PageFlowException;
+use backend\MigrationManager;
 use backend\Paths;
 use backend\fileSystem\PathsFS;
 use backend\fileSystem\loader\PermissionsLoader;
@@ -28,23 +30,28 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	
 	/**
 	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	private function moveExistingDataFolder($pathDataFolder) {
-		$reuseFolder = isset($_POST['reuseFolder']) && $_POST['reuseFolder'];
-		
-		if(file_exists($pathDataFolder) && !$reuseFolder) {
-			$count = 2;
-			
-			do {
-				$newPath = substr($pathDataFolder, 0, -1) .$count;
+		if(file_exists($pathDataFolder)) {
+			if(isset($_POST['reuseFolder']) && $_POST['reuseFolder'])
+				MigrationManager::autoRun();
+			else {
+				$count = 2;
 				
-				if(++$count > 100)
-					throw new CriticalException('Too many copies of ' . Paths::FILE_CONFIG .' exist');
+				do {
+					$newPath = substr($pathDataFolder, 0, -1) .$count;
+					
+					if(++$count > 100)
+						throw new CriticalException('Too many copies of ' . Paths::FILE_CONFIG .' exist');
+				}
+				while(file_exists($newPath));
+				
+				if(!@rename($pathDataFolder, $newPath))
+					throw new CriticalException('Could not move existing esmira_data folder');
 			}
-			while(file_exists($newPath));
-			
-			rename($pathDataFolder, $newPath);
 		}
+		
 	}
 	
 	/**
@@ -72,6 +79,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 		
 		$this->moveExistingDataFolder($pathDataFolder);
 		$this->createDataFolder($pathDataFolder);
+		copy(Paths::FILE_SERVER_VERSION, $pathDataFolder . Paths::FILENAME_VERSION);
 		
 		//create login:
 		Configs::getDataStore()->getAccountStore()->setAccount($accountName, $password);
