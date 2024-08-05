@@ -3,6 +3,7 @@
 /dist/
 /node_modules/
 /package-lock.json
+/esmira/
 /src/test/backend/data_folder/
 /.phpunit.result.cache
 /src/test/phpunit-9.5.21.phar

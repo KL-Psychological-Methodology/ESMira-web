@@ -1,0 +1,9 @@
+services:
+  esmira:
+    build:
+      context: .
+    ports:
+      - 80:80
+    volumes:
+      - ./esmira/data:/var/www/html/esmira_data
+      - ./esmira/config:/var/www/html/backend/config/
