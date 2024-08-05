@@ -78,8 +78,11 @@ class DoUpdate extends HasAdminPermission {
 			closedir($handle);
 		}
 		
-		if(count($revertFailedList))
-			throw new PageFlowException("Reverting update failed! The following files are still in the backup folder: $revertFailedList\nReverting was caused by this error: \n$msg");
+		if(count($revertFailedList)) {
+			$stringMsg = 'Reverting update failed! The following files are still in the backup folder: ' .implode(',', $revertFailedList) ."\nReverting was caused by this error: \n$msg";
+			error_log($stringMsg);
+			throw new PageFlowException($stringMsg);
+		}
 		else
 			rmdir($this->folderPathBackup);
 		
