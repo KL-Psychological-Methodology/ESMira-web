@@ -10,7 +10,7 @@ use backend\Permission;
 class GetPermissions extends NoPermission {
 	
 	function exec(): array {
-		if(!Permission::isLoggedIn())
+		if(!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
 			return ['isLoggedIn' => false];
 		else {
 			if(Permission::isAdmin()) {
