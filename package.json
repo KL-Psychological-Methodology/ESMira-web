@@ -67,6 +67,7 @@
 	},
 	"devDependencies": {
 		"@types/mithril": "^2.0.13",
+		"generate-file-webpack-plugin": "^1.0.1",
 		"ts-loader": "^9.3.0",
 		"typescript": "^4.6.4",
 		"webpack": "^5.75.0",

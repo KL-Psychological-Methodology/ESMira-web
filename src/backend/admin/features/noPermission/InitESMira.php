@@ -8,6 +8,7 @@ use backend\Configs;
 use backend\FileSystemBasics;
 use backend\exceptions\PageFlowException;
 use backend\Permission;
+use Throwable;
 
 class InitESMira extends NoPermission {
 	function exec(): array {
@@ -20,9 +21,14 @@ class InitESMira extends NoPermission {
 		$pass = $_POST['pass'];
 		$initializer = Configs::getDataStore()->getESMiraInitializer();
 		
-		FileSystemBasics::writeServerConfigs($initializer->getConfigAdditions());
-		$initializer->create($user, $pass);
-		
+		try {
+			FileSystemBasics::writeServerConfigs($initializer->getConfigAdditions());
+			$initializer->create($user, $pass);
+		}
+		catch(Throwable $e) {
+			FileSystemBasics::deleteServerConfigs();
+			throw $e;
+		}
 		//
 		//login:
 		//
