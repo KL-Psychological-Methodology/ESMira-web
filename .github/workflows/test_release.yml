@@ -6,6 +6,10 @@ on:
   
   workflow_dispatch:
 
+env:
+  REGISTRY: jodlidev
+  IMAGE_NAME: esmira
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
@@ -65,7 +69,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: jodlidev/esmira
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       
       - name: Build and push Docker image
         id: push
