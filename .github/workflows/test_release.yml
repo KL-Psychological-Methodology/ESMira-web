@@ -1,0 +1,81 @@
+name: Automatic release
+
+on:
+  push:
+    branches: [ docker-test ]
+  
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Build for production
+        run: npm run prod
+      
+      - name: Create tag
+        uses: butlerlogic/action-autotag@1.1.2
+        id: autotag
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          strategy: package
+          tag_prefix: "v"
+      
+      - name: Zip dist folder
+        run: |
+          cd dist
+          zip -r ../ESMira-web.zip .
+      
+#      - name: Create named release
+#        if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
+#        uses: softprops/action-gh-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          name: Release version ${{ steps.autotag.outputs.version }}
+#          tag_name: v${{ steps.autotag.outputs.version}}
+#          generate_release_notes: true
+#          append_body: true
+#          body_path: CHANGELOG.md
+#          files: ESMira-web.zip
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: jodlidev/esmira
+      
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
