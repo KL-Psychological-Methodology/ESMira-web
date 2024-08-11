@@ -1,7 +1,6 @@
 services:
   esmira:
-    build:
-      context: .
+    image: jodlidev/esmira
     ports:
       - 80:80
     volumes:
