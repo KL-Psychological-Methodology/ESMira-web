@@ -595,5 +595,6 @@
     "news": "Neuigkeiten",
     "input_duration": "Dauer",
     "option_other": "Erlaube Option \"Andere\"",
-    "error_news": "Laden der ESMira news fehlgeschlagen"
+    "error_news": "Laden der ESMira news fehlgeschlagen",
+    "generating": "erstelle"
 }

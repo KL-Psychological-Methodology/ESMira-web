@@ -9,7 +9,8 @@ export const URL_BLOG_RSS = "https://kl-psychological-methodology.github.io/ESMi
 export const FILE_CHECK_HTACCESS = 'api/checkHtaccess/check.php'
 export const FILE_ADMIN = 'api/admin.php'
 export const FILE_RESPONSES = FILE_ADMIN+"?type=GetData&study_id=%1&q_id=%2"
-export const FILE_MEDIA = FILE_ADMIN+"?type=CreateMediaZip&study_id=%1"
+export const FILE_CREATE_MEDIA = FILE_ADMIN+"?type=CreateMediaZip&study_id=%1"
+export const FILE_MEDIA = FILE_ADMIN+"?type=GetMediaZip&study_id=%1"
 export const FILE_IMAGE = FILE_ADMIN+"?type=GetMedia&study_id=%1&userId=%2&entryId=%3&key=%4&media_type=image"
 export const FILE_AUDIO = FILE_ADMIN+"?type=GetMedia&study_id=%1&userId=%2&entryId=%3&key=%4&media_type=audio"
 export const FILE_SAVE_ACCESS = 'api/access.php'

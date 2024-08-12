@@ -5,7 +5,7 @@ import downloadSvg from "../../imgs/icons/download.svg?raw"
 import questionnaireSvg from "../../imgs/icons/questionnaire.svg?raw"
 import backupSvg from "../../imgs/icons/backup.svg?raw"
 import {Section} from "../site/Section";
-import {FILE_ADMIN, FILE_MEDIA, FILE_RESPONSES} from "../constants/urls";
+import {FILE_ADMIN, FILE_MEDIA, FILE_CREATE_MEDIA, FILE_RESPONSES} from "../constants/urls";
 import {Study} from "../data/study/Study";
 import {TitleRow} from "../widgets/TitleRow";
 import {Requests} from "../singletons/Requests";
@@ -20,6 +20,7 @@ interface DataLineEntry {
 }
 
 export class Content extends SectionContent {
+	private is_generating_zip: boolean = false
 	private readonly backupEntries: DataLineEntry[]
 	
 	public static preLoad(section: Section): Promise<any>[] {
@@ -102,9 +103,9 @@ export class Content extends SectionContent {
 				{study.hasMedia() &&
 					<div>
 						{TitleRow(Lang.getWithColon("media_download"))}
-						<a class="spacingRight" download="media.zip" href={`${FILE_MEDIA.replace("%1", study.id.get().toString())}`}>
+						<a class="spacingRight" onclick={this.waitForDownload.bind(this, study)}>
 							{m.trust(downloadSvg)}
-							<span class="spacingLeft">media.zip</span>
+							<span id="mediaZipSpan" class="spacingLeft">media.zip</span>
 						</a>
 					</div>
 				}
@@ -152,5 +153,32 @@ export class Content extends SectionContent {
 				</div>
 			</div>
 		)
+	}
+
+	private waitForDownload(study: Study) {
+		if (this.is_generating_zip) {
+			return
+		}
+		this.is_generating_zip = true
+		const eventSource = new EventSource(`${FILE_CREATE_MEDIA.replace("%1", study.id.get().toString())}`)
+		const mediaZipSpan = document.getElementById("mediaZipSpan")
+
+		eventSource.addEventListener('progress', e => {
+			if(mediaZipSpan != undefined)
+				mediaZipSpan.innerText = "media.zip (%1 ... %2\%)".replace("%1", Lang.get("generating")).replace("%2", e.data)
+		})
+		eventSource.addEventListener('finished', e => {
+			this.is_generating_zip = false
+			eventSource.close()
+
+			if(mediaZipSpan != undefined)
+				mediaZipSpan.innerText = "media.zip"
+			let element = document.createElement('a')
+			element.setAttribute('href', `${FILE_MEDIA.replace("%1", study.id.get().toString())}`)
+			element.setAttribute('download', 'media.zip')
+			document.body.appendChild(element);
+			element.click();
+			document.body.removeChild(element);
+		})
 	}
 }

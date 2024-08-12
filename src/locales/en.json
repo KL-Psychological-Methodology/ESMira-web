@@ -595,5 +595,6 @@
     "news": "News",
     "input_duration": "Duration",
     "option_other": "Allow option \"other\"",
-    "error_news": "Failed to load ESMira news"
+    "error_news": "Failed to load ESMira news",
+    "generating": "generating"
 }

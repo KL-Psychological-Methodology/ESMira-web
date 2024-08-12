@@ -136,11 +136,20 @@ class ResponsesStoreFS implements ResponsesStore {
 		return $lastActivities;
 	}
 	
-	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename) {
+	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename, int $startCount, int $totalCount) {
 		$handle = opendir($path);
+		$count = $startCount;
 		while($file = readdir($handle)) {
 			if($file[0] != '.') {
 				$zip->addFile("$path/$file", $getMediaFilename($file));
+
+				$percent = round(($count / $totalCount) * 100);
+				echo "event: progress\n";
+				echo "data: $percent\n\n";
+				if (ob_get_contents())
+					ob_end_flush();
+				flush();
+				$count++;
 			}
 		}
 		closedir($handle);
@@ -149,16 +158,25 @@ class ResponsesStoreFS implements ResponsesStore {
 		$pathZip = Paths::fileMediaZip($studyId);
 		$zip = new ZipArchive();
 		$zip->open($pathZip, ZIPARCHIVE::CREATE);
-		
+		$folderImages = Paths::folderImages($studyId);
+		$folderAudio = Paths::folderAudio($studyId);
+		$countImages = count(scandir($folderImages)) - 2;
+		$countAudio = count(scandir($folderAudio)) - 2;
+		$countTotal = $countImages + $countAudio;
+
 		$this->fillMediaFolder(
 			$zip,
 			Paths::folderImages($studyId),
-			function($fileName) { return Paths::publicFileImageFromMediaFilename($fileName); }
+			function($fileName) { return Paths::publicFileImageFromMediaFilename($fileName); },
+			0,
+			$countTotal
 		);
 		$this->fillMediaFolder(
 			$zip,
 			Paths::folderAudio($studyId),
-			function($fileName) { return Paths::publicFileAudioFromMediaFilename($fileName); }
+			function($fileName) { return Paths::publicFileAudioFromMediaFilename($fileName); },
+			$countImages,
+			$countTotal
 		);
 		
 		$zip->close();
