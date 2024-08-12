@@ -143,13 +143,13 @@ class ResponsesStoreFS implements ResponsesStore {
 			if($file[0] != '.') {
 				$zip->addFile("$path/$file", $getMediaFilename($file));
 
+				$count++;
 				$percent = round(($count / $totalCount) * 100);
 				echo "event: progress\n";
 				echo "data: $percent\n\n";
 				if (ob_get_contents())
 					ob_end_flush();
 				flush();
-				$count++;
 			}
 		}
 		closedir($handle);
@@ -163,6 +163,12 @@ class ResponsesStoreFS implements ResponsesStore {
 		$countImages = count(scandir($folderImages)) - 2;
 		$countAudio = count(scandir($folderAudio)) - 2;
 		$countTotal = $countImages + $countAudio;
+
+		echo "event: progress\n";
+		echo "data: 0\n\n";
+		if (ob_get_contents())
+			ob_end_flush();
+		flush();
 
 		$this->fillMediaFolder(
 			$zip,
