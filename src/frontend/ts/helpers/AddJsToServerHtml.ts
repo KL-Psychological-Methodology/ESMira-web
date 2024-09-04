@@ -36,7 +36,8 @@ export class AddJsToServerHtml {
 				}
 				break
 			case "qr":
-				const qrCodeUrl = createStudyUrl(this.getAccessKey(sectionContent), sectionContent.getStaticInt("id") ?? -1, true)
+				const id = sectionContent.getStaticInt("id") ?? -1
+				const qrCodeUrl = createStudyUrl(this.getAccessKey(sectionContent), id, id != -1)
 				const qr = qrcode(0, 'L')
 				
 				qr.addData(qrCodeUrl)
