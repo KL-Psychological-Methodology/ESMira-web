@@ -3,7 +3,6 @@
 namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
-use backend\Main;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\Paths;
