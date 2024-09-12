@@ -28,6 +28,7 @@ use backend\subStores\StudyStatisticsStore;
 use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\fileSystem\subStores\AccountStoreFS;
+use backend\fileSystem\subStores\DataBackupStoreFS;
 use backend\fileSystem\subStores\MerlinLogsStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
@@ -35,7 +36,10 @@ use backend\fileSystem\subStores\UserDataStoreFS;
 use backend\fileSystem\subStores\StudyMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsStoreFS;
+use backend\subStores\DataBackupStore;
 use backend\subStores\MerlinLogsStore;
+use backend\subStores\SnapshotStore;
+use backend\fileSystem\subStores\SnapshotStoreFS;
 
 class DataStoreFS implements DataStoreInterface {
 	public function isInit(): bool {
@@ -94,5 +98,13 @@ class DataStoreFS implements DataStoreInterface {
 	}
 	public function getRewardCodeStore(): RewardCodeStore {
 		return new RewardCodeStoreFS();
+	}
+	public function getDataBackupStore(): DataBackupStore
+	{
+		return new DataBackupStoreFS();	
+	}
+	public function getSnapshotStore(): SnapshotStore
+	{
+		return new SnapshotStoreFS();
 	}
 }
