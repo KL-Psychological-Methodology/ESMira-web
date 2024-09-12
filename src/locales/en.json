@@ -602,5 +602,16 @@
     "prompt_bookmark_name": "Please select a name for the bookmark:",
     "bookmarks": "Bookmarks",
     "create_bookmark": "Bookmark this page",
-    "remove_bookmark": "Remove bookmark from this page"
+    "remove_bookmark": "Remove bookmark from this page",
+    "snapshots": "Snapshots",
+    "no_snapshot": "No snapshot stored on server",
+    "has_snapshot": "Found a snapshot from %s",
+    "create_snapshot": "Create Snapshot",
+    "creating_snaphsot": "Creating Snapshot (step %d, %d%)",
+    "created_snapshot": "Snapshot creation complete",
+    "creating_snapshot_failed": "Creating snapshot failed",
+    "delete_snapshot": "Delete snapshot",
+    "get_snapshot": "Download snapshot",
+    "upload_snapshot": "Upload snapshot",
+    "restore_snapshot": "Restore from snapshot"
 }

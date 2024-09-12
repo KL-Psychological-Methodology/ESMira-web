@@ -7,15 +7,17 @@ export interface RequestType {
 }
 
 export const Requests = {
-	loadRaw(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<string> {
+	loadRaw(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<string> {
 		return new Promise<XMLHttpRequest>((resolve) => {
 			const r = new XMLHttpRequest()
 			if(!r)
 				throw new Error(Lang.get("error_create_request_failed"))
 			
 			r.open(type, url)
-			if(type == "post")
-				r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+			if(type == "post") {
+				if(!(requestData instanceof FormData))
+					r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
+			}
 			
 			r.onreadystatechange = function() {
 				if(r.readyState !== 4)
@@ -31,7 +33,7 @@ export const Requests = {
 			return r.responseText
 		})
 	},
-	loadJson(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<any> {
+	loadJson(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<any> {
 		return this.loadRaw(url, type, requestData)
 			.then((response) => {
 				const obj = JSON.parse(response)

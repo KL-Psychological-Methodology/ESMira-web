@@ -31,6 +31,12 @@ class PathsFS {
 	static function folderTokenRoot(): string {
 		return self::folderData() .'.loginToken/';
 	}
+	static function folderDataBackup(): string {
+		return self::folderData() . '.backup/';
+	}
+	static function folderSnapshot(): string {
+		return self::folderData() . '.snapshot/';
+	}
 	
 	static function fileDataVersion(): string {
 		return self::folderData() .Paths::FILENAME_VERSION;

@@ -15,8 +15,15 @@ import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import {Requests} from "../singletons/Requests";
 import {PackageVersionComparator} from "../singletons/PackageVersionComparator";
+import { C } from "@fullcalendar/core/internal-common";
 
 type ReleaseType = {version: string, date: Date, changeLog: string, downloadUrl: string}
+
+interface SnapshotInfo {
+	hasSnapshot: boolean,
+	fileChanged: number,
+	fileSize: number
+}
 
 export class Content extends SectionContent {
 	private loader: ServerSettingsLoader
@@ -31,14 +38,16 @@ export class Content extends SectionContent {
 	private releaseData: ReleaseType[] = []
 	private debuggingOn = process.env.NODE_ENV !== "production"
 	private changeLanguageList: ChangeLanguageList
-	
+	private snapshotInfo: SnapshotInfo
+
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
-			section.getTools().settingsLoader.init()
+			section.getTools().settingsLoader.init(),
+			Requests.loadJson(`${FILE_ADMIN}?type=GetSnapshotInfo`)
 		]
 	}
 	
-	constructor(sitePage: Section, loader: ServerSettingsLoader) {
+	constructor(sitePage: Section, loader: ServerSettingsLoader, snapshotInfo: SnapshotInfo) {
 		super(sitePage)
 		this.loader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
@@ -48,6 +57,7 @@ export class Content extends SectionContent {
 		this.observerId = loader.getSettings().addObserver(this.updateSaveState.bind(this))
 		this.section.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
 		this.updateSaveState()
+		this.snapshotInfo = snapshotInfo
 	}
 	public async preInit(): Promise<any> {
 		await this.changeLanguageList.promise
@@ -216,6 +226,35 @@ export class Content extends SectionContent {
 			<br/><br/>
 			
 			
+			{TitleRow(Lang.getWithColon("snapshots"))}
+
+			<div>
+				<div>
+				{this.snapshotInfo.hasSnapshot ?
+					<span>{Lang.get("has_snapshot", (new Date(this.snapshotInfo.fileChanged * 1000)).toLocaleString())}</span> :
+					<span>{Lang.get("no_snapshot")}</span>
+				}
+				</div>
+				<div>
+					<input type="button" onclick={this.createSnapshot.bind(this)} value={Lang.get("create_snapshot")}/>
+					<span id="createSnapshotProgress"></span>
+				</div>
+				{this.snapshotInfo.hasSnapshot && <div>
+					<input type="button" onclick={this.deleteSnapshot.bind(this)} value={Lang.get("delete_snapshot")}/>
+					<input type="button" onclick={this.downloadSnapshot.bind(this)} value={Lang.get("get_snapshot")}/>
+				</div>}
+				<div>
+					<form enctype="multipart/form-data">
+						<input type="file" name="snapshotFileUpload" id="snapshotFileUpload"></input>
+					</form>
+					<input type="button" onclick={this.uploadSnapshot.bind(this)} value={Lang.get("upload_snapshot")}/>
+					<span id="snapshotUploadProgress"></span>
+				</div>
+				{this.snapshotInfo.hasSnapshot && <div>
+					<input type="button" onclick={this.restoreSnapshot.bind(this)} value={Lang.get("restore_snapshot")}/>
+				</div>}
+			</div>
+
 			{TitleRow(Lang.getWithColon("additional_languages"))}
 			{this.changeLanguageList.getView()}
 			
@@ -256,12 +295,93 @@ export class Content extends SectionContent {
 			</div>
 		</div>
 	}
-	
+
 	private updateSaveState(): void {
 		this.setDynamic("showSaveButton", this.loader.getSettings().isDifferent() ?? false)
 		m.redraw()
 	}
 	
+	private createSnapshot(): void {
+		const eventSource = new EventSource(`${FILE_ADMIN}?type=CreateSnapshot`)
+		const snapshotProgressSpan = document.getElementById("createSnapshotProgress")
+
+		eventSource.addEventListener('progress', e => {
+			console.log(e.data)
+			if(snapshotProgressSpan != undefined) {
+				const data = JSON.parse(e.data)
+			 	const step: number = data['stage'] || 0
+			 	const percent: number = data['progress'] || 0
+			 	snapshotProgressSpan.innerText = Lang.get("creating_snaphsot", step, percent)
+			}
+		})
+		eventSource.addEventListener('finished', e => {
+			alert(Lang.get("created_snapshot"));
+			eventSource.close();
+			window.location.reload();
+		})
+		eventSource.addEventListener('failed', e => {
+			console.log(e.data);
+			if(snapshotProgressSpan != undefined)
+				snapshotProgressSpan.innerText = Lang.get("creating_snapshot_failed")
+			eventSource.close();
+		})
+	}
+
+	private deleteSnapshot(): void {
+		Requests.loadJson(`${FILE_ADMIN}?type=DeleteSnapshot`).then((value) => window.location.reload())
+	}
+
+	private downloadSnapshot(): void {
+		let element = document.createElement('a')
+		element.setAttribute('href', `${FILE_ADMIN}?type=GetSnapshot`)
+		element.setAttribute('download', 'snapshot.zip')
+		document.body.appendChild(element);
+		element.click();
+		document.body.removeChild(element);
+	}
+
+	private async uploadSnapshot(): Promise<void> {
+		const inputElement: HTMLInputElement | null = document.querySelector('#snapshotFileUpload')
+		const progressElement: HTMLSpanElement | null = document.querySelector('#snapshotUploadProgress')
+		if(inputElement == null)
+			return
+
+		if(inputElement.files == null)
+			return
+
+		const file = inputElement.files[0]
+
+		if(file == undefined)
+			return
+
+		console.log(file);
+		const chunkSize = 1024 * 1024 * 5 // 5 MB chunks
+		const timeStamp = new Date().getTime()
+
+		for(let start = 0; start < file.size; start += chunkSize) {
+			const progress = Math.round((start / file.size) * 100).toString() + " %"
+			if(progressElement != null)
+				progressElement.innerText = progress
+			const chunk = file.slice(start, start + chunkSize)
+			const formData = new FormData()
+			console.log(formData)
+			formData.set('file', chunk)
+			formData.set('name', timeStamp.toString())
+			if(start + chunkSize >= file.size)
+				formData.set('complete', "1")
+
+			await Requests.loadRaw(`${FILE_ADMIN}?type=UploadSnapshot`, "post", formData)
+		}
+
+		if(progressElement != null)
+			progressElement.innerText = ""
+		window.location.reload()
+	}
+
+	private restoreSnapshot() {
+		Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`).then((value) => window.location.reload())
+	}
+
 	public destroy(): void {
 		this.observerId.removeObserver()
 		this.setDynamic("showSaveButton", false)

@@ -19,7 +19,9 @@ use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\subStores\BookmarkStore;
+use backend\subStores\DataBackupStore;
 use backend\subStores\MerlinLogsStore;
+use backend\subStores\SnapshotStore;
 
 interface DataStoreInterface {
 	public function isInit(): bool;
@@ -46,4 +48,6 @@ interface DataStoreInterface {
 	public function getServerStore(): ServerStore;
 	public function getRewardCodeStore(): RewardCodeStore;
 	public function getBookmarkStore(): BookmarkStore;
+	public function getDataBackupStore(): DataBackupStore;
+	public function getSnapshotStore(): SnapshotStore;
 }
