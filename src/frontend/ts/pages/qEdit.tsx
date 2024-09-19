@@ -185,22 +185,28 @@ export class Content extends SectionContent {
 					{
 						content:
 							<div class="listParent verticalPadding floatingSpaceLeft floatingSpaceRight">
-								<div class="">
+								<div>
 									<label class="line">
 										<small>{Lang.get("questionnaire_name")}</small>
 										<input class="big" type="text" {...BindObservable(questionnaire.title)}/>
 										{ObservableLangChooser(study)}
 									</label>
 								</div>
-								<div class="center">
-									<label class="">
+								<div class="listChild">
+									<label>
 										<input type="checkbox" {...BindObservable(questionnaire.isBackEnabled)}/>
 										<span>{Lang.get("allow_back_button")}</span>
 									</label>
-									{!this.hasInputs(questionnaire)?
 									<label>
-										<div class="inlineIcon">{m.trust(warnSvg)}</div><span>{Lang.get("questionnaire_no_inputs")}</span>
-									</label>:<div></div>
+										<input type="checkbox" {...BindObservable(questionnaire.showInDisabledList)}/>
+										<span>{Lang.get("show_in_disabled_list")}</span>
+										<small>{Lang.get("show_in_disabled_list_desc")}</small>
+									</label>
+									{!this.hasInputs(questionnaire) ?
+										<label>
+											<div class="inlineIcon">{m.trust(warnSvg)}</div>
+											<span>{Lang.get("questionnaire_no_inputs")}</span>
+										</label> : <div></div>
 									}
 								</div>
 							</div>

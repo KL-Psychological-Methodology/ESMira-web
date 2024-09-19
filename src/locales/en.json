@@ -596,5 +596,7 @@
     "input_duration": "Duration",
     "option_other": "Allow option \"other\"",
     "error_news": "Failed to load ESMira news",
-    "generating": "generating"
+    "generating": "generating",
+    "show_in_disabled_list": "Always keep questionnaire accessible",
+    "show_in_disabled_list_desc": "Is shown in disabled questionnaires list when not active"
 }
