@@ -31,6 +31,7 @@ use backend\fileSystem\subStores\AccountStoreFS;
 use backend\fileSystem\subStores\DataBackupStoreFS;
 use backend\fileSystem\subStores\BookmarkStoreFS;
 use backend\fileSystem\subStores\MerlinLogsStoreFS;
+use backend\fileSystem\subStores\SnapshotStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
 use backend\fileSystem\subStores\UserDataStoreFS;
@@ -41,7 +42,6 @@ use backend\subStores\DataBackupStore;
 use backend\subStores\BookmarkStore;
 use backend\subStores\MerlinLogsStore;
 use backend\subStores\SnapshotStore;
-use backend\fileSystem\subStores\SnapshotStoreFS;
 
 class DataStoreFS implements DataStoreInterface {
 	public function isInit(): bool {
