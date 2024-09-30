@@ -195,6 +195,10 @@ class SnapshotStoreFS implements SnapshotStore {
         $this->clearUploads("");
     }
 
+    /**
+     * @throws PageFlowException
+     * @throws CriticalException
+     */
     public function restoreSnapshot(){
         $extractDir = PathsFS::folderSnapshot() . 'temp';
         
