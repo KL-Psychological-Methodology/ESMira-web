@@ -12,8 +12,7 @@ class CreateMediaZip extends HasReadPermission {
 	function execAndOutput() {
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
-		
-		echo "Start\n\n";
+		header('X-Accell-Buffering: no');
 
 		if (ob_get_contents())
 			ob_end_flush();
