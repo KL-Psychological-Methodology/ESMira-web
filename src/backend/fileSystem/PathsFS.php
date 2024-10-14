@@ -208,4 +208,7 @@ class PathsFS {
 	static function fileRewardCode(int $studyId, string $code): string {
 		return self::folderRewardCodes($studyId) .Paths::makeUrlFriendly($code);
 	}
+	static function fileBookmarks(): string {
+		return self::folderData() . '.bookmarks';
+	}
 }

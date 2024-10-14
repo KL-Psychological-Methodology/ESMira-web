@@ -33,6 +33,9 @@ $classIndex = [
 	'GetTokenList' => 'backend\admin\features\loggedIn\GetTokenList',
 	'GetLoginHistory' => 'backend\admin\features\loggedIn\GetLoginHistory',
 	'RemoveToken' => 'backend\admin\features\loggedIn\RemoveToken',
+	'GetBookmarks' => 'backend\admin\features\loggedIn\GetBookmarks',
+	'SetBookmark' => 'backend\admin\features\loggedIn\SetBookmark',
+	'DeleteBookmark' => 'backend\admin\features\loggedIn\DeleteBookmark',
 	
 	//msg:
 	'ListParticipants' => 'backend\admin\features\messagePermission\ListParticipants',
