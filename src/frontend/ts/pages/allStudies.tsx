@@ -39,7 +39,7 @@ export class Content extends StudiesContent {
 		this.selectedPublicAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("publicAccessKeyIndex", 0)
 		this.selectedDisabledAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("disabledAccessKeyIndex", 0)
 		
-		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 3)
+		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 0)
 		switch(section.sectionValue) {
 			case "data":
 				this.targetPage = "dataStatistics"
