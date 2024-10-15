@@ -112,7 +112,7 @@ function registerChart(): void {
 	Chart.register(ChartDataLabels)
 }
 
-type DataPoint = (number | Point)[]
+type DataPoint = (number | null | Point)[]
 
 export class ChartJsBox {
 	private chartJs?: Chart
@@ -387,7 +387,7 @@ class DailyDataSetCreator extends DataSetCreator {
 		}
 	}
 	
-	private getYValue(valueType: number, rawY: StatisticsDataEntry) : number {
+	private getYValue(valueType: number, rawY: StatisticsDataEntry) : number | null {
 		switch(valueType) {
 			case STATISTICS_VALUETYPES_MEAN:
 				return rawY === undefined ? 0 : Math.round(rawY.sum / rawY.count * 100)/100
@@ -408,10 +408,11 @@ class DailyDataSetCreator extends DataSetCreator {
 			
 			for(let current_day=this.firstDay, i=0; current_day<=this.lastDay; current_day+=ONE_DAY, ++i) {
 				const yValue = this.getYValue(valueType, rawYData[current_day])
-				
-				if(this.forScatterPlot)
-					data.push({x: i, y: yValue});
-				else
+
+				if(this.forScatterPlot) {
+					if(yValue !== null)
+						data.push({x: i, y: yValue});
+				} else
 					data.push(yValue)
 			}
 			
