@@ -17,6 +17,6 @@ class DeleteBookmark extends IsLoggedIn {
 
         Configs::getDataStore()->getBookmarkStore()->deleteBookmark($accountName, $url);
         
-        return [];
+        return [$url];
     }
 }

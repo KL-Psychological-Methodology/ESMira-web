@@ -33,4 +33,11 @@ class BookmarkStoreFS implements BookmarkStore {
         unset($bookmarks[$accountName]);
         BookmarksLoader::exportFile($bookmarks);
     }
+    
+    public function changeUser(string $oldAccountName, string $newAccountName) {
+        $bookmarks = BookmarksLoader::importFile();
+        $bookmarks[$newAccountName] = $bookmarks[$oldAccountName];
+        unset($bookmarks[$oldAccountName]);
+        BookmarksLoader::exportFile($bookmarks);
+    }
 }

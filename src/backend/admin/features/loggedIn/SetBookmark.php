@@ -18,6 +18,6 @@ class SetBookmark extends IsLoggedIn {
 
         Configs::getDataStore()->getBookmarkStore()->setBookmark($accountName, $url, $name);
         
-        return [];
+        return [$url];
     }
 }
