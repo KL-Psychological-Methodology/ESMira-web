@@ -598,5 +598,6 @@
     "error_news": "Laden der ESMira news fehlgeschlagen",
     "generating": "erstelle",
     "show_in_disabled_list": "Halte Fragebogen zugänglich",
-    "show_in_disabled_list_desc": "Zeige in der Liste der deaktivierten Fragebögen wenn nicht aktiv"
+    "show_in_disabled_list_desc": "Zeige in der Liste der deaktivierten Fragebögen wenn nicht aktiv",
+    "prompt_bookmark_name": "Bitte wählen Sie einen Namen für das Lesezeichen:"
 }

@@ -11,9 +11,14 @@ export class BookmarkLoader {
     private readonly bookmarks = new ObservableRecord<string, string>({}, "bookmarks")
     
     constructor() {
+        this.loadBookmarkList()
         this.bookmarks.addObserver((_origin, _) => {
             m.redraw()
         })
+    }
+
+    public hasBookmark(url: string): boolean {
+        return this.bookmarks.exists(url)
     }
 
     public loadBookmarkList(): Promise<BookmarksDataType> {
@@ -34,7 +39,7 @@ export class BookmarkLoader {
 
     public async setBookmark(url: string, name: string): Promise<void> {
         let response = url
-        response = await Requests.loadJson(`${FILE_ADMIN}$type=SetBookmark`, "post", `url=${url}&name=${name}`)
+        response = await Requests.loadJson(`${FILE_ADMIN}?type=SetBookmark`, "post", `url=${url}&name=${name}`)
         if(response != url)
             throw new Error(Lang.get("error_unknown"))
         this.bookmarks.add(url, name)

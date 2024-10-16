@@ -265,3 +265,15 @@ sectionsView
 	width: 24px;
 	height: 24px;
 }
+
+.bookmark-inactive svg {
+	color: #2b98ca;
+}
+
+.bookmark-inactive:hover svg {
+	color: #dc4e9d;
+}
+
+.bookmark-active svg {
+	color: #dc4e9d;
+}
