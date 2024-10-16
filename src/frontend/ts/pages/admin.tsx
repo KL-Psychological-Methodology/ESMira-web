@@ -19,6 +19,7 @@ import { RssFetcher, RssItem } from "../singletons/RssFetcher";
 import { NewsItem } from "../widgets/NewsItem";
 import { Section } from "../site/Section";
 import { Requests } from "../singletons/Requests";
+import { FILE_ADMIN } from "../constants/urls";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -35,7 +36,8 @@ export class Content extends SectionContent {
 				.catch(() => {
 					section.loader.error(Lang.get("error_news"))
 					return []
-				})
+				})//,
+			//Requests.loadJson(`${FILE_ADMIN}?type=GetBookmarks`)
 		]
 	}
 
