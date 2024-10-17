@@ -47,6 +47,6 @@ export class AdminTools implements AdminToolsInterface {
 	}
 	
 	public hasPermission(name: keyof AccountPermissions, studyId: number): boolean {
-		return this.isAdmin || this.permissions[name]?.indexOf(studyId) != -1
+		return this.isAdmin || (this.permissions[name]?.indexOf(studyId) ?? -1) != -1
 	}
 }
