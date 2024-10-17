@@ -17,6 +17,10 @@ export class BookmarkLoader {
         })
     }
 
+    public isBookmarkListEmpty(): boolean {
+        return this.bookmarks.getCount() == 0;
+    }
+
     public hasBookmark(url: string): boolean {
         return this.bookmarks.exists(url)
     }
@@ -27,6 +31,10 @@ export class BookmarkLoader {
             this.bookmarks.set(bookmarksJson)
             return this.bookmarks
         })
+    }
+
+    public getBookmarkList(): Record<string, string> {
+        return this.bookmarks.get()
     }
 
     public async deleteBookmark(url: string): Promise<void> {

@@ -229,8 +229,9 @@ export class Section {
 				<a href={this.backHash()} class="back">{m.trust(backSvg)}</a>
 				<div class="sectionTitle">
 					<div class="title" onclick={this.eventClick.bind(this)}>{this.getSectionTitle()}</div>
-					<div class="extra">{this.getSectionExtras()}</div>
-					{this.getBookmark()}
+					<div>
+						<div class="extra">{this.getSectionExtras()}{this.getBookmark()}</div>
+					</div>
 				</div>
 			</div>
 			<div class={`sectionContent ${this.sectionName}`}>{this.getSectionContentView()}</div>
@@ -242,7 +243,7 @@ export class Section {
 		const isLoggedIn = this.siteData.admin.isLoggedIn()
 		const isBookmarked = this.siteData.bookmarkLoader.hasBookmark(this.getHash())
 		return isLoggedIn ? <a 
-			class={isBookmarked ? "bookmark-active" : "bookmark-inactive"}
+			class={isBookmarked ? "bookmarkActive" : "bookmarkInactive"}
 			onclick={this.toggleBookmark.bind(this)}>
 			{isBookmarked ? m.trust(starFilledSvg) : m.trust(starEmptySvg)}
 		</a> : <div></div>
@@ -254,7 +255,8 @@ export class Section {
 		if(bookmarkLoader.hasBookmark(hash)){
 			bookmarkLoader.deleteBookmark(hash)
 		} else {
-			const bookmarkName = prompt(Lang.get("prompt_bookmark_name"), hash)
+			const defaultName = this.allSections.slice(1).map((section) => section.getSectionTitle()).join(" > ")
+			const bookmarkName = prompt(Lang.get("prompt_bookmark_name"), defaultName)
 			if(!bookmarkName)
 				return
 			bookmarkLoader.setBookmark(hash, bookmarkName)

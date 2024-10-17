@@ -20,6 +20,7 @@ import { NewsItem } from "../widgets/NewsItem";
 import { Section } from "../site/Section";
 import { Requests } from "../singletons/Requests";
 import { FILE_ADMIN } from "../constants/urls";
+import { BtnTrash } from "../widgets/BtnWidgets";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -56,6 +57,30 @@ export class Content extends SectionContent {
 	
 	private logout(): Promise<void> {
 		return this.section.loader.showLoader(this.getAdmin().logout())
+	}
+
+	private editBookmark(url: string, oldName: string) {
+		const newName = prompt(Lang.get("prompt_bookmark_name"), oldName)
+		if(!newName)
+			return
+		this.section.siteData.bookmarkLoader.setBookmark(url, newName)
+	}
+
+	private bookmarkList(): Vnode<any, any> {
+		const bookmarkLoader = this.section.siteData.bookmarkLoader
+
+		return <div class="listParent">
+			<div class="listChild">
+				{Object.entries(bookmarkLoader.getBookmarkList()).sort(([,nameA], [,nameB]) => {
+					return nameA.localeCompare(nameB)
+				}).map(([url, name]) => {
+					return <div>
+						<a class="btn" onclick={this.editBookmark.bind(this, url, name)}>{m.trust(editSvg)}</a>
+						<a href={url}>{name}</a>
+					</div>
+				})}
+			</div>
+		</div>
 	}
 	
 	public getView(): Vnode<any, any> {
@@ -103,6 +128,17 @@ export class Content extends SectionContent {
 							href: this.getUrl("serverStatisticsAdmin")
 						})
 				)
+			}
+			{
+				!this.section.siteData.bookmarkLoader.isBookmarkListEmpty() &&
+				<div>
+					{
+						TitleRow(Lang.getWithColon("bookmarks"))
+					}
+					{
+						this.bookmarkList()
+					}	
+				</div>
 			}
 			{
 				tools?.isAdmin &&

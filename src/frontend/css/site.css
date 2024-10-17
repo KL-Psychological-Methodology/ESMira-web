@@ -199,6 +199,7 @@ sectionsView
 	max-height: 25px;
 }
 #sectionsView > .section .sectionTitle > .title, .section .sectionTitle .extra {
+	display: flex;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -266,14 +267,18 @@ sectionsView
 	height: 24px;
 }
 
-.bookmark-inactive svg {
-	color: #2b98ca;
+#sectionsView > .section:first-child .bookmarkInactive {
+	display: none;
 }
 
-.bookmark-inactive:hover svg {
-	color: #dc4e9d;
+#sectionsView > .section .bookmarkInactive svg {
+	fill: #2b98ca;
 }
 
-.bookmark-active svg {
-	color: #dc4e9d;
+#sectionsView > .section .bookmarkInactive:hover svg {
+	fill: #dc4e9d;
+}
+
+#sectionsView > .section .bookmarkActive svg {
+	fill: #dc4e9d;
 }
