@@ -3,12 +3,14 @@ import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import {AccountsLoader} from "../loader/AccountsLoader";
 import {MessagesLoader} from "../loader/MessagesLoader";
 import { MerlinLogsLoader } from "../loader/MerlinLogsLoader";
+import { BookmarkLoader } from "../loader/BookmarkLoader";
 
 export interface AdminToolsInterface {
 	settingsLoader: ServerSettingsLoader
 	accountsLoader: AccountsLoader
 	messagesLoader: MessagesLoader
 	merlinLogsLoader: MerlinLogsLoader
+	bookmarksLoader: BookmarkLoader
 	accountName: string
 	hasErrors: boolean
 	isAdmin: boolean

@@ -3,7 +3,6 @@ import {Container} from "../observable/Container";
 import {DynamicValues} from "./DynamicValues";
 import {DynamicCallbacks} from "./DynamicCallbacks";
 import {StudyLoader} from "../loader/StudyLoader";
-import { BookmarkLoader } from "../loader/BookmarkLoader";
 
 export class SiteData {
 	public readonly packageVersion: string
@@ -20,12 +19,10 @@ export class SiteData {
 	public readonly dynamicValues = new Container<DynamicValues>()
 	public readonly dynamicCallbacks: DynamicCallbacks = {}
 	public readonly studyLoader: StudyLoader
-	public readonly bookmarkLoader: BookmarkLoader
 	
 	constructor(admin: Admin, serverVersion: number, packageVersion: string) {
 		this.admin = admin
 		this.packageVersion = packageVersion
 		this.studyLoader = new StudyLoader(serverVersion, packageVersion)
-		this.bookmarkLoader = new BookmarkLoader()
 	}
 }

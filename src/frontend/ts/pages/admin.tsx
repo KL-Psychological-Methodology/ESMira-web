@@ -63,15 +63,15 @@ export class Content extends SectionContent {
 		const newName = prompt(Lang.get("prompt_bookmark_name"), oldName)
 		if(!newName)
 			return
-		this.section.siteData.bookmarkLoader.setBookmark(url, newName)
+		this.getAdmin().getTools().bookmarksLoader.setBookmark(url, newName)
 	}
 
 	private bookmarkList(): Vnode<any, any> {
-		const bookmarkLoader = this.section.siteData.bookmarkLoader
+		const bookmarksLoader = this.getAdmin().getTools().bookmarksLoader
 
 		return <div class="listParent">
 			<div class="listChild">
-				{Object.entries(bookmarkLoader.getBookmarkList()).sort(([,nameA], [,nameB]) => {
+				{Object.entries(bookmarksLoader.getBookmarkList()).sort(([,nameA], [,nameB]) => {
 					return nameA.localeCompare(nameB)
 				}).map(([url, name]) => {
 					return <div>
@@ -130,7 +130,7 @@ export class Content extends SectionContent {
 				)
 			}
 			{
-				!this.section.siteData.bookmarkLoader.isBookmarkListEmpty() &&
+				!this.getAdmin().getTools().bookmarksLoader.isBookmarkListEmpty() &&
 				<div>
 					{
 						TitleRow(Lang.getWithColon("bookmarks"))

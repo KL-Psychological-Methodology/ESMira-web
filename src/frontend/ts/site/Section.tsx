@@ -241,25 +241,27 @@ export class Section {
 	
 	private getBookmark(): Vnode<any, any> {
 		const isLoggedIn = this.siteData.admin.isLoggedIn()
-		const isBookmarked = this.siteData.bookmarkLoader.hasBookmark(this.getHash())
-		return isLoggedIn ? <a 
+		if(!isLoggedIn)
+			return <div></div>
+		const isBookmarked = this.getAdmin().getTools().bookmarksLoader.hasBookmark(this.getHash())
+		return <a 
 			class={isBookmarked ? "bookmarkActive" : "bookmarkInactive"}
 			onclick={this.toggleBookmark.bind(this)}>
 			{isBookmarked ? m.trust(starFilledSvg) : m.trust(starEmptySvg)}
-		</a> : <div></div>
+		</a>
 	}
 
 	private toggleBookmark(): void {
-		const bookmarkLoader: BookmarkLoader = this.siteData.bookmarkLoader
+		const bookmarksLoader: BookmarkLoader = this.getAdmin().getTools().bookmarksLoader
 		const hash = this.getHash()
-		if(bookmarkLoader.hasBookmark(hash)){
-			bookmarkLoader.deleteBookmark(hash)
+		if(bookmarksLoader.hasBookmark(hash)){
+			bookmarksLoader.deleteBookmark(hash)
 		} else {
 			const defaultName = this.allSections.slice(1).map((section) => section.getSectionTitle()).join(" > ")
 			const bookmarkName = prompt(Lang.get("prompt_bookmark_name"), defaultName)
 			if(!bookmarkName)
 				return
-			bookmarkLoader.setBookmark(hash, bookmarkName)
+			bookmarksLoader.setBookmark(hash, bookmarkName)
 		}
 		
 	}
