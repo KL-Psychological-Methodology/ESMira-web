@@ -2,7 +2,7 @@ import {FILE_ADMIN} from "../constants/urls";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
 import {ObservableArray} from "../observable/ObservableArray";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import {MessageParticipantInfo} from "../data/messages/MessageParticipantInfo";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {LoginDataInterface} from "../admin/LoginDataInterface";

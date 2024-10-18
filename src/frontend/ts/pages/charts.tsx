@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {TitleRow} from "../widgets/TitleRow";
 import {DragContainer} from "../widgets/DragContainer";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import {ChartData} from "../data/study/ChartData";
 import {Section} from "../site/Section";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";

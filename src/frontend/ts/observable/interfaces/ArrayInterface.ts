@@ -1,5 +1,5 @@
 import {PrimitiveType} from "../types/PrimitiveType";
-import {TranslatableObjectDataType} from "../TranslatableObject";
+import {TranslatableObjectDataType} from "../ObservableStructure";
 import {BaseObservable} from "../BaseObservable";
 import {ObservableTypes} from "../types/ObservableTypes";
 

@@ -1,6 +1,6 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
-export class EventTrigger extends TranslatableObject {
+export class EventTrigger extends ObservableStructure {
 	public label								= this.primitive<string>(		"label",							"Event")
 	public cueCode								= this.primitive<string>(		"cueCode",							"joined")
 	public skipThisQuestionnaire				= this.primitive<boolean>(		"skipThisQuestionnaire",			false)

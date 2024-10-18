@@ -23,7 +23,7 @@ import {DragContainer, DragTools} from "../widgets/DragContainer";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {ObservableArray} from "../observable/ObservableArray";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";

@@ -1,7 +1,7 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {ChartData} from "./ChartData";
 
-export class Statistics extends TranslatableObject {
+export class Statistics extends ObservableStructure {
 	public charts = this.objectArray("charts", ChartData)
 	
 }

@@ -3,7 +3,7 @@ import {BaseObservable} from "./BaseObservable";
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableRecordBase} from "./ObservableRecordBase";
 import {ObservablePrimitive} from "./ObservablePrimitive";
-import {TranslatableObject} from "./TranslatableObject";
+import {ObservableStructure} from "./ObservableStructure";
 
 /**
  * An observable Record that can hold any Observable or primitive types (string, number, boolean).
@@ -63,10 +63,10 @@ export class ObservablePrimitiveRecord<
 }
 
 /**
- * An observable that can be used with {@link TranslatableObject}. Functionally it is the same as {@link ObservableRecord}
+ * An observable that can be used with {@link ObservableStructure}. Functionally it is the same as {@link ObservableRecord}
  * but easier to use with TranslatableObjects
  */
-export class TranslatableObjectRecord<KeyT extends number | string, ObsT extends TranslatableObject> extends ObservableRecordBase<KeyT, ObsT> {
+export class TranslatableObjectRecord<KeyT extends number | string, ObsT extends ObservableStructure> extends ObservableRecordBase<KeyT, ObsT> {
 	constructor(data: Record<KeyT, ObsT>, key: string = "") {
 		super(key)
 		this.defaultKeys = Object.keys(data)

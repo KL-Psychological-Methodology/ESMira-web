@@ -12,11 +12,11 @@ export type TranslatableObjectDataType = Record<string, JsonTypes>
 
 /**
  * An observable that can hold {@link BaseTranslatable} or {@link BaseObservable}
- * This class acts like a "smart object" with default properties and is most useful as root for a data structure.
+ * This class acts like a "smart object" with default properties and is most useful as root (or sub root) for a data structure.
  * Each property is created via {@link primitive()}, {@link primitiveArray()}, {@link translatable()}, {@link translatableArray()} {@link objectArray()} and {@link object()}
  * See examples in frontend/ts/data/
  */
-export abstract class TranslatableObject extends BaseTranslatable<ObservableTypes> {
+export abstract class ObservableStructure extends BaseTranslatable<ObservableTypes> {
 	private _isDifferent = false
 	private alwaysDifferent = false
 	
@@ -147,7 +147,7 @@ export abstract class TranslatableObject extends BaseTranslatable<ObservableType
 		return obs
 	}
 	
-	protected objectArray<T extends TranslatableObject>(
+	protected objectArray<T extends ObservableStructure>(
 		key: string,
 		typeConstructor: { new(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
 	): TranslatableArray<TranslatableObjectDataType, T> {
@@ -162,7 +162,7 @@ export abstract class TranslatableObject extends BaseTranslatable<ObservableType
 		this.valueIndex[key] = obs
 		return obs
 	}
-	protected object<T extends TranslatableObject>(
+	protected object<T extends ObservableStructure>(
 		key: string,
 		typeConstructor: { new(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
 	): T {

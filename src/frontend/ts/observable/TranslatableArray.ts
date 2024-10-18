@@ -1,7 +1,7 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable} from "./BaseObservable";
-import {TranslatableObjectDataType} from "./TranslatableObject";
+import {TranslatableObjectDataType} from "./ObservableStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatable";
 import {ObservableArray} from "./ObservableArray";

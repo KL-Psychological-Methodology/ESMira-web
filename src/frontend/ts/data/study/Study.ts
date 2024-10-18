@@ -1,4 +1,4 @@
-import {TranslatableObject, TranslatableObjectDataType} from "../../observable/TranslatableObject";
+import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
 import {Statistics} from "./Statistics";
 import {Questionnaire} from "./Questionnaire";
 import {ObservableTypes} from "../../observable/types/ObservableTypes";
@@ -9,7 +9,7 @@ import {Input, InputMediaTypes} from "./Input";
 import {RepairStudy} from "../../helpers/RepairStudy";
 import {Lang} from "../../singletons/Lang";
 
-export class Study extends TranslatableObject implements TranslationRootInterface {
+export class Study extends ObservableStructure implements TranslationRootInterface {
 	public lastChanged: number
 	
 	public id										= this.primitive<number>(		"id",										0)

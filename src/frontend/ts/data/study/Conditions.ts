@@ -1,7 +1,7 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {JsonTypes} from "../../observable/types/JsonTypes";
 
-export class Conditions extends TranslatableObject {
+export class Conditions extends ObservableStructure {
 	public key					= this.primitive<string>(		"key",				"")
 	public value				= this.primitive<string>(		"value",			"")
 	public operator				= this.primitive<number>(		"operator",		0)

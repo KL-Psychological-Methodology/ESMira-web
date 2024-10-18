@@ -1,5 +1,5 @@
 import {Study} from "../data/study/Study";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {JSONContent, JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {ObserverId} from "../observable/BaseObservable";

@@ -1,7 +1,7 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {SignalTime} from "./SignalTime";
 
-export class Schedule extends TranslatableObject {
+export class Schedule extends ObservableStructure {
 	public userEditable					= this.primitive<boolean>(		"userEditable",		true)
 	public dailyRepeatRate				= this.primitive<number>(		"dailyRepeatRate",		1)
 	public skipFirstInLoop				= this.primitive<boolean>(		"skipFirstInLoop",		false)

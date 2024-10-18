@@ -1,6 +1,6 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
-export class MessageParticipantInfo extends TranslatableObject {
+export class MessageParticipantInfo extends ObservableStructure {
 	public name = this.primitive<string>("name", "")
 	public lastMsg = this.primitive<number>("lastMsg", 0)
 	public archived = this.primitive<boolean>("archived", false)

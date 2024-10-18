@@ -1,6 +1,6 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
-export class Action extends TranslatableObject {
+export class Action extends ObservableStructure {
 	public type								= this.primitive<number>(		"type",					1) //is Invitation
 	public timeout							= this.primitive<number>(		"timeout",					0)
 	public reminder_count					= this.primitive<number>(		"reminder_count",			0)

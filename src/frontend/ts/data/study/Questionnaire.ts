@@ -1,4 +1,4 @@
-import {TranslatableObject, TranslatableObjectDataType} from "../../observable/TranslatableObject";
+import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
 import {ActionTrigger} from "./ActionTrigger";
 import {Page} from "./Page";
 import {SumScore} from "./SumScore";
@@ -10,7 +10,7 @@ import {Scheduler} from "../../helpers/Scheduler";
 
 const ONE_DAY_MS = 86400000
 
-export class Questionnaire extends TranslatableObject {
+export class Questionnaire extends ObservableStructure {
 	public internalId								= this.primitive<number>(	"internalId",								-1)
 	public publishedAndroid							= this.primitive<boolean>(	"publishedAndroid",							true)
 	public publishedIOS								= this.primitive<boolean>(	"publishedIOS",								true)

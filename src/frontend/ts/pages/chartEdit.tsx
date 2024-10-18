@@ -14,7 +14,7 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM, STATISTICS_DATATYPES_XY
 } from "../constants/statistics";
 import {DATA_MAIN_KEYS} from "../constants/data";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import {AxisContainer} from "../data/study/AxisContainer";
 import {DragContainer} from "../widgets/DragContainer";
 import {Study} from "../data/study/Study";

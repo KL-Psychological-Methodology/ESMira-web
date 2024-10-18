@@ -1,6 +1,6 @@
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
-import {TranslatableObject, TranslatableObjectDataType} from "./TranslatableObject";
+import {ObservableStructure, TranslatableObjectDataType} from "./ObservableStructure";
 import { JsonTypes } from "./types/JsonTypes";
 import {PrimitiveType} from "./types/PrimitiveType";
 

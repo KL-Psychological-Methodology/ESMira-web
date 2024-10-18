@@ -1,4 +1,4 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
 export type InputResponseType =
 	"app_usage" |
@@ -27,7 +27,7 @@ export type InputResponseType =
 
 export type InputMediaTypes = "image" | "audio"
 
-export class Input extends TranslatableObject {
+export class Input extends ObservableStructure {
 	public responseType				= this.primitive<InputResponseType>("responseType",		"text_input")
 	public name						= this.primitive<string>(			"name",				"input")
 	public required					= this.primitive<boolean>(			"required",			false)

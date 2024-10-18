@@ -1,4 +1,4 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {
 	STATISTICS_CHARTTYPES_BARS,
 	STATISTICS_CHARTTYPES_LINE,
@@ -8,7 +8,7 @@ import {
 import {AxisContainer} from "./AxisContainer";
 import {JsonTypes} from "../../observable/types/JsonTypes";
 
-export class ChartData extends TranslatableObject {
+export class ChartData extends ObservableStructure {
 	public valueType						= this.primitive<number>(		"valueType",						STATISTICS_VALUETYPES_MEAN)
 	public dataType							= this.primitive<number>(		"dataType",						STATISTICS_DATATYPES_DAILY)
 	public chartType						= this.primitive<number>(		"chartType",						STATISTICS_CHARTTYPES_LINE)

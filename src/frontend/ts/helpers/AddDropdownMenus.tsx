@@ -1,5 +1,5 @@
 import {DropdownMenu, openDropdown} from "../widgets/DropdownMenu";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import m, {Vnode} from "mithril";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";

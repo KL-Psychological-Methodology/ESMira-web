@@ -2,7 +2,7 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {TranslatableObjectDataType} from "../observable/ObservableStructure";
 import {Section} from "../site/Section";
 import {BtnCustom} from "../widgets/BtnWidgets";
 import {JsonSourceComponent} from "../helpers/JsonSourceComponent";

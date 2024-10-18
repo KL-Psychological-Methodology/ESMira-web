@@ -1,8 +1,8 @@
-import {TranslatableObject, TranslatableObjectDataType} from "../../observable/TranslatableObject";
+import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
 import {BaseObservable} from "../../observable/BaseObservable";
 import {ObservableTypes} from "../../observable/types/ObservableTypes";
 
-export class Account extends TranslatableObject {
+export class Account extends ObservableStructure {
 	public accountName = this.primitive<string>("accountName", "")
 	
 	public admin = this.primitive<boolean>("admin", false)
