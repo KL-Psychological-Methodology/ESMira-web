@@ -390,11 +390,11 @@ class DailyDataSetCreator extends DataSetCreator {
 	private getYValue(valueType: number, rawY: StatisticsDataEntry) : number | null {
 		switch(valueType) {
 			case STATISTICS_VALUETYPES_MEAN:
-				return rawY === undefined ? 0 : Math.round(rawY.sum / rawY.count * 100)/100
+				return rawY === undefined ? null : Math.round(rawY.sum / rawY.count * 100)/100
 			case STATISTICS_VALUETYPES_SUM:
-				return rawY === undefined ? 0 : rawY.sum
+				return rawY === undefined ? null : rawY.sum
 			case STATISTICS_VALUETYPES_COUNT:
-				return rawY === undefined ? 0 : rawY.count
+				return rawY === undefined ? null : rawY.count
 		}
 		return 0
 	}
