@@ -26,12 +26,6 @@ export abstract class BaseTranslatable<T extends ObservableTypes> extends BaseOb
 		return (value as BaseTranslatable<any>).addLanguage !== undefined;
 	}
 	
-	public importObserverData(other: BaseTranslatable<T>): void {
-		const shared = other.shared
-		this.shared.observerContainer = shared.observerContainer
-		this.shared.idCounter = shared.idCounter
-	}
-	
 	abstract addLanguage(langCode: string, langData?: any): void
 	abstract renameLanguage(oldLangCode: string, newLangCode: string): void
 	abstract removeLanguage(langCode: string): void

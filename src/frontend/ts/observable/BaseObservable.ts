@@ -75,6 +75,18 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 		
 		return new ObserverId(this.shared, id, this.address)
 	}
+	
+	/**
+	 * Copies all observers from another structure to this structure.
+	 * This method assumes that this observable has the same key and address
+	 * @param other
+	 */
+	public importObserverData(other: BaseObservable<T>): void {
+		const shared = other.shared
+		this.shared.observerContainer = shared.observerContainer
+		this.shared.idCounter = shared.idCounter
+	}
+	
 	public removeAllConnectedObservers(): void {
 		delete this.shared.observerContainer[this.address]
 	}
@@ -105,7 +117,7 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 	 * Called when the value of an observable has changed.
 	 * Will only be called if the new value is actually different from the old (or if changed can not be detected properly).
 	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value)
-	 * @param forceIsDifferent Force hasMutated to act as if the value just changed from its default value
+	 * @param forceIsDifferent Force hasMutated() to assume that the value just changed from its default value
 	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer
 	 */
 	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
@@ -116,6 +128,10 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 			this.parent.hasMutated(!wasDifferent && turnedDifferent, forceIsDifferent || this.isDifferent(), target)
 	}
 	
+	/**
+	 * Forces the observable to recalculate if it was changed from its default value. Is usually called when its value was changed.
+	 * @param forceIsDifferent Force reCalcIsDifferent() to assume that the value just changed from its default value
+	 */
 	abstract reCalcIsDifferent(forceIsDifferent: boolean): void
 	abstract get(): T
 	abstract set(value: T, silently?: boolean): void
