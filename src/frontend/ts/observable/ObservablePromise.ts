@@ -11,15 +11,13 @@ export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
 		this.backingField = value
 	}
 	
+	public reCalcIsDifferent(_: boolean = false): void {
+		//do nothing
+	}
+	
 	public createJson(): JsonTypes {
         return ""
     }
-	
-	public hasMutated(forceIsDifferent: boolean = false): void {
-		this.runObservers(false, this)
-		if(this.parent)
-			this.parent.hasMutated(false, forceIsDifferent, this)
-	}
 	
 	public isDifferent(): boolean {
 		return false
@@ -31,7 +29,7 @@ export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
 	public set(value: Promise<T>, silently: boolean = false): void {
 		this.backingField = value
 		if(!silently)
-			this.hasMutated(true)
+			this.hasMutated(true, true)
 	}
 	public setValue(value: T, silently: boolean = false) {
 		this.set(Promise.resolve(value), silently)

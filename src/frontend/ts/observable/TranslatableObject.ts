@@ -25,8 +25,8 @@ export class TranslatableObject extends BaseTranslatable<ObservableTypes> {
 		this.initJson = data
 	}
 	
-	private calcIsDifferent(overrideIsDifferent: boolean = false): void {
-		if(overrideIsDifferent || this.alwaysDifferent) {
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		if(forceIsDifferent || this.alwaysDifferent) {
 			this._isDifferent = true
 			return
 		}
@@ -47,14 +47,6 @@ export class TranslatableObject extends BaseTranslatable<ObservableTypes> {
 	}
 	public isDifferent(): boolean {
 		return this._isDifferent
-	}
-	
-	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
-		const wasDifferent = this._isDifferent
-		this.calcIsDifferent(forceIsDifferent)
-		this.runObservers(turnedDifferent, target)
-		if(this.parent)
-			this.parent.hasMutated(!wasDifferent && turnedDifferent, this._isDifferent, target)
 	}
 	
 	public createJson(options?: TranslatableJsonCreatorOptions): Record<string, JsonTypes> {
@@ -102,7 +94,7 @@ export class TranslatableObject extends BaseTranslatable<ObservableTypes> {
 			if(this.isTranslatable(obs))
 				obs.removeLanguage(langCode)
 		}
-		this.calcIsDifferent()
+		this.reCalcIsDifferent()
 	}
 	
 	public updateKeyName(keyName?: string, parent?: BaseObservable<ObservableTypes> | undefined): void {

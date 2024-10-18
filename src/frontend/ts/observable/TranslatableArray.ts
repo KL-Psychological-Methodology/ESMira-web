@@ -37,6 +37,10 @@ export class TranslatableArray<
 		return this.array.get();
 	}
 	
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		this.array.reCalcIsDifferent(forceIsDifferent)
+	}
+	
 	public hasMutated(turnedDifferent?: boolean, forceIsDifferent?: boolean, target?: BaseObservable<ObservableTypes>): void {
 		this.array.hasMutated(turnedDifferent, forceIsDifferent, target)
 	}
@@ -51,7 +55,7 @@ export class TranslatableArray<
 	
 	public removeLanguage(langCode: string): void {
 		this.array.get().forEach((obs) => obs.removeLanguage(langCode))
-		this.array.calcIsDifferent()
+		this.array.reCalcIsDifferent()
 	}
 	
 	public renameLanguage(oldLangCode: string, newLangCode: string): void {

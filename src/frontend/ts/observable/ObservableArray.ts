@@ -42,8 +42,8 @@ export class ObservableArray<
 	}
 	
 	
-	public calcIsDifferent(overrideIsDifferent: boolean = false): void {
-		if(overrideIsDifferent || this.defaultField.length != this.backingField.length) {
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		if(forceIsDifferent || this.defaultField.length != this.backingField.length) {
 			this._isDifferent = true
 			return
 		}
@@ -73,13 +73,6 @@ export class ObservableArray<
         throw new Error("Method not implemented.");
     }
 	
-	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
-		const wasDifferent = this._isDifferent
-		this.calcIsDifferent(forceIsDifferent)
-		this.runObservers(turnedDifferent, target)
-		if(this.parent)
-			this.parent.hasMutated(!wasDifferent && turnedDifferent, this._isDifferent, target)
-	}
 	public updateKeyName(keyName?: string, parent?: BaseObservable<ObservableTypes>): void {
 		super.updateKeyName(keyName, parent)
 		this.backingField.forEach((obs) => obs.updateKeyName())

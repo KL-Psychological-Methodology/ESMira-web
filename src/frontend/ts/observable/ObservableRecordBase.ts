@@ -16,7 +16,7 @@ export abstract class ObservableRecordBase<
 	protected count: number = 0
 	protected defaultKeys: string[] = []
 	
-	constructor(
+	protected constructor(
 		key: string = ""
 	) {
 		super(null, key)
@@ -24,9 +24,8 @@ export abstract class ObservableRecordBase<
 		this.backingField = {} as Record<K, ObsT>
 	}
 	
-	public hasMutated(turnedDifferent: boolean, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
 		this._isDifferent = forceIsDifferent || this.defaultKeys != Object.keys(this.backingField)
-		this.runObservers(turnedDifferent, target)
 	}
 	
 	public isDifferent(): boolean {

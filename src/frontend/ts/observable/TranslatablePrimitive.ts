@@ -84,8 +84,12 @@ export class TranslatablePrimitive<T extends PrimitiveType> extends BaseTranslat
 		}
 	}
 	
-	public hasMutated(forceIsDifferent: boolean = false): void {
-		this.getObs()?.hasMutated(forceIsDifferent)
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		this.getObs()?.reCalcIsDifferent(forceIsDifferent)
+	}
+	
+	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
+		this.getObs()?.hasMutated(turnedDifferent, forceIsDifferent, target)
 	}
 	public isDifferent(): boolean {
 		let isDifferent = false

@@ -101,7 +101,22 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 		}
 	}
 	
-	abstract hasMutated(turnedDifferent: boolean, forceIsDifferent: boolean, target: BaseObservable<ObservableTypes>): void
+	/**
+	 * Called when the value of an observable has changed.
+	 * Will only be called if the new value is actually different from the old (or if changed can not be detected properly).
+	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value)
+	 * @param forceIsDifferent Force hasMutated to act as if the value just changed from its default value
+	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer
+	 */
+	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
+		const wasDifferent = this.isDifferent()
+		this.reCalcIsDifferent(forceIsDifferent)
+		this.runObservers(turnedDifferent, target)
+		if(this.parent)
+			this.parent.hasMutated(!wasDifferent && turnedDifferent, forceIsDifferent || this.isDifferent(), target)
+	}
+	
+	abstract reCalcIsDifferent(forceIsDifferent: boolean): void
 	abstract get(): T
 	abstract set(value: T, silently?: boolean): void
 	abstract createJson(options?: JsonCreatorOptions): JsonTypes
