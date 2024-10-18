@@ -2,6 +2,9 @@ import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable} from "./BaseObservable";
 import { JsonTypes } from "./types/JsonTypes";
 
+/**
+ * A observable Wrapper that can hold a Promise
+ */
 export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
 	protected backingField: Promise<T>
 	

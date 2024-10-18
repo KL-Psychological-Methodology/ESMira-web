@@ -7,6 +7,9 @@ import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatab
 
 type LanguageData<T> = Record<string, T>
 
+/**
+ * A translatable Wrapper that can hold any primitive (string, number, boolean)
+ */
 export class TranslatablePrimitive<T extends PrimitiveType> extends BaseTranslatable<T> {
 	private readonly observables: Record<string, ObservablePrimitive<T>> = {}
 	private langCount: number = 0

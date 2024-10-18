@@ -10,7 +10,13 @@ import {ObservableArray} from "./ObservableArray";
 
 export type TranslatableObjectDataType = Record<string, JsonTypes>
 
-export class TranslatableObject extends BaseTranslatable<ObservableTypes> {
+/**
+ * An observable that can hold {@link BaseTranslatable} or {@link BaseObservable}
+ * This class acts like a "smart object" with default properties and is most useful as root for a data structure.
+ * Each property is created via {@link primitive()}, {@link primitiveArray()}, {@link translatable()}, {@link translatableArray()} {@link objectArray()} and {@link object()}
+ * See examples in frontend/ts/data/
+ */
+export abstract class TranslatableObject extends BaseTranslatable<ObservableTypes> {
 	private _isDifferent = false
 	private alwaysDifferent = false
 	
@@ -62,12 +68,14 @@ export class TranslatableObject extends BaseTranslatable<ObservableTypes> {
 	}
 	
 	/**
+	 * Should not be used
 	 * @deprecated
 	 */
 	get(): any {
 		return this
 	}
 	/**
+	 * Should not be used
 	 * @deprecated
 	 */
 	public set(_value: any): void {

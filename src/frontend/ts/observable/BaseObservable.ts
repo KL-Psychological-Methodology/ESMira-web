@@ -25,8 +25,20 @@ export type ObserverCallbackType<T extends ObservableTypes> = (obj: BaseObservab
 export type JsonCreatorOptions = { dontFilterDefaults?: boolean }
 
 /**
- * Note that observers are stored in {@link shared} which is copied from root-parent container (see code in {@link constructor}).
- * That means that the observable structure can be replaced entirely without observers being lost (as long as the root parent is preserved or its {@link shared} is reused).
+ * Observables are wrappers that hold a value which can be retrieved via {@link get()} and changed via {@link set()}.
+ * Each Observable can have multiples Observers which are essentially callbacks that are called when an Observable was changed.
+ * Changes are monitored and bubbled upwards in the structure (meaning that when a child is changed, its parent and parent parents are also informed about it).
+ * When an observer notices a change (in itself or its children) it runs {@link hasMutated} which will run all its observers (added via {@link addObserver()}) in {@link runObservers()}.
+ * and then runs its parent {@link hasMutated}.
+ *
+ * Important: Changes can only be noticed if their respective {@link set()} method is used. If a value was changed directly
+ * (and / or if it is not wrapped in an observable), its change will go unnoticed.
+ *
+ * Note that observers are stored in {@link shared} which always reference the object from their root-parent container
+ * (see code in {@link constructor} and {@link addObserver()} and documentation in {@link SharedForObservable}).
+ * So in each structure, only a single {@link SharedForObservable}, that is shared between all its members, exists.
+ * This means that a child structure can be replaced entirely without their observers being lost
+ * (as long as the root parent is preserved or its {@link shared} is reused).
  */
 export abstract class BaseObservable<T extends ObservableTypes>{
 	public readonly shared: SharedForObservable
@@ -40,10 +52,21 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 		this.parent = parent
 		this.address = this.createAddress()
 	}
+	
+	/**
+	 * Calculates the address of this observable using its key and its parent address.
+	 * The address is used to find the correct Observers (which are stored in {@link shared} to run.
+	 * Each observable address needs to be unique inside a structure.
+	 */
 	private createAddress(): string {
 		return `${this.parent?.createAddress() || ""}>${this.keyName}`
 	}
 	
+	/**
+	 * Runs all added Observers (added via {@link addObserver}) for this observer
+	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value)
+	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer
+	 */
 	protected runObservers(turnedDifferent: boolean, target: BaseObservable<ObservableTypes> = this): void {
 		const bubbled = target != this
 		
@@ -56,7 +79,7 @@ export abstract class BaseObservable<T extends ObservableTypes>{
 	}
 	
 	/**
-	 * Runs {@param callback} whenever {@link runObservers()} is called (by {@link hasMutated()} or {@link set()})
+	 * Runs {@param callback} whenever {@link runObservers()} is called (by {@link hasMutated()} when the value is changed)
 	 * Note that observers are stored in {@link shared} which is copied from the root-parent container (see code in {@link constructor}).
 	 * That means that the observable structure can be replaced entirely without observers being lost (as long as the root parent is preserved or its {@link shared} is reused).
 	 * As long as {@link address} stays the same, observers will still function

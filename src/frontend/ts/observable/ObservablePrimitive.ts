@@ -3,6 +3,9 @@ import {BaseObservable} from "./BaseObservable";
 import {PrimitiveType} from "./types/PrimitiveType";
 import { JsonTypes } from "./types/JsonTypes";
 
+/**
+ * A Wrapper that can hold any primitive (string, number, boolean)
+ */
 export class ObservablePrimitive<T extends PrimitiveType> extends BaseObservable<T> {
 	protected _isDifferent = false
 	protected backingField: T

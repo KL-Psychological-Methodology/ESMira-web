@@ -7,6 +7,11 @@ import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatab
 import {ObservableArray} from "./ObservableArray";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
+/**
+ * An observable Array that is translatable and can hold {@link BaseTranslatable}
+ * Note: TranslatableArray itself does not have translations. Internally it uses an {@link ObservableArray} and all methods are relayed to it.
+ * This class mainly exists to make sure that all children are BaseTranslatable (and not only BaseObservable)
+ */
 export class TranslatableArray<
 	InputT extends TranslatableObjectDataType | PrimitiveType,
 	ObsT extends BaseTranslatable<ObservableTypes> | BaseTranslatable<PrimitiveType>

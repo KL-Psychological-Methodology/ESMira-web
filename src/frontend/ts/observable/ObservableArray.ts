@@ -5,7 +5,10 @@ import {TranslatableObjectDataType} from "./TranslatableObject";
 import {JsonTypes} from "./types/JsonTypes";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
-
+/**
+ * An observable Array that can hold any Observable or primitive types (string, number, boolean).
+ * Primitive types will internally be packed into an {@link ObservablePrimitive}
+ */
 export class ObservableArray<
 	InputT extends TranslatableObjectDataType | PrimitiveType,
 	ObsT extends BaseObservable<ObservableTypes> | BaseObservable<PrimitiveType>
