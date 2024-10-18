@@ -48,7 +48,7 @@ export class AdminTools implements AdminToolsInterface {
 			this.totalDiskSpace = 0
 		}
 	}
-	
+
 	public hasPermission(name: keyof AccountPermissions, studyId: number): boolean {
 		return this.isAdmin || (this.permissions[name]?.indexOf(studyId) ?? -1) != -1
 	}

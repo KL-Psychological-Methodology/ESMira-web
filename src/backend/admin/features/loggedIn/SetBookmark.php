@@ -9,15 +9,13 @@ use backend\Permission;
 
 class SetBookmark extends IsLoggedIn {
     function exec(): array {
-        if(!isset($_POST['url']) || !isset($_POST['name']))
+        if(!isset($_POST['url']) || !isset($_POST['alias']))
            throw new PageFlowException('Missing data');
 
-        $name = $_POST['name'];
+        $alias = $_POST['alias'];
         $url = $_POST['url'];
         $accountName = Permission::getAccountName();
 
-        Configs::getDataStore()->getBookmarkStore()->setBookmark($accountName, $url, $name);
-        
-        return [$url];
+        return Configs::getDataStore()->getBookmarkStore()->setBookmark($accountName, $url, $alias);
     }
 }

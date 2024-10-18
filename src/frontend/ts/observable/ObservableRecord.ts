@@ -3,7 +3,7 @@ import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
 import {TranslatableObject, TranslatableObjectDataType} from "./TranslatableObject";
 import { JsonTypes } from "./types/JsonTypes";
 
-export class ObservableRecord<K extends number | string, T extends TranslatableObject | string> extends BaseObservable<Record<number, T>> {
+export class ObservableRecord<K extends number | string, T extends TranslatableObject> extends BaseObservable<Record<number, T>> {
 	protected _isDifferent = false
 	private backingField: Record<K, T>
 	private count: number = 0
@@ -84,16 +84,11 @@ export class ObservableRecord<K extends number | string, T extends TranslatableO
 	public getCount(): number {
 		return this.count
 	}
-
+	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
-		const json: Record<K, JsonTypes> = {} as Record<K, JsonTypes>
+		const json: Record<K, TranslatableObjectDataType> = {} as Record<K, TranslatableObjectDataType>
 		for(const key in this.backingField) {
-			const value = this.backingField[key]
-			if(value instanceof TranslatableObject) {
-				json[key] = value.createJson(options)
-			} else if(typeof value === 'string') {
-				json[key] = value
-			}
+			json[key] = this.backingField[key].createJson(options)
 		}
 		return json
 	}

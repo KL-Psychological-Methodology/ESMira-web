@@ -54,6 +54,7 @@ export class Admin {
 			return false
 		}
 		this.tools = new (await import("./AdminTools")).AdminTools(data)
+		await this.tools.bookmarksLoader.init()
 		this.isLoggedInState = true
 		
 		return true

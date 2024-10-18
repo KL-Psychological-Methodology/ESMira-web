@@ -37,8 +37,7 @@ export class Content extends SectionContent {
 				.catch(() => {
 					section.loader.error(Lang.get("error_news"))
 					return []
-				})//,
-			//Requests.loadJson(`${FILE_ADMIN}?type=GetBookmarks`)
+				})
 		]
 	}
 
@@ -71,12 +70,12 @@ export class Content extends SectionContent {
 
 		return <div class="listParent">
 			<div class="listChild">
-				{Object.entries(bookmarksLoader.getBookmarkList()).sort(([,nameA], [,nameB]) => {
-					return nameA.localeCompare(nameB)
-				}).map(([url, name]) => {
+				{bookmarksLoader.getBookmarkList().sort((bookmarkA, bookmarkB) => {
+					return bookmarkA.alias.get().localeCompare(bookmarkB.alias.get())
+				}).map((bookmark) => {
 					return <div>
-						<a class="btn" onclick={this.editBookmark.bind(this, url, name)}>{m.trust(editSvg)}</a>
-						<a href={url}>{name}</a>
+						<a class="btn" onclick={this.editBookmark.bind(this, bookmark.url.get(), bookmark.alias.get())}>{m.trust(editSvg)}</a>
+						<a href={bookmark.url.get()}>{bookmark.alias.get()}</a>
 					</div>
 				})}
 			</div>
