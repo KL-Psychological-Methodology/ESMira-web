@@ -600,5 +600,7 @@
     "show_in_disabled_list": "Always keep questionnaire accessible",
     "show_in_disabled_list_desc": "Is shown in disabled questionnaires list when not active",
     "prompt_bookmark_name": "Please select a name for the bookmark:",
-    "bookmarks": "Bookmarks"
+    "bookmarks": "Bookmarks",
+    "create_bookmark": "Bookmark this page",
+    "remove_bookmark": "Remove bookmark from this page"
 }

@@ -246,6 +246,7 @@ export class Section {
 		const isBookmarked = this.getAdmin().getTools().bookmarksLoader.hasBookmark(this.getHash())
 		return <a 
 			class={isBookmarked ? "bookmarkActive" : "bookmarkInactive"}
+			title={Lang.get(isBookmarked ? "remove_bookmark" : "create_bookmark")}
 			onclick={this.toggleBookmark.bind(this)}>
 			{isBookmarked ? m.trust(starFilledSvg) : m.trust(starEmptySvg)}
 		</a>
