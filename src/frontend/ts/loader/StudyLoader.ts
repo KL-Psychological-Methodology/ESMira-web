@@ -1,4 +1,3 @@
-import {ObservableRecord} from "../observable/ObservableRecord";
 import {Study} from "../data/study/Study";
 import m from "mithril";
 import {PromiseCache} from "../singletons/PromiseCache";
@@ -12,8 +11,9 @@ import {ObserverId} from "../observable/BaseObservable";
 import {RepairStudy} from "../helpers/RepairStudy";
 import {Page} from "../data/study/Page";
 import {createUniqueName} from "../helpers/UniqueName";
+import {TranslatableObjectRecord} from "../observable/ObservableRecord";
 
-export type StudiesDataType = ObservableRecord<number, Study>
+export type StudiesDataType = TranslatableObjectRecord<number, Study>
 
 export interface StudyMetadata {
 	owner: string
@@ -33,7 +33,7 @@ export interface StudyDataFromServer extends StudyMetadata {
  * Note, that because of how {@link BaseObservable} work, all observers are stored in {@link studyCache} which means, when a study gets replaced, its observer will persist
  */
 export class StudyLoader {
-	private readonly studyCache = new ObservableRecord<number, Study>({}, "studies")
+	private readonly studyCache = new TranslatableObjectRecord<number, Study>({}, "studies")
 	private readonly questionnaireRegister: Record<number, number> = {}
 	private readonly observerIds: Record<number, ObserverId> = {}
 	private readonly serverVersion: number
