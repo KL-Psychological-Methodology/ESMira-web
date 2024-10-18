@@ -1,6 +1,5 @@
 import {Admin} from "../admin/Admin";
-import {Container} from "../observable/Container";
-import {DynamicValues} from "./DynamicValues";
+import {DynamicValueContainer} from "./DynamicValues";
 import {DynamicCallbacks} from "./DynamicCallbacks";
 import {StudyLoader} from "../loader/StudyLoader";
 
@@ -16,7 +15,8 @@ export class SiteData {
 	public currentSection: number = 0
 	
 	public readonly admin: Admin
-	public readonly dynamicValues = new Container<DynamicValues>()
+	// public readonly dynamicValues = new Container<DynamicValues>()
+	public readonly dynamicValues = new DynamicValueContainer()
 	public readonly dynamicCallbacks: DynamicCallbacks = {}
 	public readonly studyLoader: StudyLoader
 	
