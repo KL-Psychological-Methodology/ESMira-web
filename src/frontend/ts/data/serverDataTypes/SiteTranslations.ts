@@ -1,4 +1,4 @@
-import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "../../observable/ObservableStructure";
 import {BaseObservable} from "../../observable/BaseObservable";
 import {ObservableTypes} from "../../observable/types/ObservableTypes";
 
@@ -8,7 +8,7 @@ export class SiteTranslations extends ObservableStructure {
 	public privacyPolicy = this.translatable("privacyPolicy", "")
 	public homeMessage = this.translatable("homeMessage", "")
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
+	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
 		const defaultLang = newLang ?? (parent as ObservableStructure)?.currentLangCode.get() ?? "en"
 		const translationData = data as  Record<string, Record<string, string>>
 		super(translationData[defaultLang], parent, key, newLang)

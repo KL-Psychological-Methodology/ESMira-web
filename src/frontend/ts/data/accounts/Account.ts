@@ -1,4 +1,4 @@
-import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "../../observable/ObservableStructure";
 import {BaseObservable} from "../../observable/BaseObservable";
 import {ObservableTypes} from "../../observable/types/ObservableTypes";
 
@@ -13,7 +13,7 @@ export class Account extends ObservableStructure {
 	public msg = this.primitiveArray<number>("msg", [])
 	public publish = this.primitiveArray<number>("publish", [])
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null = null, _key?: string, newLang?: string) {
+	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null = null, _key?: string, newLang?: string) {
 		super(data, parent, data["accountName"] as string, newLang)
 	}
 	public updateKeyName(_keyName: string, parent?: BaseObservable<ObservableTypes>) {

@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {TitleRow} from "../widgets/TitleRow";
 import {DragContainer} from "../widgets/DragContainer";
-import {TranslatableObjectDataType} from "../observable/ObservableStructure";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {ChartData} from "../data/study/ChartData";
 import {Section} from "../site/Section";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
@@ -18,17 +18,17 @@ export class Content extends SectionContent {
 		return Lang.get("create_charts")
 	}
 	
-	private removeChart(list: ArrayInterface<TranslatableObjectDataType, ChartData>, index: number): void {
+	private removeChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, index: number): void {
 		if(!confirm())
 			return
 		list.remove(index)
 		window.location.hash = `${this.section.getHash(this.section.depth)}`
 	}
-	private addChart(list: ArrayInterface<TranslatableObjectDataType, ChartData>, url: string): void {
+	private addChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, url: string): void {
 		list.push({})
 		this.newSection(url)
 	}
-	private copyChart(list: ArrayInterface<TranslatableObjectDataType, ChartData>, chart: ChartData, index: number): void {
+	private copyChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, chart: ChartData, index: number): void {
 		list.addCopy(chart, index)
 	}
 	

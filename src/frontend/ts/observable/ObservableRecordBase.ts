@@ -1,6 +1,6 @@
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
-import {ObservableStructure, TranslatableObjectDataType} from "./ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "./ObservableStructure";
 import { JsonTypes } from "./types/JsonTypes";
 import {PrimitiveType} from "./types/PrimitiveType";
 
@@ -94,7 +94,7 @@ export abstract class ObservableRecordBase<
 	}
 	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
-		const json: Record<K, TranslatableObjectDataType | JsonTypes> = {} as Record<K, TranslatableObjectDataType>
+		const json: Record<K, ObservableStructureDataType | JsonTypes> = {} as Record<K, ObservableStructureDataType>
 		for(const key in this.backingField) {
 			json[key] = this.backingField[key].createJson(options)
 		}

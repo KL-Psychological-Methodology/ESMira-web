@@ -1,4 +1,4 @@
-import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "../../observable/ObservableStructure";
 import {ActionTrigger} from "./ActionTrigger";
 import {Page} from "./Page";
 import {SumScore} from "./SumScore";
@@ -40,7 +40,7 @@ export class Questionnaire extends ObservableStructure {
 	public pages									= this.objectArray(			"pages", Page)
 	public sumScores								= this.objectArray(			"sumScores", SumScore)
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null) {
+	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null) {
 		super(data, parent, data["internalId"] as string)
 	}
 	public updateKeyName(_keyName: string, parent?: BaseObservable<ObservableTypes>) {

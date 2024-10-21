@@ -1,5 +1,5 @@
 import {DropdownMenu, openDropdown} from "../widgets/DropdownMenu";
-import {TranslatableObjectDataType} from "../observable/ObservableStructure";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import m, {Vnode} from "mithril";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
@@ -42,7 +42,7 @@ export class AddDropdownMenus {
 		)
 	}
 	
-	private addStudyView(addStudy: (studyData: TranslatableObjectDataType) => any): Vnode<any, any> {
+	private addStudyView(addStudy: (studyData: ObservableStructureDataType) => any): Vnode<any, any> {
 		const loaderState = this.sectionContent.section.loader
 		const studyLoader = this.sectionContent.section.siteData.studyLoader
 		
@@ -68,7 +68,7 @@ export class AddDropdownMenus {
 					(close) => {
 						return <div class="content">
 							{m(JsonSourceComponent, {
-								setJson: (json: TranslatableObjectDataType) => {
+								setJson: (json: ObservableStructureDataType) => {
 									addStudy(json)
 									close()
 								},
@@ -107,7 +107,7 @@ export class AddDropdownMenus {
 			}
 		)
 	}
-	private addQuestionnaireView(addSQuestionnaire: (questionnaireData: TranslatableObjectDataType) => any): Vnode<any, any> {
+	private addQuestionnaireView(addSQuestionnaire: (questionnaireData: ObservableStructureDataType) => any): Vnode<any, any> {
 		const loaderState = this.sectionContent.section.loader
 		const studyLoader = this.sectionContent.section.siteData.studyLoader
 		const openedStudies: Record<number, boolean> = {}

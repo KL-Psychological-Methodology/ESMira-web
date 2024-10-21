@@ -23,7 +23,7 @@ import {DragContainer, DragTools} from "../widgets/DragContainer";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {ObservableArray} from "../observable/ObservableArray";
-import {TranslatableObjectDataType} from "../observable/ObservableStructure";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
@@ -95,7 +95,7 @@ export class Content extends SectionContent {
 	}
 	private copyPage(page: Page, index: number): void {
 		const study = this.getStudyOrThrow()
-		const newPage = (page.parent as ObservableArray<TranslatableObjectDataType, Page>).addCopy(page, index)
+		const newPage = (page.parent as ObservableArray<ObservableStructureDataType, Page>).addCopy(page, index)
 		
 		this.section.siteData.studyLoader.autoValidatePage(study, newPage)
 	}
@@ -150,7 +150,7 @@ export class Content extends SectionContent {
 		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
 		if(!newName)
 			return
-		const newInput = (input.parent as ObservableArray<TranslatableObjectDataType, Input>).addCopy(input, index)
+		const newInput = (input.parent as ObservableArray<ObservableStructureDataType, Input>).addCopy(input, index)
 		newInput.name.set(newName)
 	}
 	private deleteInput(page: Page, index: number): void {

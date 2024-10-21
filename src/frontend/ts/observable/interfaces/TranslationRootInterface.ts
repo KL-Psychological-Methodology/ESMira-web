@@ -4,7 +4,7 @@ import {ObservablePrimitive} from "../ObservablePrimitive";
 
 /**
  * This interface signals that it is the root of an observable structure and needs to be in charge of translations for all its children
- * Each {@link BaseTranslatable} that is implemented as a container ({@link TranslatableArray} or {@link TranslatableObject})
+ * Each {@link BaseTranslatable} that is implemented as a container ({@link TranslatableArray} or {@link ObservableStructure})
  * is able to handle translations for itself and its children (but NOT its parent).
  * Additionally, this interface makes sure that the root also has additional settings ({@link defaultLang} and {@link langCodes})
  * that are important for the whole structure (and are usually stored in the backend).

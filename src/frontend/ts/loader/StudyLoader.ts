@@ -4,7 +4,6 @@ import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN, FILE_STUDIES} from "../constants/urls";
 import {Lang} from "../singletons/Lang";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {ObserverId} from "../observable/BaseObservable";
@@ -12,6 +11,7 @@ import {RepairStudy} from "../helpers/RepairStudy";
 import {Page} from "../data/study/Page";
 import {createUniqueName} from "../helpers/UniqueName";
 import {TranslatableObjectRecord} from "../observable/ObservableRecord";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 
 export type StudiesDataType = TranslatableObjectRecord<number, Study>
 
@@ -224,7 +224,7 @@ export class StudyLoader {
 		return studyList
 	}
 	
-	public async addStudy(studyData: TranslatableObjectDataType): Promise<number | null> {
+	public async addStudy(studyData: ObservableStructureDataType): Promise<number | null> {
 		const id: number = await Requests.loadJson(`${FILE_ADMIN}?type=GetNewId&for=study&study_id=-1`)
 		
 		studyData.id = id
@@ -247,7 +247,7 @@ export class StudyLoader {
 		this.studyCache.add(id, newStudy)
 		return newStudy
 	}
-	public updateStudyJson(study: Study, data: TranslatableObjectDataType): Study {
+	public updateStudyJson(study: Study, data: ObservableStructureDataType): Study {
 		const id = study.id.get()
 		this.studyCache.remove(id)
 		data[id] = id
@@ -276,7 +276,7 @@ export class StudyLoader {
 		}, 500)
 	}
 	
-	public async addQuestionnaire(study: Study, questionnaireData: TranslatableObjectDataType): Promise<Questionnaire> {
+	public async addQuestionnaire(study: Study, questionnaireData: ObservableStructureDataType): Promise<Questionnaire> {
 		const questionnaires = study.questionnaires.get()
 		const filtered = []
 		for(const questionnaire of questionnaires) {
@@ -326,7 +326,7 @@ export class StudyLoader {
 			`${FILE_ADMIN}?type=${saveType}&study_id=${study.id.get()}&lastChanged=${study.lastChanged}`,
 			"post",
 			JSON.stringify(studies)
-		) as { metaData: StudyMetadata, json: Record<string, TranslatableObjectDataType> }
+		) as { metaData: StudyMetadata, json: Record<string, ObservableStructureDataType> }
 		
 		study.lastChanged = response.metaData.lastSavedAt
 		this.updateMetadata(study.id.get(), response.metaData)

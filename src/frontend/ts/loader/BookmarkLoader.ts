@@ -3,7 +3,7 @@ import {PromiseCache} from "../singletons/PromiseCache";
 import {FILE_ADMIN} from "../constants/urls";
 import {Requests} from "../singletons/Requests";
 import {Lang} from "../singletons/Lang";
-import {ObservableStructure, TranslatableObjectDataType} from "../observable/ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "../observable/ObservableStructure";
 import {ObservableArray} from "../observable/ObservableArray";
 
 
@@ -13,12 +13,12 @@ export class Bookmark extends ObservableStructure {
 }
 
 export class BookmarkLoader {
-	private bookmarks?: ObservableArray<TranslatableObjectDataType, Bookmark>
+	private bookmarks?: ObservableArray<ObservableStructureDataType, Bookmark>
 	
 	public async init(): Promise<BookmarkLoader> {
 		return PromiseCache.get("bookmarsList", async() => {
 			const bookmarksJson = await Requests.loadJson(`${FILE_ADMIN}?type=GetBookmarks`)
-			this.bookmarks = new ObservableArray<TranslatableObjectDataType, Bookmark>(
+			this.bookmarks = new ObservableArray<ObservableStructureDataType, Bookmark>(
 				bookmarksJson,
 				null,
 				"bookmarksList",

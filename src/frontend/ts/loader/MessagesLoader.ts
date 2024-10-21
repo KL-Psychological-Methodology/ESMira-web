@@ -2,13 +2,13 @@ import {FILE_ADMIN} from "../constants/urls";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
 import {ObservableArray} from "../observable/ObservableArray";
-import {TranslatableObjectDataType} from "../observable/ObservableStructure";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {MessageParticipantInfo} from "../data/messages/MessageParticipantInfo";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {LoginDataInterface} from "../admin/LoginDataInterface";
 import {ParticipantMessagesContainer} from "../data/messages/ParticipantMessagesContainer";
 
-export type MessageParticipantInfoList = ObservableArray<TranslatableObjectDataType, MessageParticipantInfo>
+export type MessageParticipantInfoList = ObservableArray<ObservableStructureDataType, MessageParticipantInfo>
 
 export class MessagesLoader {
 	private messageParticipantInfoLists: Record<number, MessageParticipantInfoList> = {}
@@ -51,7 +51,7 @@ export class MessagesLoader {
 				}
 			}
 			else {
-				const list = new ObservableArray<TranslatableObjectDataType, MessageParticipantInfo>(
+				const list = new ObservableArray<ObservableStructureDataType, MessageParticipantInfo>(
 					jsonList,
 					null,
 					`messageParticipantEntryList-${studyId}`,
@@ -79,8 +79,8 @@ export class MessagesLoader {
 		return this.messageParticipantInfoLists[studyId]
 	}
 	
-	private async loadMessageParticipantInfoList (studyId: number): Promise<TranslatableObjectDataType[]> {
-		const listJson: TranslatableObjectDataType[] = await Requests.loadJson(`${FILE_ADMIN}?type=ListUserWithMessages&study_id=${studyId}`)
+	private async loadMessageParticipantInfoList (studyId: number): Promise<ObservableStructureDataType[]> {
+		const listJson: ObservableStructureDataType[] = await Requests.loadJson(`${FILE_ADMIN}?type=ListUserWithMessages&study_id=${studyId}`)
 		
 		listJson.sort((a,b) => {
 			if(a["lastMsg"] == b["lastMsg"])

@@ -1,7 +1,7 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable} from "./BaseObservable";
-import {TranslatableObjectDataType} from "./ObservableStructure";
+import {ObservableStructureDataType} from "./ObservableStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatable";
 import {ObservableArray} from "./ObservableArray";
@@ -13,7 +13,7 @@ import {ArrayInterface} from "./interfaces/ArrayInterface";
  * This class mainly exists to make sure that all children are BaseTranslatable (and not only BaseObservable)
  */
 export class TranslatableArray<
-	InputT extends TranslatableObjectDataType | PrimitiveType,
+	InputT extends ObservableStructureDataType | PrimitiveType,
 	ObsT extends BaseTranslatable<ObservableTypes> | BaseTranslatable<PrimitiveType>
 	> extends BaseTranslatable<any[]> implements ArrayInterface<InputT, ObsT> {
 	

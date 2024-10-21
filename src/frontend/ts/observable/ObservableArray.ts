@@ -1,7 +1,7 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
-import {TranslatableObjectDataType} from "./ObservableStructure";
+import {ObservableStructureDataType} from "./ObservableStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
@@ -10,7 +10,7 @@ import {ArrayInterface} from "./interfaces/ArrayInterface";
  * Primitive types will internally be packed into an {@link ObservablePrimitive}
  */
 export class ObservableArray<
-	InputT extends TranslatableObjectDataType | PrimitiveType,
+	InputT extends ObservableStructureDataType | PrimitiveType,
 	ObsT extends BaseObservable<ObservableTypes> | BaseObservable<PrimitiveType>
 > extends BaseObservable<any[]> implements ArrayInterface<InputT, ObsT> {
 	private _isDifferent = false

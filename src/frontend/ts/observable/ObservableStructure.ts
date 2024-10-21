@@ -8,7 +8,7 @@ import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatab
 import {TranslatableArray} from "./TranslatableArray";
 import {ObservableArray} from "./ObservableArray";
 
-export type TranslatableObjectDataType = Record<string, JsonTypes>
+export type ObservableStructureDataType = Record<string, JsonTypes>
 
 /**
  * An observable that can hold {@link BaseTranslatable} or {@link BaseObservable}
@@ -20,13 +20,13 @@ export abstract class ObservableStructure extends BaseTranslatable<ObservableTyp
 	private _isDifferent = false
 	private alwaysDifferent = false
 	
-	private readonly initJson: TranslatableObjectDataType
+	private readonly initJson: ObservableStructureDataType
 	
 	private readonly generalDefaultValues: Record<string, PrimitiveType | PrimitiveType[]> = {}
 	private readonly valueIndex: Record<string, BaseObservable<ObservableTypes>> = {}
 	
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
+	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
 		super(parent, key, newLang)
 		this.initJson = data
 	}
@@ -149,10 +149,10 @@ export abstract class ObservableStructure extends BaseTranslatable<ObservableTyp
 	
 	protected objectArray<T extends ObservableStructure>(
 		key: string,
-		typeConstructor: { new(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
-	): TranslatableArray<TranslatableObjectDataType, T> {
-		const obs = new TranslatableArray<TranslatableObjectDataType, T>(
-			this.initJson.hasOwnProperty(key) ? this.initJson[key] as TranslatableObjectDataType[] : [],
+		typeConstructor: { new(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
+	): TranslatableArray<ObservableStructureDataType, T> {
+		const obs = new TranslatableArray<ObservableStructureDataType, T>(
+			this.initJson.hasOwnProperty(key) ? this.initJson[key] as ObservableStructureDataType[] : [],
 			this,
 			key,
 			(data, parent, childKey) => {
@@ -164,9 +164,9 @@ export abstract class ObservableStructure extends BaseTranslatable<ObservableTyp
 	}
 	protected object<T extends ObservableStructure>(
 		key: string,
-		typeConstructor: { new(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
+		typeConstructor: { new(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string): T ;}
 	): T {
-		const obs = new typeConstructor(this.initJson.hasOwnProperty(key) ? this.initJson[key] as TranslatableObjectDataType : {}, this, key)
+		const obs = new typeConstructor(this.initJson.hasOwnProperty(key) ? this.initJson[key] as ObservableStructureDataType : {}, this, key)
 		this.valueIndex[key] = obs
 		return obs
 	}

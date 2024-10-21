@@ -1,4 +1,4 @@
-import {ObservableStructure, TranslatableObjectDataType} from "../../observable/ObservableStructure";
+import {ObservableStructure, ObservableStructureDataType} from "../../observable/ObservableStructure";
 import {Statistics} from "./Statistics";
 import {Questionnaire} from "./Questionnaire";
 import {ObservableTypes} from "../../observable/types/ObservableTypes";
@@ -50,7 +50,7 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 	public publicStatistics							= this.object("publicStatistics", Statistics)
 	public personalStatistics						= this.object("personalStatistics", Statistics)
 	
-	constructor(data: TranslatableObjectDataType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
+	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
 		if(repair != null && !repair.repairStudy(data))
 			throw Lang.get("error_study_not_compatible", data["title"]?.toString() ?? "Error")
 		
