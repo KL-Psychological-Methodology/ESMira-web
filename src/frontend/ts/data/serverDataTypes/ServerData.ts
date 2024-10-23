@@ -1,9 +1,9 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {JsonTypes} from "../../observable/types/JsonTypes";
 import {SiteTranslations} from "./SiteTranslations";
 import {TranslationRootInterface} from "../../observable/interfaces/TranslationRootInterface";
 
-export class ServerData extends TranslatableObject implements TranslationRootInterface {
+export class ServerData extends ObservableStructure implements TranslationRootInterface {
 	public defaultLang = this.primitive<string>("defaultLang", "en")
 	public langCodes = this.primitiveArray<string>("langCodes", [])
 	public siteTranslations = this.object("translationData", SiteTranslations)

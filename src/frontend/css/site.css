@@ -199,6 +199,7 @@ sectionsView
 	max-height: 25px;
 }
 #sectionsView > .section .sectionTitle > .title, .section .sectionTitle .extra {
+	display: flex;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -264,4 +265,20 @@ sectionsView
 #sectionsView > .section .loader .loaderClose {
 	width: 24px;
 	height: 24px;
+}
+
+#sectionsView > .section:first-child .bookmarkInactive {
+	display: none;
+}
+
+#sectionsView > .section .bookmarkInactive svg {
+	fill: #2b98ca;
+}
+
+#sectionsView > .section .bookmarkInactive:hover svg {
+	fill: #dc4e9d;
+}
+
+#sectionsView > .section .bookmarkActive svg {
+	fill: #dc4e9d;
 }

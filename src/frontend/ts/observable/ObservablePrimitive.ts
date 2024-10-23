@@ -3,6 +3,9 @@ import {BaseObservable} from "./BaseObservable";
 import {PrimitiveType} from "./types/PrimitiveType";
 import { JsonTypes } from "./types/JsonTypes";
 
+/**
+ * A Wrapper that can hold any primitive (string, number, boolean)
+ */
 export class ObservablePrimitive<T extends PrimitiveType> extends BaseObservable<T> {
 	protected _isDifferent = false
 	protected backingField: T
@@ -19,12 +22,8 @@ export class ObservablePrimitive<T extends PrimitiveType> extends BaseObservable
         return this.get();
     }
 	
-	public hasMutated(forceIsDifferent: boolean = false): void {
-		const wasDifferent = this._isDifferent
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
 		this._isDifferent = forceIsDifferent || this.backingField != this.defaultField
-		this.runObservers(this._isDifferent, this)
-		if(this.parent)
-			this.parent.hasMutated(!wasDifferent && this._isDifferent, this._isDifferent, this)
 	}
 	
 	public isDifferent(): boolean {
@@ -41,7 +40,7 @@ export class ObservablePrimitive<T extends PrimitiveType> extends BaseObservable
 		}
 		else if(this.backingField != value) {
 			this.backingField = value
-			this.hasMutated()
+			this.hasMutated(!this._isDifferent)
 		}
 	}
 }

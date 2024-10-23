@@ -1,13 +1,16 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
-import {TranslatableObjectDataType} from "./TranslatableObject";
+import {ObservableStructureDataType} from "./ObservableStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
-
+/**
+ * An observable Array that can hold any Observable or primitive types (string, number, boolean).
+ * Primitive types will internally be packed into an {@link ObservablePrimitive}
+ */
 export class ObservableArray<
-	InputT extends TranslatableObjectDataType | PrimitiveType,
+	InputT extends ObservableStructureDataType | PrimitiveType,
 	ObsT extends BaseObservable<ObservableTypes> | BaseObservable<PrimitiveType>
 > extends BaseObservable<any[]> implements ArrayInterface<InputT, ObsT> {
 	private _isDifferent = false
@@ -42,8 +45,8 @@ export class ObservableArray<
 	}
 	
 	
-	public calcIsDifferent(overrideIsDifferent: boolean = false): void {
-		if(overrideIsDifferent || this.defaultField.length != this.backingField.length) {
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		if(forceIsDifferent || this.defaultField.length != this.backingField.length) {
 			this._isDifferent = true
 			return
 		}
@@ -73,13 +76,6 @@ export class ObservableArray<
         throw new Error("Method not implemented.");
     }
 	
-	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
-		const wasDifferent = this._isDifferent
-		this.calcIsDifferent(forceIsDifferent)
-		this.runObservers(turnedDifferent, target)
-		if(this.parent)
-			this.parent.hasMutated(!wasDifferent && turnedDifferent, this._isDifferent, target)
-	}
 	public updateKeyName(keyName?: string, parent?: BaseObservable<ObservableTypes>): void {
 		super.updateKeyName(keyName, parent)
 		this.backingField.forEach((obs) => obs.updateKeyName())

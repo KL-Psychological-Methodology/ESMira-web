@@ -1,14 +1,19 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
 import {BaseObservable} from "./BaseObservable";
-import {TranslatableObjectDataType} from "./TranslatableObject";
+import {ObservableStructureDataType} from "./ObservableStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatable";
 import {ObservableArray} from "./ObservableArray";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
+/**
+ * An observable Array that is translatable and can hold {@link BaseTranslatable}
+ * Note: TranslatableArray itself does not have translations. Internally it uses an {@link ObservableArray} and all methods are relayed to it.
+ * This class mainly exists to make sure that all children are BaseTranslatable (and not only BaseObservable)
+ */
 export class TranslatableArray<
-	InputT extends TranslatableObjectDataType | PrimitiveType,
+	InputT extends ObservableStructureDataType | PrimitiveType,
 	ObsT extends BaseTranslatable<ObservableTypes> | BaseTranslatable<PrimitiveType>
 	> extends BaseTranslatable<any[]> implements ArrayInterface<InputT, ObsT> {
 	
@@ -37,6 +42,10 @@ export class TranslatableArray<
 		return this.array.get();
 	}
 	
+	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		this.array.reCalcIsDifferent(forceIsDifferent)
+	}
+	
 	public hasMutated(turnedDifferent?: boolean, forceIsDifferent?: boolean, target?: BaseObservable<ObservableTypes>): void {
 		this.array.hasMutated(turnedDifferent, forceIsDifferent, target)
 	}
@@ -51,7 +60,7 @@ export class TranslatableArray<
 	
 	public removeLanguage(langCode: string): void {
 		this.array.get().forEach((obs) => obs.removeLanguage(langCode))
-		this.array.calcIsDifferent()
+		this.array.reCalcIsDifferent()
 	}
 	
 	public renameLanguage(oldLangCode: string, newLangCode: string): void {

@@ -123,6 +123,12 @@ export class InputOptionDesigner {
 			category: "classic",
 			view: () => this.onlyRequiredAndDefaultOptions()
 		},
+		"duration": {
+			title: Lang.get("input_duration"),
+			helpUrl: "",
+			category: "classic",
+			view: () => this.onlyRequiredAndDefaultOptions()
+		},
 		"dynamic_input": {
 			title: Lang.get("input_dynamic_input"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Dynamic-item",
@@ -211,7 +217,10 @@ export class InputOptionDesigner {
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-multiple-choice",
 			category: "classic",
 			view: () => [
-				this.requiredOption(),
+				<div>
+					{this.requiredOption()}
+					{this.otherOption()}
+				</div>,
 				this.defaultValueOption(),
 				this.itemsOption()
 			]
@@ -225,6 +234,7 @@ export class InputOptionDesigner {
 					{this.requiredOption()}
 					{this.checkedOptionElement(this.input.asDropDown, Lang.get("show_as_dropdown"))}
 					{this.checkedOptionElement(this.input.forceInt, Lang.get("save_as_number"))}
+					{this.otherOption()}
 				</div>,
 				this.defaultValueOption(),
 				this.itemsOption()
@@ -456,6 +466,10 @@ export class InputOptionDesigner {
 				</div>
 			})
 		}</div>
+	}
+
+	private otherOption(): Vnode<any, any> {
+		return this.checkedOptionElement(this.input.other, Lang.get("option_other"))
 	}
 	
 	

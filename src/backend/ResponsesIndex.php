@@ -41,6 +41,16 @@ class ResponsesIndex {
 					$itemName = $input->listChoices[$i-1];
 					$this->backwardsAliases["$name~$i"] = "$name~$itemName";
 				}
+				if($input->other) {
+					$this->addName("$name~other");
+					$this->addName("$name~other_text");
+				}
+				break;
+			case 'list_single':
+				$this->addName($name);
+				if($input->other) {
+					$this->addName("$name~other");
+				}
 				break;
 			case 'file_upload':
 			case 'photo':

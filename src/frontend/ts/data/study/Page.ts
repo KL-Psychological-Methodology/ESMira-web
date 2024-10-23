@@ -1,7 +1,7 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 import {Input} from "./Input";
 
-export class Page extends TranslatableObject {
+export class Page extends ObservableStructure {
 	public randomized					= this.primitive<boolean>(		"randomized",					false)
 	public skipAfterSecs				= this.primitive<number>(		"skipAfterSecs",				0)
 	

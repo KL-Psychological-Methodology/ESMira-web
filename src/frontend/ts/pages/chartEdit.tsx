@@ -14,7 +14,7 @@ import {
 	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM, STATISTICS_DATATYPES_XY
 } from "../constants/statistics";
 import {DATA_MAIN_KEYS} from "../constants/data";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {AxisContainer} from "../data/study/AxisContainer";
 import {DragContainer} from "../widgets/DragContainer";
 import {Study} from "../data/study/Study";
@@ -71,10 +71,10 @@ export class Content extends ChartEditSectionContent {
 		}
 	}
 	
-	private copyAxisContainer(list: ArrayInterface<TranslatableObjectDataType, AxisContainer>, axis: AxisContainer, index: number): void {
+	private copyAxisContainer(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, axis: AxisContainer, index: number): void {
 		list.addCopy(axis, index)
 	}
-	private removeAxisContainer(list: ArrayInterface<TranslatableObjectDataType, AxisContainer>, index: number): void {
+	private removeAxisContainer(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, index: number): void {
 		list.remove(index)
 	}
 	private removeCondition(list: AxisData, index: number): void {
@@ -90,7 +90,7 @@ export class Content extends ChartEditSectionContent {
 		
 		element.selectedIndex = 0
 	}
-	private addVariable(list: ArrayInterface<TranslatableObjectDataType, AxisContainer>, study: Study): void {
+	private addVariable(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, study: Study): void {
 		const studyVariables = StudyDataValues.getStudyVariables(study)
 		const variableName = studyVariables.length ? studyVariables[0] : ""
 		
@@ -291,7 +291,7 @@ export class Content extends ChartEditSectionContent {
 		</div>
 	}
 	
-	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<TranslatableObjectDataType, AxisContainer>): Vnode<any, any> {
+	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<ObservableStructureDataType, AxisContainer>): Vnode<any, any> {
 		const studyVariables = StudyDataValues.getStudyVariables(study)
 		return DragContainer((dragTools) =>
 			DashRow(

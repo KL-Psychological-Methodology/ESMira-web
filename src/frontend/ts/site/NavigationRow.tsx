@@ -56,7 +56,7 @@ export class NavigationRow {
 		this.renderView()
 		
 		window.onbeforeunload = () => {
-			return this.siteData.dynamicValues.get("showSaveButton") || siteData.studyLoader.hasUnsavedStudy()
+			return this.siteData.dynamicValues.getChild("showSaveButton") || siteData.studyLoader.hasUnsavedStudy()
 				? Lang.get("confirm_leave_page_unsaved_changes")
 				: undefined;
 		};
@@ -170,14 +170,14 @@ export class NavigationRow {
 								<div
 									onclick={() => {(this.siteData.dynamicCallbacks.save ?? (() => console.error("No save callback!")) )()}}
 									id="saveBox"
-									class={this.siteData.dynamicValues.get("showSaveButton") ? "highlight clickable visible" : "highlight clickable"}
+									class={this.siteData.dynamicValues.getChild("showSaveButton") ? "highlight clickable visible" : "highlight clickable"}
 								>{Lang.get("save")}</div>
 							}
 							{this.siteData.admin.isLoggedIn() &&
 								<div
 									onclick={() => {(this.siteData.dynamicCallbacks.publish ?? (() => console.error("No publish callback!")) )()}}
 									id="publishBox"
-									class={this.siteData.dynamicValues.get("showPublishButton") ? "clickable visible" : "clickable"}
+									class={this.siteData.dynamicValues.getChild("showPublishButton") ? "clickable visible" : "clickable"}
 									title={Lang.get("info_publish")}
 								>{m.trust(publishSvg)}</div>
 							}

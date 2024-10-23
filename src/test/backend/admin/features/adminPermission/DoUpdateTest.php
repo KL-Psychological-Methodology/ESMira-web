@@ -56,7 +56,7 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		
 		$zip = new ZipArchive();
 		$zip->open($this->fileUpdate, ZIPARCHIVE::CREATE);
-		$zip->addFromString('backend/config/configs.default.php', '<?php return ["" => "__newConfig"];');
+		$zip->addFromString('backend/defaults/configs.default.php', '<?php return ["" => "__newConfig"];');
 		$zip->addFromString('new File', 'content');
 		$zip->close();
 		$this->setGet(['fromVersion' => PHP_INT_MAX .'.0.0']); //we dont want UpdateVersion() to trigger
@@ -75,7 +75,7 @@ class DoUpdateTest extends BaseAdminPermissionTestSetup {
 		$this->assertTrue(Configs::get('__originalConfig'));
 		$this->assertFileExists($this->folderPathSource .'new File');
 		$this->assertFileDoesNotExist($this->folderPathSource .'index.php');
-		$this->assertFileExists($this->folderPathSource .'backend/config/configs.default.php');
+		$this->assertFileExists($this->folderPathSource .'backend/defaults/configs.default.php');
 		$this->assertFileDoesNotExist($this->fileUpdate);
 	}
 	

@@ -1,10 +1,10 @@
 import {PrimitiveType} from "../types/PrimitiveType";
-import {TranslatableObjectDataType} from "../TranslatableObject";
+import {ObservableStructureDataType} from "../ObservableStructure";
 import {BaseObservable} from "../BaseObservable";
 import {ObservableTypes} from "../types/ObservableTypes";
 
 export interface ArrayInterface<
-	InputT extends TranslatableObjectDataType | PrimitiveType,
+	InputT extends ObservableStructureDataType | PrimitiveType,
 	ObsT extends BaseObservable<ObservableTypes> | BaseObservable<PrimitiveType>
 	> {
 	

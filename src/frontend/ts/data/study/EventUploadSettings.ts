@@ -1,6 +1,6 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
-export class EventUploadSettings extends TranslatableObject {
+export class EventUploadSettings extends ObservableStructure {
 	public actions_executed			= this.primitive<boolean>(		"actions_executed",		true)
 	public invitation				= this.primitive<boolean>(		"invitation",				true)
 	public invitation_missed		= this.primitive<boolean>(		"invitation_missed",		false)

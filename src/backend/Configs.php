@@ -23,7 +23,7 @@ class Configs {
 			return $current[$key];
 		else {
 			$default = self::getDefaultAll();
-			return $default[$key] ?? null;
+			return $default[$key] ?? '';
 		}
 	}
 	static function getAll(): array {

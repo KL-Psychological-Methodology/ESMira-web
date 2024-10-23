@@ -14,8 +14,10 @@ class ChangeAccountName extends IsLoggedIn {
 		if(!isset($_POST['new_account']))
 			throw new PageFlowException('Missing data');
 		
-		$accountStore = Configs::getDataStore()->getAccountStore();
-		
+		$dataStore = Configs::getDataStore();
+		$accountStore = $dataStore->getAccountStore();
+		$bookmarksStore = $dataStore->getBookmarkStore();		
+
 		if($this->isAdmin && isset($_POST['accountName'])) {
 			$accountName = $_POST['accountName'];
 			if(!$accountStore->doesAccountExist($accountName))
@@ -32,7 +34,8 @@ class ChangeAccountName extends IsLoggedIn {
 			throw new PageFlowException("Username '$newAccountName' already exists");
 		
 		$accountStore->changeAccountName($accountName, $newAccountName);
-		
+		$bookmarksStore->changeUser($accountName, $newAccountName);
+
 		if(Permission::getAccountName() == $accountName) {
 			$_SESSION['account'] = $newAccountName;
 			if(isset($_COOKIE['account']))

@@ -2,7 +2,7 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {Section} from "../site/Section";
 import {BtnCustom} from "../widgets/BtnWidgets";
 import {JsonSourceComponent} from "../helpers/JsonSourceComponent";
@@ -24,7 +24,7 @@ export class Content extends SectionContent {
 	public getView(): Vnode<any, any> {
 		return m(JsonSourceComponent, {
 			getStudy: () => this.getStudyOrThrow(),
-			setJson: (json: TranslatableObjectDataType) => {
+			setJson: (json: ObservableStructureDataType) => {
 				const study = this.getStudyOrThrow()
 				if(JSON.stringify(json) == JSON.stringify(study.createJson()))
 					return

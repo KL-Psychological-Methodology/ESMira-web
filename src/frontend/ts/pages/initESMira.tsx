@@ -50,6 +50,7 @@ export class Content extends SectionContent {
 			"post",
 			`new_account=${accountName}&pass=${password}&data_location=${this.folderData.dirBase}&reuseFolder=${this.reuseFolder ? "1" : "0"}`
 		)
+		this.goTo("admin")
 		window.location.reload()
 		return true
 	}
@@ -86,11 +87,11 @@ export class Content extends SectionContent {
 					<div class="center">
 						<label>
 							<small>{Lang.get("no")}</small>
-							<input type="radio" checked={this.reuseFolder} onchange={() => {this.reuseFolder = true}}/>
+							<input type="radio" checked={!this.reuseFolder} onchange={() => {this.reuseFolder = false}}/>
 						</label>
 						<label class="spacingLeft">
 							<small>{Lang.get("yes")}</small>
-							<input type="radio" checked={!this.reuseFolder} onchange={() => {this.reuseFolder = false}}/>
+							<input type="radio" checked={this.reuseFolder} onchange={() => {this.reuseFolder = true}}/>
 						</label>
 					</div>
 				</div>

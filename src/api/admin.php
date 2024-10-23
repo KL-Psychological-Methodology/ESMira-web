@@ -33,6 +33,9 @@ $classIndex = [
 	'GetTokenList' => 'backend\admin\features\loggedIn\GetTokenList',
 	'GetLoginHistory' => 'backend\admin\features\loggedIn\GetLoginHistory',
 	'RemoveToken' => 'backend\admin\features\loggedIn\RemoveToken',
+	'GetBookmarks' => 'backend\admin\features\loggedIn\GetBookmarks',
+	'SetBookmark' => 'backend\admin\features\loggedIn\SetBookmark',
+	'DeleteBookmark' => 'backend\admin\features\loggedIn\DeleteBookmark',
 	
 	//msg:
 	'ListParticipants' => 'backend\admin\features\messagePermission\ListParticipants',
@@ -48,6 +51,7 @@ $classIndex = [
 	'ListData' => 'backend\admin\features\readPermission\ListData',
 	'GetData' => 'backend\admin\features\readPermission\GetData',
 	'CreateMediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',
+	'GetMediaZip' => 'backend\admin\features\readPermission\GetMediaZip',
 	'GetMedia' => 'backend\admin\features\readPermission\GetMedia',
 	'ListMerlinLogs' => 'backend\admin\features\readPermission\ListMerlinLogs',
 	'DeleteMerlinLog' => 'backend\admin\features\readPermission\DeleteMerlinLog',

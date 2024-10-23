@@ -69,7 +69,7 @@ export abstract class SectionContent {
 		return this.section.getDynamic(key, defaultValue)
 	}
 	public setDynamic<T extends PrimitiveType>(key: keyof DynamicValues, newValue: T) {
-		this.section.siteData.dynamicValues.set(key, newValue)
+		this.section.siteData.dynamicValues.setChild(key, newValue)
 	}
 	public getStaticInt<T extends StaticValues>(key: T): number | null {
 		return this.section.getStaticInt(key)

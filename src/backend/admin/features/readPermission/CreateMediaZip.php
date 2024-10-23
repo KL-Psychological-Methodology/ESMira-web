@@ -11,17 +11,25 @@ use backend\Paths;
 class CreateMediaZip extends HasReadPermission {
 	
 	function execAndOutput() {
-		$pathZip = Paths::fileMediaZip($this->studyId);
+		header('Content-Type: text/event-stream');
+		header('Cache-Control: no-cache');
 		
+		echo "Start\n\n";
+
+		if (ob_get_contents())
+			ob_end_flush();
+		flush();
+
+		$pathZip = Paths::fileMediaZip($this->studyId);
 		if(!file_exists($pathZip)) //zip was not created or deleted, so we create it:
 			Configs::getDataStore()->getResponsesStore()->createMediaZip($this->studyId);
-		
-		Main::setHeader('Cache-Control: no-cache, must-revalidate');
-		Main::setHeader('Content-Type: application/octet-stream');
-		Main::setHeader('Content-Disposition: attachment; filename=' . Paths::FILENAME_MEDIA_ZIP);
-		Main::setHeader('Content-Transfer-Encoding: binary');
-		Main::setHeader('Content-Length: ' . filesize($pathZip));
-		readfile($pathZip);
+
+		echo "event: finished\n";
+		echo "data: \n\n";
+
+		if (ob_get_contents())
+			ob_end_flush();
+		flush();
 	}
 	
 	function exec(): array {

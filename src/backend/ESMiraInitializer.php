@@ -3,6 +3,7 @@
 namespace backend;
 
 use backend\exceptions\CriticalException;
+use backend\exceptions\PageFlowException;
 
 interface ESMiraInitializer {
 	/**
@@ -16,6 +17,7 @@ interface ESMiraInitializer {
 	
 	/**
 	 * @throws CriticalException
+	 * @throws PageFlowException
 	 */
 	public function create($accountName, $password);
 }

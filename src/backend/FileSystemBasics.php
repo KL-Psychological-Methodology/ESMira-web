@@ -62,4 +62,8 @@ class FileSystemBasics {
 		self::writeFile(Paths::FILE_CONFIG, '<?php return ' . var_export($saveValues, true) . ';');
 		Configs::resetConfig($saveValues);
 	}
+	
+	public static function deleteServerConfigs() {
+		unlink(Paths::FILE_CONFIG);
+	}
 }

@@ -2,19 +2,19 @@ import {FILE_ADMIN} from "../constants/urls";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
 import {ObservableArray} from "../observable/ObservableArray";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import {Account} from "../data/accounts/Account";
 import {safeConfirm} from "../constants/methods";
 import {Lang} from "../singletons/Lang";
 
-export type AccountList = ObservableArray<TranslatableObjectDataType, Account>
+export type AccountList = ObservableArray<ObservableStructureDataType, Account>
 
 export class AccountsLoader {
 	private accounts?: AccountList
 	public async init(): Promise<AccountsLoader> {
 		return PromiseCache.get("accountsList", async () => {
 			const accountsJson = await Requests.loadJson(`${FILE_ADMIN}?type=ListAccounts`)
-			this.accounts = new ObservableArray<TranslatableObjectDataType, Account>(
+			this.accounts = new ObservableArray<ObservableStructureDataType, Account>(
 				accountsJson,
 				null,
 				"accountList",

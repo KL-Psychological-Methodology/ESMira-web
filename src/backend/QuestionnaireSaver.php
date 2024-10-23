@@ -207,8 +207,8 @@ class QuestionnaireSaver {
 		$output = '<form class="questionnaireBox coloredLines" method="post">';
 		
 		if(isset($page->header))
-		$output .= "<div class=\"line horizontalPadding verticalPadding\">$page->header</div>";
-	
+		    $output .= "<div class=\"line horizontalPadding verticalPadding\">$page->header</div>";
+
 		$anyRequiredInputs = false;
 		foreach($inputs as $input) {
 			if(!isset($input->name))

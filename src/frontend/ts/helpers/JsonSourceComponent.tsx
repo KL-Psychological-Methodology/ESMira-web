@@ -1,5 +1,5 @@
 import {Study} from "../data/study/Study";
-import {TranslatableObjectDataType} from "../observable/TranslatableObject";
+import {ObservableStructureDataType} from "../observable/ObservableStructure";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {JSONContent, JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {ObserverId} from "../observable/BaseObservable";
@@ -8,7 +8,7 @@ import {Lang} from "../singletons/Lang";
 
 interface JsonSourceComponentOptions {
 	getStudy?: () => Study
-	setJson: (json: TranslatableObjectDataType) => void
+	setJson: (json: ObservableStructureDataType) => void
 	showMainMenuBar?: boolean
 	mode?: Mode
 	saveBtnLabel?: string
@@ -16,7 +16,7 @@ interface JsonSourceComponentOptions {
 export class JsonSourceComponent implements Component<JsonSourceComponentOptions, any> {
 	private hasChanged: boolean = false
 	private editor?: JSONEditor
-	private setJson?: (json: TranslatableObjectDataType) => void
+	private setJson?: (json: ObservableStructureDataType) => void
 	private getStudy?: () => Study
 	private studyObserveId?: ObserverId
 	private saveBtnLabel?: string

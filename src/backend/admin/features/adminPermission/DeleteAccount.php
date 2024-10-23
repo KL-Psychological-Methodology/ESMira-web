@@ -14,8 +14,10 @@ class DeleteAccount extends HasAdminPermission {
 		
 		$accountName = $_POST['accountName'];
 		
-		Configs::getDataStore()->getAccountStore()->removeAccount($accountName);
-		
+		$dataStore = Configs::getDataStore();
+		$dataStore->getAccountStore()->removeAccount($accountName);
+		$dataStore->getBookmarkStore()->deleteBookmarksUser($accountName);
+
 		return [];
 	}
 }

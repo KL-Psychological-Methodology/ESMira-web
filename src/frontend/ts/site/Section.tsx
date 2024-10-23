@@ -4,6 +4,8 @@ import {SiteData} from "./SiteData";
 import {Lang} from "../singletons/Lang";
 import {SectionContent} from "./SectionContent";
 import backSvg from "../../imgs/icons/back.svg?raw";
+import starEmptySvg from "../../imgs/icons/star_empty.svg?raw";
+import starFilledSvg from "../../imgs/icons/star_filled.svg?raw";
 import {StaticValues} from "./StaticValues";
 import {Study} from "../data/study/Study";
 import {StudiesDataType} from "../loader/StudyLoader";
@@ -12,6 +14,7 @@ import {DynamicValues} from "./DynamicValues";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {AdminToolsInterface} from "../admin/AdminToolsInterface";
 import {Admin} from "../admin/Admin";
+import { BookmarkLoader } from "../loader/BookmarkLoader";
 
 export class Section {
 	public readonly depth: number
@@ -226,7 +229,9 @@ export class Section {
 				<a href={this.backHash()} class="back">{m.trust(backSvg)}</a>
 				<div class="sectionTitle">
 					<div class="title" onclick={this.eventClick.bind(this)}>{this.getSectionTitle()}</div>
-					<div class="extra">{this.getSectionExtras()}</div>
+					<div>
+						<div class="extra">{this.getSectionExtras()}{this.getBookmark()}</div>
+					</div>
 				</div>
 			</div>
 			<div class={`sectionContent ${this.sectionName}`}>{this.getSectionContentView()}</div>
@@ -234,6 +239,34 @@ export class Section {
 		</div>
 	}
 	
+	private getBookmark(): Vnode<any, any> {
+		const isLoggedIn = this.siteData.admin.isLoggedIn()
+		if(!isLoggedIn)
+			return <div></div>
+		const isBookmarked = this.getAdmin().getTools().bookmarksLoader.hasBookmark(this.getHash())
+		return <a 
+			class={isBookmarked ? "bookmarkActive" : "bookmarkInactive"}
+			title={Lang.get(isBookmarked ? "remove_bookmark" : "create_bookmark")}
+			onclick={this.toggleBookmark.bind(this)}>
+			{isBookmarked ? m.trust(starFilledSvg) : m.trust(starEmptySvg)}
+		</a>
+	}
+
+	private toggleBookmark(): void {
+		const bookmarksLoader: BookmarkLoader = this.getAdmin().getTools().bookmarksLoader
+		const hash = this.getHash()
+		if(bookmarksLoader.hasBookmark(hash)){
+			bookmarksLoader.deleteBookmark(hash)
+		} else {
+			const defaultName = this.allSections.slice(1).map((section) => section.getSectionTitle()).join(" > ")
+			const bookmarkName = prompt(Lang.get("prompt_bookmark_name"), defaultName)
+			if(!bookmarkName)
+				return
+			bookmarksLoader.setBookmark(hash, bookmarkName)
+		}
+		
+	}
+
 	public getHash(depth: number = this.depth): string {
 		const sections = this.allSections;
 		const dataCodes: string[] = []

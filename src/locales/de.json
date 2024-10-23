@@ -570,7 +570,7 @@
     "edit_study": "Studie bearbeiten",
     "can_be_left_empty": "Kann leer bleiben",
     "hint_to_best_practices": "Vor dem Start der Studie, empfehlen wir sich die Best Practices in unserem Wiki durchzulesen",
-    "confirm_delete_access_key": "Soll der Zugangsschlüssl '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
+    "confirm_delete_access_key": "Soll der Zugangsschlüssel '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
     "study_tag": "Studienkennzeichnung",
     "show_data": "Zeige Daten",
     "input_location_resolution": "H3 Auflösung",
@@ -592,5 +592,15 @@
     "new_merlin_logs": "Neue Logs",
     "text_script": "Text Script",
     "text_script_explanation": "Wenn vorhanden ersetzt das Ergebnis dieses Scripts den angezeigten Text des Items.",
-    "news": "Neuigkeiten"
+    "news": "Neuigkeiten",
+    "input_duration": "Dauer",
+    "option_other": "Erlaube Option \"Andere\"",
+    "error_news": "Laden der ESMira news fehlgeschlagen",
+    "generating": "erstelle",
+    "show_in_disabled_list": "Halte Fragebogen zugänglich",
+    "show_in_disabled_list_desc": "Zeige in der Liste der deaktivierten Fragebögen wenn nicht aktiv",
+    "prompt_bookmark_name": "Bitte wählen Sie einen Namen für das Lesezeichen:",
+    "bookmarks": "Lesezeichen",
+    "create_bookmark": "Lesezeichen für diese Seite setzen",
+    "remove_bookmark": "Lesezeichen für diese Seite entfernen"
 }

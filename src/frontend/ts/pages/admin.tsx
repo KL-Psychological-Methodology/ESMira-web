@@ -19,6 +19,8 @@ import { RssFetcher, RssItem } from "../singletons/RssFetcher";
 import { NewsItem } from "../widgets/NewsItem";
 import { Section } from "../site/Section";
 import { Requests } from "../singletons/Requests";
+import { FILE_ADMIN } from "../constants/urls";
+import { BtnTrash } from "../widgets/BtnWidgets";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -32,6 +34,10 @@ export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			RssFetcher.loadFeed(3)
+				.catch(() => {
+					section.loader.error(Lang.get("error_news"))
+					return []
+				})
 		]
 	}
 
@@ -50,6 +56,30 @@ export class Content extends SectionContent {
 	
 	private logout(): Promise<void> {
 		return this.section.loader.showLoader(this.getAdmin().logout())
+	}
+
+	private editBookmark(url: string, oldName: string) {
+		const newName = prompt(Lang.get("prompt_bookmark_name"), oldName)
+		if(!newName)
+			return
+		this.getAdmin().getTools().bookmarksLoader.setBookmark(url, newName)
+	}
+
+	private bookmarkList(): Vnode<any, any> {
+		const bookmarksLoader = this.getAdmin().getTools().bookmarksLoader
+
+		return <div class="listParent">
+			<div class="listChild">
+				{bookmarksLoader.getBookmarkList().sort((bookmarkA, bookmarkB) => {
+					return bookmarkA.alias.get().localeCompare(bookmarkB.alias.get())
+				}).map((bookmark) => {
+					return <div>
+						<a class="btn" onclick={this.editBookmark.bind(this, bookmark.url.get(), bookmark.alias.get())}>{m.trust(editSvg)}</a>
+						<a href={bookmark.url.get()}>{bookmark.alias.get()}</a>
+					</div>
+				})}
+			</div>
+		</div>
 	}
 	
 	public getView(): Vnode<any, any> {
@@ -99,6 +129,17 @@ export class Content extends SectionContent {
 				)
 			}
 			{
+				!this.getAdmin().getTools().bookmarksLoader.isBookmarkListEmpty() &&
+				<div>
+					{
+						TitleRow(Lang.getWithColon("bookmarks"))
+					}
+					{
+						this.bookmarkList()
+					}	
+				</div>
+			}
+			{
 				tools?.isAdmin &&
 					<div>
 						{
@@ -139,7 +180,7 @@ export class Content extends SectionContent {
 				)
 			}
 			<br/>
-			{
+			{ !!this.rssItems.length &&
 				<div>
 					{
 						TitleRow(Lang.getWithColon("news"))

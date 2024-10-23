@@ -9,7 +9,9 @@ class Paths {
 	const FILENAME_MEDIA_ZIP = 'media.zip';
 	const FOLDER_SERVER_BACKUP = DIR_BASE .'backup/';
 	const FILE_SERVER_UPDATE = DIR_BASE .'update.zip';
-	const FILE_DEFAULT_CONFIG = DIR_BASE . 'backend/config/configs.default.php';
+	const FILE_DEFAULT_CONFIG = DIR_BASE . 'backend/defaults/configs.default.php';
+	const FILENAME_VERSION = 'VERSION';
+	const FILE_SERVER_VERSION = DIR_BASE . Paths::FILENAME_VERSION;
 	
 	
 	public static function folderImages(int $studyId): string {

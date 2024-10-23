@@ -32,6 +32,9 @@ class PathsFS {
 		return self::folderData() .'.loginToken/';
 	}
 	
+	static function fileDataVersion(): string {
+		return self::folderData() .Paths::FILENAME_VERSION;
+	}
 	static function fileLogins(): string {
 		return self::folderData() .'.logins';
 	}
@@ -204,5 +207,8 @@ class PathsFS {
 	}
 	static function fileRewardCode(int $studyId, string $code): string {
 		return self::folderRewardCodes($studyId) .Paths::makeUrlFriendly($code);
+	}
+	static function fileBookmarks(): string {
+		return self::folderData() . '.bookmarks';
 	}
 }

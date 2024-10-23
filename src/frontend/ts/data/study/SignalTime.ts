@@ -1,7 +1,7 @@
-import {TranslatableObject} from "../../observable/TranslatableObject";
+import {ObservableStructure} from "../../observable/ObservableStructure";
 
 let idCounter = 0
-export class SignalTime extends TranslatableObject {
+export class SignalTime extends ObservableStructure {
 	public readonly id = ++idCounter //only used for Scheduler
 	public startTimeOfDay				= this.primitive<number>(		"startTimeOfDay",			0)
 	public endTimeOfDay					= this.primitive<number>(		"endTimeOfDay",			0)
