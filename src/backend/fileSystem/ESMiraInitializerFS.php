@@ -33,7 +33,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	 * @throws PageFlowException
 	 */
 	private function moveExistingDataFolder($pathDataFolder) {
-		if(file_exists($pathDataFolder)) {
+		if(file_exists($pathDataFolder) && !FileSystemBasics::isDirEmpty($pathDataFolder)) {
 			if(isset($_POST['reuseFolder']) && $_POST['reuseFolder'])
 				MigrationManager::autoRun();
 			else {
