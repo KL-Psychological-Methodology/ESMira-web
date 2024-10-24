@@ -379,7 +379,7 @@ export class Content extends SectionContent {
 	}
 
 	private restoreSnapshot() {
-		Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`)//.then((value) => window.location.reload())
+		Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`).then((value) => window.location.reload())
 	}
 
 	public destroy(): void {
