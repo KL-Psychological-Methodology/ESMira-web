@@ -27,4 +27,7 @@ interface SnapshotStore {
     public function completeUpload(string $name);
 
     public function clearUploads(string $curentName);
+
+    public function storeOldConfigs();
+    public function restoreOldConfigs();
 }

@@ -10,6 +10,7 @@ use Throwable;
 class CreateSnapshot extends HasAdminPermission {
 
     function execAndOutput() {
+        set_time_limit(10 * 60);
         header('Content-Type: text/event-stream');
         header('Cache-Control: no-cache');
         header('X-Accell-Buffering: no');
