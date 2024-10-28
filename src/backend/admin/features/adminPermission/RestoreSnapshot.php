@@ -3,7 +3,6 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
-use backend\BackupManager;
 use backend\Configs;
 use backend\exceptions\PageFlowException;
 use backend\fileSystem\DataStoreFS;
@@ -11,7 +10,6 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\Paths;
 use backend\subStores\SnapshotStore;
-use PSpell\Config;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
@@ -39,7 +37,7 @@ class restoreSnapshot extends HasAdminPermission
 
 	public function __construct(
 		string $folderPathSource = DIR_BASE,
-		string $folderPathBackup = Paths::FOLDER_SERVER_BACKUP,
+		string $folderPathBackup = Paths::FOLDER_SERVER_BACKUP
 	) {
 		parent::__construct();
 		//we define them here so we can change the location for testing:
@@ -87,7 +85,9 @@ class restoreSnapshot extends HasAdminPermission
 		if (count($revertFailedList)) {
 			throw new PageFlowException("Reverting backup failed! The following files are still in the backup folder: $revertFailedList\nReverting was caused by this error: \n$msg");
 		} else {
-			rmdir($this->folderPathBackup);
+			if (file_exists($this->folderPathBackup) && FileSystemBasics::emptyFolder($this->folderPathBackup)) {
+				rmdir($this->folderPathBackup);
+			}
 		}
 
 		return new PageFlowException($msg);
@@ -156,7 +156,7 @@ class restoreSnapshot extends HasAdminPermission
 	 * @throws PageFlowException
 	 * @throws CriticalException
 	 */
-	private function checkSnapshot(string $filePathSnapshot)
+	private function checkSnapshot()
 	{
 		if (!file_exists(self::TEMP_INFO)) {
 			throw new PageFlowException("No info.json found in snapshot.");
@@ -195,13 +195,6 @@ class restoreSnapshot extends HasAdminPermission
 			throw new PageFlowException("Could not open snaphot zip file.");
 		}
 
-		//for($i = 0; $i < $zip->numFiles; $i++) {
-		//    $filename = $zip->getNameIndex($i);
-		//$fileinfo = pathinfo($filename);
-		//    if(!copy("zip://" . $zipPath . "#" . $filename, self::TEMP_DIR . $filename))
-		//        throw new PageFlowException("Could not extract $filename from snapshot zip");
-		//}
-
 		if (!($zip->extractTo(self::TEMP_DIR))) {
 			$zip->close();
 			throw new PageFlowException("Could not extract snapshot zip file.");
@@ -226,10 +219,10 @@ class restoreSnapshot extends HasAdminPermission
 			$snapshotStore = Configs::getDataStore()->getSnapshotStore();
 			$snapshotStore->storeOldConfigs();
 			$this->unpackToTemp($snapshotStore);
-			$this->checkSnapshot($snapshotStore->getSnapshotZipPath());
+			$this->checkSnapshot();
 
 			$dataBackup = Configs::getDataStore()->getDataBackupStore();
-			//$dataBackup->backupData();
+			$dataBackup->backupData();
 
 			try {
 				$this->moveEverythingToBackupLocation();
@@ -244,8 +237,6 @@ class restoreSnapshot extends HasAdminPermission
 						"target" => substr(PathsFS::folderData(), 0, -1)
 					]
 				];
-				
-				// Restore ESMira Server
 
 				foreach ($paths as $pathsConfig) {
 
@@ -266,14 +257,14 @@ class restoreSnapshot extends HasAdminPermission
 					}
 				}
 
-				if (FileSystemBasics::emptyFolder(substr($this->folderPathBackup, 0, -1))) {
-					rmdir($this->folderPathBackup);
-				}
+				$snapshotStore->restoreOldConfigs();
+
+				if (file_exists($this->folderPathBackup) && (!FileSystemBasics::emptyFolder($this->folderPathBackup) || !@rmdir($this->folderPathBackup)))
+					throw new PageFlowException("Failed to clean up backup. Snapshot restore was successful, but backup folder needs to manually be cleaned: $this->folderPathBackup");
+				$dataBackup->deleteBackup();
 			} catch (Throwable $e) {
 				$this->revertBackup($e->getMessage());
 			}
-
-			$snapshotStore->restoreOldConfigs();
 		} catch (Throwable $e) {
 			throw $e;
 		} finally {
