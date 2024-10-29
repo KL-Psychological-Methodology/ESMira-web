@@ -616,5 +616,5 @@
 	"restore_snapshot": "Restore from snapshot",
 	"state_restoring": "Restoring from snapshot",
 	"info_snapshot_successful": "ESMira has successfully been restored from the snapshot",
-	"experiental_feature": "This feature is still experimental"
+	"experimental_feature": "This feature is still experimental"
 }

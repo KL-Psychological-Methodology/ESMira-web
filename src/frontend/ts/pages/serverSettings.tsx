@@ -15,6 +15,7 @@ import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { RichText } from "../widgets/RichText";
 import { TabBar } from "../widgets/TabBar";
 import { TitleRow } from "../widgets/TitleRow";
+import wansSvg from "../../imgs/icons/warn.svg?raw"
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -228,29 +229,36 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.getWithColon("snapshots"))}
 
 			<div>
-				<div>
+				<div class="verticalPadding">
+					<p class="center">
+						<div class="inlineIcon">{m.trust(wansSvg)}</div>
+						<span>{Lang.get("experimental_feature")}</span>
+					</p>
 					{this.snapshotInfo.hasSnapshot ?
 						<span>{Lang.get("has_snapshot", new Date(this.snapshotInfo.fileChanged * 1000).toLocaleString(), this.getReadableByteSize(this.snapshotInfo.fileSize))}</span> :
 						<span>{Lang.get("no_snapshot")}</span>
 					}
 				</div>
-				<div>
-					<input type="button" onclick={this.createSnapshot.bind(this)} value={Lang.get("create_snapshot")} />
+				<div class="verticalPadding">
+					<input class="btn" type="button" onclick={this.createSnapshot.bind(this)} value={Lang.get("create_snapshot")} />
 					<span id="createSnapshotProgress"></span>
 				</div>
-				{this.snapshotInfo.hasSnapshot && <div>
-					<input type="button" onclick={this.deleteSnapshot.bind(this)} value={Lang.get("delete_snapshot")} />
-					<input type="button" onclick={this.downloadSnapshot.bind(this)} value={Lang.get("get_snapshot")} />
+				{this.snapshotInfo.hasSnapshot && <div class="verticalPadding">
+					<hr />
+					<input class="btn" type="button" onclick={this.deleteSnapshot.bind(this)} value={Lang.get("delete_snapshot")} />
+					<input class="btn" type="button" onclick={this.downloadSnapshot.bind(this)} value={Lang.get("get_snapshot")} />
 				</div>}
-				<div>
+				<hr />
+				<div class="verticalPadding">
 					<form enctype="multipart/form-data">
-						<input type="file" name="snapshotFileUpload" id="snapshotFileUpload"></input>
+						<input class="verticalPadding" type="file" name="snapshotFileUpload" id="snapshotFileUpload"></input>
 					</form>
-					<input type="button" onclick={this.uploadSnapshot.bind(this)} value={Lang.get("upload_snapshot")} />
+					<input class="btn verticalPadding" type="button" onclick={this.uploadSnapshot.bind(this)} value={Lang.get("upload_snapshot")} />
 					<span id="snapshotUploadProgress"></span>
 				</div>
-				{this.snapshotInfo.hasSnapshot && <div>
-					<input type="button" onclick={this.restoreSnapshot.bind(this)} value={Lang.get("restore_snapshot")} />
+				{this.snapshotInfo.hasSnapshot && <div class="verticalPadding">
+					<hr />
+					<input class="btn" type="button" onclick={this.restoreSnapshot.bind(this)} value={Lang.get("restore_snapshot")} />
 				</div>}
 			</div>
 
