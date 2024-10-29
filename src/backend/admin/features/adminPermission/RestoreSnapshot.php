@@ -263,7 +263,8 @@ class restoreSnapshot extends HasAdminPermission
 					throw new PageFlowException("Failed to clean up backup. Snapshot restore was successful, but backup folder needs to manually be cleaned: $this->folderPathBackup");
 				$dataBackup->deleteBackup();
 			} catch (Throwable $e) {
-				$this->revertBackup($e->getMessage());
+				$dataBackup->restoreData();
+				throw $this->revertBackup($e->getMessage());
 			}
 		} catch (Throwable $e) {
 			throw $e;

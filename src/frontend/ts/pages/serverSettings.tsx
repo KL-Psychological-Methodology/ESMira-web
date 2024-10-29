@@ -383,6 +383,7 @@ export class Content extends SectionContent {
 		await loader.showLoader(new Promise(async (resolve, reject) => {
 			try {
 				await Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`)
+				resolve(null)
 			}
 			catch (e) {
 				reject(e)
