@@ -598,6 +598,16 @@
 	"error_news": "Laden der ESMira news fehlgeschlagen",
 	"generating": "erstelle",
 	"snapshots": "Snapshots",
+	"no_snapshot": "Kein Snapshot auf dem Server gespeichert",
+	"has_snapshot": "Snapshot vom %s gefunden (%s)",
+	"create_snapshot": "Erstelle Snapshot",
+	"creating_snapshot": "Erstelle Snapshot (Schritt %d, %d%)",
+	"created_snapshot": "Erstellung des Snapshots abgeschlossen",
+	"creating_snapshot_failed": "Erstellung des Snapshots fehlgeschlagen",
+	"delete_snapshot": "Lösche Snapshot",
+	"get_snapshot": "Snapshot herunterladen",
+	"upload_snapshot": "Snapshot hochladen",
+	"restore_snapshot": "Von Snapshot wiederherstellen",
 	"show_in_disabled_list": "Halte Fragebogen zugänglich",
 	"show_in_disabled_list_desc": "Zeige in der Liste der deaktivierten Fragebögen wenn nicht aktiv",
 	"prompt_bookmark_name": "Bitte wählen Sie einen Namen für das Lesezeichen:",
@@ -605,5 +615,6 @@
 	"create_bookmark": "Lesezeichen für diese Seite setzen",
 	"remove_bookmark": "Lesezeichen für diese Seite entfernen",
 	"state_restoring": "Entpacke Snapshot",
-	"info_snapshot_successful": "ESMira wurde erfolgreich aus dem Snapshot wiederhergestellt"
+	"info_snapshot_successful": "ESMira wurde erfolgreich aus dem Snapshot wiederhergestellt",
+	"experimental_feature": "Diese Funkiton ist noch experimentell"
 }

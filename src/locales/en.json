@@ -605,7 +605,7 @@
 	"remove_bookmark": "Remove bookmark from this page",
 	"snapshots": "Snapshots",
 	"no_snapshot": "No snapshot stored on server",
-	"has_snapshot": "Found a snapshot from %s",
+	"has_snapshot": "Found a snapshot from %s (%s)",
 	"create_snapshot": "Create Snapshot",
 	"creating_snaphsot": "Creating Snapshot (step %d, %d%)",
 	"created_snapshot": "Snapshot creation complete",
@@ -615,5 +615,6 @@
 	"upload_snapshot": "Upload snapshot",
 	"restore_snapshot": "Restore from snapshot",
 	"state_restoring": "Restoring from snapshot",
-	"info_snapshot_successful": "ESMira has successfully been restored from the snapshot"
+	"info_snapshot_successful": "ESMira has successfully been restored from the snapshot",
+	"experiental_feature": "This feature is still experimental"
 }

@@ -1,21 +1,20 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { TabBar } from "../widgets/TabBar";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { FILE_ADMIN, URL_RELEASES_LIST } from "../constants/urls";
-import { BindObservable } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { RichText } from "../widgets/RichText";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { ChangeLanguageList } from "../widgets/ChangeLanguageList";
-import { Section } from "../site/Section";
-import { ObserverId } from "../observable/BaseObservable";
-import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
-import { Requests } from "../singletons/Requests";
+import m, { Vnode } from "mithril";
+import { FILE_ADMIN, URL_RELEASES_LIST } from "../constants/urls";
+import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
+import { ObserverId } from "../observable/BaseObservable";
+import { ObservablePrimitive } from "../observable/ObservablePrimitive";
+import { Lang } from "../singletons/Lang";
 import { PackageVersionComparator } from "../singletons/PackageVersionComparator";
-import { C } from "@fullcalendar/core/internal-common";
+import { Requests } from "../singletons/Requests";
+import { Section } from "../site/Section";
+import { SectionContent } from "../site/SectionContent";
+import { BindObservable } from "../widgets/BindObservable";
+import { ChangeLanguageList } from "../widgets/ChangeLanguageList";
+import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
+import { RichText } from "../widgets/RichText";
+import { TabBar } from "../widgets/TabBar";
+import { TitleRow } from "../widgets/TitleRow";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -231,7 +230,7 @@ export class Content extends SectionContent {
 			<div>
 				<div>
 					{this.snapshotInfo.hasSnapshot ?
-						<span>{Lang.get("has_snapshot", (new Date(this.snapshotInfo.fileChanged * 1000)).toLocaleString())}</span> :
+						<span>{Lang.get("has_snapshot", new Date(this.snapshotInfo.fileChanged * 1000).toLocaleString(), this.getReadableByteSize(this.snapshotInfo.fileSize))}</span> :
 						<span>{Lang.get("no_snapshot")}</span>
 					}
 				</div>
@@ -314,7 +313,7 @@ export class Content extends SectionContent {
 				snapshotProgressSpan.innerText = Lang.get("creating_snaphsot", step, percent)
 			}
 		})
-		eventSource.addEventListener('finished', e => {
+		eventSource.addEventListener('finished', _ => {
 			alert(Lang.get("created_snapshot"));
 			eventSource.close();
 			window.location.reload();
@@ -328,7 +327,7 @@ export class Content extends SectionContent {
 	}
 
 	private deleteSnapshot(): void {
-		Requests.loadJson(`${FILE_ADMIN}?type=DeleteSnapshot`).then((value) => window.location.reload())
+		Requests.loadJson(`${FILE_ADMIN}?type=DeleteSnapshot`).then((_) => window.location.reload())
 	}
 
 	private downloadSnapshot(): void {
@@ -391,7 +390,7 @@ export class Content extends SectionContent {
 		}), Lang.get("state_restoring"))
 
 		alert(Lang.get("info_snapshot_successful"))
-		Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`).then((value) => window.location.reload())
+		Requests.loadJson(`${FILE_ADMIN}?type=RestoreSnapshot`).then((_) => window.location.reload())
 	}
 
 	public destroy(): void {
@@ -399,5 +398,14 @@ export class Content extends SectionContent {
 		this.setDynamic("showSaveButton", false)
 		this.section.siteData.dynamicCallbacks.save = undefined
 		super.destroy();
+	}
+
+	private getReadableByteSize(bytes: number): string {
+		if (bytes > 1000000000)
+			return `${Math.round(bytes / 10000000) / 100} Gb`
+		else if (bytes > 1000000)
+			return `${Math.round(bytes / 10000) / 100} Mb`
+		else
+			return `${Math.round(bytes / 1000)} Kb`
 	}
 }
