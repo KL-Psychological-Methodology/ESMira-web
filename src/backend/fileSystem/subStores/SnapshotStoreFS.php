@@ -47,11 +47,12 @@ class SnapshotStoreFS implements SnapshotStore
 		$pathZip = $this->filePathZip();
 
 		$this->deleteSnapshot();
-
+		
+		$zip = new ZipArchive();
+		
 		try {
 			FileSystemBasics::createFolder(PathsFS::folderSnapshot());
 
-			$zip = new ZipArchive();
 
 			if (!($zip->open($pathZip, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE) === true))
 				throw new PageFlowException('Could not open new zip file for snapshot.');
