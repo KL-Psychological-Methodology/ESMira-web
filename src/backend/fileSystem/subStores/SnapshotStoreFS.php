@@ -3,6 +3,7 @@
 namespace backend\fileSystem\subStores;
 
 use backend\Configs;
+use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -39,7 +40,7 @@ class SnapshotStoreFS implements SnapshotStore
 	const PERSISTENT_KEYS = [self::KEY_DATA_DIR];
 
 	private $oldConfigVars = [];
-
+	
 	public function createSnapshot()
 	{
 		FileSystemBasics::createFolder(PathsFS::folderSnapshot());
@@ -212,10 +213,6 @@ class SnapshotStoreFS implements SnapshotStore
 		$this->clearUploads("");
 	}
 
-	/**
-	 * @throws PageFlowException
-	 * @throws CriticalException
-	 */
 	public function restoreSnapshot()
 	{
 		$extractDir = PathsFS::folderSnapshot() . 'temp';

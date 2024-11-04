@@ -4,6 +4,7 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
+use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 use backend\fileSystem\DataStoreFS;
 use backend\fileSystem\PathsFS;
@@ -48,6 +49,7 @@ class restoreSnapshot extends HasAdminPermission
 	/**
 	 * @throws CriticalException
 	 * @throws PageFlowException
+	 * @throws CriticalException
 	 */
 	protected function revertBackup($msg): PageFlowException
 	{
@@ -154,7 +156,6 @@ class restoreSnapshot extends HasAdminPermission
 
 	/**
 	 * @throws PageFlowException
-	 * @throws CriticalException
 	 */
 	private function checkSnapshot()
 	{

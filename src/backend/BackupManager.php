@@ -2,6 +2,7 @@
 
 namespace backend;
 
+use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 
 class BackupManager {
@@ -30,7 +31,7 @@ class BackupManager {
         $this->folderPathBackup = $folderPathBackup;
     }
 
-    	/**
+	/**
 	 * Windows throws some weird permission denied exceptions if we try to move the api-folder (probably because it is "used" by the server. So we move the files one by one.
 	 * @throws PageFlowException
 	 * @throws CriticalException
