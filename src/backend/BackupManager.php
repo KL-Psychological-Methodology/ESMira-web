@@ -71,7 +71,7 @@ class BackupManager {
 			if(!file_exists($oldLocation))
 				continue;
 			if(file_exists($newLocation))
-				throw "Critical error! $newLocation already exists. This should never happen. Please check the file structure manually";
+				throw new CriticalException("Critical error! $newLocation already exists. This should never happen. Please check the file structure manually");
 			
 			
 			$this->move($oldLocation, $newLocation);
