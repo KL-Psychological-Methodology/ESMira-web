@@ -8,8 +8,6 @@ use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\Paths;
 use backend\subStores\SnapshotStore;
-use backend\DirFilter;
-use PSpell\Config;
 use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveFilterIterator;
