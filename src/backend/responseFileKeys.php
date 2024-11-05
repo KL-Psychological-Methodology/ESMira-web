@@ -14,8 +14,10 @@ const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
 	'questionnaireName',
 	'eventType',
 	'timezone',
+	'timezoneOffset',
 	'responseTime',
 	'responseTime_formatted', //will be created by the server
+	'localDateTime', //will be sent by the client
 	'formDuration',
 	'pageDurations',
 	'lastInvitation',
@@ -36,8 +38,10 @@ const KEYS_EVENT_RESPONSES = [
 	'questionnaireName',
 	'eventType',
 	'timezone',
+	'timezoneOffset',
 	'responseTime',
 	'responseTime_formatted', //will be created by the server
+	'localDateTime', //will be sent by the client
 	'newSchedule',
 	'actionScheduledTo',
 	'actionScheduledTo_formatted', //will be created by the server
