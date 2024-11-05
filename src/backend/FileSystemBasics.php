@@ -54,6 +54,12 @@ class FileSystemBasics {
 		return true;
 	}
 	
+	public static function isDirEmpty($path): bool {
+		//Thanks to:
+		//https://stackoverflow.com/questions/7497733/how-can-i-use-php-to-check-if-a-directory-is-empty
+		return (count(scandir($path)) == 2);
+	}
+	
 	/**
 	 * @throws CriticalException
 	 */
