@@ -55,7 +55,10 @@ class Main
 	{
 		if (isset($_GET['lang'])) {
 			$lang = $_GET['lang'];
-			self::setCookie('lang', $_GET['lang'], 32532447600);
+			$expires = 32532447600;
+			if (gettype($expires) == "double") // check in case of 32 bit OS
+				$expires = -1;
+			self::setCookie('lang', $_GET['lang'], $expires);
 		} else if (isset($_COOKIE['lang']))
 			$lang = $_COOKIE['lang'];
 		else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
