@@ -16,7 +16,7 @@ use RecursiveIteratorIterator;
 use Throwable;
 use ZipArchive;
 
-class restoreSnapshot extends HasAdminPermission
+class RestoreSnapshot extends HasAdminPermission
 {
 	//we dont want to blindly copy everything over in case there are non ESMira-files in our main folder:
 	public const NEEDS_BACKUP = ['api', 'backend',  'frontend', 'locales', '.htaccess', 'CHANGELOG.md', 'index.php', 'index_nojs.php', 'LICENSE', 'README.md'];
