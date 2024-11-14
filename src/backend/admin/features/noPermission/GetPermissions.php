@@ -7,25 +7,28 @@ use backend\Configs;
 use backend\fileSystem\PathsFS;
 use backend\Permission;
 
-class GetPermissions extends NoPermission {
-	
-	function exec(): array {
-		if(!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
+class GetPermissions extends NoPermission
+{
+
+	function exec(): array
+	{
+		if (!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
 			return ['isLoggedIn' => false];
 		else {
-			if(Permission::isAdmin()) {
+			if (Permission::isAdmin()) {
 				$obj = [
 					'isAdmin' => true,
 					'canCreate' => true,
+					'canIssueFallbackTokens' => true,
 					'hasErrors' => Configs::getDataStore()->getErrorReportStore()->hasErrorReports(),
 					'totalDiskSpace' => disk_total_space(PathsFS::folderData()),
 					'freeDiskSpace' => disk_free_space(PathsFS::folderData()),
 				];
-			}
-			else
+			} else
 				$obj = [
 					'permissions' => Permission::getPermissions(),
-					'canCreate' => Permission::canCreate()
+					'canCreate' => Permission::canCreate(),
+					'canIssueFallbackTokens' => Permission::canIssueFallbackTokens()
 				];
 			$obj['accountName'] = Permission::getAccountName();
 			$obj['isLoggedIn'] = true;

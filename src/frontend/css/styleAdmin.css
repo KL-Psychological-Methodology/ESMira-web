@@ -35,6 +35,11 @@ Dragging
 accountList
 **********/
 
+#accountList {
+	width: 100%;
+	overflow-x: auto;
+}
+
 #accountList th {
 	text-align: center;
 	padding-right: 10px;

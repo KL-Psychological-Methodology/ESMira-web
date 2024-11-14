@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace backend\fileSystem;
@@ -29,6 +30,7 @@ use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\fileSystem\subStores\AccountStoreFS;
 use backend\fileSystem\subStores\BookmarkStoreFS;
+use backend\fileSystem\subStores\FallbackTokenStoreFS;
 use backend\fileSystem\subStores\MerlinLogsStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\StudyStoreFS;
@@ -37,67 +39,92 @@ use backend\fileSystem\subStores\StudyMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsStoreFS;
 use backend\subStores\BookmarkStore;
+use backend\subStores\FallbackTokenStore;
 use backend\subStores\MerlinLogsStore;
 
-class DataStoreFS implements DataStoreInterface {
-	public function isInit(): bool {
+class DataStoreFS implements DataStoreInterface
+{
+	public function isInit(): bool
+	{
 		$path = Configs::get('dataFolder_path');
 		return $path && file_exists($path);
 	}
-	public function isReady(): bool {
+	public function isReady(): bool
+	{
 		return disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
 	}
-	
-	public function getESMiraInitializer(): ESMiraInitializer {
+
+	public function getESMiraInitializer(): ESMiraInitializer
+	{
 		return new ESMiraInitializerFS();
 	}
-	
-	public function getAccountStore(): AccountStore {
+
+	public function getAccountStore(): AccountStore
+	{
 		return new AccountStoreFS();
 	}
-	public function getLoginTokenStore(): LoginTokenStore {
+	public function getLoginTokenStore(): LoginTokenStore
+	{
 		return new LoginTokenStoreFS();
 	}
-	public function getMerlinLogsStore(): MerlinLogsStore{
+	public function getMerlinLogsStore(): MerlinLogsStore
+	{
 		return new MerlinLogsStoreFS();
 	}
-	public function getMessagesStore(): MessagesStore {
+	public function getMessagesStore(): MessagesStore
+	{
 		return new MessagesStoreFS();
 	}
-	public function getStudyAccessIndexStore(): StudyAccessIndexStore {
+	public function getStudyAccessIndexStore(): StudyAccessIndexStore
+	{
 		return new StudyAccessIndexStoreFS();
 	}
-	public function getStudyStore(): StudyStore {
+	public function getStudyStore(): StudyStore
+	{
 		return new StudyStoreFS();
 	}
-	public function getResponsesStore(): ResponsesStore {
+	public function getResponsesStore(): ResponsesStore
+	{
 		return new ResponsesStoreFS();
 	}
-	public function getUserDataStore(string $userId): UserDataStore {
+	public function getUserDataStore(string $userId): UserDataStore
+	{
 		return new UserDataStoreFS($userId);
 	}
-	public function getStudyMetadataStore(int $studyId): StudyMetadataStore {
+	public function getStudyMetadataStore(int $studyId): StudyMetadataStore
+	{
 		return new StudyMetadataStoreFS($studyId);
 	}
-	public function getStudyStatisticsMetadataStore(int $studyId): StudyStatisticsMetadataStore {
+	public function getStudyStatisticsMetadataStore(int $studyId): StudyStatisticsMetadataStore
+	{
 		return new StudyStatisticsMetadataStoreFS($studyId);
 	}
-	public function getStudyStatisticsStore(int $studyId): StudyStatisticsStore {
+	public function getStudyStatisticsStore(int $studyId): StudyStatisticsStore
+	{
 		return new StudyStatisticsStoreFS($studyId);
 	}
-	public function getServerStatisticsStore(): ServerStatisticsStore {
+	public function getServerStatisticsStore(): ServerStatisticsStore
+	{
 		return new ServerStatisticsStoreFS();
 	}
-	public function getErrorReportStore(): ErrorReportStore {
+	public function getErrorReportStore(): ErrorReportStore
+	{
 		return new ErrorReportStoreFS();
 	}
-	public function getServerStore(): ServerStore {
+	public function getServerStore(): ServerStore
+	{
 		return new ServerStoreFS();
 	}
-	public function getRewardCodeStore(): RewardCodeStore {
+	public function getRewardCodeStore(): RewardCodeStore
+	{
 		return new RewardCodeStoreFS();
 	}
-	public function getBookmarkStore(): BookmarkStore {
+	public function getBookmarkStore(): BookmarkStore
+	{
 		return new BookmarkStoreFS();
+	}
+	public function getFallbackTokenStore(): FallbackTokenStore
+	{
+		return new FallbackTokenStoreFS();
 	}
 }
