@@ -6,6 +6,7 @@ use backend\exceptions\CriticalException;
 
 interface FallbackTokenStore
 {
+	const TOKEN_LENGTH = 32;
 	/**
 	 * @throws CriticalException
 	 */

@@ -11,8 +11,6 @@ use backend\subStores\FallbackTokenStore;
 
 class FallbackTokenStoreFS implements FallbackTokenStore
 {
-	const TOKEN_LENGTH = 32;
-
 	private function checkIsUniqueUrl(string $accountName, string $url): bool
 	{
 		$inboundTokens = FallbackTokenLoader::importInboundFile();
