@@ -5,11 +5,22 @@ import { Lang } from "../singletons/Lang";
 import { Requests } from "../singletons/Requests";
 import { Section } from "../site/Section";
 import { SectionContent } from "../site/SectionContent";
-import { BtnAdd, BtnTrash } from "../widgets/BtnWidgets";
+import { BtnAdd, BtnTrash, BtnCopy } from "../widgets/BtnWidgets";
+import { TitleRow } from "../widgets/TitleRow";
+
+class RecentToken {
+	token: string = ""
+	url: string = ""
+
+	constructor(token: string, url: string) {
+		this.token = token
+		this.url = url
+	}
+}
 
 export class Content extends SectionContent {
 	private userInboundTokens: InboundFallbackTokenInfo[] = []
-
+	private recentToken: RecentToken | null = null
 	public static preLoad(_section: Section): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokensForUser`)
@@ -57,21 +68,20 @@ export class Content extends SectionContent {
 		if (!url)
 			return
 
-		url = btoa(url)
+		let encodedUrl = btoa(url)
 
 		const response = await this.section.loader.loadJson(
 			`${FILE_ADMIN}?type=IssueInboundFallbackToken`,
 			"post",
-			`url=${url}`
+			`url=${encodedUrl}`
 		)
 		const token: string = response[0];
+		this.recentToken = new RecentToken(token, url)
 		await this.reloadInboundTokenList()
-		// TODO add some way to display the current token
-		alert(Lang.get("info_fallback_token", token))
 	}
 
 	public title(): string {
-		return Lang.get("fallback_system")
+		return Lang.get("fallback_token_list")
 	}
 
 	public getView(): Vnode<any, any> {
@@ -80,6 +90,7 @@ export class Content extends SectionContent {
 			<div class="spacingBottom center">
 				{BtnAdd(this.issueInboundToken.bind(this), Lang.get("create_fallback_token"))}
 			</div>
+			{this.getNewInboundTokenView()}
 		</div>
 	}
 
@@ -94,6 +105,24 @@ export class Content extends SectionContent {
 				)}
 			</div>
 		</div>
+	}
+
+	private getNewInboundTokenView(): Vnode<any, any> {
+		if (this.recentToken == null)
+			return <div></div>
+		return <div>
+			{TitleRow(Lang.get("new_inbound_fallback_token"))}
+			<div>{Lang.get("info_fallback_token", this.recentToken.url)}</div>
+			<br />
+			<div class="verticalPadding center"><span>{this.recentToken.token}</span>{BtnCopy(this.copyToken.bind(this))}</div>
+		</div>
+	}
+
+	private copyToken() {
+		if (this.recentToken == null)
+			return
+		navigator.clipboard.writeText(this.recentToken?.token)
+		alert(Lang.get("copied_inbound_fallback_token", this.recentToken?.token, this.recentToken?.url))
 	}
 
 }

@@ -605,9 +605,12 @@
 	"remove_bookmark": "Lesezeichen für diese Seite entfernen",
 	"permissions_issue_fallback_tokens": "Berechtigung um Fallbacktoken zu erstellen",
 	"fallback_system": "Fallback System",
+	"fallback_token_list": "Fallacktoken",
 	"permission_fallback_tokens": "Fallback Token",
 	"create_fallback_token": "Fallbacktoken erstellen",
 	"prompt_fallback_token_url": "URL der Ziel-ESMira-instanz",
-	"info_fallback_token": "Ihr Token ist: %s\nDieser Token kann nur einmal angezeigt werden. Stellen Sie sicher, dass Sie ihn sofort in Ihre ESMira-Instanz eintragen, da er nicht wiederhergestellt werden kann.",
-	"confirm_delete_fallback_token": "Soll der Fallback Token für '%s' wirklich gelöscht werden?"
+	"info_fallback_token": "Hier ist Ihr neuer Fallback Token für '%s'. Dieser Token kann nur einmal angezeigt werden. Kopieren Sie Ihn umgehend, da er später nicht wiederhergestellt werden kann.",
+	"confirm_delete_fallback_token": "Soll der Fallback Token für '%s' wirklich gelöscht werden?",
+	"new_inbound_fallback_token": "Neuer Fallback Token",
+	"copied_inbound_fallback_token": "Token '%s' für '%s' wurde in die Zwischenablage kopiert."
 }
