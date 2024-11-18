@@ -5,6 +5,12 @@ namespace backend;
 use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 
+enum PermissionTokenType
+{
+	case HEXADECIMAL;
+	case BASE64;
+}
+
 class Permission
 {
 	static function getHashedPass(string $pass)
@@ -164,9 +170,12 @@ class Permission
 	/**
 	 * @throws CriticalException
 	 */
-	static function calcRandomToken(int $length): string
+	static function calcRandomToken(int $length, PermissionTokenType $type = PermissionTokenType::HEXADECIMAL): string
 	{
 		//Thanks to: https://www.php.net/manual/en/function.random-bytes.php#118932
+
+		$bytes = "";
+
 		if (function_exists('random_bytes'))
 			return bin2hex(random_bytes($length));
 		else if (function_exists('mcrypt_create_iv'))
@@ -175,6 +184,14 @@ class Permission
 			return bin2hex(openssl_random_pseudo_bytes($length));
 		else
 			throw new CriticalException('This server does not support random_bytes(), mcrypt_create_iv() or openssl_random_pseudo_bytes()');
+
+		switch ($type) {
+			case PermissionTokenType::HEXADECIMAL:
+				return bin2hex($bytes);
+			case PermissionTokenType::BASE64;
+				return base64_encode($bytes);
+		}
+		throw new CriticalException('Unsupported token type');
 	}
 	static function getHashedToken(string $tokenHash)
 	{
