@@ -6,11 +6,12 @@ use backend\dataClasses\InboundFallbackToken;
 use backend\exceptions\CriticalException;
 use backend\fileSystem\loader\FallbackTokenLoader;
 use backend\Permission;
+use backend\PermissionTokenType;
 use backend\subStores\FallbackTokenStore;
 
 class FallbackTokenStoreFS implements FallbackTokenStore
 {
-	const TOKEN_LENGTH = 64;
+	const TOKEN_LENGTH = 32;
 
 	private function checkIsUniqueUrl(string $accountName, string $url): bool
 	{
@@ -49,7 +50,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 	{
 		if (!$this->checkIsUniqueUrl($accountName, $url))
 			throw new CriticalException("Inbound Fallback Token url must be unique per user");
-		$token = Permission::calcRandomToken(self::TOKEN_LENGTH);
+		$token = Permission::calcRandomToken(self::TOKEN_LENGTH, PermissionTokenType::BASE64);
 		$hashedToken = Permission::getHashedToken($token);
 		$tokenInfo = new InboundFallbackToken($url, $hashedToken);
 
