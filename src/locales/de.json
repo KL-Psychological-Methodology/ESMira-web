@@ -612,5 +612,9 @@
 	"info_fallback_token": "Hier ist Ihr neuer Fallback Token für '%s'. Dieser Token kann nur einmal angezeigt werden. Kopieren Sie Ihn umgehend, da er später nicht wiederhergestellt werden kann.",
 	"confirm_delete_fallback_token": "Soll der Fallback Token für '%s' wirklich gelöscht werden?",
 	"new_inbound_fallback_token": "Neuer Fallback Token",
-	"copied_inbound_fallback_token": "Token '%s' für '%s' wurde in die Zwischenablage kopiert."
+	"copied_inbound_fallback_token": "Token '%s' für '%s' wurde in die Zwischenablage kopiert.",
+	"add_outbound_fallback_token": "Token hinzufügen",
+	"outbound_fallback_token_url": "URL",
+	"outbound_fallback_token": "Token",
+	"url_https_error": "URL mit 'https://' beginnen"
 }

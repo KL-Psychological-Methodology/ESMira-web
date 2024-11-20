@@ -612,5 +612,9 @@
 	"info_fallback_token": "Below you find your new fallback token for '%s'. Note that this token can only be displayed once. Please copy it immediately, as it cannot be restored later.",
 	"confirm_delete_inbound_fallback_token": "Do you really want to delete the fallback token for '%s'?",
 	"new_inbound_fallback_token": "New Fallback Token",
-	"copied_inbound_fallback_token": "Copied token '%s' for '%s' to clipboard."
+	"copied_inbound_fallback_token": "Copied token '%s' for '%s' to clipboard.",
+	"add_outbound_fallback_token": "Add a Token",
+	"outbound_fallback_token_url": "URL",
+	"outbound_fallback_token": "Token",
+	"url_https_error": "URL needs to start with 'https://'"
 }

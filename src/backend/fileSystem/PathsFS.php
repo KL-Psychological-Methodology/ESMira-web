@@ -266,10 +266,10 @@ class PathsFS
 	}
 	static function fileIncomingFallbackTokens(): string
 	{
-		return self::folderData() . '.incomingiFallbackTokens';
+		return self::folderData() . '.inboundFallbackTokens';
 	}
-	static function fileOutgoinFallbackTokens(): string
+	static function fileOutboundFallbackTokens(): string
 	{
-		return self::folderData() . '.outgoinFallbackTokens';
+		return self::folderData() . '.outboundFallbackTokens';
 	}
 }

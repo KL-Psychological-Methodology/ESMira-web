@@ -29,13 +29,13 @@ class FallbackTokenLoader
 	{
 		if (self::$outboundCache)
 			return self::$outboundCache;
-		$path = PathsFS::fileOutgoinFallbackTokens();
+		$path = PathsFS::fileOutboundFallbackTokens();
 		return self::$outboundCache = file_exists($path) ? unserialize(file_get_contents($path)) : [];
 	}
 
 	public static function exportOutboundFile(array $outboundTokens)
 	{
-		$path = PathsFS::fileOutgoinFallbackTokens();
+		$path = PathsFS::fileOutboundFallbackTokens();
 		FileSystemBasics::writeFile($path, serialize($outboundTokens));
 		self::$outboundCache = $outboundTokens;
 	}

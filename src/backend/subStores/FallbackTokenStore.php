@@ -19,4 +19,10 @@ interface FallbackTokenStore
 	 * @throws CriticalException
 	 */
 	public function deleteInboundToken(string $accountName, string $url);
+
+	public function registerOutboundToken(string $url, string $token);
+
+	public function getOutboundTokenUrls(): array;
+
+	public function setOutboundTokensList(array $urls);
 }
