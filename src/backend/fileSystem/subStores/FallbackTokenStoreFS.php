@@ -5,6 +5,7 @@ namespace backend\fileSystem\subStores;
 use backend\dataClasses\InboundFallbackToken;
 use backend\dataClasses\OutboundFallbackToken;
 use backend\exceptions\CriticalException;
+use backend\exceptions\FallbackFeatureException;
 use backend\fileSystem\loader\FallbackTokenLoader;
 use backend\Permission;
 use backend\PermissionTokenType;
@@ -87,6 +88,22 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		FallbackTokenLoader::exportInboundFile($inboundTokens);
 	}
 
+	public function checkInboundToken(string $token): bool
+	{
+		$hashedToken = Permission::getHashedToken($token);
+		$inboundTokens = FallbackTokenLoader::importInboundFile();
+		foreach ($inboundTokens as $accountTokens) {
+			foreach ($accountTokens as $token) {
+				if (!$token instanceof InboundFallbackToken) {
+					throw new CriticalException("Invalid data in FallbackTokenStore");
+				}
+				if (strcmp($hashedToken, $token->hashedToken) === 0)
+					return true;
+			}
+		}
+		return false;
+	}
+
 	public function registerOutboundToken(string $url, string $newToken)
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
@@ -133,6 +150,18 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		return $urlList;
 	}
 
+	public function hasOutboundTokenUrl(string $url): bool
+	{
+		$outboundTokens = FallbackTokenLoader::importOutboundFile();
+		foreach ($outboundTokens as $token) {
+			if (!$token instanceof OutboundFallbackToken)
+				throw new CriticalException("Invalid data in FallbackTokenStore");
+			if (strcmp($url, $token->url) === 0)
+				return true;
+		}
+		return false;
+	}
+
 	public function setOutboundTokensList(array $urls)
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
@@ -150,5 +179,18 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 			$newOutboundTokens[] = $urlMap[$url];
 		}
 		FallbackTokenLoader::exportOutboundFile($newOutboundTokens);
+	}
+
+	public function getOutboundTokenForUrl(string $url): string
+	{
+		$outboundTokens = FallbackTokenLoader::importOutboundFile();
+		foreach ($outboundTokens as $token) {
+			if (!$token instanceof OutboundFallbackToken)
+				throw new CriticalException("Invalid data in FallbackTokenStore");
+			if (strcmp($url, $token->url)) {
+				return $token->token;
+			}
+		}
+		throw new CriticalException("No Fallback Token exists for given URL");
 	}
 }

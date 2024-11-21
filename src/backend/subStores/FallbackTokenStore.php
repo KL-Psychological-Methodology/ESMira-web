@@ -20,9 +20,15 @@ interface FallbackTokenStore
 	 */
 	public function deleteInboundToken(string $accountName, string $url);
 
+	public function checkInboundToken(string $token): bool;
+
 	public function registerOutboundToken(string $url, string $token);
 
 	public function getOutboundTokenUrls(): array;
 
+	public function hasOutboundTokenUrl(string $url): bool;
+
 	public function setOutboundTokensList(array $urls);
+
+	public function getOutboundTokenForUrl(string $url): string;
 }

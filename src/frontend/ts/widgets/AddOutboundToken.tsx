@@ -21,6 +21,7 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 	private urlStyle = new InputStyleData()
 	private tokenStyle = new InputStyleData()
 	private formEnabled: boolean = false
+	private debuggingOn = process.env.NODE_ENV !== "production"
 
 	public oncreate(vNode: VnodeDOM<AddOutboundTokenComponentOptions, any>) {
 		this.url.addObserver(() => {
@@ -41,7 +42,10 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 	}
 
 	private urlCheck(value: string): InputStyleData {
-		const httpsExpression = /^https:\/\//
+
+		let httpsExpression = /^https:\/\//
+		if (this.debuggingOn)
+			httpsExpression = /^https?:\/\// //Allow http on debug server
 		const httpsRegex = new RegExp(httpsExpression)
 
 		if (!value.length)
