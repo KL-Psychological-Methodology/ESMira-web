@@ -605,7 +605,7 @@
 	"remove_bookmark": "Lesezeichen für diese Seite entfernen",
 	"permissions_issue_fallback_tokens": "Berechtigung um Fallbacktoken zu erstellen",
 	"fallback_system": "Fallback System",
-	"fallback_token_list": "Fallacktoken",
+	"fallback_token_list": "Fallbacktoken",
 	"permission_fallback_tokens": "Fallback Token",
 	"create_fallback_token": "Fallbacktoken erstellen",
 	"prompt_fallback_token_url": "URL der Ziel-ESMira-instanz",
@@ -616,5 +616,9 @@
 	"add_outbound_fallback_token": "Token hinzufügen",
 	"outbound_fallback_token_url": "URL",
 	"outbound_fallback_token": "Token",
-	"url_https_error": "URL mit 'https://' beginnen"
+	"url_https_error": "URL muss mit 'https://' beginnen",
+	"fallback_server_title": "Fallbackserver: %s",
+	"fallback_url_parameter_error": "Url für Fallbacktoken konnte nicht ausgelesen werden",
+	"fallback_ping": "Teste Verbindung zu Fallbackserver",
+	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert."
 }

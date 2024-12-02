@@ -4,6 +4,8 @@ namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
 use backend\Configs;
+use backend\exceptions\CriticalException;
+use backend\exceptions\FallbackRequestException;
 use backend\exceptions\PageFlowException;
 use backend\FallbackRequest;
 
@@ -18,7 +20,11 @@ class PingFallbackServer extends HasAdminPermission
 		$url = base64_decode($rawUrl);
 
 		$request = new FallbackRequest();
-		$request->postRequest($url, "Ping", []);
+		try {
+			$request->postRequest($url, "Ping", []);
+		} catch (FallbackRequestException $e) {
+			throw new CriticalException($e->getMessage());
+		}
 		return [];
 	}
 }

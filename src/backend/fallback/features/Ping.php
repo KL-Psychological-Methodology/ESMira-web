@@ -2,9 +2,9 @@
 
 namespace backend\fallback\features;
 
-use backend\admin\HasAdminPermission;
+use backend\fallback\FallbackFeature;
 
-class Ping extends HasAdminPermission
+class Ping extends FallbackFeature
 {
 	function exec(): array
 	{

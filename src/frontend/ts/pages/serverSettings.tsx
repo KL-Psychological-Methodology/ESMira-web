@@ -15,7 +15,7 @@ import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import { Requests } from "../singletons/Requests";
 import { PackageVersionComparator } from "../singletons/PackageVersionComparator";
-import { BtnAdd, BtnTrash } from "../widgets/BtnWidgets";
+import { BtnAdd, BtnEdit, BtnTrash } from "../widgets/BtnWidgets";
 import { AddOutboundToken } from "../widgets/AddOutboundToken";
 import { ObservableArray } from "../observable/ObservableArray";
 import { ObservableStructureDataType } from "../observable/ObservableStructure";
@@ -287,7 +287,8 @@ export class Content extends SectionContent {
 								<div class="verticalPadding">
 									{dragTools.getDragStarter(index, this.outboundTokenUrls)}
 									{BtnTrash(this.deleteOutboundToken.bind(this, index))}
-									<span>{token.url.get()}</span>
+									<a href={token.url.get()}>{token.url.get()}</a>
+									<a class="spacingLeft" href={this.getUrl(`fallbackServerView,fallbackUrl:${btoa(token.url.get())}`)}>{BtnEdit()}</a>
 								</div>
 							)
 						)}

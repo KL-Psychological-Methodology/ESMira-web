@@ -42,7 +42,6 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 	}
 
 	private urlCheck(value: string): InputStyleData {
-
 		let httpsExpression = /^https:\/\//
 		if (this.debuggingOn)
 			httpsExpression = /^https?:\/\// //Allow http on debug server
@@ -61,7 +60,10 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 
 	private async submitForm(onFinish: (url: string, token: string) => Promise<boolean>, onError: (msg: string) => void, e: InputEvent): Promise<any> {
 		e.preventDefault()
-		const response = await onFinish(this.url.get(), this.token.get())
+		let url = this.url.get()
+		if (!url.endsWith("/"))
+			url = url + "/"
+		const response = await onFinish(url, this.token.get())
 		if (response) {
 			this.url.set("")
 			this.token.set("")

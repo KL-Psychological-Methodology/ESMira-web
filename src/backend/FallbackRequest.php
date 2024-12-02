@@ -45,14 +45,15 @@ class FallbackRequest
 
 		$context = stream_context_create($options);
 
-		$requestURL = $url . "/api/fallback.php?type=" . $feature;
+		$requestURL = $url . "api/fallback.php?type=" . $feature;
 
 		$response = file_get_contents($requestURL, false, $context);
+
 
 		if ($response === false)
 			throw new FallbackRequestException("No response from server.", FallbackRequestException::NO_RESPONSE);
 
-		$responseData = json_decode($response);
+		$responseData = json_decode($response, true);
 
 		if (!isset($responseData['code']))
 			throw new FallbackRequestException("Response code missing from fallback response.", FallbackRequestException::MISSING_RESPONSE_CODE);

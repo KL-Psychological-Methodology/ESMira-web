@@ -1,9 +1,10 @@
 <?php
 
-namespace backend\admin;
+namespace backend\fallback;
 
 use backend\Configs;
 use backend\exceptions\FallbackFeatureException;
+use backend\FallbackRequestOutput;
 use backend\JsonOutput;
 
 abstract class FallbackFeature
@@ -21,7 +22,7 @@ abstract class FallbackFeature
 
 	function execAndOutput()
 	{
-		echo JsonOutput::successObj($this->exec());
+		echo FallbackRequestOutput::successObj($this->exec());
 	}
 
 	abstract function exec(): array;

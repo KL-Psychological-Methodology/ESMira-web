@@ -187,7 +187,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			if (strcmp($url, $token->url)) {
+			if (strcmp($url, $token->url) === 0) {
 				return $token->token;
 			}
 		}
