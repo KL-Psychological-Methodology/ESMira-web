@@ -572,7 +572,7 @@
     "last_saved_by": "Ultimo salvataggio da",
     "last_saved_at": "Ultimo salvataggio a",
     "study_tag": "Etichetta dello studio",
-    "input_location_resolution": "H3 Risoluzione (0-9)",
+    "input_location_resolution": "Risoluzione H3",
     "screenshot_appInstall_android": "frontend/screenshot/store_install-android-it.png",
     "calendar_description": "Questo calendario mostra gli eventi e il tempo di esecuzione dei questionari dal punto di vista di un partecipante, a seconda del momento in cui si è unito allo studio",
     "image_input_quality": "Qualità dell'immagine",
@@ -601,5 +601,6 @@
     "text_script_explanation": "Se presente, il risultato di questo script sostituirà il testo visualizzato di questa voce.",
     "show_in_disabled_list_desc": "Viene visualizzato nell'elenco dei questionari disabilitati quando non è attivo.",
     "prompt_bookmark_name": "Selezionare un nome per il segnalibro:",
-    "create_bookmark": "Aggiungi ai preferiti questa pagina"
+    "create_bookmark": "Aggiungi ai preferiti questa pagina",
+    "input_location_resolution_desc": "Risoluzione da 0 a 15. Utilizzare la risoluzione 9 per ottenere un buon compromesso tra anonimato dei partecipanti e precisione."
 }
