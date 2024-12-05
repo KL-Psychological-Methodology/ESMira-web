@@ -620,5 +620,7 @@
 	"fallback_server_title": "Fallback Server: %s",
 	"fallback_url_parameter_error": "Could not get url for fallback token",
 	"fallback_ping": "Test connection to fallback server",
-	"fallback_ping_success": "Connection to %s successful! Remote server replied and accepted the fallback token."
+	"fallback_ping_success": "Connection to %s successful! Remote server replied and accepted the fallback token.",
+	"fallback_system_own_url_title": "This server's url",
+	"fallback_system_own_url_instruction": "Below is the url of this server, in the form another server expects it for use in the fallback system:"
 }

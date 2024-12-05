@@ -15,13 +15,14 @@ import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import { Requests } from "../singletons/Requests";
 import { PackageVersionComparator } from "../singletons/PackageVersionComparator";
-import { BtnAdd, BtnEdit, BtnTrash } from "../widgets/BtnWidgets";
+import { BtnAdd, BtnCopy, BtnEdit, BtnTrash } from "../widgets/BtnWidgets";
 import { AddOutboundToken } from "../widgets/AddOutboundToken";
 import { ObservableArray } from "../observable/ObservableArray";
 import { ObservableStructureDataType } from "../observable/ObservableStructure";
 import { OutboundFallbackToken } from "../data/fallbackTokens/outboundFallbackToken";
 import { DragContainer } from "../widgets/DragContainer";
 import { callback } from "chart.js/dist/helpers/helpers.core";
+import { getBaseUrl } from "../constants/methods";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -278,6 +279,7 @@ export class Content extends SectionContent {
 	}
 
 	private getFallbackSystemView(): Vnode<any, any> {
+		const url = getBaseUrl()
 		return <div>
 			<div class="listParent">
 				{DragContainer((dragTools) =>
@@ -299,6 +301,10 @@ export class Content extends SectionContent {
 
 			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.section.loader.error(msg) })}
 
+			{TitleRow(Lang.get("fallback_system_own_url_title"))}
+
+			<div>{Lang.get("fallback_system_own_url_instruction")}</div>
+			<div class="center spacingTop"><span>{url}</span>{BtnCopy(() => navigator.clipboard.writeText(url))}</div>
 		</div>
 
 	}

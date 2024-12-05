@@ -620,5 +620,7 @@
 	"fallback_server_title": "Fallbackserver: %s",
 	"fallback_url_parameter_error": "Url für Fallbacktoken konnte nicht ausgelesen werden",
 	"fallback_ping": "Teste Verbindung zu Fallbackserver",
-	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert."
+	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert.",
+	"fallback_system_own_url_title": "URL dieses Servers",
+	"fallback_system_own_url_instruction": "Unternstehend ist die URL dieses Servers, so wie sie von anderen Servern für Verwendung im Fallbacksystem erwartet wird."
 }

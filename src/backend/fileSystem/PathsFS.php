@@ -58,6 +58,10 @@ class PathsFS
 	{
 		return self::folderStudies() . self::FILENAME_STUDY_INDEX;
 	}
+	static function fileFallbackStudyIndex(string $encodedUrl): string
+	{
+		return self::folderFallbackStudiesUrl($encodedUrl) . self::FILENAME_STUDY_INDEX;
+	}
 
 
 	static function folderLangs(int $studyId): string
@@ -120,6 +124,23 @@ class PathsFS
 	{
 		return self::folderStudies() . "$studyId/.reward_codes/";
 	}
+	static function folderFallbackStudies(): string
+	{
+		return self::folderData() . 'fallbackStudies/';
+	}
+	static function folderFallbackStudiesUrl(string $encodedUrl): string
+	{
+		return self::folderFallbackStudies() . "$encodedUrl/";
+	}
+	static function folderFallbackStudy(string $encodedUrl, int $studyId): string
+	{
+		return self::folderFallbackStudiesUrl($encodedUrl) . "$studyId/";
+	}
+	static function folderFallbackStudyLangs(string $encodedUrl, int $studyId): string
+	{
+		return self::folderFallbackStudy($encodedUrl, $studyId) . ".langs/";
+	}
+
 
 
 	static function fileBlockLogin(string $accountName): string
@@ -271,5 +292,17 @@ class PathsFS
 	static function fileOutboundFallbackTokens(): string
 	{
 		return self::folderData() . '.outboundFallbackTokens';
+	}
+	static function fileFallbackStudyLock(string $encodedUrl, int $studyId): string
+	{
+		return self::folderFallbackStudy($encodedUrl, $studyId) . '.locked';
+	}
+	static function fileFallbackStudyConfig(string $encodedUrl, int $studyId): string
+	{
+		return self::folderFallbackStudy($encodedUrl, $studyId) . '.config.json';
+	}
+	static function fileFallbackLangConfig(string $encodedUrl, int $studyId, string $code): string
+	{
+		return self::folderFallbackStudyLangs($encodedUrl, $studyId) . "$code.json";
 	}
 }

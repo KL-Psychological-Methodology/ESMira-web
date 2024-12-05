@@ -30,6 +30,7 @@ use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\fileSystem\subStores\AccountStoreFS;
 use backend\fileSystem\subStores\BookmarkStoreFS;
+use backend\fileSystem\subStores\FallbackStudyStoreFS;
 use backend\fileSystem\subStores\FallbackTokenStoreFS;
 use backend\fileSystem\subStores\MerlinLogsStoreFS;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
@@ -39,8 +40,11 @@ use backend\fileSystem\subStores\StudyMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsMetadataStoreFS;
 use backend\fileSystem\subStores\StudyStatisticsStoreFS;
 use backend\subStores\BookmarkStore;
+use backend\subStores\FallbackStudyAccessIndexStore;
+use backend\subStores\FallbackStudyStore;
 use backend\subStores\FallbackTokenStore;
 use backend\subStores\MerlinLogsStore;
+use FallbackStudyAccessIndexStoreFS;
 
 class DataStoreFS implements DataStoreInterface
 {
@@ -126,5 +130,13 @@ class DataStoreFS implements DataStoreInterface
 	public function getFallbackTokenStore(): FallbackTokenStore
 	{
 		return new FallbackTokenStoreFS();
+	}
+	public function getFallbackStudyAccessIndexStore(string $encodedUrl): FallbackStudyAccessIndexStore
+	{
+		return new FallbackStudyAccessIndexStoreFS($encodedUrl);
+	}
+	public function getFallbackStudyStore(string $encodedUrl): FallbackStudyStore
+	{
+		return new FallbackStudyStoreFS($encodedUrl);
 	}
 }

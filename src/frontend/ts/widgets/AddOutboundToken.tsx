@@ -77,7 +77,7 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 					<label>
 						<small>{Lang.get("outbound_fallback_token_url")}</small>
 						<input
-							type="text" {...BindObservable(this.url)}
+							type="text" {...BindObservable(this.url, undefined, undefined, "onkeyup")}
 							style={this.urlStyle.style}
 						/>
 						<small>{this.urlStyle.msg}</small>
@@ -87,7 +87,7 @@ class AddOutboundTokenComponent implements Component<AddOutboundTokenComponentOp
 					<label>
 						<small>{Lang.get("outbound_fallback_token")}</small>
 						<input
-							type="text" {...BindObservable(this.token)}
+							type="text" {...BindObservable(this.token, undefined, undefined, "onkeyup")}
 							style={this.tokenStyle.style}
 						/>
 						<small>{this.tokenStyle.msg}</small>

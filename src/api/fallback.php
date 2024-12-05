@@ -19,6 +19,7 @@ if (!isset($_GET['type'])) {
 
 $classIndex = [
 	'Ping' => '\backend\fallback\features\Ping',
+	'SaveStudy' => '\backend\fallback\features\SaveStudy',
 ];
 
 $type = $_GET['type'];

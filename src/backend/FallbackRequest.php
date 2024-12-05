@@ -4,6 +4,7 @@ namespace backend;
 
 use backend\exceptions\CriticalException;
 use backend\exceptions\FallbackRequestException;
+use stdClass;
 
 class FallbackRequest
 {
@@ -21,10 +22,16 @@ class FallbackRequest
 
 	public function postRequest(string $url, string $feature, array $data): array
 	{
+		$postData = http_build_query($data);
+		return $this->doRequest($url, $feature, $postData, "POST");
+	}
+
+	public function postRequestRaw(string $url, string $feature, string $data): array
+	{
 		return $this->doRequest($url, $feature, $data, "POST");
 	}
 
-	private function doRequest(string $url, string $feature, array $data, string $method): array
+	private function doRequest(string $url, string $feature, string $data, string $method): array
 	{
 		$tokenStore = Configs::getDataStore()->getFallbackTokenStore();
 
@@ -39,7 +46,7 @@ class FallbackRequest
 			"http" => [
 				"method" => $method,
 				"header" => "Content-type: application/x-www-form-urlencoded",
-				"content" => http_build_query($data)
+				"content" => $data
 			]
 		];
 
