@@ -300,11 +300,6 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.get("add_outbound_fallback_token"))}
 
 			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.section.loader.error(msg) })}
-
-			{TitleRow(Lang.get("fallback_system_own_url_title"))}
-
-			<div>{Lang.get("fallback_system_own_url_instruction")}</div>
-			<div class="center spacingTop"><span>{url}</span>{BtnCopy(() => navigator.clipboard.writeText(url))}</div>
 		</div>
 
 	}

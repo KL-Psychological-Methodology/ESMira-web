@@ -18,6 +18,12 @@ if (!isset($_GET['type'])) {
 }
 
 $classIndex = [
+	// Setup
+
+	'Setup' => '\backend\fallback\features\Setup',
+
+	// Fallback Features
+
 	'Ping' => '\backend\fallback\features\Ping',
 	'SaveStudy' => '\backend\fallback\features\SaveStudy',
 ];

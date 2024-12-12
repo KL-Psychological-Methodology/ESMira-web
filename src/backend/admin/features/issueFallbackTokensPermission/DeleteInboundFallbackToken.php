@@ -17,7 +17,7 @@ class DeleteInboundFallbackToken extends HasIssueFallbackTokensPermission
 		$user = $_POST['user'];
 		$url = base64_decode($_POST['url']);
 
-		if (Permission::getAccountName() != $user && !Permission::isAdmin())
+		if (strcmp(Permission::getAccountName(), $user) !== 0 && !Permission::isAdmin())
 			throw new CriticalException("No Permission");
 
 		Configs::getDataStore()->getFallbackTokenStore()->deleteInboundToken($user, $url);

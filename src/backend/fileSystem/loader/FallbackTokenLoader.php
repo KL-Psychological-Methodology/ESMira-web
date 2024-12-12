@@ -7,6 +7,7 @@ use backend\FileSystemBasics;
 
 class FallbackTokenLoader
 {
+	private static $setupCache = null;
 	private static $inboundCache = null;
 	private static $outboundCache = null;
 
@@ -38,5 +39,20 @@ class FallbackTokenLoader
 		$path = PathsFS::fileOutboundFallbackTokens();
 		FileSystemBasics::writeFile($path, serialize($outboundTokens));
 		self::$outboundCache = $outboundTokens;
+	}
+
+	public static function importSetupFile(): array
+	{
+		if (self::$setupCache)
+			return self::$setupCache;
+		$path = PathsFS::fileFallbackSetupTokens();
+		return self::$inboundCache = file_exists($path) ? unserialize(file_get_contents($path)) : [];
+	}
+
+	public static function exportSetupFile(array $setupTokens)
+	{
+		$path = PathsFS::fileFallbackSetupTokens();
+		FileSystemBasics::writeFile($path, serialize($setupTokens));
+		self::$setupCache = $setupTokens;
 	}
 }

@@ -73,7 +73,7 @@ $classIndex = [
 	'CreateStudy' => 'backend\admin\features\createPermission\CreateStudy',
 
 	//issueFallbackTokens
-	'IssueInboundFallbackToken' => 'backend\admin\features\issueFallbackTokensPermission\IssueInboundFallbackToken',
+	'IssueFallbackSetupToken' => 'backend\admin\features\issueFallbackTokensPermission\IssueFallbackSetupToken',
 	'GetInboundFallbackTokensForUser' => 'backend\admin\features\issueFallbackTokensPermission\GetInboundFallbackTokensForUser',
 	'DeleteInboundFallbackToken' => 'backend\admin\features\issueFallbackTokensPermission\DeleteInboundFallbackToken',
 

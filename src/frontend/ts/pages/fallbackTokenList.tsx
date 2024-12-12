@@ -1,4 +1,5 @@
 import m, { Vnode } from "mithril";
+import { getBaseUrl } from "../constants/methods";
 import { FILE_ADMIN } from "../constants/urls";
 import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
 import { Lang } from "../singletons/Lang";
@@ -8,19 +9,9 @@ import { SectionContent } from "../site/SectionContent";
 import { BtnAdd, BtnTrash, BtnCopy } from "../widgets/BtnWidgets";
 import { TitleRow } from "../widgets/TitleRow";
 
-class RecentToken {
-	token: string = ""
-	url: string = ""
-
-	constructor(token: string, url: string) {
-		this.token = token
-		this.url = url
-	}
-}
-
 export class Content extends SectionContent {
 	private userInboundTokens: InboundFallbackTokenInfo[] = []
-	private recentToken: RecentToken | null = null
+	private recentToken: string | null = null
 	public static preLoad(_section: Section): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokensForUser`)
@@ -60,23 +51,13 @@ export class Content extends SectionContent {
 	}
 
 	private async issueInboundToken(): Promise<void> {
-		let url: string | null = ""
-		do {
-			url = prompt(Lang.get("prompt_fallback_token_url"), url)
-		} while (url && !this.isURLunique(url))
-
-		if (!url)
-			return
-
-		let encodedUrl = btoa(url)
-
 		const response = await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=IssueInboundFallbackToken`,
+			`${FILE_ADMIN}?type=IssueFallbackSetupToken`,
 			"post",
-			`url=${encodedUrl}`
+			""
 		)
 		const token: string = response[0];
-		this.recentToken = new RecentToken(token, url)
+		this.recentToken = token
 		await this.reloadInboundTokenList()
 	}
 
@@ -86,9 +67,11 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		return <div>
+
+
 			{this.getInboundTokenList()}
 			<div class="spacingBottom center">
-				{BtnAdd(this.issueInboundToken.bind(this), Lang.get("create_fallback_token"))}
+				{BtnAdd(this.issueInboundToken.bind(this), Lang.get("create_fallback_setup_token"))}
 			</div>
 			{this.getNewInboundTokenView()}
 		</div>
@@ -110,19 +93,13 @@ export class Content extends SectionContent {
 	private getNewInboundTokenView(): Vnode<any, any> {
 		if (this.recentToken == null)
 			return <div></div>
+		const url = getBaseUrl()
+		let token = this.recentToken
 		return <div>
-			{TitleRow(Lang.get("new_inbound_fallback_token"))}
-			<div>{Lang.get("info_fallback_token", this.recentToken.url)}</div>
-			<br />
-			<div class="verticalPadding center"><span>{this.recentToken.token}</span>{BtnCopy(this.copyToken.bind(this))}</div>
+			{TitleRow(Lang.get("new_fallback_setup_token"))}
+			<div>{Lang.get("info_fallback_setup_token")}</div>
+			<div class="verticalPadding center spacingTop"><span>{token}</span>{BtnCopy(() => navigator.clipboard.writeText(token))}</div>
+			<div class="center"><span>{url}</span>{BtnCopy(() => navigator.clipboard.writeText(url))}</div>
 		</div>
 	}
-
-	private copyToken() {
-		if (this.recentToken == null)
-			return
-		navigator.clipboard.writeText(this.recentToken?.token)
-		alert(Lang.get("copied_inbound_fallback_token", this.recentToken?.token, this.recentToken?.url))
-	}
-
 }

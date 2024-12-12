@@ -15,11 +15,6 @@ class FallbackRequest
 	const REMOTE_ERROR = 4;
 	const UNEXPECTED_REQUEST = 5;
 
-	public function getRequest(string $url, string $feature, array $data): array
-	{
-		return $this->doRequest($url, $feature, $data, "GET");
-	}
-
 	public function postRequest(string $url, string $feature, array $data): array
 	{
 		$postData = http_build_query($data);
@@ -40,7 +35,11 @@ class FallbackRequest
 
 		$token = $tokenStore->getOutboundTokenForUrl($url);
 
-		$data["fallbackToken"] = $token;
+		if ($token !== null) {
+			if (strlen($data))
+				$data = $data . '&';
+			$data = $data . "fallbackToken=$token";
+		}
 
 		$options = [
 			"http" => [

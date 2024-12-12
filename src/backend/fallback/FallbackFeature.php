@@ -5,9 +5,8 @@ namespace backend\fallback;
 use backend\Configs;
 use backend\exceptions\FallbackFeatureException;
 use backend\FallbackRequestOutput;
-use backend\JsonOutput;
 
-abstract class FallbackFeature
+abstract class FallbackFeature extends BaseFallbackFeature
 {
 
 	function __construct()
@@ -18,11 +17,6 @@ abstract class FallbackFeature
 		$token = $_POST['fallbackToken'];
 		if (!Configs::getDataStore()->getFallbackTokenStore()->checkInboundToken($token))
 			throw new FallbackFeatureException("Fallback token not found.", FallbackFeatureException::KEY_NOT_FOUND);
-	}
-
-	function execAndOutput()
-	{
-		echo FallbackRequestOutput::successObj($this->exec());
 	}
 
 	abstract function exec(): array;

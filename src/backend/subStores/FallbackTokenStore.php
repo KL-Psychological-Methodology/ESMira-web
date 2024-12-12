@@ -6,18 +6,18 @@ use backend\exceptions\CriticalException;
 
 interface FallbackTokenStore
 {
-	const TOKEN_LENGTH = 32;
-	/**
-	 * @throws CriticalException
-	 */
+	const SETUP_TOKEN_LENGTH = 32;
+	const SETUP_TOKEN_EXPIRY_TIME = 60 * 60 * 1000; // One Hour
+	const TOKEN_LENGTH = 128;
+
 	public function getInboundTokensInfoForUser(string $accountName): array;
-	/**
-	 * @throws CriticalException
-	 */
-	public function issueInboundToken(string $accountName, string $url): string;
-	/**
-	 * @throws CriticalException
-	 */
+
+	public function getInboundTokens(): array;
+
+	public function issueSetupToken(string $accountName): string;
+
+	public function issueInboundToken(string $setupToken, string $url): string;
+
 	public function deleteInboundToken(string $accountName, string $url);
 
 	public function checkInboundToken(string $token): bool;
@@ -30,5 +30,5 @@ interface FallbackTokenStore
 
 	public function setOutboundTokensList(array $urls);
 
-	public function getOutboundTokenForUrl(string $url): string;
+	public function getOutboundTokenForUrl(string $url): ?string;
 }

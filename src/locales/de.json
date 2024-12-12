@@ -607,12 +607,10 @@
 	"fallback_system": "Fallback System",
 	"fallback_token_list": "Fallbacktoken",
 	"permission_fallback_tokens": "Fallback Token",
-	"create_fallback_token": "Fallbacktoken erstellen",
-	"prompt_fallback_token_url": "URL der Ziel-ESMira-instanz",
-	"info_fallback_token": "Hier ist Ihr neuer Fallback Token für '%s'. Dieser Token kann nur einmal angezeigt werden. Kopieren Sie Ihn umgehend, da er später nicht wiederhergestellt werden kann.",
+	"create_fallback_setup_token": "Setuptoken für Fallback erstellen",
+	"info_fallback_setup_token": "Hier ist Ihn neuer Token für die Einrichtung des Fallbacksystems, sowie die URL dieses Servers. Im nächsten Schritt müssen Sie beides im Adminpanel des anderen Servers eingeben.",
 	"confirm_delete_fallback_token": "Soll der Fallback Token für '%s' wirklich gelöscht werden?",
-	"new_inbound_fallback_token": "Neuer Fallback Token",
-	"copied_inbound_fallback_token": "Token '%s' für '%s' wurde in die Zwischenablage kopiert.",
+	"new_fallback_setup_token": "Neuer Setuptoken",
 	"add_outbound_fallback_token": "Token hinzufügen",
 	"outbound_fallback_token_url": "URL",
 	"outbound_fallback_token": "Token",
@@ -620,7 +618,5 @@
 	"fallback_server_title": "Fallbackserver: %s",
 	"fallback_url_parameter_error": "Url für Fallbacktoken konnte nicht ausgelesen werden",
 	"fallback_ping": "Teste Verbindung zu Fallbackserver",
-	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert.",
-	"fallback_system_own_url_title": "URL dieses Servers",
-	"fallback_system_own_url_instruction": "Unternstehend ist die URL dieses Servers, so wie sie von anderen Servern für Verwendung im Fallbacksystem erwartet wird."
+	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert."
 }

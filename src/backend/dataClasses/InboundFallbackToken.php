@@ -9,18 +9,15 @@ namespace backend\dataClasses;
 
 class InboundFallbackToken
 {
-	/**
-	 * @var string
-	 */
 	public $hashedToken;
-	/**
-	 * @var string
-	 */
 	public $otherServerUrl;
+	public $issuingUser;
 
-	public function __construct(string $url, string $hashedToken)
+
+	public function __construct(string $url, string $hashedToken, string $issuingUser)
 	{
 		$this->hashedToken = $hashedToken;
 		$this->otherServerUrl = $url;
+		$this->issuingUser = $issuingUser;
 	}
 }

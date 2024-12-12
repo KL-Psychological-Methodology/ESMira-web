@@ -607,12 +607,10 @@
 	"fallback_system": "Fallback System",
 	"fallback_token_list": "Fallback Tokens",
 	"permission_fallback_tokens": "Fallback Tokens",
-	"create_fallback_token": "Create Fallback Token",
-	"prompt_fallback_token_url": "URL of target ESMira instance",
-	"info_fallback_token": "Below you find your new fallback token for '%s'. Note that this token can only be displayed once. Please copy it immediately, as it cannot be restored later.",
+	"create_fallback_setup_token": "Create Fallback Setup Token",
+	"info_fallback_setup_token": "Below you find your new token to setup the fallback system, as well as the URL of this server. In the next step you will need to enter both in the admin panel on the other server.",
 	"confirm_delete_inbound_fallback_token": "Do you really want to delete the fallback token for '%s'?",
-	"new_inbound_fallback_token": "New Fallback Token",
-	"copied_inbound_fallback_token": "Copied token '%s' for '%s' to clipboard.",
+	"new_fallback_setup_token": "New Setup Token",
 	"add_outbound_fallback_token": "Add a Token",
 	"outbound_fallback_token_url": "URL",
 	"outbound_fallback_token": "Token",
@@ -620,7 +618,5 @@
 	"fallback_server_title": "Fallback Server: %s",
 	"fallback_url_parameter_error": "Could not get url for fallback token",
 	"fallback_ping": "Test connection to fallback server",
-	"fallback_ping_success": "Connection to %s successful! Remote server replied and accepted the fallback token.",
-	"fallback_system_own_url_title": "This server's url",
-	"fallback_system_own_url_instruction": "Below is the url of this server, in the form another server expects it for use in the fallback system:"
+	"fallback_ping_success": "Connection to %s successful! Remote server replied and accepted the fallback token."
 }
