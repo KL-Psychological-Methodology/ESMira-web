@@ -17,16 +17,21 @@ class SetupFallbackSystem extends HasAdminPermission
 			throw new PageFlowException("Missing data");
 
 		$ownUrl = $_POST['ownUrl'];
-		$encodedOtherUrl = $_POST['ohterUrl'];
+		$encodedOtherUrl = $_POST['otherUrl'];
 		$otherUrl = base64_decode($encodedOtherUrl);
 		$setupToken = $_POST['setupToken'];
 
 		$request = new FallbackRequest();
 		try {
-			$response = $request->postRequest($otherUrl, "Setup", [
-				"encodedUrl" => $ownUrl,
-				"setupToken" => $setupToken,
-			]);
+			$response = $request->postRequest(
+				$otherUrl,
+				"Setup",
+				[
+					"encodedUrl" => $ownUrl,
+					"setupToken" => $setupToken,
+				],
+				false
+			);
 
 			if (!isset($response['fallbackToken']))
 				throw new CriticalException("No fallback token included in remote server response");

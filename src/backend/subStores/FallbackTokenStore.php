@@ -16,19 +16,21 @@ interface FallbackTokenStore
 
 	public function issueSetupToken(string $accountName): string;
 
-	public function issueInboundToken(string $setupToken, string $url): string;
+	public function issueInboundToken(string $setupToken, string $encodedUrl): string;
 
-	public function deleteInboundToken(string $accountName, string $url);
+	public function deleteInboundToken(string $accountName, string $encodedUrl);
 
 	public function checkInboundToken(string $token): bool;
 
-	public function registerOutboundToken(string $url, string $token);
+	public function getInboundTokenUrl(string $token): string | false;
+
+	public function registerOutboundToken(string $encodedUrl, string $token);
 
 	public function getOutboundTokenUrls(): array;
 
-	public function hasOutboundTokenUrl(string $url): bool;
+	public function hasOutboundTokenUrl(string $encodedUrl): bool;
 
-	public function setOutboundTokensList(array $urls);
+	public function setOutboundTokensList(array $encodedUrl);
 
-	public function getOutboundTokenForUrl(string $url): ?string;
+	public function getOutboundTokenForUrl(string $encodedUrl): ?string;
 }

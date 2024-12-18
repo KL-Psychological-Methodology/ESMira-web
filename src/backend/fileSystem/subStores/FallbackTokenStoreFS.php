@@ -15,13 +15,13 @@ use backend\subStores\FallbackTokenStore;
 
 class FallbackTokenStoreFS implements FallbackTokenStore
 {
-	private function checkIsUniqueUrl(string $url): bool
+	private function checkIsUniqueUrl(string $encodedUrl): bool
 	{
 		$inboundTokens = FallbackTokenLoader::importInboundFile();
 		foreach ($inboundTokens as $token) {
 			if (!$token instanceof InboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			if (strcmp($token->otherServerUrl, $url) === 0)
+			if (strcmp($token->otherServerUrl, $encodedUrl) === 0)
 				return false;
 		}
 		return true;
@@ -108,15 +108,15 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 			}
 		}
 
-		if ($selectedSetupToken != null) {
+		if ($selectedSetupToken !== null) {
 			FallbackTokenLoader::exportSetupFile($trimmedSetupTokens);
 		}
 		return $selectedSetupToken;
 	}
 
-	public function issueInboundToken(string $setupToken, string $url): string
+	public function issueInboundToken(string $setupToken, string $encodedUrl): string
 	{
-		if (!$this->checkIsUniqueUrl($url))
+		if (!$this->checkIsUniqueUrl($encodedUrl))
 			throw new CriticalException("An Inbound Fallback Token already exists for the given URL.");
 
 		$setupTokenInfo = $this->consumeSetupToken($setupToken);
@@ -125,7 +125,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 
 		$token = Permission::calcRandomToken(self::TOKEN_LENGTH, PermissionTokenType::BASE64);
 		$hashedToken = Permission::getHashedToken($token);
-		$inboundTokenInfo = new InboundFallbackToken($url, $hashedToken, $setupTokenInfo->issuingUser);
+		$inboundTokenInfo = new InboundFallbackToken($encodedUrl, $hashedToken, $setupTokenInfo->issuingUser);
 
 		$inboundTokens = FallbackTokenLoader::importInboundFile();
 		$inboundTokens[] = $inboundTokenInfo;
@@ -134,7 +134,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		return $token;
 	}
 
-	public function deleteInboundToken(string $accountName, string $url)
+	public function deleteInboundToken(string $accountName, string $encodedUrl)
 	{
 		$inboundTokens = FallbackTokenLoader::importInboundFile();
 		$trimmedTokens = [];
@@ -143,7 +143,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 			if (! $token instanceof InboundFallbackToken) {
 				throw new CriticalException("Invalid data in FallbackTokenStore");
 			}
-			if (strcmp($url, $token->otherServerUrl) === 0) {
+			if (strcmp($encodedUrl, $token->otherServerUrl) === 0) {
 				if (strcmp($accountName, $token->issuingUser) !== 0) {
 					throw new CriticalException("URL and issuing user do not match.");
 				}
@@ -165,9 +165,23 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		foreach ($inboundTokens as $token) {
 			if (!$token instanceof InboundFallbackToken) {
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-				if (strcmp($hashedToken, $token->hashedToken) === 0)
-					return true;
 			}
+			if (strcmp($hashedToken, $token->hashedToken) === 0)
+				return true;
+		}
+		return false;
+	}
+
+	public function getInboundTokenUrl(string $token): string | false
+	{
+		$hashedToken = Permission::getHashedToken($token);
+		$inboundTokens = FallbackTokenLoader::importInboundFile();
+		foreach ($inboundTokens as $token) {
+			if (!$token instanceof InboundFallbackToken) {
+				throw new CriticalException("Invalid data in FallbackTokenStore");
+			}
+			if (strcmp($hashedToken, $token->hashedToken) === 0)
+				return $token->otherServerUrl;
 		}
 		return false;
 	}
@@ -187,7 +201,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		FallbackTokenLoader::exportOutboundFile($outboundTokens);
 	}
 
-	public function deleteOutboundToken(string $url)
+	public function deleteOutboundToken(string $encodedUrl)
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
 		$trimmedOutboundTokens = [];
@@ -195,7 +209,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			if (strcmp($url, $token->url) === 0) {
+			if (strcmp($encodedUrl, $token->url) === 0) {
 				$didRemove = true;
 			} else {
 				$trimmedOutboundTokens[] = $token;
@@ -213,18 +227,18 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			$urlList[] = ['url' => $token->url];
+			$urlList[] = ['url' => base64_decode($token->url)];
 		}
 		return $urlList;
 	}
 
-	public function hasOutboundTokenUrl(string $url): bool
+	public function hasOutboundTokenUrl(string $encodedUrl): bool
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			if (strcmp($url, $token->url) === 0)
+			if (strcmp($encodedUrl, $token->url) === 0)
 				return true;
 		}
 		return false;
@@ -249,13 +263,13 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		FallbackTokenLoader::exportOutboundFile($newOutboundTokens);
 	}
 
-	public function getOutboundTokenForUrl(string $url): ?string
+	public function getOutboundTokenForUrl(string $encodedUrl): ?string
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
-			if (strcmp($url, $token->url) === 0) {
+			if (strcmp($encodedUrl, $token->url) === 0) {
 				return $token->token;
 			}
 		}

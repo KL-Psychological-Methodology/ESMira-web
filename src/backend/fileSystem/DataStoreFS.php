@@ -30,6 +30,7 @@ use backend\subStores\UserDataStore;
 use backend\subStores\AccountStore;
 use backend\fileSystem\subStores\AccountStoreFS;
 use backend\fileSystem\subStores\BookmarkStoreFS;
+use backend\fileSystem\subStores\FallbackStudyAccessIndexStoreFS;
 use backend\fileSystem\subStores\FallbackStudyStoreFS;
 use backend\fileSystem\subStores\FallbackTokenStoreFS;
 use backend\fileSystem\subStores\MerlinLogsStoreFS;
@@ -44,7 +45,6 @@ use backend\subStores\FallbackStudyAccessIndexStore;
 use backend\subStores\FallbackStudyStore;
 use backend\subStores\FallbackTokenStore;
 use backend\subStores\MerlinLogsStore;
-use FallbackStudyAccessIndexStoreFS;
 
 class DataStoreFS implements DataStoreInterface
 {

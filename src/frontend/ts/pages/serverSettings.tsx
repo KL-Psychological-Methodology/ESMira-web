@@ -306,9 +306,9 @@ export class Content extends SectionContent {
 
 	private async addOutboundToken(url: string, token: string): Promise<any> {
 		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=RegisterOutboundFallbackToken`,
+			`${FILE_ADMIN}?type=SetupFallbackSystem`,
 			"post",
-			`url=${btoa(url)}&token=${token}`
+			`otherUrl=${btoa(url)}&ownUrl=${btoa(getBaseUrl())}&setupToken=${token}`
 		)
 		this.outboundTokenUrls.push({ "url": url })
 		return true

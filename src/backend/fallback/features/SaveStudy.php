@@ -63,10 +63,11 @@ class SaveStudy extends FallbackFeature
 
 	function exec(): array
 	{
-		if (!isset($_GET['url']))
+		$this->initClass($this->encodedUrl);
+		if (!isset($_POST['studyBundle'])) {
 			throw new PageFlowException('Missing data');
-		$this->initClass($_GET['url']);
-		$studyCollectionJson = Main::getRawPostInput();
+		}
+		$studyCollectionJson = $_POST['studyBundle'];
 		$this->studyCollection = json_decode($studyCollectionJson);
 		if (!$this->studyCollection)
 			throw new PageFlowException('Unexpected data');
@@ -79,6 +80,7 @@ class SaveStudy extends FallbackFeature
 		if (!isset($study->id)) {
 			throw new PageFlowException("Problem with study id!");
 		}
+
 		$this->studyId = $study->id;
 
 		$this->publishUnPublish();

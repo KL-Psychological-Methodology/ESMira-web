@@ -10,7 +10,9 @@ use backend\CreateDataSet;
 use backend\dataClasses\StatisticsJsonEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\exceptions\CriticalException;
+use backend\exceptions\FallbackRequestException;
 use backend\exceptions\PageFlowException;
+use backend\FallbackRequest;
 use backend\Main;
 use backend\Permission;
 use backend\ResponsesIndex;
@@ -467,6 +469,19 @@ class SaveStudy extends HasWritePermission
 		$studyStatisticsStore->saveChanges();
 	}
 
+	protected function saveFallback($json)
+	{
+		$outboundUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenUrls();
+		foreach ($outboundUrls as $url) {
+			$request = new FallbackRequest();
+			try {
+				$request->postRequest($url['url'], "SaveStudy", ['studyBundle' => $json]);
+			} catch (FallbackRequestException $e) {
+				error_log($e->getMessage());
+			}
+		}
+	}
+
 	protected function initClass()
 	{
 		$dataStore = Configs::getDataStore();
@@ -541,6 +556,13 @@ class SaveStudy extends HasWritePermission
 		$this->save();
 
 		$studyMetadataStore = Configs::getDataStore()->getStudyMetadataStore($study->id);
+
+		//
+		//save fallback
+		//
+		$this->saveFallback($studyCollectionJson);
+
+
 		return [
 			'metaData' => [
 				'owner' => $studyMetadataStore->getOwner(),

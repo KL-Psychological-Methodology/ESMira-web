@@ -4,13 +4,13 @@ namespace backend\dataClasses;
 
 class FallbackSetupToken
 {
-	public $tokenHash;
+	public $hashedToken;
 	public $issuingUser;
 	public $creationTime;
 
-	public function __construct(string $tokenHash, string $issuingUser, int $creationTime)
+	public function __construct(string $hashedToken, string $issuingUser, int $creationTime)
 	{
-		$this->$tokenHash = $tokenHash;
+		$this->hashedToken = $hashedToken;
 		$this->issuingUser = $issuingUser;
 		$this->creationTime = $creationTime;
 	}

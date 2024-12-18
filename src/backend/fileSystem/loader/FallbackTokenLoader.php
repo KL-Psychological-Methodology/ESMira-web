@@ -46,7 +46,7 @@ class FallbackTokenLoader
 		if (self::$setupCache)
 			return self::$setupCache;
 		$path = PathsFS::fileFallbackSetupTokens();
-		return self::$inboundCache = file_exists($path) ? unserialize(file_get_contents($path)) : [];
+		return self::$setupCache = file_exists($path) ? unserialize(file_get_contents($path)) : [];
 	}
 
 	public static function exportSetupFile(array $setupTokens)

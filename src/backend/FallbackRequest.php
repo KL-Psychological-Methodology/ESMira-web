@@ -15,30 +15,33 @@ class FallbackRequest
 	const REMOTE_ERROR = 4;
 	const UNEXPECTED_REQUEST = 5;
 
-	public function postRequest(string $url, string $feature, array $data): array
+	public function postRequest(string $url, string $feature, array $data, bool $requiresToken = true): array
 	{
 		$postData = http_build_query($data);
-		return $this->doRequest($url, $feature, $postData, "POST");
+		return $this->doRequest($url, $feature, $postData, "POST", $requiresToken);
 	}
 
-	public function postRequestRaw(string $url, string $feature, string $data): array
+	public function postRequestRaw(string $url, string $feature, string $data, bool $requiresToken = true): array
 	{
-		return $this->doRequest($url, $feature, $data, "POST");
+		return $this->doRequest($url, $feature, $data, "POST", $requiresToken);
 	}
 
-	private function doRequest(string $url, string $feature, string $data, string $method): array
+	private function doRequest(string $url, string $feature, string $data, string $method, bool $requiresToken = true): array
 	{
 		$tokenStore = Configs::getDataStore()->getFallbackTokenStore();
+		$encodedUrl = base64_encode($url);
 
-		if (!$tokenStore->hasOutboundTokenUrl($url))
-			throw new FallbackRequestException("No token registered for given URL.", FallbackRequestException::URL_NOT_REGISTERED);
+		if ($requiresToken) {
+			if (!$tokenStore->hasOutboundTokenUrl($encodedUrl))
+				throw new FallbackRequestException("No token registered for given URL.", FallbackRequestException::URL_NOT_REGISTERED);
 
-		$token = $tokenStore->getOutboundTokenForUrl($url);
+			$token = $tokenStore->getOutboundTokenForUrl($encodedUrl);
 
-		if ($token !== null) {
-			if (strlen($data))
-				$data = $data . '&';
-			$data = $data . "fallbackToken=$token";
+			if ($token !== null) {
+				if (strlen($data))
+					$data = $data . '&';
+				$data = $data . "fallbackToken=$token";
+			}
 		}
 
 		$options = [

@@ -1,5 +1,7 @@
 <?php
 
+namespace backend\fileSystem\subStores;
+
 use backend\fileSystem\loader\FallbackStudyAccessIndexLoader;
 use backend\fileSystem\subStores\StudyAccessIndexStoreFS;
 use backend\subStores\FallbackStudyAccessIndexStore;
