@@ -97,6 +97,7 @@ $classIndex = [
 	'RegisterOutboundFallbackToken' => 'backend\admin\features\adminPermission\RegisterOutboundFallbackToken',
 	'SetupFallbackSystem' => 'backend\admin\features\adminPermission\SetupFallbackSystem',
 	'PingFallbackServer' => 'backend\admin\features\adminPermission\PingFallbackServer',
+	'SynchAllStudiesToFallback' => 'backend\admin\features\adminPermission\SynchAllStudiesToFallback',
 	'DownloadUpdate' => 'backend\admin\features\adminPermission\DownloadUpdate',
 	'DoUpdate' => 'backend\admin\features\adminPermission\DoUpdate',
 	'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
