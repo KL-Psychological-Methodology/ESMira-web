@@ -25,6 +25,8 @@ $classIndex = [
 	// Fallback Features
 
 	'Ping' => '\backend\fallback\features\Ping',
+	'DeleteStudy' => '\backend\fallback\features\DeleteStudy',
+	'FreezeStudy' => '\backend\fallback\features\FreezeStudy',
 	'SaveStudy' => '\backend\fallback\features\SaveStudy',
 ];
 

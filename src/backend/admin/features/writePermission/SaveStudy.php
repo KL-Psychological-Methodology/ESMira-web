@@ -469,19 +469,6 @@ class SaveStudy extends HasWritePermission
 		$studyStatisticsStore->saveChanges();
 	}
 
-	protected function saveFallback($json)
-	{
-		$outboundUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenUrls();
-		foreach ($outboundUrls as $url) {
-			$request = new FallbackRequest();
-			try {
-				$request->postRequest($url['url'], "SaveStudy", ['studyBundle' => $json]);
-			} catch (FallbackRequestException $e) {
-				error_log($e->getMessage());
-			}
-		}
-	}
-
 	protected function initClass()
 	{
 		$dataStore = Configs::getDataStore();
@@ -560,7 +547,7 @@ class SaveStudy extends HasWritePermission
 		//
 		//save fallback
 		//
-		$this->saveFallback($studyCollectionJson);
+		$this->handleFallback("SaveStudy", ['studyBundle' => $studyCollectionJson]);
 
 
 		return [
