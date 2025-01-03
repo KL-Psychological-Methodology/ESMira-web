@@ -595,7 +595,7 @@
     "generating": "generování",
     "show_in_disabled_list": "Vždy mít dotazník k dispozici",
     "error_news": "Nepodařilo se načíst novinky ESMira",
-    "show_in_disabled_list_desc": "Zobrazuje se v seznamu zakázaných dotazníků, pokud není aktivní.",
+    "show_in_disabled_list_desc": "Zobrazuje se v seznamu vypnutých dotazníků, pokud není aktivní.",
     "cookie_consent_desc": "Pro každou studii používá ESMira <a target=\"_blank\" href=\"https://de.wikipedia.org/wiki/HTTP_cookie\">soubory cookie</a> k ukládání následujících informací:<ul><li><b> Poskytnuté uživatelské jméno</b>: Abyste se nemuseli pokaždé ptát na uživatelské jméno.</li><li><b> Přijetí informovaného souhlasu</b>: Abyste nemuseli pokaždé přijímat informovaný souhlas.</li><li><b> Informace o stavu konkrétních položek dotazníku</b>: Některé dotazníky zobrazují pokaždé jiné položky. Aby to bylo možné, potřebují uložit, které položky se již dříve zobrazovaly.</li></ul>",
     "server_update": "Aktualizace serveru (aktuální verze %s)",
     "info_ESMira_is_up_to_date": "ESMira je aktuální 😀",
