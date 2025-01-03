@@ -346,7 +346,7 @@
     "screenshot_server_ask_android": "frontend/screenshots/server_ask-android-en.png",
     "search": "Vyhledávání",
     "seconds": "Sekundy",
-    "seen": "Viděno na",
+    "seen": "Viděno",
     "screenshot_qrCode_askNo_android": "frontend/screenshots/qr_code_ask_no-android-en.png",
     "screenshot_appInstall_android": "frontend/screenshots/store_install-android-en.png",
     "random_fixed": "Pevný",
@@ -379,5 +379,7 @@
     "state_loading": "Načítání…",
     "state_loading_entryNum": "Načtené položky %d…",
     "skip_page_after_secs_info": "Po uplynutí zadané doby automaticky přeskočí stránku (položky, které je třeba vyplnit, budou ignorovány). 0 pro vypnutí.",
-    "state_loading_file": "Načítání %s…"
+    "state_loading_file": "Načítání %s…",
+    "select_to_subtract": "Vyberte jeden, který chcete odebrat",
+    "state_downloading": "Stáhnout…"
 }
