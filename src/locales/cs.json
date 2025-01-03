@@ -551,5 +551,7 @@
     "public_variables": "Veřejné proměnné",
     "error_faulty_chart": "Graf nelze zobrazit",
     "join_time": "Čas zapojení",
-    "empty": "Prázdné"
+    "empty": "Prázdné",
+    "info_urls_without_study_id": "Pokud stejný přístupový klíč používají i jiné studie, povedou tyto odkazy na seznam těchto studií.",
+    "plead_to_cite_us": "Citujte prosím publikaci společnosti ESMira"
 }
