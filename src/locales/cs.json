@@ -292,5 +292,11 @@
     "logout_x": "Odhlášení %s",
     "max_value_vas_desc": "Pokud je hodnota nižší než 1, je výchozí hodnota 100.",
     "informed_consent": "Informovaný souhlas",
-    "input_category_media": "Údaje o médiích"
+    "input_category_media": "Údaje o médiích",
+    "permission_admin": "Admin",
+    "permission_create": "Vytvořit",
+    "permission_msg": "Zprávy",
+    "permission_write": "Změna",
+    "permission_read": "Data",
+    "per_day": "Na den"
 }
