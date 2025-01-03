@@ -562,5 +562,15 @@
     "all_user": "Všichni uživatelé",
     "created_by": "Vytvořeno",
     "last_saved_by": "Naposledy uloženo",
-    "last_saved_at": "Naposledy uloženo"
+    "last_saved_at": "Naposledy uloženo",
+    "from_study_source": "Ze zdrojového kódu studie",
+    "info_low_disk_space": "ESMira má na disku už jen %d Mb místa!",
+    "home_message": "Zpráva na titulní straně",
+    "edit_study": "Upravit studii",
+    "can_be_left_empty": "Lze ponechat prázdné",
+    "hint_to_best_practices": "Než začnete studovat, doporučujeme se seznámit s osvědčenými postupy na naší wiki.",
+    "confirm_delete_access_key": "Opravdu chcete odstranit přístupový klíč '%s'?\n\nPokud nebudou odstraněny všechny přístupové klíče (tj. studie nebude zveřejněna), aktivní účastníci používající tento přístupový klíč ztratí přístup do studie!",
+    "study_tag": "Studijní značka",
+    "input_location_resolution": "H3 Rozlišení",
+    "input_location_resolution_desc": "Rozlišení od 0 do 15. Pro dobrý kompromis mezi anonymitou účastníků a přesností použijte rozlišení 9."
 }
