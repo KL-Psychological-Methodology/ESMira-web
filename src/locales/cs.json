@@ -543,11 +543,13 @@
     "add_filter": "Přidat filtr",
     "filter": "Filtr",
     "trigger": "Spouštěč",
-    "filter_and_trigger": "Filtr a spoušť",
+    "filter_and_trigger": "Filtr a spouštěč",
     "desc_reward_system": "Pokud je systém odměn aktivován, aplikace dává účastníkům možnost vygenerovat náhodný kód odměny, který mají následně zaslat výzkumníkovi (aby nebyla narušena anonymita, je důležité, aby byl tento kód zaslán kanálem mimo ESMiru, protože účastníci obvykle musí uvést také bankovní údaje nebo adresu bydliště).",
     "calendar_description": "Tento kalendář zobrazuje události a dobu trvání dotazníků z pohledu účastníka v závislosti na tom, kdy se do studie zapojil.",
     "join_date": "Datum připojení",
     "calendar": "Kalendář",
     "public_variables": "Veřejné proměnné",
-    "error_faulty_chart": "Graf nelze zobrazit"
+    "error_faulty_chart": "Graf nelze zobrazit",
+    "join_time": "Čas zapojení",
+    "empty": "Prázdné"
 }
