@@ -409,5 +409,6 @@
     "studyTut_participate_chooseYesForQR": "Když budete požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Yes</b>\".",
     "statisticsDataType_daily": "Za den",
     "statisticsDataType_sum": "Celkový součet",
-    "statisticsValueType_count": "Počet"
+    "statisticsValueType_count": "Počet",
+    "studyTut_participate_chooseNoForQR": "Když jste požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>No</b>\"."
 }
