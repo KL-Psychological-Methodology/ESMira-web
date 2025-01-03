@@ -594,5 +594,6 @@
     "option_other": "Povolit možnost \"jiné\"",
     "generating": "generování",
     "show_in_disabled_list": "Vždy mít dotazník k dispozici",
-    "error_news": "Nepodařilo se načíst novinky ESMira"
+    "error_news": "Nepodařilo se načíst novinky ESMira",
+    "show_in_disabled_list_desc": "Zobrazuje se v seznamu zakázaných dotazníků, pokud není aktivní."
 }
