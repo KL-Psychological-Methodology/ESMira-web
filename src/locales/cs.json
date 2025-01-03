@@ -495,5 +495,19 @@
     "yes": "Ano",
     "no": "Ne",
     "info_no_connection_to_update_server": "Žádné připojení k aktualizačnímu serveru",
-    "cookie_consent": "Souhlas s Cookies"
+    "cookie_consent": "Souhlas s Cookies",
+    "info_newVersionAvailable": "K dispozici je nová verze",
+    "info_web_update_complete": "ESMira byla úspěšně aktualizována.\n\nStránka se nyní znovu načte a doufejme, že ESMira bude super moderní a špičková! ;)",
+    "update_now": "Aktualizovat nyní",
+    "info_trigger_needs_action": "Potřebujete alespoň jednu akci.",
+    "edit_page_x": "Upravit stránku %d",
+    "info_study_is_public": "Studie je veřejně přístupná. Přidáním jednoho nebo více přístupových klíčů k ní omezíte přístup.",
+    "media_download": "Zipování a stahování mediálních souborů",
+    "group_count": "Počet skupin",
+    "randomGroups": "Náhodné skupiny",
+    "languages_and_randomGroups": "Jazyky a náhodné skupiny",
+    "joined_per_group": "Připojeno na skupinu",
+    "questionnaire_edit_title": "Strana %d (%d položek):",
+    "info_languages": "Účastníci obdrží buď verzi této studie v závislosti na jazykovém kódu svého prohlížeče / chytrého telefonu, nebo, pokud verze pro jejich jazyk neexistuje, výchozí verzi studie. Je třeba použít platné jazykové kódy, jinak nebude jazyková verze zjištěna.",
+    "info_randomGroups": "Každý účastník bude náhodně zařazen do skupiny. Toho lze využít ke skrytí dotazníků pro konkrétní skupiny."
 }
