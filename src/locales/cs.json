@@ -483,5 +483,8 @@
     "x_per_weekday": "%s za pracovní den",
     "x_times_between_y_and_z": "%d krát mezi %s a %s",
     "wait_x_days_until_first": "Počkejte %d dní do prvního provedení",
-    "xAxisIsNumberRange_label": "Zacházejte s hodnotami na ose x jako s rozsahem čísel"
+    "xAxisIsNumberRange_label": "Zacházejte s hodnotami na ose x jako s rozsahem čísel",
+    "yesterday": "Včera",
+    "path_to_data_directory": "Cesta k datovému adresáři",
+    "info_path_to_data_directory": "V této cestě bude vytvořena složka s názvem \"esmira_data\", která bude obsahovat všechna data. PHP musí mít pro toto umístění oprávnění k zápisu. Dále je třeba zajistit, aby tato složka nebyla přístupná z internetu (do složky se umístí soubor podle htaccess). Pokud si nejste jisti, co zadat, ponechte předvolenou hodnotu tak, jak je."
 }
