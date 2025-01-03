@@ -324,7 +324,7 @@
     "questionnaire_outdated": "Náhled již není aktuální. Aktuální verze se zobrazí po uložení studie.",
     "questionnaires": "Dotazníky",
     "questionnaires_can_only_be_completed_once": "Dotazník lze vyplnit pouze jednou",
-    "quit_study": "Ukončení studia",
+    "quit_study": "Ukončení studie",
     "questionnaires_can_only_be_completed_per_notification": "Dotazník lze vyplnit pouze jednou za oznámení.",
     "only_at_specific_time": "Pouze v určitou denní dobu",
     "random": "Náhodné",
@@ -348,5 +348,9 @@
     "seconds": "Sekundy",
     "seen": "Viděno na",
     "screenshot_qrCode_askNo_android": "frontend/screenshots/qr_code_ask_no-android-en.png",
-    "screenshot_appInstall_android": "frontend/screenshots/store_install-android-en.png"
+    "screenshot_appInstall_android": "frontend/screenshots/store_install-android-en.png",
+    "random_fixed": "Pevný",
+    "referer_with_count": "Referent (%d)",
+    "remember_me_token": "Zapamatuj si mě token",
+    "repeat_every": "Opakuje se pokaždé"
 }
