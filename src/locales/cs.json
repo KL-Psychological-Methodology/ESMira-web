@@ -377,7 +377,7 @@
     "state_creatingIndex_entryNum": "%d položky vlevo na index…",
     "state_error": "Chyba…",
     "state_loading": "Načítání…",
-    "state_loading_entryNum": "Načtené položky %d…",
+    "state_loading_entryNum": "Načteno %d záznamů…",
     "skip_page_after_secs_info": "Po uplynutí zadané doby automaticky přeskočí stránku (položky, které je třeba vyplnit, budou ignorovány). 0 pro vypnutí.",
     "state_loading_file": "Načítání %s…",
     "select_to_subtract": "Vyberte jeden, který chcete odebrat",
@@ -406,5 +406,8 @@
     "studyTut_install_app": "Otevřete obchod s aplikacemi ve svém chytrém telefonu a přejděte na stránku instalace aplikace ESMira kliknutím na tento odkaz:",
     "studyTut_install_press_install": "Poté klikněte na tlačítko \"Instalovat\" a počkejte, dokud se ESMira úspěšně nenainstaluje.",
     "studyTut_participate_click_link": "Klikněte na tento odkaz.",
-    "studyTut_participate_chooseYesForQR": "Když budete požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Yes</b>\"."
+    "studyTut_participate_chooseYesForQR": "Když budete požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Yes</b>\".",
+    "statisticsDataType_daily": "Za den",
+    "statisticsDataType_sum": "Celkový součet",
+    "statisticsValueType_count": "Počet"
 }
