@@ -1,1 +1,15 @@
-{}
+{
+    "about_study": "O studii",
+    "accessKey": "přístupový klíč",
+    "action_invitation": "Pozvánka na dotazník pomocí oznámení",
+    "action_notification": "Jednoduchá upozornění",
+    "action_msg": "Zpráva participantům",
+    "activation": "Aktivace",
+    "add_schedule": "Přidat plán",
+    "bold": "Tučně",
+    "calculate": "Spočítat",
+    "more_information": "Více informací",
+    "_code": "en",
+    "about_esmira": "O ESMira",
+    "about_text": "ESMira je nástroj pro provádění longitudinálních studií (ESM, AA, EMA, ...). Studie lze vytvářet přes online rozhraní a účastníci mohou používat buď iOS, Android, nebo webový prohlížeč."
+}
