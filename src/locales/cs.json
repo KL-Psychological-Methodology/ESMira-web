@@ -572,5 +572,17 @@
     "confirm_delete_access_key": "Opravdu chcete odstranit přístupový klíč '%s'?\n\nPokud nebudou odstraněny všechny přístupové klíče (tj. studie nebude zveřejněna), aktivní účastníci používající tento přístupový klíč ztratí přístup do studie!",
     "study_tag": "Studijní značka",
     "input_location_resolution": "H3 Rozlišení",
-    "input_location_resolution_desc": "Rozlišení od 0 do 15. Pro dobrý kompromis mezi anonymitou účastníků a přesností použijte rozlišení 9."
+    "input_location_resolution_desc": "Rozlišení od 0 do 15. Pro dobrý kompromis mezi anonymitou účastníků a přesností použijte rozlišení 9.",
+    "questionnaire_no_inputs": "Dotazník nemá žádné položky!",
+    "image_input_quality": "Kvalita obrazu",
+    "image_input_quality_desc": "Hodnota od 0 (nejmenší velikost souboru) do 100 (nejlepší kvalita).",
+    "input_relevance": "Relevance",
+    "page_relevance": "Relevance",
+    "questionnaire_end_script": "Koncový blok skriptování",
+    "virtual_inputs": "Virtuální předměty",
+    "merlin_logs": "Protokoly skriptů",
+    "confirm_delete_merlin_log": "Opravdu chcete odstranit protokol skriptu '%s'?",
+    "no_merlin_logs": "Nejsou přítomny žádné protokoly skriptů.",
+    "vertical": "vertikální",
+    "likert_vertical_explanation": "Použití vertikální Likertovy stupnice může zabránit problémům se zobrazením, pokud je počet kroků vysoký (více než ~7)."
 }
