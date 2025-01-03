@@ -584,5 +584,6 @@
     "confirm_delete_merlin_log": "Opravdu chcete odstranit protokol skriptu '%s'?",
     "no_merlin_logs": "Nejsou přítomny žádné protokoly skriptů.",
     "vertical": "vertikální",
-    "likert_vertical_explanation": "Použití vertikální Likertovy stupnice může zabránit problémům se zobrazením, pokud je počet kroků vysoký (více než ~7)."
+    "likert_vertical_explanation": "Použití vertikální Likertovy stupnice může zabránit problémům se zobrazením, pokud je počet kroků vysoký (více než ~7).",
+    "sum_scores": "Součtové skóre"
 }
