@@ -494,7 +494,7 @@
     "info_dataFolder_already_exists": "V tomto umístění již existuje složka s názvem \"esmira_data\". Má být stávající složka znovu použita pro ESMira (pokud zvolíte \"Ne\", bude stávající složka přejmenována)?",
     "yes": "Ano",
     "no": "Ne",
-    "info_no_connection_to_update_server": "Žádné připojení k aktualizačnímu serveru",
+    "info_no_connection_to_update_server": "Žádné připojení k aktualizaci serveru",
     "cookie_consent": "Souhlas s Cookies",
     "info_newVersionAvailable": "K dispozici je nová verze",
     "info_web_update_complete": "ESMira byla úspěšně aktualizována.\n\nStránka se nyní znovu načte a doufejme, že ESMira bude super moderní a špičková! ;)",
