@@ -506,8 +506,9 @@
     "group_count": "Počet skupin",
     "randomGroups": "Náhodné skupiny",
     "languages_and_randomGroups": "Jazyky a náhodné skupiny",
-    "joined_per_group": "Připojeno na skupinu",
+    "joined_per_group": "Připojeno do skupiny",
     "questionnaire_edit_title": "Strana %d (%d položek):",
     "info_languages": "Účastníci obdrží buď verzi této studie v závislosti na jazykovém kódu svého prohlížeče / chytrého telefonu, nebo, pokud verze pro jejich jazyk neexistuje, výchozí verzi studie. Je třeba použít platné jazykové kódy, jinak nebude jazyková verze zjištěna.",
-    "info_randomGroups": "Každý účastník bude náhodně zařazen do skupiny. Toho lze využít ke skrytí dotazníků pro konkrétní skupiny."
+    "info_randomGroups": "Každý účastník bude náhodně zařazen do skupiny. Toho lze využít ke skrytí dotazníků pro konkrétní skupiny.",
+    "quit_per_group": "Odešlo ze skupiny"
 }
