@@ -203,5 +203,16 @@
     "for_AndroidSmartphones": "Pro smartphony se systémem Android",
     "error_questionnaire_not_active": "Tento dotazník není aktivní.",
     "for_iOSSmartphones": "Pro iPhony",
-    "error_study_not_compatible": "Zdá se, že tato studie není kompatibilní se serverem. Prosím, aktualizujte server."
+    "error_study_not_compatible": "Zdá se, že tato studie není kompatibilní se serverem. Prosím, aktualizujte server.",
+    "frequency": "Frekvence",
+    "general": "Obecné",
+    "questionnaire": "Dotazník",
+    "questionnaire_name": "Název dotazníku",
+    "questionnaire_view": "Informace o studii",
+    "header": "Záhlaví",
+    "heading": "Hlavička",
+    "hidden_studies": "Omezené studie",
+    "hideUntilCompletion": "Viditelné pouze pro účastníky, kteří ukončili studii.",
+    "highlighted": "Zvýrazněné",
+    "home": "Home"
 }
