@@ -200,9 +200,9 @@
     "external": "Externí",
     "footer": "Zápatí",
     "error_no_webWorkers": "Tento prohlížeč nepodporuje web Workers",
-    "for_AndroidSmartphones": "Pro smartphony se systémem Android",
+    "for_AndroidSmartphones": "Pro Android",
     "error_questionnaire_not_active": "Tento dotazník není aktivní.",
-    "for_iOSSmartphones": "Pro iPhony",
+    "for_iOSSmartphones": "Pro iPhone",
     "error_study_not_compatible": "Zdá se, že tato studie není kompatibilní se serverem. Prosím, aktualizujte server.",
     "frequency": "Frekvence",
     "general": "Obecné",
@@ -214,5 +214,6 @@
     "hidden_studies": "Omezené studie",
     "hideUntilCompletion": "Viditelné pouze pro účastníky, kteří ukončili studii.",
     "highlighted": "Zvýrazněné",
-    "home": "Home"
+    "home": "Home",
+    "freeze_study": "Zmrazit studii"
 }
