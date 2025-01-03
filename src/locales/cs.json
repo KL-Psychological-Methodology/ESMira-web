@@ -553,5 +553,12 @@
     "join_time": "Čas zapojení",
     "empty": "Prázdné",
     "info_urls_without_study_id": "Pokud stejný přístupový klíč používají i jiné studie, povedou tyto odkazy na seznam těchto studií.",
-    "plead_to_cite_us": "Citujte prosím publikaci společnosti ESMira"
+    "plead_to_cite_us": "Citujte prosím publikaci společnosti ESMira",
+    "publications_using_esmira": "Publikace využívající ESMira",
+    "esmira_instances": "Instance ESMira",
+    "main_publication": "Hlavní publikace",
+    "download_source_for_publication": "Zvažte přidání zdrojového kódu studie do své publikace, aby ostatní mohli vaši studii zopakovat.",
+    "disk_space": "Místo na disku",
+    "all_user": "Všichni uživatelé",
+    "created_by": "Vytvořil"
 }
