@@ -214,6 +214,15 @@
     "hidden_studies": "Omezené studie",
     "hideUntilCompletion": "Viditelné pouze pro účastníky, kteří ukončili studii.",
     "highlighted": "Zvýrazněné",
-    "home": "Home",
-    "freeze_study": "Zmrazit studii"
+    "home": "Domů",
+    "freeze_study": "Zmrazit studii",
+    "host_own_study": "Hostujte vlastní studii",
+    "input_category_classic": "Klasický",
+    "input_app_usage": "Sledování používání aplikace",
+    "input_compass": "Kompasová položka",
+    "input_likert": "Likertova škála",
+    "input_location": "Lokace",
+    "input_photo": "Pořídit fotografii",
+    "orderedList": "Seřazený seznam",
+    "input_va_scale": "Vizuální analogová škála"
 }
