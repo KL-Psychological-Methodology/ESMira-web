@@ -410,5 +410,5 @@
     "statisticsDataType_daily": "Za den",
     "statisticsDataType_sum": "Celkový součet",
     "statisticsValueType_count": "Počet",
-    "studyTut_participate_chooseNoForQR": "Když jste požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>No</b>\"."
+    "studyTut_participate_chooseNoForQR": "Když jste požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Ne</b>\"."
 }
