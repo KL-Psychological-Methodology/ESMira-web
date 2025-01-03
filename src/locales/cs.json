@@ -410,5 +410,15 @@
     "statisticsDataType_daily": "Za den",
     "statisticsDataType_sum": "Celkový součet",
     "statisticsValueType_count": "Počet",
-    "studyTut_participate_chooseNoForQR": "Když jste požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Ne</b>\"."
+    "studyTut_participate_chooseNoForQR": "Když jste požádáni o zadání kódu QR <b></b> , vyberte možnost \"<b style='color:red'>Ne</b>\".",
+    "studyTut_participate_description": "Jediné, co potřebujete, je aplikace ESMira, pomocí které se můžete k této studii připojit.<br/><br/>To zabere jen minutu. Stačí postupovat podle scénáře, který vám nejlépe vyhovuje:",
+    "studyTut_participate_install_app": "Instalace ESMira",
+    "studyTut_participate_method_x_header": "Alternativní %d:",
+    "studyTut_participate_method_manual": "Váš telefon nemá <u>fotoaparát</u> a je <u>jiné zařízení</u>.",
+    "studyTut_participate_method_notOnPhone": "Tuto stránku <u>jste otevřeli na jiném zařízení</u>.",
+    "studyTut_participate_method_onPhone": "Tuto stránku <u>jste otevřeli na svém smartphonu</u>.",
+    "studyTut_participate_open_this_website": "Otevřete tuto webovou stránku ve smartphonu.",
+    "studyTut_participate_scanQr": "Naskenujte pomocí chytrého telefonu následující QR kód:",
+    "studyTut_participate_opens_automatically": "ESMira se otevře automaticky.",
+    "studyTut_participate_selectAccessKeyYes": "Když jste požádáni o přístupový klíč <b></b> , vyberte \"<b>Yes</b>\" a zadejte \"<b style='color:red'>%s</b> \"."
 }
