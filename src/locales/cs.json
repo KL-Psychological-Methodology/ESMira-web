@@ -486,5 +486,13 @@
     "xAxisIsNumberRange_label": "Zacházet s hodnotami na ose x jako s rozsahem čísel",
     "yesterday": "Včera",
     "path_to_data_directory": "Cesta k datovému adresáři",
-    "info_path_to_data_directory": "V této cestě bude vytvořena složka s názvem \"esmira_data\", která bude obsahovat všechna data. PHP musí mít pro toto umístění oprávnění k zápisu. Dále je třeba zajistit, aby tato složka nebyla přístupná z internetu (do složky se umístí soubor podle htaccess). Pokud si nejste jisti, co zadat, ponechte předvolenou hodnotu tak, jak je."
+    "info_path_to_data_directory": "V této cestě bude vytvořena složka s názvem \"esmira_data\", která bude obsahovat všechna data. PHP musí mít pro toto umístění oprávnění k zápisu. Dále je třeba zajistit, aby tato složka nebyla přístupná z internetu (do složky se umístí soubor podle htaccess). Pokud si nejste jisti, co zadat, ponechte předvolenou hodnotu tak, jak je.",
+    "installation_settings": "Nastavení instalace",
+    "info_init_additional_steps": "K tomu, aby ESMira fungovala podle očekávání, je třeba provést některé další konfigurace serveru. Více informací najdete na <a href=\"https://github.com/KL-Psychological-Methodology/ESMira/wiki/Setting-up-a-server#optional-steps-for-specific-server-setups\" target=\"_blank\">[ve wiki]</a>:",
+    "enabled": "Povoleno",
+    "additional_server_settings": "Další nastavení serveru",
+    "info_dataFolder_already_exists": "V tomto umístění již existuje složka s názvem \"esmira_data\". Má být stávající složka znovu použita pro ESMira (pokud zvolíte \"Ne\", bude stávající složka přejmenována)?",
+    "yes": "Ano",
+    "no": "Ne",
+    "info_no_connection_to_update_server": "Žádné připojení k aktualizačnímu serveru"
 }
