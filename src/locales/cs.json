@@ -59,7 +59,7 @@
     "backups": "Zálohování",
     "permissions_create": "Oprávnění k vytváření studií",
     "permissions_publish": "Zveřejnit studii",
-    "charts_public": "Graf využívající údaje všech účastníků",
+    "charts_public": "Graf využívající data všech účastníků",
     "continue": "Pokračovat",
     "changed": "změněno",
     "chart_max_yValue_explainZero": "Zadejte 0 pro vypnutí limitu",
@@ -133,5 +133,12 @@
     "webInstallInstructions": "Další pokyny k instalaci aplikace (webová verze, lze ponechat prázdné)",
     "confirm_delete_account": "Opravdu chcete odstranit uživatele '%s' ?",
     "desc_schedule_planned": "Když byl smartphone nastaven tak, aby provedl akci plánu v určitý čas.",
-    "confirm_delete_error": "Opravdu chcete odstranit chybové hlášení '%s'?"
+    "confirm_delete_error": "Opravdu chcete odstranit chybové hlášení '%s'?",
+    "data_collected_since": "Data shromažďovány od",
+    "fitToShowLinearProgression_label": "Zobrazit lineární regresní, pokud je r2 fit větší než",
+    "timestamp": "Timestamp",
+    "condition": "Podmínka",
+    "desc_invitation_missed": "Když pozvánka na dotazník byla propásnuta.",
+    "desc_joined": "Když bylo do studie zapojeno.",
+    "confirm_delete_inputPage": "Opravdu chcete odstranit CELOU stránku včetně všech jejích záznamů?"
 }
