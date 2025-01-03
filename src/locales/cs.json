@@ -167,5 +167,13 @@
     "desc_qrCode": "Po naskenování tohoto QR kódu aplikací ESMira pro chytré telefony (nezáleží na tom, o jaký QR kód se jedná) se tato studie otevře. Ostatní aplikace pro skenování QR budou vedeny na vybranou url adresu.",
     "desc_study_message": "Když byla zobrazena studijní zpráva (zpráva, kterou lze účastníkům poslat přes webové rozhraní).",
     "embedded": "Vložené stránky",
-    "error_accessKey_wrong_format": "Přístupové klíče musí začínat znakem a mohou obsahovat pouze znaky a čísla."
+    "error_accessKey_wrong_format": "Přístupové klíče musí začínat znakem a mohou obsahovat pouze znaky a čísla.",
+    "desc_rejoined": "Když se přidal/a do studie a v aplikaci jsou stále uloženy staré statistiky této studie.",
+    "desc_schedule_changed": "Když účastník změnil plán studie.",
+    "disabled": "Vypnuto",
+    "duplicate_questionnaire": "Duplikovat dotazník",
+    "duplicate_study": "Duplikovat studii",
+    "edit_alarms": "Upravit spouštěče",
+    "edit_studies": "Upravit studie",
+    "edit_sumScores": "Vytvořit součtové skóry"
 }
