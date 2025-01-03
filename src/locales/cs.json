@@ -38,5 +38,12 @@
     "add_link": "Přidat odkaz",
     "add_signalTime": "Přidání denní doby",
     "app_type_per_questionnaire": "Typ aplikace pro dotazníky",
-    "after_x_seconds": "Po %d sekundách"
+    "after_x_seconds": "Po %d sekundách",
+    "calculate_sumScores": "Výpočet součtového skóre",
+    "check": "Zkontrolovat",
+    "colon": "%s:",
+    "permissions_admin": "Oprávnění admina",
+    "permissions_msg": "Čtení / psaní zpráv",
+    "permissions_read": "Načíst data",
+    "permissions_write": "Změnit studii"
 }
