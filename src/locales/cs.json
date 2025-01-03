@@ -298,5 +298,7 @@
     "permission_msg": "Zprávy",
     "permission_write": "Změna",
     "permission_read": "Data",
-    "per_day": "Na den"
+    "per_day": "Za den",
+    "prompt_image_fileSize": "\"%s\" je velmi velký soubor. Jste si jisti, že jej chcete vložit do studyfile? Mohlo by to prodloužit dobu stahování a zpracování studie.",
+    "public_studies": "Veřejné studie"
 }
