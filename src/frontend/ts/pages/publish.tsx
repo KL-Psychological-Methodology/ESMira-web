@@ -147,7 +147,7 @@ export class Content extends SectionContent {
 							</div>
 							
 							<div class="spacingTop">{Lang.getWithColon("more_information")}</div>
-							<div class="spacingLeft"><a class="showArrow" href="https://github.com/KL-Psychological-Methodology/ESMira/wiki/Conditions-for-using-ESMira" target="_blank">Conditions for using ESMira</a></div>
+							<div class="spacingLeft"><a class="showArrow" href="https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-common-problems" target="_blank">Conditions for using ESMira</a></div>
 						</div>
 				}),
 				
