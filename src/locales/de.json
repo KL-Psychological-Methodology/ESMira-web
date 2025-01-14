@@ -619,5 +619,7 @@
 	"fallback_url_parameter_error": "Url für Fallbacktoken konnte nicht ausgelesen werden",
 	"fallback_ping": "Teste Verbindung zu Fallbackserver",
 	"fallback_ping_success": "Verbindung zu %s erfolgreich! Anderer Server hat geantwortet und den Fallbacktoken akzeptiert.",
-	"fallback_full_synch": "Alle Studien synchronisieren"
+	"fallback_full_synch": "Alle Studien synchronisieren",
+	"inbound_fallback_token_info": "Dies ist die Liste aller anderen Server, die diesen Server als Fallback für Studien verwenden können.",
+	"outbound_fallback_token_info": "Dies ist die Liste aller anderen Server, die diser Server als Fallback four Studien verwenden kann."
 }

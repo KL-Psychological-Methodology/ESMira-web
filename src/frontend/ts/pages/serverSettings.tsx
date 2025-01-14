@@ -281,7 +281,8 @@ export class Content extends SectionContent {
 	private getFallbackSystemView(): Vnode<any, any> {
 		const url = getBaseUrl()
 		return <div>
-			<div class="listParent">
+			<span>{Lang.get("outbound_fallback_token_info")}</span>
+			<div class="listParent spacingTop">
 				{DragContainer((dragTools) =>
 					<div class="listChild">
 						{this.outboundTokenUrls.get().map((token: OutboundFallbackToken, index) =>

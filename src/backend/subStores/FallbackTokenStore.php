@@ -28,6 +28,8 @@ interface FallbackTokenStore
 
 	public function getOutboundTokenUrls(): array;
 
+	public function getOutboundTokenEncodedUrls(): array;
+
 	public function hasOutboundTokenUrl(string $encodedUrl): bool;
 
 	public function setOutboundTokensList(array $encodedUrl);

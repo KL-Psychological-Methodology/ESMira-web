@@ -67,7 +67,7 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		return <div>
-
+			<span>{Lang.get("inbound_fallback_token_info")}</span>
 
 			{this.getInboundTokenList()}
 			<div class="spacingBottom center">
@@ -78,7 +78,7 @@ export class Content extends SectionContent {
 	}
 
 	private getInboundTokenList(): Vnode<any, any> {
-		return <div class="listParent">
+		return <div class="listParent spacingTop">
 			<div class="listChild">
 				{this.userInboundTokens.map((token: InboundFallbackTokenInfo) =>
 					<div>

@@ -232,6 +232,18 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		return $urlList;
 	}
 
+	public function getOutboundTokenEncodedUrls(): array
+	{
+		$outboundTokens = FallbackTokenLoader::importOutboundFile();
+		$urlList = [];
+		foreach ($outboundTokens as $token) {
+			if (!$token instanceof OutboundFallbackToken)
+				throw new CriticalException("Invalid data in FallbackTokenStore");
+			$urlList[] = $token->url;
+		}
+		return $urlList;
+	}
+
 	public function hasOutboundTokenUrl(string $encodedUrl): bool
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
