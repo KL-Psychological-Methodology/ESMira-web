@@ -73,6 +73,8 @@ class Main
 				case 'it':
 				case 'uk':
 				case 'tl':
+				case 'es':
+				case 'cs':
 					return $lang;
 				default:
 					return 'en';
