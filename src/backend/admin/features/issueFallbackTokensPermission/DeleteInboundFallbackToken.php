@@ -15,12 +15,12 @@ class DeleteInboundFallbackToken extends HasIssueFallbackTokensPermission
 		if (!isset($_POST['url']) || !isset($_POST['user']))
 			throw new PageFlowException('Missing data');
 		$user = $_POST['user'];
-		$url = base64_decode($_POST['url']);
+		$encodedUrl = $_POST['url'];
 
-		if (strcmp(Permission::getAccountName(), $user) !== 0 && !Permission::isAdmin())
+		if (Permission::getAccountName() != $user && !Permission::isAdmin())
 			throw new CriticalException("No Permission");
 
-		Configs::getDataStore()->getFallbackTokenStore()->deleteInboundToken($user, $url);
+		Configs::getDataStore()->getFallbackTokenStore()->deleteInboundToken($user, $encodedUrl);
 		return [];
 	}
 }

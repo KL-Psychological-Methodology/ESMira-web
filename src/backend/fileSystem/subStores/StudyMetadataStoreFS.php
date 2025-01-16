@@ -70,7 +70,7 @@ class StudyMetadataStoreFS implements StudyMetadataStore
 			'lastSavedBy' => Permission::getAccountName(),
 			'lastSavedAt' => time(),
 			'studyTag' => $study->studyTag ?? '',
-			'usingFallback' => $study->usingFallback ?? true
+			'useFallback' => $study->useFallback ?? true
 		];
 		FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($this->studyId), serialize($this->metadata));
 
@@ -144,6 +144,6 @@ class StudyMetadataStoreFS implements StudyMetadataStore
 	public function isUsingFallback(): bool
 	{
 		$this->loadMetadata();
-		return $this->metadata['usingFallback'] ?? true;
+		return $this->metadata['useFallback'] ?? true;
 	}
 }

@@ -29,6 +29,7 @@ $classIndex = [
 	'DeleteAllStudiesExcept' => '\backend\fallback\features\DeleteAllStudiesExcept',
 	'FreezeStudy' => '\backend\fallback\features\FreezeStudy',
 	'SaveStudy' => '\backend\fallback\features\SaveStudy',
+	'RemoveConnection' => '\backend\fallback\features\RemoveConnection',
 ];
 
 $type = $_GET['type'];

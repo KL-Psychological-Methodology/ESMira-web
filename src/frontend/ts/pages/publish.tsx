@@ -187,7 +187,7 @@ export class Content extends SectionContent {
 		const urlList = this.getUrlListAndCacheUrls(study, accessKey)
 
 		let qrCodeUrl = this.allUrls[this.currentUrl]
-		if (this.fallbackUrls.length > 0) {
+		if (study.useFallback && this.fallbackUrls.length > 0) {
 			qrCodeUrl = `${qrCodeUrl}?fallback=${this.fallbackUrls[0]}`
 		}
 		const qr = qrcode(0, 'L')

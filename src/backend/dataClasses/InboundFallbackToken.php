@@ -10,7 +10,7 @@ namespace backend\dataClasses;
 class InboundFallbackToken
 {
 	public $hashedToken;
-	public $otherServerUrl;
+	public $otherServerUrl; // encoded as base64
 	public $issuingUser;
 
 

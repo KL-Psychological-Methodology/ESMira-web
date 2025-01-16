@@ -20,6 +20,8 @@ interface FallbackTokenStore
 
 	public function deleteInboundToken(string $accountName, string $encodedUrl);
 
+	public function deleteInboundTokensForUser(string $accountName);
+
 	public function checkInboundToken(string $token): bool;
 
 	public function getInboundTokenUrl(string $token): string | false;

@@ -14,17 +14,20 @@ require_once DIR_BASE . 'backend/responseFileKeys.php';
 abstract class HasWritePermission extends IsLoggedIn
 {
 
-	protected function handleFallback(string $feature, array $data = [])
+	protected function handleFallback(string $feature, array $data = [], bool $force = false)
 	{
-		$data['studyId'] = $this->studyId;
-		$outboundUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenUrls();
-		foreach ($outboundUrls as $url) {
-			$request = new FallbackRequest();
-			try {
-				$request->postRequest($url['url'], $feature, $data);
-			} catch (FallbackRequestException $e) {
-				$errorMsg = "Fallback System encountered an error when trying to call feature " . $feature . " on url '" . $url['url'] . "': ";
-				Main::reportError($e, $errorMsg);
+		$dataStore = Configs::getDataStore();
+		if ($force || $dataStore->getStudyMetadataStore($this->studyId)->isUsingFallback()) {
+			$data['studyId'] = $this->studyId;
+			$outboundUrls = $dataStore->getFallbackTokenStore()->getOutboundTokenUrls();
+			foreach ($outboundUrls as $url) {
+				$request = new FallbackRequest();
+				try {
+					$request->postRequest($url['url'], $feature, $data);
+				} catch (FallbackRequestException $e) {
+					$errorMsg = "Fallback System encountered an error when trying to call feature " . $feature . " on url '" . $url['url'] . "': ";
+					Main::reportError($e, $errorMsg);
+				}
 			}
 		}
 	}

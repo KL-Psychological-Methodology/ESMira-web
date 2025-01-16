@@ -62,4 +62,13 @@ class FallbackStudyStoreFS extends BaseStudyStoreFS implements FallbackStudyStor
 		FileSystemBasics::createFolder(PathsFS::folderFallbackStudy($this->encodedUrl, $studyId));
 		FileSystemBasics::createFolder(PathsFS::folderFallbackStudyLangs($this->encodedUrl, $studyId));
 	}
+
+	public function deleteStore()
+	{
+		$fallbackStudyStorePath = PathsFS::folderFallbackStudiesUrl($this->encodedUrl);
+		if (file_exists($fallbackStudyStorePath)) {
+			FileSystemBasics::emptyFolder($fallbackStudyStorePath);
+			@rmdir($fallbackStudyStorePath);
+		}
+	}
 }

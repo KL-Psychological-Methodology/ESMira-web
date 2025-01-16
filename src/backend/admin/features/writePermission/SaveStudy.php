@@ -53,6 +53,7 @@ class SaveStudy extends HasWritePermission
 		'subVersion' => true,
 		'internalId' => true
 	];
+	private $didUseFallback;
 
 
 	public static function getConditionString(string $key, int $storageType, int $timeInterval, array $conditions): string
@@ -474,6 +475,7 @@ class SaveStudy extends HasWritePermission
 		$dataStore = Configs::getDataStore();
 		$this->studyAccessIndexStore = $dataStore->getStudyAccessIndexStore();
 		$this->studyStore = $dataStore->getStudyStore();
+		$this->didUseFallback = $this->studyStore->studyExists($this->studyId) && $dataStore->getStudyMetadataStore($this->studyId)->isUsingFallback();
 	}
 
 	function exec(): array
@@ -497,6 +499,7 @@ class SaveStudy extends HasWritePermission
 
 		if ($this->studyStore->getStudyLastChanged($this->studyId) > (int) $_GET['lastChanged'])
 			throw new PageFlowException('The study configuration was changed (by another account?) since you last loaded it. You can not save your changes. Please reload the page.');
+
 
 
 		//
@@ -547,7 +550,11 @@ class SaveStudy extends HasWritePermission
 		//
 		//save fallback
 		//
-		$this->handleFallback("SaveStudy", ['studyBundle' => $studyCollectionJson]);
+		if ($study->useFallback ?? true) {
+			$this->handleFallback("SaveStudy", ['studyBundle' => $studyCollectionJson], true);
+		} else if ($this->didUseFallback) { // Delete study from fallback server if it was previously saved
+			$this->handleFallback("DeleteStudy", [], true);
+		}
 
 
 		return [

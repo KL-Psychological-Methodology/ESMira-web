@@ -2,11 +2,13 @@
 
 namespace backend\fileSystem\subStores;
 
+use backend\Configs;
 use backend\dataClasses\FallbackSetupToken;
 use backend\dataClasses\InboundFallbackToken;
 use backend\dataClasses\OutboundFallbackToken;
 use backend\exceptions\CriticalException;
-use backend\exceptions\FallbackFeatureException;
+use backend\exceptions\FallbackRequestException;
+use backend\FallbackRequest;
 use backend\fileSystem\loader\FallbackTokenLoader;
 use backend\Main;
 use backend\Permission;
@@ -39,6 +41,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 				$setupTokens[] = $token;
 			}
 		}
+		FallbackTokenLoader::exportSetupFile($setupTokens);
 		return $setupTokens;
 	}
 
@@ -94,6 +97,8 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 
 	private function consumeSetupToken(string $token): ?FallbackSetupToken
 	{
+		error_log($token);
+
 		$setupTokens = $this->getValidSetupTokens();
 		$hashedToken = Permission::getHashedToken($token);
 
@@ -156,6 +161,16 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 			return;
 		}
 		FallbackTokenLoader::exportInboundFile($trimmedTokens);
+
+		Configs::getDataStore()->getFallbackStudyStore($encodedUrl)->deleteStore();
+	}
+
+	public function deleteInboundTokensForUser(string $accountName)
+	{
+		$tokens = $this->getInboundTokensInfoForUser($accountName);
+		foreach ($tokens as $token) {
+			$this->deleteInboundToken($accountName, $token->otherServerUrl);
+		}
 	}
 
 	public function checkInboundToken(string $token): bool
@@ -260,17 +275,20 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
 		$urlMap = [];
+		$newOutboundTokens = [];
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
 			$urlMap[$token->url] = $token;
-		}
-		$newOutboundTokens = [];
-		foreach ($urls as $url) {
-			if (!isset($urlMap[$url])) {
-				throw new CriticalException("Nonexistant URL in input list");
+			if (in_array($token->url, $urls)) {
+				$newOutboundTokens[] = $token;
+			} else {
+				$request = new FallbackRequest();
+				try {
+					$request->postRequest(base64_decode($token->url), "RemoveConnection", []);
+				} catch (FallbackRequestException) {
+				}
 			}
-			$newOutboundTokens[] = $urlMap[$url];
 		}
 		FallbackTokenLoader::exportOutboundFile($newOutboundTokens);
 	}

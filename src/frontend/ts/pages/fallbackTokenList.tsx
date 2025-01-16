@@ -39,13 +39,13 @@ export class Content extends SectionContent {
 	}
 
 	private async deleteInboundToken(token: InboundFallbackTokenInfo) {
-		if (!confirm(Lang.get("confirm_delete_inbound_fallback_token", token.otherServerUrl)))
+		if (!confirm(Lang.get("confirm_delete_inbound_fallback_token", atob(token.otherServerUrl))))
 			return
 
 		await this.section.loader.loadJson(
 			`${FILE_ADMIN}?type=DeleteInboundFallbackToken`,
 			"post",
-			`url=${btoa(token.otherServerUrl)}&user=${token.user}`
+			`url=${token.otherServerUrl}&user=${token.user}`
 		)
 		await this.reloadInboundTokenList()
 	}
@@ -83,7 +83,7 @@ export class Content extends SectionContent {
 				{this.userInboundTokens.map((token: InboundFallbackTokenInfo) =>
 					<div>
 						{BtnTrash(this.deleteInboundToken.bind(this, token))}
-						<span>{token.otherServerUrl}</span>
+						<span>{atob(token.otherServerUrl)}</span>
 					</div>
 				)}
 			</div>
@@ -98,8 +98,8 @@ export class Content extends SectionContent {
 		return <div>
 			{TitleRow(Lang.get("new_fallback_setup_token"))}
 			<div>{Lang.get("info_fallback_setup_token")}</div>
-			<div class="verticalPadding center spacingTop"><span>{token}</span>{BtnCopy(() => navigator.clipboard.writeText(token))}</div>
-			<div class="center"><span>{url}</span>{BtnCopy(() => navigator.clipboard.writeText(url))}</div>
+			<div class="verticalPadding center spacingTop"><span>{url}</span>{BtnCopy(() => navigator.clipboard.writeText(url))}</div>
+			<div class="center"><span>{token}</span>{BtnCopy(() => navigator.clipboard.writeText(token))}</div>
 		</div>
 	}
 }
