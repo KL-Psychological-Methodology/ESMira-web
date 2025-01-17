@@ -23,6 +23,7 @@ import { OutboundFallbackToken } from "../data/fallbackTokens/outboundFallbackTo
 import { DragContainer } from "../widgets/DragContainer";
 import { callback } from "chart.js/dist/helpers/helpers.core";
 import { getBaseUrl } from "../constants/methods";
+import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -40,15 +41,17 @@ export class Content extends SectionContent {
 	private debuggingOn = process.env.NODE_ENV !== "production"
 	private changeLanguageList: ChangeLanguageList
 	private outboundTokenUrls: ObservableArray<ObservableStructureDataType, OutboundFallbackToken>
+	private inboundTokens: Map<string, InboundFallbackTokenInfo[]> = new Map()
 
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			section.getTools().settingsLoader.init(),
-			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackTokensInfo`)
+			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackTokensInfo`).catch(() => { return [] }),
+			Requests.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`).catch(() => { return [] })
 		]
 	}
 
-	constructor(sitePage: Section, loader: ServerSettingsLoader, tokenInfos: ObservableStructureDataType[]) {
+	constructor(sitePage: Section, loader: ServerSettingsLoader, tokenInfos: ObservableStructureDataType[], inboundTokens: InboundFallbackTokenInfo[]) {
 		super(sitePage)
 		this.loader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
@@ -65,7 +68,34 @@ export class Content extends SectionContent {
 			(data, parent, key) => { return new OutboundFallbackToken(data, parent, key) }
 		)
 		this.outboundTokenUrls.addObserver(this.updateOutboundFallbackTokenList.bind(this))
+		this.sortInboundTokens(inboundTokens)
 	}
+
+	private async reloadInboundTokenList(): Promise<void> {
+		const inboundTokens = await this.section.loader.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`)
+		this.sortInboundTokens(inboundTokens)
+	}
+
+	private sortInboundTokens(inboundTokens: InboundFallbackTokenInfo[]) {
+		this.inboundTokens = new Map()
+		for (var token of inboundTokens) {
+			if (!this.inboundTokens.has(token.user)) {
+				this.inboundTokens.set(token.user, [])
+			}
+			this.inboundTokens.get(token.user)!.push(token)
+		}
+	}
+
+	private async deleteInboundToken(token: InboundFallbackTokenInfo) {
+		if (!confirm(Lang.get("confirm_delete_inbound_fallback_token", atob(token.otherServerUrl))))
+			return
+
+		await this.section.loader.loadJson(`${FILE_ADMIN}?type=DeleteInboundFallbackToken`,
+			"post",
+			`url=${token.otherServerUrl}&user=${token.user}`)
+		await this.reloadInboundTokenList()
+	}
+
 	public async preInit(): Promise<any> {
 		await this.changeLanguageList.promise
 		await this.loadUpdates()
@@ -301,8 +331,33 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.get("add_outbound_fallback_token"))}
 
 			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.section.loader.error(msg) })}
+
+			{this.getFallbackInboundView()}
+
 		</div>
 
+	}
+
+	private getFallbackInboundView(): Vnode<any, any> {
+		return <div>
+			{TitleRow(Lang.get("admin_inbound_fallback_list"))}
+			<span>{Lang.get("inbound_fallback_token_info")}</span>
+			<div class="listParent">
+				<div class="listChild">
+					{Array.from(this.inboundTokens.keys()).map((user: string) =>
+						<div>
+							<div class="spacingTop spacingBottom"><h2>{user}</h2></div>
+							<div>{this.inboundTokens.get(user)?.map((token) =>
+								<div>
+									{BtnTrash(this.deleteInboundToken.bind(this, token))}
+									<span>{atob(token.otherServerUrl)}</span>
+								</div>
+							)}</div>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
 	}
 
 	private async addOutboundToken(url: string, token: string): Promise<any> {

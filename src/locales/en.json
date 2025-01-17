@@ -623,5 +623,6 @@
 	"inbound_fallback_token_info": "This is the list of all other servers that can use this server as a fallback for studies.",
 	"outbound_fallback_token_info": "This is the list of all other servers that this server can use as fallback for studies.",
 	"study_use_fallback": "Use fallback system",
-	"study_fallback_info": "Using the fallback system will also store this study on another server, so that participants using the QR code can still join the study even if this server is down."
+	"study_fallback_info": "Using the fallback system will also store this study on another server, so that participants using the QR code can still join the study even if this server is down.",
+	"admin_inbound_fallback_list": "List of Incoming Connections"
 }
