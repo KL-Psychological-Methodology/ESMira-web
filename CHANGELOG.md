@@ -1,12 +1,13 @@
-> [!CAUTION]
-> This update introduces scripting. To find out more on this new feature, head on over to the wiki page for [Scripting](https://github.com/KL-Psychological-Methodology/ESMira/wiki/Scripting-in-ESMira).
+### ⚠️ Breaking
+
+- Study Join Links: The new format of **QR-Codes** and **Links** including the fallback parameter can not be read by the current version of the ESMira client application. By the time this update comes out of alpha, the app will be updated to properly handle this optional parameter both in plain links and the QR codes encoding them. However, for the time being, please be cautious, as this could prevent participants from entering studies. If in doubt, disable the fallback system for sensitive studies for now.
 
 ### 🚀 Added
 
-- Scripting Features:
-    - A code editor for ESMira's new scripting language, Merlin. This editor includes a linter, allowing you to detect syntax errors during study creation.
-    - _Relevance_ scripts for both items and pages. These scripts allow to dynamically show or hide the respective item or page depending on the conditions specified in the script.
-    - _Text_ scripts for items. These scripts allow for dynamically generating item text in code.
-    - _Virtual Items_. These are similar to the sum scores already part of ESMira (and can be found in the same location). However, they only define a name that is expected and will be part of the data set. These value of these items can be programmatically set within scripts.
-    - _Scripting End Block_. A script that gets executed right before a questionnaire is saved. This script can be used to, e.g., calculate statistics derived from items in the questionnaire and save these into virtual items.
-- Option for vertical Likert scale. Some devices with smaller screens have trouble displaying Likert scales with a larger number of steps. This option allows to have a Likert scale rendered vertically, making it more compatible with all screen sizes.
+- Fallback System: This system allows to (unidirectionally) connect ESMira servers, so they may act as a fallback when participants try to enter a study. Study configuration files will automatically be saved to the fallback server. The QR-Codes participants can use to enter a study will then include an additional parameter encoding the fallback server's address. If the intended server is not reachable when a participant tries to sign up for a study the ESMira client app will then try to retrieve the study from the fallback server. All subsequent communication (e.g., data upload) is handled by the original server once it is reachable again. This feature includes several aspects:
+    - A new user permission to allow the creation of setup tokens for connecting servers.
+    - A system for connecting servers and testing the connection.
+    - Studies can optionally disable the fallback system (opt-out).
+    - QR-Codes and Join Links now contain a fallback parameter.
+- Added the option to omit page numbering to questionnaires.
+- Added the option to omit the toast message informing participants when pages have been skipped to questionnaires.
