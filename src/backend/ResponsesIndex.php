@@ -1,22 +1,26 @@
 <?php
 
 namespace backend;
-require_once DIR_BASE .'/backend/responseFileKeys.php';
 
-class ResponsesIndex {
+require_once DIR_BASE . '/backend/responseFileKeys.php';
+
+class ResponsesIndex
+{
 	public $keys;
 	public $types = [];
 	public $backwardsAliases = []; // This associative array holds name aliases to preserve backwards compatibility, in cases where variable name changes are necessary
-	
-	public function __construct(array $keys = [], array $types = [], array $backwardsAliases = []) {
+
+	public function __construct(array $keys = [], array $types = [], array $backwardsAliases = [])
+	{
 		$this->keys = $keys;
 		$this->types = $types;
 		$this->backwardsAliases = $backwardsAliases;
 	}
-	
-	public function addInput(\stdClass $input) {
+
+	public function addInput(\stdClass $input)
+	{
 		$name = $input->name;
-		switch($input->responseType ?? 'text_input') {
+		switch ($input->responseType ?? 'text_input') {
 			case 'text':
 				return;
 			case 'app_usage':
@@ -36,19 +40,19 @@ class ResponsesIndex {
 				break;
 			case 'list_multiple':
 				$this->addName($name);
-				for($i = 1; $i <= count($input->listChoices ?? []); $i++) {
+				for ($i = 1; $i <= count($input->listChoices ?? []); $i++) {
 					$this->addName("$name~$i");
-					$itemName = $input->listChoices[$i-1];
+					$itemName = $input->listChoices[$i - 1];
 					$this->backwardsAliases["$name~$i"] = "$name~$itemName";
 				}
-				if($input->other) {
+				if ($input->other ?? false) {
 					$this->addName("$name~other");
 					$this->addName("$name~other_text");
 				}
 				break;
 			case 'list_single':
 				$this->addName($name);
-				if($input->other) {
+				if ($input->other ?? false) {
 					$this->addName("$name~other");
 				}
 				break;
@@ -66,7 +70,8 @@ class ResponsesIndex {
 				break;
 		}
 	}
-	public function addName($name) {
+	public function addName($name)
+	{
 		$this->keys[] = $name;
 	}
 }
