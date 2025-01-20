@@ -3,14 +3,14 @@
 ignore_user_abort(true);
 set_time_limit(0);
 
-require_once dirname(__FILE__, 2) .'/backend/autoload.php';
+require_once dirname(__FILE__, 2) . '/backend/autoload.php';
 
 use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 use backend\JsonOutput;
 
 
-if(!isset($_GET['type'])) {
+if (!isset($_GET['type'])) {
 	echo JsonOutput::error('Missing data');
 	return;
 }
@@ -23,7 +23,7 @@ $classIndex = [
 	'login' => 'backend\admin\features\noPermission\Login',
 	'logout' => 'backend\admin\features\noPermission\Logout',
 	'GetPermissions' => 'backend\admin\features\noPermission\GetPermissions',
-	
+
 	//logged in:
 	'GetStrippedStudyList' => 'backend\admin\features\loggedIn\GetStrippedStudyList',
 	'GetStudyFromQuestionnaireId' => 'backend\admin\features\loggedIn\GetStudyFromQuestionnaireId',
@@ -36,7 +36,7 @@ $classIndex = [
 	'GetBookmarks' => 'backend\admin\features\loggedIn\GetBookmarks',
 	'SetBookmark' => 'backend\admin\features\loggedIn\SetBookmark',
 	'DeleteBookmark' => 'backend\admin\features\loggedIn\DeleteBookmark',
-	
+
 	//msg:
 	'ListParticipants' => 'backend\admin\features\messagePermission\ListParticipants',
 	'ListMessages' => 'backend\admin\features\messagePermission\ListMessages',
@@ -44,7 +44,7 @@ $classIndex = [
 	'MessageSetRead' => 'backend\admin\features\messagePermission\MessageSetRead',
 	'SendMessage' => 'backend\admin\features\messagePermission\SendMessage',
 	'DeleteMessage' => 'backend\admin\features\messagePermission\DeleteMessage',
-	
+
 	//read:
 	'ValidateRewardCode' => 'backend\admin\features\readPermission\ValidateRewardCode',
 	'GetRewardCodeData' => 'backend\admin\features\readPermission\GetRewardCodeData',
@@ -57,7 +57,7 @@ $classIndex = [
 	'DeleteMerlinLog' => 'backend\admin\features\readPermission\DeleteMerlinLog',
 	'ChangeMerlinLog' => 'backend\admin\features\readPermission\ChangeMerlinLog',
 	'GetMerlinLog' => 'backend\admin\features\readPermission\GetMerlinLog',
-	
+
 	//write
 	'IsFrozen' => 'backend\admin\features\writePermission\IsFrozen',
 	'DeleteStudy' => 'backend\admin\features\writePermission\DeleteStudy',
@@ -68,10 +68,16 @@ $classIndex = [
 	'BackupStudy' => 'backend\admin\features\writePermission\BackupStudy',
 	'SaveStudy' => 'backend\admin\features\writePermission\SaveStudy',
 	'MarkStudyAsUpdated' => 'backend\admin\features\writePermission\MarkStudyAsUpdated',
-	
+	'GetOutboundFallbackUrls' => 'backend\admin\features\writePermission\GetOutboundFallbackUrls',
+
 	//create
 	'CreateStudy' => 'backend\admin\features\createPermission\CreateStudy',
-	
+
+	//issueFallbackTokens
+	'IssueFallbackSetupToken' => 'backend\admin\features\issueFallbackTokensPermission\IssueFallbackSetupToken',
+	'GetInboundFallbackTokensForUser' => 'backend\admin\features\issueFallbackTokensPermission\GetInboundFallbackTokensForUser',
+	'DeleteInboundFallbackToken' => 'backend\admin\features\issueFallbackTokensPermission\DeleteInboundFallbackToken',
+
 	//admin
 	'GetLastActivities' => 'backend\admin\features\adminPermission\GetLastActivities',
 	'GetUsedSpacePerStudy' => 'backend\admin\features\adminPermission\GetUsedSpacePerStudy',
@@ -87,6 +93,13 @@ $classIndex = [
 	'AddStudyPermission' => 'backend\admin\features\adminPermission\AddStudyPermission',
 	'DeleteStudyPermission' => 'backend\admin\features\adminPermission\DeleteStudyPermission',
 	'ToggleAccountPermission' => 'backend\admin\features\adminPermission\ToggleAccountPermission',
+	'GetOutboundFallbackTokensInfo' => 'backend\admin\features\adminPermission\GetOutboundFallbackTokensInfo',
+	'GetInboundFallbackTokens' => 'backend\admin\features\adminPermission\GetInboundFallbackTokens',
+	'SetOutboundFallbackTokensList' => 'backend\admin\features\adminPermission\SetOutboundFallbackTokensList',
+	'RegisterOutboundFallbackToken' => 'backend\admin\features\adminPermission\RegisterOutboundFallbackToken',
+	'SetupFallbackSystem' => 'backend\admin\features\adminPermission\SetupFallbackSystem',
+	'PingFallbackServer' => 'backend\admin\features\adminPermission\PingFallbackServer',
+	'SynchAllStudiesToFallback' => 'backend\admin\features\adminPermission\SynchAllStudiesToFallback',
 	'DownloadUpdate' => 'backend\admin\features\adminPermission\DownloadUpdate',
 	'DoUpdate' => 'backend\admin\features\adminPermission\DoUpdate',
 	'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
@@ -94,7 +107,7 @@ $classIndex = [
 
 $type = $_GET['type'];
 
-if(!isset($classIndex[$type])) {
+if (!isset($classIndex[$type])) {
 	echo JsonOutput::error('Unexpected request');
 	return;
 }
@@ -102,10 +115,8 @@ try {
 	$className = $classIndex[$type];
 	$c = new $className;
 	$c->execAndOutput();
-}
-catch(CriticalException $e) {
+} catch (CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
-}
-catch(PageFlowException $e) {
+} catch (PageFlowException $e) {
 	echo JsonOutput::error($e->getMessage());
 }

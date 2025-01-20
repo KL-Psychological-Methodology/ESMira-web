@@ -7,21 +7,29 @@ use backend\Configs;
 use backend\exceptions\PageFlowException;
 use backend\Permission;
 
-class ToggleAccountPermission extends HasAdminPermission {
-	
-	function exec(): array {
-		if(!isset($_POST['accountName']))
+class ToggleAccountPermission extends HasAdminPermission
+{
+
+	function exec(): array
+	{
+		if (!isset($_POST['accountName']))
 			throw new PageFlowException('Missing data');
-		else if(Permission::getAccountName() === $_POST['accountName'])
+		else if (Permission::getAccountName() === $_POST['accountName'])
 			throw new PageFlowException('You can not remove your own admin permissions');
-		
+
 		$accountName = $_POST['accountName'];
-		
-		if(isset($_POST['admin']))
+
+		if (isset($_POST['admin']))
 			Configs::getDataStore()->getAccountStore()->setAdminPermission($accountName, (bool) $_POST['admin']);
-		if(isset($_POST['create']))
+		if (isset($_POST['create']))
 			Configs::getDataStore()->getAccountStore()->setCreatePermission($accountName, (bool) $_POST['create']);
-		
+		if (isset($_POST['issueFallbackToken'])) {
+			$canIssueFallbackToken = (bool) $_POST['issueFallbackToken'];
+			Configs::getDataStore()->getAccountStore()->setIssueFallbackTokenPermission($accountName, $canIssueFallbackToken);
+			if (!$canIssueFallbackToken)
+				Configs::getDataStore()->getFallbackTokenStore()->deleteInboundTokensForUser($accountName);
+		}
+
 		return [];
 	}
 }

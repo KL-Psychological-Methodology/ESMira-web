@@ -210,14 +210,15 @@ export class Content extends SectionContent {
 										<input type="checkbox" {...BindObservable(questionnaire.showSkipToast)} />
 										<span>{Lang.get("show_skip_toast")}</span>
 									</label>
-									{!this.hasInputs(questionnaire) ?
-										<label>
-											<div class="inlineIcon">{m.trust(warnSvg)}</div>
-											<span>{Lang.get("questionnaire_no_inputs")}</span>
-										</label> : <div></div>
+									{
+										!this.hasInputs(questionnaire) ?
+											<label>
+												<div class="inlineIcon">{m.trust(warnSvg)}</div>
+												<span>{Lang.get("questionnaire_no_inputs")}</span>
+											</label> : <div></div>
 									}
-								</div>
-							</div>
+								</div >
+							</div >
 					}),
 				DashElement("stretched", {
 					content:
@@ -226,7 +227,7 @@ export class Content extends SectionContent {
 								<small>{Lang.get("questionnaire_end_script")}{NotCompatibleIcon("Web")}</small>
 								{CodeEditor(questionnaire.endScriptBlock)}
 							</div>
-						</div>
+						</div >
 				})
 			)}
 
@@ -241,46 +242,48 @@ export class Content extends SectionContent {
 			<div class="dragHidden spacingBottom center">
 				{BtnAdd(this.addPage.bind(this, questionnaire), Lang.get("add_page"))}
 			</div>
-		</div>
+		</div >
 	}
 
 	private getPageView(dragTools: DragTools, study: Study, questionnaire: Questionnaire, qIndex: number, page: Page, pageIndex: number): Vnode<any, any> {
-		return <div class="spacingTop">
-			{TitleRow(
-				<div class="spacingTop">
-					<div class="title flexGrow flexCenter">{Lang.get("questionnaire_edit_title", (pageIndex + 1), page.inputs.get().length)}</div>
+		return <div class="spacingTop" >
+			{
+				TitleRow(
+					<div class="spacingTop" >
+						<div class="title flexGrow flexCenter">{Lang.get("questionnaire_edit_title", (pageIndex + 1), page.inputs.get().length)}</div>
 
-					<div class="nowrap flexCenter">
-						{BtnTrash(this.deletePage.bind(this, questionnaire, pageIndex))}
-						{BtnCopy(this.copyPage.bind(this, page, pageIndex + 1))}
-						{
-							DropdownMenu("transferPage",
-								BtnTransfer(),
-								(close) => <ul>
-									<h2 class="nowrap">{Lang.getWithColon("transfer_to_other_questionnaire")}</h2>
-									{study.questionnaires.get().map((selectedQuestionnaire) =>
-										<li class="clickable nowrap" onclick={this.transferPage.bind(this, questionnaire, pageIndex, selectedQuestionnaire, close)}>{selectedQuestionnaire.getTitle()}</li>
-									)}
-								</ul>
-							)
-						}
+						<div class="nowrap flexCenter">
+							{BtnTrash(this.deletePage.bind(this, questionnaire, pageIndex))}
+							{BtnCopy(this.copyPage.bind(this, page, pageIndex + 1))}
+							{
+								DropdownMenu("transferPage",
+									BtnTransfer(),
+									(close) => <ul>
+										<h2 class="nowrap">{Lang.getWithColon("transfer_to_other_questionnaire")}</h2>
+										{study.questionnaires.get().map((selectedQuestionnaire) =>
+											<li class="clickable nowrap" onclick={this.transferPage.bind(this, questionnaire, pageIndex, selectedQuestionnaire, close)}>{selectedQuestionnaire.getTitle()}</li>
+										)}
+									</ul>
+								)
+							}
 
-						{pageIndex < questionnaire.pages.get().length - 1 ?
-							<div class="btn horizontal clickable" onclick={this.movePageDown.bind(this, questionnaire, pageIndex)}>
-								{m.trust(downSvg)}
-							</div> : BtnLikeSpacer()
-						}
-						{pageIndex > 0 ?
-							<div class="btn horizontal clickable" onclick={this.movePageUp.bind(this, questionnaire, pageIndex)}>
-								{m.trust(upSvg)}
-							</div> : BtnLikeSpacer()
-						}
-						<a class="spacingLeft" href={this.getUrl(`pageSettings,qId:${questionnaire.internalId.get()},pageI:${pageIndex}`)}>
-							{BtnEdit()}
-						</a>
+							{pageIndex < questionnaire.pages.get().length - 1 ?
+								<div class="btn horizontal clickable" onclick={this.movePageDown.bind(this, questionnaire, pageIndex)}>
+									{m.trust(downSvg)}
+								</div> : BtnLikeSpacer()
+							}
+							{pageIndex > 0 ?
+								<div class="btn horizontal clickable" onclick={this.movePageUp.bind(this, questionnaire, pageIndex)}>
+									{m.trust(upSvg)}
+								</div> : BtnLikeSpacer()
+							}
+							<a class="spacingLeft" href={this.getUrl(`pageSettings,qId:${questionnaire.internalId.get()},pageI:${pageIndex}`)}>
+								{BtnEdit()}
+							</a>
+						</div>
 					</div>
-				</div>
-			)}
+				)
+			}
 
 			{page.inputs.get().length == 0 && dragTools.getDragTarget(0, page.inputs)}
 
@@ -314,6 +317,6 @@ export class Content extends SectionContent {
 				{BtnLikeSpacer()}
 				{BtnAdd(this.addInput.bind(this, questionnaire, pageIndex), Lang.get("add_item"))}
 			</div>
-		</div>
+		</div >
 	}
 }

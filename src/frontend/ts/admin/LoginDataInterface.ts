@@ -1,4 +1,4 @@
-import {AccountPermissions} from "./AccountPermissions";
+import { AccountPermissions } from "./AccountPermissions";
 
 export interface LoginDataInterface {
 	accountName: string
@@ -9,6 +9,7 @@ export interface LoginDataInterface {
 	newMerlinLogs: number[]
 	isAdmin: boolean
 	canCreate: boolean
+	canIssueFallbackTokens: boolean
 	hasErrors: boolean
 	totalDiskSpace: number
 	freeDiskSpace: number
