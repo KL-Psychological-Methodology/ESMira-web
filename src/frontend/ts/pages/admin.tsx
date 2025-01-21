@@ -177,7 +177,7 @@ export class Content extends SectionContent {
 					DashElement(null, {
 						small: true,
 						template: { title: Lang.get("fallback_system"), icon: m.trust(fallbackSystemSvg) },
-						href: this.getUrl("fallbackTokenList")
+						href: this.getUrl("fallbackSystem")
 					}),
 					DashElement(null, {
 						small: true,
