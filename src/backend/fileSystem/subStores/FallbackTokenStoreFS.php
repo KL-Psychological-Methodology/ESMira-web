@@ -275,20 +275,17 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 	{
 		$outboundTokens = FallbackTokenLoader::importOutboundFile();
 		$urlMap = [];
-		$newOutboundTokens = [];
 		foreach ($outboundTokens as $token) {
 			if (!$token instanceof OutboundFallbackToken)
 				throw new CriticalException("Invalid data in FallbackTokenStore");
 			$urlMap[$token->url] = $token;
-			if (in_array($token->url, $urls)) {
-				$newOutboundTokens[] = $token;
-			} else {
-				$request = new FallbackRequest();
-				try {
-					$request->postRequest(base64_decode($token->url), "RemoveConnection", []);
-				} catch (FallbackRequestException) {
-				}
+		}
+		$newOutboundTokens = [];
+		foreach ($urls as $url) {
+			if (!isset($urlMap[$url])) {
+				throw new CriticalException("Nonexistant URL in input list");
 			}
+			$newOutboundTokens[] = $urlMap[$url];
 		}
 		FallbackTokenLoader::exportOutboundFile($newOutboundTokens);
 	}
