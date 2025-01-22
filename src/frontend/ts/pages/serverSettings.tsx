@@ -10,20 +10,11 @@ import { RichText } from "../widgets/RichText";
 import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { ChangeLanguageList } from "../widgets/ChangeLanguageList";
 import { Section } from "../site/Section";
-import { BaseObservable, ObserverId } from "../observable/BaseObservable";
+import { ObserverId } from "../observable/BaseObservable";
 import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import { Requests } from "../singletons/Requests";
 import { PackageVersionComparator } from "../singletons/PackageVersionComparator";
-import { BtnAdd, BtnCopy, BtnEdit, BtnTrash } from "../widgets/BtnWidgets";
-import { AddOutboundToken } from "../widgets/AddOutboundToken";
-import { ObservableArray } from "../observable/ObservableArray";
-import { ObservableStructureDataType } from "../observable/ObservableStructure";
-import { OutboundFallbackToken } from "../data/fallbackTokens/outboundFallbackToken";
-import { DragContainer } from "../widgets/DragContainer";
-import { callback } from "chart.js/dist/helpers/helpers.core";
-import { getBaseUrl } from "../constants/methods";
-import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -40,18 +31,14 @@ export class Content extends SectionContent {
 	private releaseData: ReleaseType[] = []
 	private debuggingOn = process.env.NODE_ENV !== "production"
 	private changeLanguageList: ChangeLanguageList
-	private outboundTokenUrls: ObservableArray<ObservableStructureDataType, OutboundFallbackToken>
-	private inboundTokens: Map<string, InboundFallbackTokenInfo[]> = new Map()
 
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			section.getTools().settingsLoader.init(),
-			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackTokensInfo`).catch(() => { return [] }),
-			Requests.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`).catch(() => { return [] })
 		]
 	}
 
-	constructor(sitePage: Section, loader: ServerSettingsLoader, tokenInfos: ObservableStructureDataType[], inboundTokens: InboundFallbackTokenInfo[]) {
+	constructor(sitePage: Section, loader: ServerSettingsLoader) {
 		super(sitePage)
 		this.loader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
@@ -61,39 +48,6 @@ export class Content extends SectionContent {
 		this.observerId = loader.getSettings().addObserver(this.updateSaveState.bind(this))
 		this.section.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
 		this.updateSaveState()
-		this.outboundTokenUrls = new ObservableArray<ObservableStructureDataType, OutboundFallbackToken>(
-			tokenInfos,
-			null,
-			"outboundTokenUrls",
-			(data, parent, key) => { return new OutboundFallbackToken(data, parent, key) }
-		)
-		this.outboundTokenUrls.addObserver(this.updateOutboundFallbackTokenList.bind(this))
-		this.sortInboundTokens(inboundTokens)
-	}
-
-	private async reloadInboundTokenList(): Promise<void> {
-		const inboundTokens = await this.section.loader.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`)
-		this.sortInboundTokens(inboundTokens)
-	}
-
-	private sortInboundTokens(inboundTokens: InboundFallbackTokenInfo[]) {
-		this.inboundTokens = new Map()
-		for (var token of inboundTokens) {
-			if (!this.inboundTokens.has(token.user)) {
-				this.inboundTokens.set(token.user, [])
-			}
-			this.inboundTokens.get(token.user)!.push(token)
-		}
-	}
-
-	private async deleteInboundToken(token: InboundFallbackTokenInfo) {
-		if (!confirm(Lang.get("confirm_delete_inbound_fallback_token", atob(token.otherServerUrl))))
-			return
-
-		await this.section.loader.loadJson(`${FILE_ADMIN}?type=DeleteInboundFallbackToken`,
-			"post",
-			`url=${token.otherServerUrl}&user=${token.user}`)
-		await this.reloadInboundTokenList()
 	}
 
 	public async preInit(): Promise<any> {
@@ -210,10 +164,6 @@ export class Content extends SectionContent {
 				title: Lang.get("privacyPolicy"),
 				view: this.getPrivacyPolicyView.bind(this)
 			},
-			{
-				title: Lang.get("fallback_system"),
-				view: this.getFallbackSystemView.bind(this)
-			}
 		])
 	}
 
@@ -306,81 +256,6 @@ export class Content extends SectionContent {
 				{ObservableLangChooser(settings)}
 			</div>
 		</div>
-	}
-
-	private getFallbackSystemView(): Vnode<any, any> {
-		const url = getBaseUrl()
-		return <div>
-			<span>{Lang.get("outbound_fallback_token_info")}</span>
-			<div class="listParent spacingTop">
-				{DragContainer((dragTools) =>
-					<div class="listChild">
-						{this.outboundTokenUrls.get().map((token: OutboundFallbackToken, index) =>
-							dragTools.getDragTarget(index, this.outboundTokenUrls,
-								<div class="verticalPadding">
-									{dragTools.getDragStarter(index, this.outboundTokenUrls)}
-									{BtnTrash(this.deleteOutboundToken.bind(this, index))}
-									<a href={token.url.get()}>{token.url.get()}</a>
-									<a class="spacingLeft" href={this.getUrl(`fallbackServerView,fallbackUrl:${btoa(token.url.get())}`)}>{BtnEdit()}</a>
-								</div>
-							)
-						)}
-					</div>
-				)}
-			</div>
-			{TitleRow(Lang.get("add_outbound_fallback_token"))}
-
-			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.section.loader.error(msg) })}
-
-			{this.getFallbackInboundView()}
-
-		</div>
-
-	}
-
-	private getFallbackInboundView(): Vnode<any, any> {
-		return <div>
-			{TitleRow(Lang.get("admin_inbound_fallback_list"))}
-			<span>{Lang.get("inbound_fallback_token_info")}</span>
-			<div class="listParent">
-				<div class="listChild">
-					{Array.from(this.inboundTokens.keys()).map((user: string) =>
-						<div>
-							<div class="spacingTop spacingBottom"><h2>{user}</h2></div>
-							<div>{this.inboundTokens.get(user)?.map((token) =>
-								<div>
-									{BtnTrash(this.deleteInboundToken.bind(this, token))}
-									<span>{atob(token.otherServerUrl)}</span>
-								</div>
-							)}</div>
-						</div>
-					)}
-				</div>
-			</div>
-		</div>
-	}
-
-	private async addOutboundToken(url: string, token: string): Promise<any> {
-		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=SetupFallbackSystem`,
-			"post",
-			`otherUrl=${btoa(url)}&ownUrl=${btoa(getBaseUrl())}&setupToken=${token}`
-		)
-		this.outboundTokenUrls.push({ "url": url })
-		return true
-	}
-
-	private async deleteOutboundToken(index: number): Promise<any> {
-		this.outboundTokenUrls.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
-	}
-
-	private async updateOutboundFallbackTokenList(): Promise<void> {
-		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=SetOutboundFallbackTokensList`,
-			"post",
-			`urlList=${JSON.stringify(this.outboundTokenUrls.get().map((token) => btoa(token.url.get())))}`
-		)
 	}
 
 	private updateSaveState(): void {

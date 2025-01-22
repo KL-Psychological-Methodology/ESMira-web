@@ -613,7 +613,7 @@
 	"info_fallback_setup_token": "Hier ist Ihn neuer Token für die Einrichtung des Fallbacksystems, sowie die URL dieses Servers. Im nächsten Schritt müssen Sie beides im Adminpanel des anderen Servers eingeben.",
 	"confirm_delete_fallback_token": "Soll der Fallback Token für '%s' wirklich gelöscht werden?",
 	"new_fallback_setup_token": "Neuer Setuptoken",
-	"add_outbound_fallback_token": "Token hinzufügen",
+	"add_fallback_token": "Verbindung hinzufügen",
 	"outbound_fallback_token_url": "URL",
 	"outbound_fallback_token": "Token",
 	"url_https_error": "URL muss mit 'https://' beginnen",
@@ -626,5 +626,6 @@
 	"outbound_fallback_token_info": "Dies ist die Liste aller anderen Server, die diser Server als Fallback für Studien verwenden kann.",
 	"study_use_fallback": "Verwende Fallbacksystem",
 	"study_fallback_info": "Bei verwendung des Fallbacksystems wird diese Studie auch auf einem anderen Server gespeichert, damit Versuchspersonen die der Studie mit dem QR-Code beitreteten dies auch tun können, wenn dieser Server ausfällt.",
-	"anmin_inbound_fallback_list": "Liste von eingehenden Verbindungen"
+	"inbound_fallback_tab": "Eingehende Verbindungen",
+	"outbound_fallback_tab": "Ausgehende Verbindungen"
 }

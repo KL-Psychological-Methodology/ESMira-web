@@ -97,8 +97,6 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 
 	private function consumeSetupToken(string $token): ?FallbackSetupToken
 	{
-		error_log($token);
-
 		$setupTokens = $this->getValidSetupTokens();
 		$hashedToken = Permission::getHashedToken($token);
 
