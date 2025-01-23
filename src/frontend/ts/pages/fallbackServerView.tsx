@@ -11,8 +11,12 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		return <div>
-			<div><a onclick={this.ping.bind(this)}>{Lang.get("fallback_ping")}</a></div>
-			<div><a onclick={this.forceSync.bind(this)}>{Lang.get("fallback_full_synch")}</a></div>
+			<div class="center spacingTop">
+				<input type="button" onclick={this.ping.bind(this)} value={Lang.get("fallback_ping")} />
+			</div>
+			<div class="center spacingTop">
+				<input type="button" onclick={this.forceSync.bind(this)} value={Lang.get("fallback_full_synch")} />
+			</div>
 		</div>
 	}
 
