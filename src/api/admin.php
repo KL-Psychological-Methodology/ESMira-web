@@ -77,6 +77,7 @@ $classIndex = [
 	'IssueFallbackSetupToken' => 'backend\admin\features\issueFallbackTokensPermission\IssueFallbackSetupToken',
 	'GetInboundFallbackTokens' => 'backend\admin\features\issueFallbackTokensPermission\GetInboundFallbackTokens',
 	'DeleteInboundFallbackToken' => 'backend\admin\features\issueFallbackTokensPermission\DeleteInboundFallbackToken',
+	'GetOutboundFallbackTokensInfo' => 'backend\admin\features\issueFallbackTokensPermission\GetOutboundFallbackTokensInfo',
 
 	//admin
 	'GetLastActivities' => 'backend\admin\features\adminPermission\GetLastActivities',
@@ -93,7 +94,6 @@ $classIndex = [
 	'AddStudyPermission' => 'backend\admin\features\adminPermission\AddStudyPermission',
 	'DeleteStudyPermission' => 'backend\admin\features\adminPermission\DeleteStudyPermission',
 	'ToggleAccountPermission' => 'backend\admin\features\adminPermission\ToggleAccountPermission',
-	'GetOutboundFallbackTokensInfo' => 'backend\admin\features\adminPermission\GetOutboundFallbackTokensInfo',
 	'SetOutboundFallbackTokensList' => 'backend\admin\features\adminPermission\SetOutboundFallbackTokensList',
 	'RegisterOutboundFallbackToken' => 'backend\admin\features\adminPermission\RegisterOutboundFallbackToken',
 	'SetupFallbackSystem' => 'backend\admin\features\adminPermission\SetupFallbackSystem',
