@@ -23,7 +23,7 @@ $studiesJson = [];
 $studyStore = Configs::getDataStore()->getFallbackStudyStore($fromUrl);
 
 try {
-	$key = isset($_Get['access_key']) ? strtolower(trim($_Get['access_key'])) : '';
+	$key = isset($_GET['access_key']) ? strtolower(trim($_GET['access_key'])) : '';
 	$lang = Main::getLang(false);
 
 	$ids = Configs::getDataStore()->getFallbackStudyAccessIndexStore($fromUrl)->getStudyIds($key);
