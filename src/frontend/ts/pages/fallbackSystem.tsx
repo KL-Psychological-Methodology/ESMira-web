@@ -88,6 +88,7 @@ export class Content extends SectionContent {
 			"post",
 			`otherUrl=${btoa(url)}&ownUrl=${btoa(getBaseUrl())}&setupToken=${token}`
 		)
+		this.outboundTokenUrls.push({ "url": url })
 		return true
 	}
 
@@ -98,7 +99,7 @@ export class Content extends SectionContent {
 
 	private async updateOutpboundFallbackTokenList(): Promise<void> {
 		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=SetOutboundFallbackTokenList`,
+			`${FILE_ADMIN}?type=SetOutboundFallbackTokensList`,
 			"post",
 			`urlList=${JSON.stringify(this.outboundTokenUrls.get().map((token) => btoa(token.url.get())))}`
 		)
