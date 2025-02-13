@@ -12,6 +12,7 @@ use backend\noJs\NoJsMain;
 use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\Page;
+use backend\noJs\StudyData;
 use stdClass;
 
 class AppInstall implements Page
@@ -25,6 +26,9 @@ class AppInstall implements Page
 	 */
 	private $accessKey;
 
+	private $primaryUrl;
+	private $encodedFallbackUrl;
+
 	/**
 	 * @throws CriticalException
 	 * @throws PageFlowException
@@ -32,10 +36,32 @@ class AppInstall implements Page
 	 */
 	public function __construct()
 	{
-		$studyData = NoJsMain::getStudyData();
+		if (isset($_GET['fromUrl'])) {
+			$studyData = $this->setupFallback($_GET['fromUrl']);
+		} else {
+			$studyData = $this->setupPrimary();
+		}
 		$this->study = $studyData->study;
 		$this->accessKey = $studyData->accessKey;
 		CreateDataSet::saveWebAccess($studyData->study->id, 'app_install');
+	}
+
+	private function setupPrimary(): StudyData
+	{
+		$studyData = NoJsMain::getStudyData();
+		if ($this->study->useFallback ?? true) {
+			$fallbackUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenEncodedUrls();
+			$this->encodedFallbackUrl = sizeof($fallbackUrls) > 0 ? $fallbackUrls[0] : '';
+		}
+		CreateDataSet::saveWebAccess($studyData->study->id, 'app_install');
+		return $studyData;
+	}
+
+	private function setupFallback(string $fromUrl): StudyData
+	{
+		$studyData = NoJsMain::getFallbackStudyData($fromUrl);
+		$this->encodedFallbackUrl = base64_encode($_SERVER['HTTP_HOST']);
+		return $studyData;
 	}
 
 	private function getFallbackUrlParameter(): string

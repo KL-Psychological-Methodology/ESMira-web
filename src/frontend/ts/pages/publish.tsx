@@ -185,11 +185,7 @@ export class Content extends SectionContent {
 	private getPublishView(study: Study, accessKey: string): TabContent {
 		//We create urlList first so all urls are cached for the qr code to use:
 		const urlList = this.getUrlListAndCacheUrls(study, accessKey)
-
-		let qrCodeUrl = this.allUrls[this.currentUrl]
-		if (study.useFallback.get() && this.fallbackUrls.length > 0) {
-			qrCodeUrl = `${qrCodeUrl}?fallback=${this.fallbackUrls[0]}`
-		}
+		const qrCodeUrl = this.allUrls[this.currentUrl]
 		const qr = qrcode(0, 'L')
 		qr.addData(qrCodeUrl)
 		qr.make()
@@ -224,15 +220,16 @@ export class Content extends SectionContent {
 		this.allUrls = []
 		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
 		const appInstrTitle = Lang.get("app_installation_instructions")
+		const fallbackUrl = study.useFallback.get() && this.fallbackUrls.length > 0 ? this.fallbackUrls[0] : ""
 
 		return [
 			{
 				content: <div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get()))}
+						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), false, "https", fallbackUrl))}
 					</div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get()))}
+						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), false, "https", fallbackUrl))}
 					</div>
 					{accessKey.length > 0 &&
 						<div class="smallText">{Lang.get("info_urls_without_study_id")}</div>
@@ -242,10 +239,10 @@ export class Content extends SectionContent {
 			accessKey.length > 0 && {
 				content: <div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true))}
+						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true, "https", fallbackUrl))}
 					</div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), true))}
+						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), true, "https", fallbackUrl))}
 					</div>
 				</div>
 			},

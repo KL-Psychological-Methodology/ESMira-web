@@ -17,4 +17,5 @@ export type StaticValues =
 	"timestamp" |
 	"username" |
 	"password" |
-	"fallbackUrl"
+	"fallbackUrl" |
+	"fromUrl"
