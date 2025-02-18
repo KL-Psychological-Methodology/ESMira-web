@@ -54,7 +54,7 @@
         "html-loader": "^4.2.0",
         "html-webpack-plugin": "^5.5.0",
         "html-webpack-skip-assets-plugin": "^1.0.3",
-        "markdown-it": "^13.0.1",
+        "markdown-it": "^14.0.0",
         "mini-css-extract-plugin": "^2.7.2",
         "mini-svg-data-uri": "^1.4.4",
         "mithril": "^2.2.2",
