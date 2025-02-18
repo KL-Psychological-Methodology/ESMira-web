@@ -5,7 +5,7 @@ import { BindObservable } from "../widgets/BindObservable";
 import { Study } from "../data/study/Study";
 import { ObservablePrimitive } from "../observable/ObservablePrimitive";
 import { TabBar, TabContent } from "../widgets/TabBar";
-import { createAppUrl, createQuestionnaireUrl, createStudyUrl } from "../constants/methods";
+import { createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl } from "../constants/methods";
 import qrcode from "qrcode-generator"
 import { Section } from "../site/Section";
 import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
@@ -221,12 +221,13 @@ export class Content extends SectionContent {
 		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
 		const appInstrTitle = Lang.get("app_installation_instructions")
 		const fallbackUrl = study.useFallback.get() && this.fallbackUrls.length > 0 ? this.fallbackUrls[0] : ""
+		const fallbackAppInstallUrl = createFallbackAppUrl(accessKey, study.id.get(), fallbackUrl)
 
 		return [
 			{
 				content: <div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), false, "https", fallbackUrl))}
+						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), false, "https"))}
 					</div>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), false, "https", fallbackUrl))}
@@ -239,7 +240,7 @@ export class Content extends SectionContent {
 			accessKey.length > 0 && {
 				content: <div>
 					<div class="line">
-						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true, "https", fallbackUrl))}
+						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true, "https"))}
 					</div>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), true, "https", fallbackUrl))}
@@ -254,6 +255,18 @@ export class Content extends SectionContent {
 							{this.getUrlViewAndCacheUrl(questionnaire.getTitle(), createQuestionnaireUrl(accessKey, questionnaire.internalId.get()))}
 						</div>
 					)}
+				</div>
+			},
+			study.useFallback && {
+				content: <div
+					onpointerenter={this.onPointerEnterUrl.bind(null, fallbackAppInstallUrl)}
+					onpointerleave={this.onPointerLeaveUrl.bind(null)}
+				>
+					<label class="noTitle noDesc">{Lang.get("fallback_app_installation_instructions")}</label>
+					&nbsp;
+					<span class="middle">
+						{BtnCopy(() => navigator.clipboard.writeText(fallbackAppInstallUrl))}
+					</span>
 				</div>
 			}
 		]

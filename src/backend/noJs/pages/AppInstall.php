@@ -26,8 +26,10 @@ class AppInstall implements Page
 	 */
 	private $accessKey;
 
+	// Necessary for Fallback System
 	private $primaryUrl;
 	private $encodedFallbackUrl;
+	private $isPrimary;
 
 	/**
 	 * @throws CriticalException
@@ -48,6 +50,7 @@ class AppInstall implements Page
 
 	private function setupPrimary(): StudyData
 	{
+		$this->isPrimary = true;
 		$studyData = NoJsMain::getStudyData();
 		if ($this->study->useFallback ?? true) {
 			$fallbackUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenEncodedUrls();
@@ -59,25 +62,31 @@ class AppInstall implements Page
 
 	private function setupFallback(string $fromUrl): StudyData
 	{
+		$this->isPrimary = false;
 		$studyData = NoJsMain::getFallbackStudyData($fromUrl);
 		$this->encodedFallbackUrl = base64_encode($_SERVER['HTTP_HOST']);
 		return $studyData;
 	}
 
-	private function getFallbackUrlParameter(): string
+	private function getDeepLinkUrl(string $scriptName): string
 	{
-		if (!($this->study->useFallback ?? true)) {
-			return '';
+		$fallbackParameter = '';
+		if ($this->study->useFallback ?? true) {
+			$fallbackParameter = "?fallback=" . $this->encodedFallbackUrl;
 		}
-		try {
-			$fallbackUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenEncodedUrls();
-			if (sizeof($fallbackUrls) == 0) {
-				return '';
-			}
-			return '?fallback=' . $fallbackUrls[0];
-		} catch (CriticalException) {
+		return 'esmira://' . $this->primaryUrl . $scriptName . $this->study->id . ($this->accessKey ? "-$this->accessKey" : '') . $fallbackParameter;
+	}
+
+	private function getQrCode(): string
+	{
+		if ($this->isPrimary) {
+			return '<img alt="qr code" js-action="qr"/>';
+		} else {
+			$fallbackParameter = "?fallback=" . $this->encodedFallbackUrl;
+			$protocol = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '');
+			$qrUrl = $protocol . '://' . $this->primaryUrl . '/' . $this->study->id . ($this->accessKey ? "-$this->accessKey" : '') . $fallbackParameter;
+			return '<img alt="qr code" js-action="directQr" qr-url="' . $qrUrl . '"/>';
 		}
-		return '';
 	}
 
 	public function getTitle(): string
@@ -140,7 +149,7 @@ class AppInstall implements Page
 			. '</div></li>
 			<li>' . Lang::get('studyTut_participate_open_this_website') . '</li>
 			<li>
-				<a href="esmira://' . $_SERVER['HTTP_HOST'] . $scriptName . $this->study->id . ($this->accessKey ? "-$this->accessKey" : '') . $this->getFallbackUrlParameter() . '">' . Lang::get('studyTut_participate_click_link') . '</a>
+				<a href="' . $this->getDeepLinkUrl($scriptName) . '">' . Lang::get('studyTut_participate_click_link') . '</a>
 			</li>
 			<li>' . Lang::get('studyTut_participate_opens_automatically') . '</li>
 		</ol>
@@ -172,9 +181,7 @@ class AppInstall implements Page
 				</li>
 				<li>
 					<span>' . Lang::get('studyTut_participate_scanQr') . '</span>
-					<div class="center">
-						<img alt="qr code" js-action="qr"/>
-					</div>
+					<div class="center">' . $this->getQrCode() . '</div>
 				</li>
 			</ol>
 			

@@ -627,5 +627,6 @@
 	"study_use_fallback": "Verwende Fallbacksystem",
 	"study_fallback_info": "Bei verwendung des Fallbacksystems wird diese Studie auch auf einem anderen Server gespeichert, damit Versuchspersonen die der Studie mit dem QR-Code beitreteten dies auch tun können, wenn dieser Server ausfällt.",
 	"inbound_fallback_tab": "Eingehende Verbindungen",
-	"outbound_fallback_tab": "Ausgehende Verbindungen"
+	"outbound_fallback_tab": "Ausgehende Verbindungen",
+	"fallback_app_installation_instructions": "Fallback App Installations-Instruktionen"
 }

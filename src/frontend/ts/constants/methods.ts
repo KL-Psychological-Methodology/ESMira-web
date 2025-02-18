@@ -21,18 +21,15 @@ export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean
 		? getBaseUrl(protocol) + "app-" + id + "-" + accessKey + fallbackSuffix
 		: getBaseUrl(protocol) + "app-" + (accessKey || id) + fallbackSuffix;
 }
-export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https", encodedFallbackUrl: string = ""): string {
-	const fallbackSuffix = encodedFallbackUrl ? "?fallback=" + encodedFallbackUrl : ""
+export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
 	return alwaysAddId && accessKey
-		? getBaseUrl(protocol) + id + "-" + accessKey + fallbackSuffix
-		: getBaseUrl(protocol) + (accessKey || id) + fallbackSuffix;
+		? getBaseUrl(protocol) + id + "-" + accessKey
+		: getBaseUrl(protocol) + (accessKey || id);
 }
-export function createFallbackStudyUrl(encodedBaseUrl: string, accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
-	const baseUrl = (protocol || location.protocol) + '://' + atob(encodedBaseUrl)
-	const encodedFallbackUrl = atob(getBaseUrl())
-	return alwaysAddId && accessKey
-		? baseUrl + id + "-" + accessKey + "?fallback=" + encodedFallbackUrl
-		: baseUrl + (accessKey || id) + "?fallback=" + encodedFallbackUrl;
+export function createFallbackAppUrl(accessKey: string, id: number, encodedFallbackUrl: string, protocol: string = "https") {
+	const fallbackUrl = atob(encodedFallbackUrl)
+	const encodedFromUrl = btoa(getBaseUrl(protocol))
+	return fallbackUrl + "#fallbackAppInstall,id:" + id + (accessKey ? ",accessKey:" + accessKey : "") + ",fromUrl:" + encodedFromUrl
 }
 export function createQuestionnaireUrl(accessKey: string, qId: number, protocol: string = "https"): string {
 	return getBaseUrl(protocol) + "survey-" + qId + (accessKey ? "-" + accessKey : "");

@@ -10,6 +10,7 @@ use Exception;
 use backend\Main;
 use backend\CreateDataSet;
 use backend\subStores\BaseStudyStore;
+use backend\subStores\StudyAccessIndexStore;
 use stdClass;
 
 class NoJsMain
@@ -41,29 +42,37 @@ class NoJsMain
 	static function getStudyData(): StudyData
 	{
 		$studyStore = Configs::getDataStore()->getStudyStore();
-		return self::getStudyDataFromStore($studyStore);
+		$studyAccessIndexStore = Configs::getDataStore()->getStudyAccessIndexStore();
+		return self::getStudyDataFromStore($studyStore, $studyAccessIndexStore);
 	}
 
 	static function getFallbackStudyData(string $encodedUrl): StudyData
 	{
+		error_log("getting Fallback study");
 		$studyStore = Configs::getDataStore()->getFallbackStudyStore($encodedUrl);
-		return self::getStudyDataFromStore($studyStore);
+		$studyAccessIndexStore = Configs::getDataStore()->getFallbackStudyAccessIndexStore($encodedUrl);
+		return self::getStudyDataFromStore($studyStore,  $studyAccessIndexStore);
 	}
 
-	static private function getStudyDataFromStore(BaseStudyStore $studyStore): StudyData
+	static private function getStudyDataFromStore(BaseStudyStore $studyStore, StudyAccessIndexStore $studyAccessIndexStore): StudyData
 	{
-		$studyAccessIndexStore = Configs::getDataStore()->getStudyAccessIndexStore();
 		$accessKey = Main::getAccessKey();
 		$idsForAccessKey = $studyAccessIndexStore->getStudyIds($accessKey);
 		$lang = Main::getLang(false);
+		error_log("access key: $accessKey");
 
 		if (empty($idsForAccessKey) && !empty($accessKey))
 			throw new PageFlowException(Lang::get('error_wrong_accessKey'));
 
-		if (isset($_GET['id']))
+		if (isset($_GET['id'])) {
 			$targetStudyId = (int) $_GET['id'];
-		else if (isset($_GET['qid']))
+			error_log("got id $targetStudyId");
+		} else if (isset($_GET['qid'])) {
 			$targetStudyId = $studyAccessIndexStore->getStudyIdForQuestionnaireId((int) $_GET['qid']);
+			error_log("found id $targetStudyId");
+		}
+
+
 
 		if (isset($targetStudyId) && $targetStudyId) {
 			foreach ($idsForAccessKey as $studyId) {
