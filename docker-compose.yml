@@ -1,8 +1,9 @@
 services:
   esmira:
     image: jodlidev/esmira:main
+    restart: "unless-stopped"
     ports:
-      - 80:80
+      - "80:80"
     volumes:
       - ./esmira/esmira_data:/var/www/html/esmira_data
       - ./esmira/config:/var/www/html/backend/config/
