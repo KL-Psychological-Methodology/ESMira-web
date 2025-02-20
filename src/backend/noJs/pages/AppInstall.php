@@ -45,12 +45,12 @@ class AppInstall implements Page
 		}
 		$this->study = $studyData->study;
 		$this->accessKey = $studyData->accessKey;
-		CreateDataSet::saveWebAccess($studyData->study->id, 'app_install');
 	}
 
 	private function setupPrimary(): StudyData
 	{
 		$this->isPrimary = true;
+		$this->primaryUrl = $_SERVER['HTTP_HOST'];
 		$studyData = NoJsMain::getStudyData();
 		if ($this->study->useFallback ?? true) {
 			$fallbackUrls = Configs::getDataStore()->getFallbackTokenStore()->getOutboundTokenEncodedUrls();
@@ -63,6 +63,7 @@ class AppInstall implements Page
 	private function setupFallback(string $fromUrl): StudyData
 	{
 		$this->isPrimary = false;
+		$this->primaryUrl = preg_replace('/(https?:\/\/)|(\/$)/', '', base64_decode($fromUrl));
 		$studyData = NoJsMain::getFallbackStudyData($fromUrl);
 		$this->encodedFallbackUrl = base64_encode($_SERVER['HTTP_HOST']);
 		return $studyData;

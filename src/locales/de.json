@@ -190,6 +190,7 @@
 	"error_short_message": "Die Nachricht muss aus mindestens 2 Zeichen bestehen.",
 	"error_short_username": "Der Username muss aus mindestens 3 Zeichen bestehen.",
 	"error_study_not_compatible": "Die Studie \"%s\" scheint nicht mit diesem Server kompatibel zu sein. Bitte den Server updaten.",
+	"error_study_not_found": "Angeforderte Studie nicht gefunden",
 	"error_study_was_changed": "Die Studie \"%s\" wurde seit dem letzten Laden verändert. Alle lokalen Änderungen wurden mit der neuesten Version der Studie überschrieben.",
 	"error_unknown": "Unerwarteter Fehler!",
 	"error_unknown_data": "Unbekannte Daten.",

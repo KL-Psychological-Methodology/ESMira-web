@@ -48,28 +48,24 @@ class NoJsMain
 
 	static function getFallbackStudyData(string $encodedUrl): StudyData
 	{
-		error_log("getting Fallback study");
 		$studyStore = Configs::getDataStore()->getFallbackStudyStore($encodedUrl);
 		$studyAccessIndexStore = Configs::getDataStore()->getFallbackStudyAccessIndexStore($encodedUrl);
-		return self::getStudyDataFromStore($studyStore,  $studyAccessIndexStore);
+		return self::getStudyDataFromStore($studyStore,  $studyAccessIndexStore, false);
 	}
 
-	static private function getStudyDataFromStore(BaseStudyStore $studyStore, StudyAccessIndexStore $studyAccessIndexStore): StudyData
+	static private function getStudyDataFromStore(BaseStudyStore $studyStore, StudyAccessIndexStore $studyAccessIndexStore, bool $forward = true): StudyData
 	{
 		$accessKey = Main::getAccessKey();
 		$idsForAccessKey = $studyAccessIndexStore->getStudyIds($accessKey);
 		$lang = Main::getLang(false);
-		error_log("access key: $accessKey");
 
 		if (empty($idsForAccessKey) && !empty($accessKey))
 			throw new PageFlowException(Lang::get('error_wrong_accessKey'));
 
 		if (isset($_GET['id'])) {
 			$targetStudyId = (int) $_GET['id'];
-			error_log("got id $targetStudyId");
 		} else if (isset($_GET['qid'])) {
 			$targetStudyId = $studyAccessIndexStore->getStudyIdForQuestionnaireId((int) $_GET['qid']);
-			error_log("found id $targetStudyId");
 		}
 
 
@@ -87,8 +83,10 @@ class NoJsMain
 		if (!isset($study)) {
 			if (empty($idsForAccessKey) && !empty($accessKey))
 				throw new PageFlowException(Lang::get('error_wrong_accessKey'));
-			else
+			else if ($forward)
 				throw new ForwardingException(new StudiesList());
+			else
+				throw new PageFlowException(Lang::get('error_study_not_found'));
 		}
 
 		return (!isset($_GET['qid']) || !($questionnaire = self::getQuestionnaire($study, (int)$_GET['qid'])))
