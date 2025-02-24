@@ -239,6 +239,7 @@
 	"input_category_passive": "Without inputs",
 	"input_category_sensor": "Sensor data",
 	"input_category_special": "Special inputs",
+	"input_ambient_light": "Ambient light",
 	"input_app_usage": "App usage tracking",
 	"input_bluetooth_devices": "List of bluetooth devices",
 	"input_binary": "Binary item",
