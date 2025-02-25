@@ -46,7 +46,7 @@ export class InputOptionDesigner {
 			title: Lang.get("input_ambient_light"),
 			helpUrl: "",
 			category: "sensor",
-			notCompatible: ["Web"],
+			notCompatible: ["Web", "iOS"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
