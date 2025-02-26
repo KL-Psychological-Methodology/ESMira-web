@@ -185,7 +185,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 		return false;
 	}
 
-	public function getInboundTokenUrl(string $token): string | false
+	public function getInboundTokenUrl(string $token): string
 	{
 		$hashedToken = Permission::getHashedToken($token);
 		$inboundTokens = FallbackTokenLoader::importInboundFile();
@@ -196,7 +196,7 @@ class FallbackTokenStoreFS implements FallbackTokenStore
 			if (strcmp($hashedToken, $token->hashedToken) === 0)
 				return $token->otherServerUrl;
 		}
-		return false;
+		return "";
 	}
 
 	public function registerOutboundToken(string $encodedUrl, string $newToken)

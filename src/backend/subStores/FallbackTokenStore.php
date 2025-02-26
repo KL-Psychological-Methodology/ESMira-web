@@ -24,7 +24,7 @@ interface FallbackTokenStore
 
 	public function checkInboundToken(string $token): bool;
 
-	public function getInboundTokenUrl(string $token): string | false;
+	public function getInboundTokenUrl(string $token): string;
 
 	public function registerOutboundToken(string $encodedUrl, string $token);
 

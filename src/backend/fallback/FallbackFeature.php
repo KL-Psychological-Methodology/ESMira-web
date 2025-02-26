@@ -18,7 +18,7 @@ abstract class FallbackFeature extends BaseFallbackFeature
 
 		$token = $_POST['fallbackToken'];
 		$this->encodedUrl = Configs::getDataStore()->getFallbackTokenStore()->getInboundTokenUrl($token);
-		if ($this->encodedUrl === false)
+		if (strcmp($this->encodedUrl, "") == 0)
 			throw new FallbackFeatureException("Fallback token not found.", FallbackFeatureException::KEY_NOT_FOUND);
 	}
 
