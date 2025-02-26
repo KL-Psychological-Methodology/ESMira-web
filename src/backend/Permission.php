@@ -5,10 +5,10 @@ namespace backend;
 use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
 
-enum PermissionTokenType
+class PermissionTokenType
 {
-	case HEXADECIMAL;
-	case BASE64;
+	const HEXADECIMAL = 0;
+	const BASE64 = 1;
 }
 
 class Permission
