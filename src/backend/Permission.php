@@ -170,7 +170,7 @@ class Permission
 	/**
 	 * @throws CriticalException
 	 */
-	static function calcRandomToken(int $length, PermissionTokenType $type = PermissionTokenType::HEXADECIMAL): string
+	static function calcRandomToken(int $length, int $type = PermissionTokenType::HEXADECIMAL): string
 	{
 		//Thanks to: https://www.php.net/manual/en/function.random-bytes.php#118932
 
