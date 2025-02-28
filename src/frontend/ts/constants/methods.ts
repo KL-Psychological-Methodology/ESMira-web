@@ -29,7 +29,7 @@ export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boole
 export function createFallbackAppUrl(accessKey: string, id: number, encodedFallbackUrl: string, protocol: string = "https") {
 	const fallbackUrl = atob(encodedFallbackUrl)
 	const encodedFromUrl = btoa(getBaseUrl(protocol))
-	return fallbackUrl + "#fallbackAppInstall,id:" + id + (accessKey ? ",accessKey:" + accessKey : "") + ",fromUrl:" + encodedFromUrl
+	return fallbackUrl + 'fallback-' + id + (accessKey ? "-" + accessKey : '') + "-" + encodedFromUrl
 }
 export function createQuestionnaireUrl(accessKey: string, qId: number, protocol: string = "https"): string {
 	return getBaseUrl(protocol) + "survey-" + qId + (accessKey ? "-" + accessKey : "");

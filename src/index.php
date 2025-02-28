@@ -19,7 +19,14 @@ if(Configs::getDataStore()->isInit()) {
 	}
 	else if(isset($_GET['id'])) {
 		$studyId = (int)$_GET['id'];
-		$jsKey = isset($_GET['app_install']) ? "appInstall,id:$studyId" : "studyOverview,id:$studyId";
+		if(isset($_GET['app_install'])) {
+			$jsKey = "appInstall,id:$studyId";
+		} else if(isset($_GET['from_url'])) {
+			$fromUrl = $_GET['from_url'];
+			$jsKey = "fallbackAppInstall,id:$studyId,fromUrl:$fromUrl";
+		} else {
+			$jsKey = "studyOverview,id:$studyId";
+		}
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
