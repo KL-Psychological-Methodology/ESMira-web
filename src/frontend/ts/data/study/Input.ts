@@ -3,6 +3,7 @@ import { ObservableStructure } from "../../observable/ObservableStructure";
 export type InputResponseType =
 	"ambient_light" |
 	"app_usage" |
+	"battery_level" |
 	"binary" |
 	"bluetooth_devices" |
 	"compass" |

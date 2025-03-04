@@ -73,6 +73,17 @@ export class InputOptionDesigner {
 			]
 
 		},
+		"battery_level": {
+			title: Lang.get("input_battery_level"),
+			helpUrl: "",
+			category: "sensor",
+			notCompatible: ["Web"],
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>
+			]
+		},
 		"binary": {
 			title: Lang.get("input_binary"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Binary-item",

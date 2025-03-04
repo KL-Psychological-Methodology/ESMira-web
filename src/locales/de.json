@@ -241,6 +241,7 @@
 	"input_category_special": "Spezielle Inputs",
 	"input_ambient_light": "Umgebungslicht",
 	"input_app_usage": "App Nutzungs-Zeiten",
+	"input_battery_level": "Akkustand",
 	"input_binary": "Binäres Item",
 	"input_bluetooth_devices": "Liste von Bluetooth-Geräten",
 	"input_compass": "Kompass Item",
