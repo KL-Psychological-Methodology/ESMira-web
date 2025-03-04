@@ -631,5 +631,7 @@
 	"study_fallback_info": "Using the fallback system will also store this study on another server, so that participants using the QR code can still join the study even if this server is down.",
 	"inbound_fallback_tab": "Incoming Connections",
 	"outbound_fallback_tab": "Outgoing Connections",
-	"fallback_app_installation_instructions": "Fallback app installation instructions"
+	"fallback_app_installation_instructions": "Fallback app installation instructions",
+	"maintenance": "Maintenance",
+	"rebuild_study_index": "Rebuild study index"
 }

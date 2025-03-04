@@ -66,6 +66,10 @@ export class Content extends SectionContent {
 		return `${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.section.siteData.packageVersion}`
 	}
 
+	private async rebuildStudyIndex(): Promise<void> {
+		await this.section.loader.loadJson(`${FILE_ADMIN}?type=RebuildStudyIndex`).then(() => { this.section.loader.showMessage(Lang.get("info_successful")) })
+	}
+
 	private async saveServerSettings(): Promise<void> {
 		await this.section.loader.showLoader(
 			this.getTools().settingsLoader.saveSettings()
@@ -164,6 +168,10 @@ export class Content extends SectionContent {
 				title: Lang.get("privacyPolicy"),
 				view: this.getPrivacyPolicyView.bind(this)
 			},
+			{
+				title: Lang.get("maintenance"),
+				view: this.getMaintenanceView.bind(this)
+			}
 		])
 	}
 
@@ -256,6 +264,13 @@ export class Content extends SectionContent {
 				{ObservableLangChooser(settings)}
 			</div>
 		</div>
+	}
+	private getMaintenanceView(): Vnode<any, any> {
+		return <div>
+			<div class="center">
+				<input type="button" onclick={this.rebuildStudyIndex.bind(this)} value={Lang.get("rebuild_study_index")} />
+			</div>
+		</div >
 	}
 
 	private updateSaveState(): void {
