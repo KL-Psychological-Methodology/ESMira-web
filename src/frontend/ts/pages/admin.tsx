@@ -1,8 +1,8 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
-import {Lang} from "../singletons/Lang";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../widgets/DashRow";
+import { DashElement } from "../widgets/DashElement";
+import { Lang } from "../singletons/Lang";
 import addSvg from "../../imgs/icons/add.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
 import editSvg from "../../imgs/icons/change.svg?raw"
@@ -13,8 +13,9 @@ import logoutSvg from "../../imgs/dashIcons/logout.svg?raw"
 import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
-import {TitleRow} from "../widgets/TitleRow";
-import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
+import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
+import { TitleRow } from "../widgets/TitleRow";
+import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
 import { RssFetcher, RssItem } from "../singletons/RssFetcher";
 import { NewsItem } from "../widgets/NewsItem";
 import { Section } from "../site/Section";
@@ -49,18 +50,18 @@ export class Content extends SectionContent {
 	public title(): string {
 		return Lang.get("admin")
 	}
-	
+
 	private async addStudy(e: MouseEvent): Promise<void> {
 		return this.addDropdownMenus.addStudy(e.target as Element)
 	}
-	
+
 	private logout(): Promise<void> {
 		return this.section.loader.showLoader(this.getAdmin().logout())
 	}
 
 	private editBookmark(url: string, oldName: string) {
 		const newName = prompt(Lang.get("prompt_bookmark_name"), oldName)
-		if(!newName)
+		if (!newName)
 			return
 		this.getAdmin().getTools().bookmarksLoader.setBookmark(url, newName)
 	}
@@ -81,7 +82,7 @@ export class Content extends SectionContent {
 			</div>
 		</div>
 	}
-	
+
 	public getView(): Vnode<any, any> {
 		const tools = this.getTools()
 		return <div>
@@ -93,7 +94,7 @@ export class Content extends SectionContent {
 						small: true,
 						content: <div class="highlight">{Lang.get("info_low_disk_space", Math.round(tools.freeDiskSpace / 1000 / 1000))}</div>
 					}),
-					
+
 					(tools.permissions.write || tools.canCreate) &&
 					DashElement(null,
 						{
@@ -102,30 +103,30 @@ export class Content extends SectionContent {
 						},
 						tools.canCreate && {
 							floating: true,
-							template: {title: Lang.get("create"), icon: m.trust(addSvg) },
+							template: { title: Lang.get("create"), icon: m.trust(addSvg) },
 							onclick: this.addStudy.bind(this)
 						},
 					),
-					
+
 					tools.permissions.msg &&
-						DashElement(null, {
-							highlight: !!(tools.messagesLoader.studiesWithNewMessagesCount.get()),
-							template: {title: Lang.get("messages"), icon: m.trust(messagesSvg) },
-							href: this.getUrl("allStudies:msgs")
-						}),
-					
+					DashElement(null, {
+						highlight: !!(tools.messagesLoader.studiesWithNewMessagesCount.get()),
+						template: { title: Lang.get("messages"), icon: m.trust(messagesSvg) },
+						href: this.getUrl("allStudies:msgs")
+					}),
+
 					tools.permissions.read &&
-						DashElement(null, {
-							highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
-							template: {title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },
-							href: this.getUrl("allStudies:data")
-						}),
-					
+					DashElement(null, {
+						highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
+						template: { title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },
+						href: this.getUrl("allStudies:data")
+					}),
+
 					tools?.isAdmin &&
-						DashElement(null, {
-							template: {title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg) },
-							href: this.getUrl("serverStatisticsAdmin")
-						})
+					DashElement(null, {
+						template: { title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg) },
+						href: this.getUrl("serverStatisticsAdmin")
+					})
 				)
 			}
 			{
@@ -136,65 +137,71 @@ export class Content extends SectionContent {
 					}
 					{
 						this.bookmarkList()
-					}	
+					}
 				</div>
 			}
 			{
 				tools?.isAdmin &&
-					<div>
-						{
-							TitleRow(Lang.getWithColon("server"))
-						}
-						{
-							DashRow(
-								DashElement(null, {
-									template: {title: Lang.get("edit_users"), icon: m.trust(editUsersSvg) },
-									href: this.getUrl("accountList")
-								}),
-								DashElement(null, {
-									template: {title: Lang.get("server_settings"), icon: m.trust(serverSettingsSvg) },
-									href: this.getUrl("serverSettings")
-								}),
-								DashElement(null, {
-									highlight: tools?.hasErrors,
-									template: {title: Lang.get("show_errorReports"), icon: m.trust(errorReportsSvg) },
-									href: this.getUrl("errorList")
-								})
-							)
-						}
-					</div>
+				<div>
+					{
+						TitleRow(Lang.getWithColon("server"))
+					}
+					{
+						DashRow(
+							DashElement(null, {
+								template: { title: Lang.get("edit_users"), icon: m.trust(editUsersSvg) },
+								href: this.getUrl("accountList")
+							}),
+							DashElement(null, {
+								template: { title: Lang.get("server_settings"), icon: m.trust(serverSettingsSvg) },
+								href: this.getUrl("serverSettings")
+							}),
+							DashElement(null, {
+								highlight: tools?.hasErrors,
+								template: { title: Lang.get("show_errorReports"), icon: m.trust(errorReportsSvg) },
+								href: this.getUrl("errorList")
+							})
+						)
+					}
+				</div>
 			}
-			<br/>
+			<br />
 			{
 				DashRow(
 					DashElement(null, {
 						small: true,
-						template: {title: Lang.get("edit_user_account"), icon: m.trust(editAccountSvg) },
+						template: { title: Lang.get("edit_user_account"), icon: m.trust(editAccountSvg) },
 						href: this.getUrl("myAccount")
+					}),
+					(tools?.isAdmin || tools?.canIssueFallbackTokens) &&
+					DashElement(null, {
+						small: true,
+						template: { title: Lang.get("fallback_system"), icon: m.trust(fallbackSystemSvg) },
+						href: this.getUrl("fallbackSystem")
 					}),
 					DashElement(null, {
 						small: true,
-						template: {title: Lang.get("logout_x", tools?.accountName), icon: m.trust(logoutSvg)},
+						template: { title: Lang.get("logout_x", tools?.accountName), icon: m.trust(logoutSvg) },
 						onclick: this.logout.bind(this)
 					})
 				)
 			}
-			<br/>
-			{ !!this.rssItems.length &&
+			<br />
+			{!!this.rssItems.length &&
 				<div>
 					{
 						TitleRow(Lang.getWithColon("news"))
 					}
 					<div>
-					{
-						this.rssItems.map(item => {
-							return NewsItem(item)
-						})
-					}
+						{
+							this.rssItems.map(item => {
+								return NewsItem(item)
+							})
+						}
 					</div>
 				</div>
 			}
 		</div>
-		
+
 	}
 }

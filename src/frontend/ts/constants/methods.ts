@@ -1,4 +1,4 @@
-import {Lang} from "../singletons/Lang";
+import { Lang } from "../singletons/Lang";
 
 export function safeConfirm(msg: string): boolean {
 	return confirm(msg) && (prompt(Lang.get("confirm_again")) || "").toLowerCase() === "ok"
@@ -15,18 +15,24 @@ export function getBaseUrl(protocol: string = "https"): string {
 	return (protocol || location.protocol) + '://' + getBaseDomain();
 }
 
-export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
+export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https", encodedFallbackUrl: string = ""): string {
+	const fallbackSuffix = encodedFallbackUrl ? "?fallback=" + encodedFallbackUrl : ""
 	return alwaysAddId && accessKey
-		? getBaseUrl(protocol)+"app-"+id+"-"+accessKey
-		: getBaseUrl(protocol)+"app-"+(accessKey || id);
+		? getBaseUrl(protocol) + "app-" + id + "-" + accessKey + fallbackSuffix
+		: getBaseUrl(protocol) + "app-" + (accessKey || id) + fallbackSuffix;
 }
 export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
 	return alwaysAddId && accessKey
-		? getBaseUrl(protocol)+id+"-"+accessKey
-		: getBaseUrl(protocol)+(accessKey || id);
+		? getBaseUrl(protocol) + id + "-" + accessKey
+		: getBaseUrl(protocol) + (accessKey || id);
+}
+export function createFallbackAppUrl(accessKey: string, id: number, encodedFallbackUrl: string, protocol: string = "https") {
+	const fallbackUrl = atob(encodedFallbackUrl)
+	const encodedFromUrl = btoa(getBaseUrl(protocol))
+	return fallbackUrl + 'fallback-' + id + (accessKey ? "-" + accessKey : '') + "-" + encodedFromUrl
 }
 export function createQuestionnaireUrl(accessKey: string, qId: number, protocol: string = "https"): string {
-	return getBaseUrl(protocol)+"survey-"+qId+(accessKey ? "-"+accessKey : "");
+	return getBaseUrl(protocol) + "survey-" + qId + (accessKey ? "-" + accessKey : "");
 }
 
 export function getMidnightMillis(timestamp: number = Date.now()): number {
@@ -39,5 +45,5 @@ export function getMidnightMillis(timestamp: number = Date.now()): number {
 }
 export function timeStampToTimeString(timestamp: number) {
 	const d = new Date(timestamp)
-	return d.toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"})
+	return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 }

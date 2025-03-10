@@ -120,13 +120,27 @@ class AccountStoreFS implements AccountStore
 	{
 		$permissions = PermissionsLoader::importFile();
 
-		if ($permissions[$accountName]['admin'])
+		if (isset($permissions[$accountName]['admin']) && $permissions[$accountName]['admin'])
 			return;
 
 		if (!isset($permissions[$accountName]))
 			$permissions[$accountName] = ['create' => $canCreate];
 		else
 			$permissions[$accountName]['create'] = $canCreate;
+
+		PermissionsLoader::exportFile($permissions);
+	}
+
+	public function setIssueFallbackTokenPermission(string $accountName, bool $canIssueToken)
+	{
+		$permissions = PermissionsLoader::importFile();
+
+		if (isset($permissions[$accountName]['admin']) && $permissions[$accountName]['admin'])
+			return;
+		if (!isset($permissions[$accountName]))
+			$permissions[$accountName] = ['issueFallbackToken' => $canIssueToken];
+		else
+			$permissions[$accountName]['issueFallbackToken'] = $canIssueToken;
 
 		PermissionsLoader::exportFile($permissions);
 	}

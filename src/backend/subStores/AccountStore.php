@@ -4,14 +4,15 @@ namespace backend\subStores;
 
 use backend\exceptions\CriticalException;
 
-interface AccountStore {
+interface AccountStore
+{
 	public function getLoginHistoryCsv(string $accountName): string;
 	/**
 	 * @throws CriticalException
 	 */
 	public function addToLoginHistoryEntry(string $accountName, array $data);
-	
-	
+
+
 	public function getPermissions(string $accountName): array;
 	/**
 	 * @throws CriticalException
@@ -29,14 +30,18 @@ interface AccountStore {
 	 * @throws CriticalException
 	 */
 	public function setCreatePermission(string $accountName, bool $canCreate);
-	
+	/**
+	 * @throws CriticalException
+	 */
+	public function setIssueFallbackTokenPermission(string $accountName, bool $canIssueToken);
+
 	/**
 	 * @throws CriticalException
 	 */
 	public function createBlocking($accountName);
 	public function removeBlocking(string $accountName);
 	public function getAccountBlockedTime(string $accountName): int;
-	
+
 	/**
 	 * @throws CriticalException
 	 */
@@ -47,12 +52,12 @@ interface AccountStore {
 	 * @throws CriticalException
 	 */
 	public function setAccount($accountName, $password);
-	
+
 	/**
 	 * @throws CriticalException
 	 */
 	function changeAccountName(string $oldAccountName, string $newAccountName);
-	
+
 	/**
 	 * @throws CriticalException
 	 */

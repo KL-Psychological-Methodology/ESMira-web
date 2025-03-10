@@ -5,7 +5,8 @@ namespace backend\subStores;
 use backend\exceptions\CriticalException;
 use stdClass;
 
-interface StudyMetadataStore {
+interface StudyMetadataStore
+{
 	/**
 	 * @throws CriticalException
 	 */
@@ -50,4 +51,6 @@ interface StudyMetadataStore {
 	 * @throws CriticalException
 	 */
 	public function getStudyTag(): string;
+
+	public function isUsingFallback(): bool;
 }

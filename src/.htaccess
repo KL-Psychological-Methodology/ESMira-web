@@ -3,6 +3,9 @@ php_value upload_max_filesize 300M
 RewriteEngine On
 
 
+# to fallback study		www.example.com/1234-KEY-f:FALLBACK
+#RewriteRule ^(\d+)-([a-zA-Z][a-zA-Z0-9]+)-f:([0-9a-zA-Z+/=]+)$ index.php?key=$2#fallbackAppInstall,id:$1,fromUrl:$3 [NC,L,QSA]
+
 # to study				www.example.com/1234
 RewriteRule ^(\d+)$ index.php?id=$1 [NC,L,QSA]
 
@@ -21,6 +24,12 @@ RewriteRule ^app-([a-zA-Z][a-zA-Z0-9]+)$ index.php?key=$1&app_install [NC,L,QSA]
 
 # to app instructions	www.example.com/app-1234-KEY
 RewriteRule ^app-(\d+)-([a-zA-Z][a-zA-Z0-9]+)$ index.php?id=$1&key=$2&app_install [NC,L,QSA]
+
+# to fallback app instructions www.example.com/fallback-1234-FaLlBaCc=
+RewriteRule ^fallback-(\d+)-([a-zA-Z0-9+\/=]+)$ index.php?id=$1&from_url=$2 [NC,L,QSA]
+
+# to fallback app instructions www.example.com/fallback-1234-KEY-FaLlBaCc=
+RewriteRule ^fallback-(\d+)-([a-zA-Z][a-zA-Z0-9]+)-([a-zA-Z0-9+\/=]+)$ index.php?id=$1&key=$2&from_url=$3 [NC,L,QSA]
 
 
 # to questionnaire		www.example.com/survey-12345
