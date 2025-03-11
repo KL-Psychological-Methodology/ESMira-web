@@ -96,17 +96,41 @@ export class Content extends SectionContent {
 		</div>
 	}
 
+	private getPublishedView(): Vnode<any, any> {
+		const study = this.getStudyOrThrow()
+		return <div class="center">
+			<div>
+				<label class="noTitle noDesc">
+					<input type="radio" name="published" checked={!study.published.get()} onchange={this.changePublishedState.bind(this, false, false)} />
+					{Lang.get("published_not")}
+				</label>
+			</div>
+			<div>
+				<label class="noTitle noDesc">
+					<input type="radio" name="published" checked={study.published.get() && !study.studyOver.get()} onchange={this.changePublishedState.bind(this, true, false)} />
+					{Lang.get("published")}
+				</label>
+			</div>
+			<div>
+				<label class="noTitle noDesc">
+					<input type="radio" name="published" checked={study.published.get() && study.studyOver.get()} onchange={this.changePublishedState.bind(this, true, true)} />
+					{Lang.get("study_over")}
+				</label>
+			</div>
+		</div>
+	}
+
+	private changePublishedState(published: boolean, over: boolean): void {
+		const study = this.getStudyOrThrow()
+		study.published.set(published)
+		study.studyOver.set(over)
+	}
 
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
 		return <div>
-			<div class="center">
-				<label>
-					<input type="checkbox" {...BindObservable(study.published)} />
-					<span class="highlight">{study.published.get() ? Lang.get("published") : Lang.get("published_not")}</span>
-				</label>
-			</div>
+			{this.getPublishedView()}
 			{(study.published.get() || study.accessKeys.get().length != 0) &&
 				<div>
 					{DashRow(
