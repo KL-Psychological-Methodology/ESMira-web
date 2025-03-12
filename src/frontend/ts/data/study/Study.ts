@@ -23,6 +23,7 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 	public publishedWeb = this.primitive<boolean>("publishedWeb", true)
 	public publishedAndroid = this.primitive<boolean>("publishedAndroid", true)
 	public publishedIOS = this.primitive<boolean>("publishedIOS", true)
+	public studyOver = this.primitive<boolean>("studyOver", false)
 	public sendMessagesAllowed = this.primitive<boolean>("sendMessagesAllowed", true)
 	public randomGroups = this.primitive<number>("randomGroups", 0)
 	public enableRewardSystem = this.primitive<boolean>("enableRewardSystem", false)
@@ -44,6 +45,7 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 	public contactEmail = this.translatable("contactEmail", "")
 	public rewardEmailContent = this.translatable("rewardEmailContent", "")
 	public rewardInstructions = this.translatable("rewardInstructions", "")
+	public postStudyNote = this.translatable("postStudyNote", "")
 
 	public questionnaires = this.objectArray("questionnaires", Questionnaire)
 

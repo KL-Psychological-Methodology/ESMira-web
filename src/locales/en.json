@@ -633,5 +633,8 @@
 	"outbound_fallback_tab": "Outgoing Connections",
 	"fallback_app_installation_instructions": "Fallback app installation instructions",
 	"maintenance": "Maintenance",
-	"rebuild_study_index": "Rebuild study index"
+	"rebuild_study_index": "Rebuild study index",
+	"study_over": "Study is over",
+	"study_over_message": "This study is no longer active.",
+	"post_study_note": "Post-study note (displayed on info pages after study is over)"
 }
