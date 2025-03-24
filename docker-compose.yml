@@ -1,6 +1,6 @@
 services:
   esmira:
-    image: jodlidev/esmira:main
+    image: jodlidev/esmira:latest
     restart: "unless-stopped"
     ports:
       - "80:80"
