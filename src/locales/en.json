@@ -606,7 +606,7 @@
 	"bookmarks": "Bookmarks",
 	"create_bookmark": "Bookmark this page",
 	"remove_bookmark": "Remove bookmark from this page",
-	"show_pagination": "Showe page numbering",
+	"show_pagination": "Show page numbering",
 	"show_skip_toast": "Display a message when pages are skipped",
 	"permissions_issue_fallback_tokens": "Privileges for creating fallback tokens",
 	"fallback_system": "Fallback System",
