@@ -626,5 +626,15 @@
     "fallback_ping": "Test připojení k záložnímu serveru",
     "fallback_full_synch": "Synchronizace všech studií",
     "outbound_fallback_token_info": "Toto je seznam všech ostatních serverů, které tento server může použít jako záložní pro studie.",
-    "study_use_fallback": "Použití záložního systému"
+    "study_use_fallback": "Použití záložního systému",
+    "maintenance": "Údržba",
+    "info_fallback_setup_token": "Níže najdete nový token pro nastavení záložního systému a adresu URL tohoto serveru. V dalším kroku je třeba obojí zadat do panelu správce na druhém serveru.",
+    "permission_fallback_tokens": "Záložní tokeny",
+    "fallback_app_installation_instructions": "Pokyny pro instalaci záložní aplikace",
+    "fallback_token_list": "Záložní tokeny",
+    "create_fallback_setup_token": "Vytvoření tokenu nouzového nastavení",
+    "confirm_delete_inbound_fallback_token": "Opravdu chcete odstranit záložní token pro '%s'?",
+    "add_fallback_token": "Přidání připojení",
+    "inbound_fallback_tab": "Příchozí připojení",
+    "outbound_fallback_tab": "Odchozí připojení"
 }
