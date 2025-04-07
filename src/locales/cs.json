@@ -604,5 +604,7 @@
     "create_bookmark": "Záložka této stránky",
     "remove_bookmark": "Odstranění záložky z této stránky",
     "error_study_not_found": "Požadovaná studie nebyla nalezena",
-    "input_ambient_light": "Okolní světlo"
+    "input_ambient_light": "Okolní světlo",
+    "show_pagination": "Zobrazte číslování stránek",
+    "input_battery_level": "Úroveň nabití baterie"
 }
