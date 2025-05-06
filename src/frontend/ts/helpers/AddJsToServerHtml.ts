@@ -36,7 +36,7 @@ export class AddJsToServerHtml {
 				}
 				break
 			case "qr":
-				const qrCodeUrl = createStudyUrl(this.getAccessKey(sectionContent), sectionContent.getStaticInt("id") ?? -1, true)
+				const qrCodeUrl = createStudyUrl(this.getAccessKey(sectionContent), sectionContent.getStaticInt("id") ?? -1, false)
 				this.qrUrl(view, qrCodeUrl)
 				break
 			case "directQr":
