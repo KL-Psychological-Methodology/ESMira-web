@@ -87,6 +87,7 @@ $classIndex = [
     'GetError' => 'backend\admin\features\adminPermission\GetError',
     'ChangeError' => 'backend\admin\features\adminPermission\ChangeError',
     'DeleteError' => 'backend\admin\features\adminPermission\DeleteError',
+	'ForwardErrorReport' => 'backend\admin\features\adminPermission\ForwardErrorReport',
     'ListAccounts' => 'backend\admin\features\adminPermission\ListAccounts',
     'CreateAccount' => 'backend\admin\features\adminPermission\CreateAccount',
     'DeleteAccount' => 'backend\admin\features\adminPermission\DeleteAccount',

@@ -636,5 +636,8 @@
 	"rebuild_study_index": "Rebuild study index",
 	"study_over": "Study is over",
 	"study_over_message": "This study is no longer active.",
-	"post_study_note": "Post-study note (displayed on info pages after study is over)"
+	"post_study_note": "Post-study note (displayed on info pages after study is over)",
+	"forward_error_report": "Forward error report",
+	"send_to": "Send to",
+	"additional_information": "Additional information"
 }
