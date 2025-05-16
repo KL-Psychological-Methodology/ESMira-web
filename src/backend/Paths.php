@@ -9,6 +9,8 @@ class Paths {
     const FOLDER_SERVER_BACKUP = DIR_BASE .'backup/';
     const FOLDER_EXTENSIONS = DIR_BASE . 'extensions/';
     const FILE_DATESET_EXTENSION = Paths::FOLDER_EXTENSIONS . 'datasetExtension.php';
+	const FILE_MERLIN_LOG_EXTENSION = Paths::FOLDER_EXTENSIONS . 'merlinLogExtension.php';
+	const FILE_MESSAGE_EXTENSION = Paths::FOLDER_EXTENSIONS . 'messageExtension.php';
     const FILE_SERVER_UPDATE = DIR_BASE .'update.zip';
     const FILE_DEFAULT_CONFIG = DIR_BASE . 'backend/defaults/configs.default.php';
     const FILENAME_VERSION = 'VERSION';

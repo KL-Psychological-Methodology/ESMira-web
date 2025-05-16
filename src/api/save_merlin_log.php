@@ -4,6 +4,7 @@ use backend\Main;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\JsonOutput;
+use backend\Paths;
 
 require_once dirname(__FILE__, 2) . '/backend/autoload.php';
 
@@ -57,3 +58,9 @@ try {
 }
 echo JsonOutput::successObj();
 
+ob_flush();
+flush();
+
+if (file_exists(Paths::FILE_MERLIN_LOG_EXTENSION)) {
+	require(Paths::FILE_MERLIN_LOG_EXTENSION);
+}
