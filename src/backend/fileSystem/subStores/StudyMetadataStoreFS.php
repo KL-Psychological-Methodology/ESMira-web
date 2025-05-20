@@ -59,7 +59,7 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
         $this->metadata =  [
             'version' => (int) ($study->version ?? 0),
             'published' => $study->published ?? false,
-            'studyOver' => $stud->studyOver ?? false,
+            'studyOver' => $study->studyOver ?? false,
             'hasQuestionnaires' => isset($study->questionnaires) && count($study->questionnaires),
             'title' => $study->title ?? 'Error',
             'accessKeys' => $study->accessKeys ?? [],

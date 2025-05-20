@@ -24,7 +24,8 @@ class GetStrippedStudyList extends IsLoggedIn {
 			'lastSavedBy' => $studyMetadataStore->getLastSavedBy(),
 			'lastSavedAt' => $studyMetadataStore->getLastSavedAt(),
 			'createdTimestamp' => $studyMetadataStore->getCreatedTimestamp(),
-			'studyTag' => $studyMetadataStore->getStudyTag()
+			'studyTag' => $studyMetadataStore->getStudyTag(),
+			'studyOver' => $studyMetadataStore->isOver(),
 		];
 	}
 	
