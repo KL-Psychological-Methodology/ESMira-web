@@ -640,5 +640,6 @@
 	"post_study_note": "Post-study note (displayed on info pages after study is over)",
 	"forward_error_report": "Forward error report",
 	"send_to": "Send to",
-	"additional_information": "Additional information"
+	"additional_information": "Additional information",
+	"ai_translation": "AI-generated translation"
 }

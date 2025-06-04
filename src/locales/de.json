@@ -640,5 +640,6 @@
 	"post_study_note": "Nachricht nach Studienende (wird auf Infoseiten angezeigt, nachdem Studie vorüber ist",
 	"forward_error_report": "Fehlerbericht weiterleiten",
 	"send_to": "Sende an",
-	"additional_information": "Zusätzliche Informationen"
+	"additional_information": "Zusätzliche Informationen",
+	"ai_translation": "KI-generierte Übersetzung"
 }
