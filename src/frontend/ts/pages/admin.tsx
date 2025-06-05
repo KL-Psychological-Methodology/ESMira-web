@@ -115,7 +115,7 @@ export class Content extends SectionContent {
 						href: this.getUrl("allStudies:msgs")
 					}),
 
-					tools.permissions.read &&
+					(tools.permissions.read || tools.permissions.readSimplified) &&
 					DashElement(null, {
 						highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
 						template: { title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },

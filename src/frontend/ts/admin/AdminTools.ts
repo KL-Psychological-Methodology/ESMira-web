@@ -40,7 +40,7 @@ export class AdminTools implements AdminToolsInterface {
 
 		if (data.isAdmin) {
 			this.isAdmin = true
-			this.permissions = { publish: [], msg: [], read: [], write: [] }
+			this.permissions = { publish: [], msg: [], read: [], readSimplified: [], write: [] }
 			this.freeDiskSpace = data.freeDiskSpace
 			this.totalDiskSpace = data.totalDiskSpace
 		}

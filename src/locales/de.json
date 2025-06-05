@@ -60,6 +60,7 @@
 	"permissions_msg": "Nachrichten lesen / schreiben",
 	"permissions_publish": "Studie veröffentlichen",
 	"permissions_read": "Daten lesen",
+	"permissions_read_simplified": "Daten lesen (vereinfachte Ansicht)",
 	"permissions_write": "Studie verändern",
 	"charts_public": "Diagramme über alle Teilnehmende",
 	"charts_personal": "Persönliche Diagramme",

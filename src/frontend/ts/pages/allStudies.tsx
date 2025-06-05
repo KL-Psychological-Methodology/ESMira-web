@@ -124,7 +124,7 @@ export class Content extends StudiesContent {
 		const studies = this.section.siteData.studyLoader.getSortedStudyList(unsortedStudies)
 		switch (this.section.sectionValue) {
 			case "data":
-				this.studies = studies.filter((study) => this.hasPermission("read", study.id.get()))
+				this.studies = studies.filter((study) => (this.hasPermission("read", study.id.get())) || this.hasPermission("readSimplified", study.id.get()))
 				break
 			case "edit":
 				this.studies = studies.filter((study) => this.hasPermission("write", study.id.get()))
