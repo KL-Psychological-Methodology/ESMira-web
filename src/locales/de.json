@@ -636,9 +636,11 @@
 	"rebuild_study_index": "Studienindex neu generieren",
 	"study_over": "Studie ist vorbei",
 	"study_over_message": "Diese Studie ist nicht mehr aktiv.",
-	"concluded_studies": "Abeschlossene Studien",
 	"post_study_note": "Nachricht nach Studienende (wird auf Infoseiten angezeigt, nachdem Studie vorüber ist",
 	"forward_error_report": "Fehlerbericht weiterleiten",
 	"send_to": "Sende an",
-	"additional_information": "Zusätzliche Informationen"
+	"additional_information": "Zusätzliche Informationen",
+	"axis_use_y_threshold": "Verwende y Schwellenwert",
+	"axis_y_thershold_value": "Schwellenwert",
+	"axis_y_threshold_color": "Schwellenwertfarbe"
 }
