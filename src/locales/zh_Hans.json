@@ -391,7 +391,7 @@
     "state_loading_file": "正在加载 %s…",
     "state_loading": "正在加载…",
     "state_loading_entryNum": "已加载 %d 条数据…",
-    "statistics": "统计",
+    "statistics": "统计数据",
     "statisticsChartType": "图表类型",
     "statisticsChart_line": "折线图",
     "statisticsChart_line_filled": "填充折线图",
