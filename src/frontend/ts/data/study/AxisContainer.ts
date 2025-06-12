@@ -11,6 +11,7 @@ export class AxisContainer extends ObservableStructure {
 	public threshold = this.primitive<number>("threshold", 0)
 	public thresholdColor = this.primitive<string>("thresholdColor", "#dc4e9d")
 	public useThreshold = this.primitive<boolean>("useThreshold", false)
+	public useThresholdOnClient = this.primitive<boolean>("useThresholdOnClient", true)
 
 	public label = this.translatable("label", "")
 

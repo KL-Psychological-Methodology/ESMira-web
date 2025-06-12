@@ -643,5 +643,6 @@
 	"additional_information": "Additional information",
 	"axis_use_y_threshold": "Use y threshold",
 	"axis_y_thershold_value": "threshold value",
-	"axis_y_threshold_color": "threshold color"
+	"axis_y_threshold_color": "threshold color",
+	"axis_use_threshold_on_client": "Use threshold in ESMira application"
 }

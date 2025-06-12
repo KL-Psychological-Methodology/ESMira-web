@@ -642,5 +642,6 @@
 	"additional_information": "Zusätzliche Informationen",
 	"axis_use_y_threshold": "Verwende y Schwellenwert",
 	"axis_y_thershold_value": "Schwellenwert",
-	"axis_y_threshold_color": "Schwellenwertfarbe"
+	"axis_y_threshold_color": "Schwellenwertfarbe",
+	"axis_use_threshold_on_client": "Verwende Schwellenwert in ESMira App"
 }

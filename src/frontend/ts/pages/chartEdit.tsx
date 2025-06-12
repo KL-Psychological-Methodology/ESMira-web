@@ -347,6 +347,12 @@ export class Content extends ChartEditSectionContent {
 													<small>{Lang.get("axis_y_threshold_color")}</small>
 													<input type="color" {...BindObservable(container.thresholdColor)} />
 												</label>
+
+												<label class="horizontal">
+													<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
+													<span class="horizontal smallText">{Lang.get("axis_use_threshold_on_client")}</span>
+												</label>
+
 											</div>}
 
 
