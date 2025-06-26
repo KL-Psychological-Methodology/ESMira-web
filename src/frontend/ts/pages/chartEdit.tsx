@@ -331,29 +331,32 @@ export class Content extends ChartEditSectionContent {
 											}
 											{this.getAxisView(study, Lang.get("axis_y"), container.yAxis, studyVariables)}
 
-											<label class="horizontal">
-												<input type="checkbox" {...BindObservable(container.useThreshold)} />
-												<span class="horizontal smallText">{Lang.get("axis_use_y_threshold")}</span>
-											</label>
-
-											{container.useThreshold.get() && <div>
-
-												<label class="horizontal">
-													<small>{Lang.get("axis_y_thershold_value")}</small>
-													<input type="number" {...BindObservable(container.threshold)} />
+											{chart.chartType.get() != STATISTICS_CHARTTYPES_SCATTER && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE &&
+												<div>											<label class="horizontal">
+													<input type="checkbox" {...BindObservable(container.useThreshold)} />
+													<span class="horizontal smallText">{Lang.get("axis_use_y_threshold")}</span>
 												</label>
 
-												<label class="horizontal">
-													<small>{Lang.get("axis_y_threshold_color")}</small>
-													<input type="color" {...BindObservable(container.thresholdColor)} />
-												</label>
+													{container.useThreshold.get() && <div>
 
-												<label class="horizontal">
-													<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
-													<span class="horizontal smallText">{Lang.get("axis_use_threshold_on_client")}</span>
-												</label>
+														<label class="horizontal">
+															<small>{Lang.get("axis_y_thershold_value")}</small>
+															<input type="number" {...BindObservable(container.threshold)} />
+														</label>
 
-											</div>}
+														<label class="horizontal">
+															<small>{Lang.get("axis_y_threshold_color")}</small>
+															<input type="color" {...BindObservable(container.thresholdColor)} />
+														</label>
+
+														<label class="horizontal">
+															<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
+															<span class="horizontal smallText">{Lang.get("axis_use_threshold_on_client")}</span>
+														</label>
+
+													</div>}
+
+												</div>}
 
 
 										</div>
@@ -371,7 +374,7 @@ export class Content extends ChartEditSectionContent {
 		const conditionOptions = this.getConditionVariables(study, axis.variableName.get())
 
 		return <div>
-			<div class="vertical">
+			< div class="vertical" >
 				<label class="horizontal spacingRight">
 					<small>{title}</small>
 					<select {...BindObservable(axis.variableName)}>
@@ -385,7 +388,7 @@ export class Content extends ChartEditSectionContent {
 						{conditionOptions.map((option) => <option>{option}</option>)}
 					</select>
 				</label>
-			</div>
+			</div >
 			<table>
 				{axis.conditions.get().map((condition, index) =>
 					condition.key.get() &&
@@ -439,6 +442,6 @@ export class Content extends ChartEditSectionContent {
 					</tr>
 				)}
 			</table>
-		</div>
+		</div >
 	}
 }
