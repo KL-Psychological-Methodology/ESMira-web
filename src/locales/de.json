@@ -60,6 +60,7 @@
 	"permissions_msg": "Nachrichten lesen / schreiben",
 	"permissions_publish": "Studie veröffentlichen",
 	"permissions_read": "Daten lesen",
+	"permissions_read_simplified": "Daten lesen (vereinfachte Ansicht)",
 	"permissions_write": "Studie verändern",
 	"charts_public": "Diagramme über alle Teilnehmende",
 	"charts_personal": "Persönliche Diagramme",
@@ -644,5 +645,6 @@
 	"axis_use_y_threshold": "Verwende y Schwellenwert",
 	"axis_y_thershold_value": "Schwellenwert",
 	"axis_y_threshold_color": "Schwellenwertfarbe",
-	"axis_use_threshold_on_client": "Verwende Schwellenwert in ESMira App"
+	"axis_use_threshold_on_client": "Verwende Schwellenwert in ESMira App",
+	"ai_translation": "KI-generierte Übersetzung"
 }

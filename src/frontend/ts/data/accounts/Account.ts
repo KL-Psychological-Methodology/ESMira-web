@@ -13,6 +13,7 @@ export class Account extends ObservableStructure {
 	public write = this.primitiveArray<number>("write", [])
 	public msg = this.primitiveArray<number>("msg", [])
 	public publish = this.primitiveArray<number>("publish", [])
+	public readSimplified = this.primitiveArray<number>("readSimplified", [])
 
 	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null = null, _key?: string, newLang?: string) {
 		super(data, parent, data["accountName"] as string, newLang)

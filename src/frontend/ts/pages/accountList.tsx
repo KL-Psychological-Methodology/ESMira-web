@@ -48,6 +48,7 @@ export class Content extends SectionContent {
 						<th>{Lang.get("permission_write")}</th>
 						<th>{Lang.get("permission_msg")}</th>
 						<th>{Lang.get("permission_read")}</th>
+						<th>{Lang.get("permissions_read_simplified")}</th>
 						<th>{Lang.get("permission_fallback_tokens")}</th>
 						<th></th>
 					</tr>
@@ -77,6 +78,9 @@ export class Content extends SectionContent {
 							</td>
 							<td>
 								<span>{account.admin.get() ? m.trust("&#10004;") : account.read.get().length}</span>
+							</td>
+							<td>
+								<span>{account.admin.get() ? "" : account.readSimplified.get().length}</span>
 							</td>
 							<td>
 								{(account.admin.get() || account.issueFallbackToken.get()) &&
