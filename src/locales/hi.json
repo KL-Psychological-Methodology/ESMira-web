@@ -337,7 +337,7 @@
     "randomize_page": "आइटम क्रम यादृच्छिक बनाएं",
     "referer_with_count": "संदर्भकर्ता (%d)",
     "redo": "फिर करें",
-    "reload": "पुनः लोड करें",
+    "reload": "दोबारा लोड करें",
     "remember_me": "मुझे याद रखें",
     "remember_me_token": "मुझे याद रखें टोकन",
     "repeat_every": "हर बार दोहराएं",
@@ -462,7 +462,7 @@
     "used_study_version": "प्रयुक्त अध्ययन संस्करण",
     "userAgent_with_count": "यूज़र एजेंट (%d)",
     "userEditable_desc": "दिन के समय उपयोगकर्ता द्वारा बदले जा सकते हैं",
-    "user_id": "उपयोगकर्ता आईडी",
+    "user_id": "यूसर आईडी",
     "username": "उपयोगकर्ता नाम",
     "value": "मान",
     "values_in_percent": "प्रतिशत में गणना",
@@ -633,5 +633,5 @@
     "maintenance": "रखरखाव",
     "rebuild_study_index": "अध्ययन सूची को पुनः निर्मित करें",
     "info_required": "* इनपुट आवश्यक है",
-    "delete_study": "अध्ययन हटाएँ"
+    "delete_study": "अध्ययन मिटाएँ"
 }
