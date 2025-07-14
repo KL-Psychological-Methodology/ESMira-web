@@ -68,7 +68,8 @@ class Main {
                 case 'fr':
                 case 'hi':
                 case 'it':
-                case 'nb':
+				case 'nb_NO':
+				case 'pt':
                 case 'tl':
                 case 'uk':
                 case 'zk':
