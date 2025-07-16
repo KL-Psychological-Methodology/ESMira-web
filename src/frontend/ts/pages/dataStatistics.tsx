@@ -31,7 +31,7 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.section.getStaticInt("id") || 0] || false
-		const useSimplified = !this.hasPermission('read', this.section.getStaticInt("id") || 0) || true
+		const useSimplified = !this.hasPermission('read', this.section.getStaticInt("id") || 0)
 		if (useSimplified) {
 			return <div>
 				<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
