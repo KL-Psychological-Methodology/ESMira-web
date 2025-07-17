@@ -2,7 +2,7 @@ import m, { Vnode } from "mithril";
 import { Input, InputResponseType } from "../data/study/Input";
 import { Study } from "../data/study/Study";
 import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../widgets/BindObservable";
+import { BindObservable, ConstrainedNumberTransformer } from "../widgets/BindObservable";
 import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { DragContainer } from "../widgets/DragContainer";
 import { DashRow } from "../widgets/DashRow";
@@ -130,7 +130,7 @@ export class InputOptionDesigner {
 				<div>
 					<label class="vertical noDesc">
 						<small>{Lang.get("timeout")}</small>
-						<input type="text" {...BindObservable(this.input.timeoutSec)} />
+						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("seconds")}</small>
 					</label>
 					<label class="vertical noDesc">
@@ -275,7 +275,7 @@ export class InputOptionDesigner {
 				<div>
 					<label class="spacingTop">
 						<small>{Lang.get("input_location_resolution")}</small>
-						<input type="number" {...BindObservable(this.input.resolution)} />
+						<input type="number" {...BindObservable(this.input.resolution, new ConstrainedNumberTransformer(0, 15))} />
 						<small>{Lang.get("input_location_resolution_desc")}</small>
 					</label>
 				</div>
@@ -304,7 +304,7 @@ export class InputOptionDesigner {
 				<div>
 					<label class="spacingTop">
 						<small>{Lang.get("image_input_quality")}</small>
-						<input type="number" {...BindObservable(this.input.quality)} />
+						<input type="number" {...BindObservable(this.input.quality, new ConstrainedNumberTransformer(0, 100))} />
 						<small>{Lang.get("image_input_quality_desc")}</small>
 					</label>
 				</div>
@@ -363,7 +363,7 @@ export class InputOptionDesigner {
 					{this.inputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), "", "number")}
 					<label class="spacingTop">
 						<small>{Lang.get("max_value")}</small>
-						<input type="number" {...BindObservable(this.input.maxValue)} />
+						<input type="number" {...BindObservable(this.input.maxValue, new ConstrainedNumberTransformer(1, undefined))} />
 						<small>{Lang.get("max_value_vas_desc")}</small>
 					</label>
 				</div>,
