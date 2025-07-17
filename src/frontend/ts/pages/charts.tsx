@@ -1,25 +1,25 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
-import {DragContainer} from "../widgets/DragContainer";
-import {ObservableStructureDataType} from "../observable/ObservableStructure";
-import {ChartData} from "../data/study/ChartData";
-import {Section} from "../site/Section";
-import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
-import {BtnAdd, BtnCopy, BtnTrash} from "../widgets/BtnWidgets";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { TitleRow } from "../widgets/TitleRow";
+import { DragContainer } from "../widgets/DragContainer";
+import { ObservableStructureDataType } from "../observable/ObservableStructure";
+import { ChartData } from "../data/study/ChartData";
+import { Section } from "../site/Section";
+import { ArrayInterface } from "../observable/interfaces/ArrayInterface";
+import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
 		return [section.getStudyPromise()]
 	}
-	
+
 	public title(): string {
 		return Lang.get("create_charts")
 	}
-	
+
 	private removeChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, index: number): void {
-		if(!confirm())
+		if (!confirm())
 			return
 		list.remove(index)
 		window.location.hash = `${this.section.getHash(this.section.depth)}`
@@ -31,15 +31,15 @@ export class Content extends SectionContent {
 	private copyChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, chart: ChartData, index: number): void {
 		list.addCopy(chart, index)
 	}
-	
+
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
 		const publicCharts = study.publicStatistics.charts
 		const personalCharts = study.personalStatistics.charts
-		
-		if(!study.questionnaires.get().length)
+
+		if (!study.questionnaires.get().length)
 			return <div class="center spacingTop">{Lang.get("info_no_questionnaires_created")}</div>
-		
+
 		return <div>
 			{TitleRow(Lang.getWithColon("charts_public"))}
 			<div class="listParent">
@@ -59,10 +59,10 @@ export class Content extends SectionContent {
 						)}
 					</div>
 				)}
-				<br/>
-				{BtnAdd(this.addChart.bind(this, publicCharts, `chartEdit:public,chartI:${publicCharts.get().length}`),  Lang.get("add"))}
+				<br />
+				{BtnAdd(this.addChart.bind(this, publicCharts, `chartEdit:public,chartI:${publicCharts.get().length}`), Lang.get("add"))}
 			</div>
-			
+
 			{TitleRow(Lang.getWithColon("charts_personal"))}
 			<div class="listParent">
 				{DragContainer((dragTools) =>
@@ -74,15 +74,15 @@ export class Content extends SectionContent {
 									{BtnTrash(this.removeChart.bind(this, personalCharts, index))}
 									{BtnCopy(this.copyChart.bind(this, publicCharts, chart, index))}
 									<a href={this.getUrl(`chartEdit:personal,chartI:${index}`)}>
-										<span>{chart.title.get()}</span>
+										<span>{chart.title.get() !== "" ? chart.title.get() : Lang.get("unnamed_chart")}</span>
 									</a>
 								</div>
 							)
 						)}
 					</div>
 				)}
-				<br/>
-				{BtnAdd(this.addChart.bind(this, personalCharts, `chartEdit:personal,chartI:${personalCharts.get().length}`),  Lang.get("add"))}
+				<br />
+				{BtnAdd(this.addChart.bind(this, personalCharts, `chartEdit:personal,chartI:${personalCharts.get().length}`), Lang.get("add"))}
 			</div>
 		</div>
 	}

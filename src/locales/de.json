@@ -646,5 +646,6 @@
 	"axis_y_thershold_value": "Schwellenwert",
 	"axis_y_threshold_color": "Schwellenwertfarbe",
 	"axis_use_threshold_on_client": "Verwende Schwellenwert in ESMira App",
-	"ai_translation": "KI-generierte Übersetzung"
+	"ai_translation": "KI-generierte Übersetzung",
+	"unnamed_chart": "<Unbenanntes Diagramm>"
 }
