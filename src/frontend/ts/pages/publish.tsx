@@ -199,7 +199,8 @@ export class Content extends SectionContent {
 						icon: m.trust(downloadSvg),
 						title: Lang.get("download_source_for_publication")
 					},
-					href: window.URL.createObjectURL(new Blob([JSON.stringify(study.createJson())], { type: 'text/json' }))
+					href: window.URL.createObjectURL(new Blob([JSON.stringify(study.createJson())], { type: 'text/json' })),
+					downloadHref: `${study.title.get()}.json`
 				})
 			)}
 		</div>
