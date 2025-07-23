@@ -1,6 +1,4 @@
-import { Title } from "chart.js";
 import m, { Vnode } from "mithril";
-import { OutputFileSystem } from "webpack";
 import { getBaseUrl } from "../constants/methods";
 import { FILE_ADMIN } from "../constants/urls";
 import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
@@ -18,6 +16,7 @@ import { DragContainer } from "../widgets/DragContainer";
 import { TabBar } from "../widgets/TabBar";
 import { TitleRow } from "../widgets/TitleRow";
 
+// noinspection JSUnusedGlobalSymbols
 export class Content extends SectionContent {
 	private inboundTokens: Map<string, InboundFallbackTokenInfo[]> = new Map()
 	private outboundTokenUrls: ObservableArray<ObservableStructureDataType, OutboundFallbackToken>
@@ -77,8 +76,7 @@ export class Content extends SectionContent {
 			"post",
 			""
 		)
-		const token: string = response[0];
-		this.recentToken = token
+		this.recentToken = response[0]
 		await this.reloadInboundTokenList()
 	}
 
