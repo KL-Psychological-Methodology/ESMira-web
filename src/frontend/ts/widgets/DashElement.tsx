@@ -15,6 +15,7 @@ export type DashViewOptions = {
 	disabled?: boolean
 	onclick?: (e: MouseEvent) => void
 	href?: string
+	downloadHref?: string
 	showAsClickable?: boolean
 	floating?: boolean
 	floatingRight?: boolean
@@ -64,7 +65,7 @@ function DashElementView(options: DashViewOptions): Vnode<any, any> {
 		view = <div class="highlight">Missing Dash Information</div>
 	
 	if(options.href) {
-		return <a target={options.href.startsWith("http") ? "_blank" : ""} class={`${classString} dashLink`} href={options.href}>{view}</a>
+		return <a target={options.href.startsWith("http") ? "_blank" : ""} class={`${classString} dashLink`} href={options.href} download={options ? options.downloadHref : ""}>{view}</a>
 	}
 	else if(options.onclick)
 		return <a class={`${classString} dashLink`} onclick={options.onclick}>{view}</a>
