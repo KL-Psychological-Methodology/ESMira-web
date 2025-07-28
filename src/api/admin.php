@@ -101,7 +101,8 @@ $classIndex = [
     'SynchAllStudiesToFallback' => 'backend\admin\features\adminPermission\SynchAllStudiesToFallback',
     'DownloadUpdate' => 'backend\admin\features\adminPermission\DownloadUpdate',
     'DoUpdate' => 'backend\admin\features\adminPermission\DoUpdate',
-    'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
+    'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion',
+	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //to allow updates from versions before 3.0.0
 ];
 
 $type = $_GET['type'];
