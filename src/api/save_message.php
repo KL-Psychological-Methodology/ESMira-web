@@ -4,6 +4,7 @@ use backend\exceptions\CriticalException;
 use backend\Main;
 use backend\Configs;
 use backend\JsonOutput;
+use backend\Paths;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
@@ -63,3 +64,10 @@ catch(Throwable $e) {
 	return;
 }
 echo JsonOutput::successObj();
+
+ob_flush();
+flush();
+
+if (file_exists(Paths::FILE_MESSAGE_EXTENSION)) {
+	require(Paths::FILE_MESSAGE_EXTENSION);
+}

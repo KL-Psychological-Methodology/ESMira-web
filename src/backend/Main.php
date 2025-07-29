@@ -31,7 +31,7 @@ class Main {
 
     static function setHeader($header) {
         if (IS_TEST_INSTANCE)
-        return;
+            return;
         header($header);
     }
 
@@ -60,13 +60,19 @@ class Main {
 
         if ($limitLang) {
             switch ($lang) {
-                case 'de':
-                case 'en':
-                case 'it':
-                case 'uk':
-                case 'tl':
-                case 'es':
                 case 'cs':
+                case 'de':
+                case 'el':
+                case 'en':
+                case 'es':
+                case 'fr':
+                case 'hi':
+                case 'it':
+				case 'nb_NO':
+				case 'pt':
+                case 'tl':
+                case 'uk':
+                case 'zk':
                     return $lang;
                 default:
                     return 'en';
@@ -99,7 +105,7 @@ class Main {
             $expires = time() + 15552000;
         $_COOKIE[$key] = $value;
         if (IS_TEST_INSTANCE)
-        return;
+            return;
         if (version_compare(phpversion(), '7.3', '<'))
             setcookie($key, $value, $expires);
         else setcookie($key, $value, ['expires' => $expires, 'samesite' => 'Strict']);

@@ -191,6 +191,7 @@ export class Content extends SectionContent {
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_write"), "write")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_msg"), "msg")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_read"), "read")}
+			{this.getListPermissionView(account, Lang.getWithColon("permissions_read_simplified"), "readSimplified")}
 		</div>
 	}
 

@@ -128,7 +128,10 @@ abstract class UserDataStore {
 		foreach($study->questionnaires as $questionnaire) {
 			$qId = $questionnaire->internalId;
 			$min = $questionnaire->minDataSetsForReward ?? 0;
-			if($min != 0 && ($userdata->questionnaireDataSetCount[$qId] ?? 0) < $min) {
+			$groups = $questionnaire->limitToGroup ?? 0;
+			$userCanFillOut = $groups == 0 || $groups == $userdata->group; // If a user cannot fill out a questionnaire it automatically counts as fulfilled
+			$minimumReached = $min == 0 || ($userdata->questionnaireDataSetCount[$qId] ?? 0) >= $min;
+			if($userCanFillOut && !$minimumReached) {
 				$unfulfilledQuestionnaires = true;
 				$fulfilledQuestionnaires[$qId] = false;
 			}

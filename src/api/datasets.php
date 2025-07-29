@@ -45,6 +45,9 @@ try {
     return;
 }
 
+ob_flush();
+flush();
+
 if (file_exists(Paths::FILE_DATESET_EXTENSION)) {
-    require(Paths::FILE_DATESET_EXTENSION);
+	require(Paths::FILE_DATESET_EXTENSION);
 }

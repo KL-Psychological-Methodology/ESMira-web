@@ -1,8 +1,8 @@
-import {SectionAlternative, SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
-import {Lang} from "../singletons/Lang";
+import { SectionAlternative, SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../widgets/DashRow";
+import { DashElement } from "../widgets/DashElement";
+import { Lang } from "../singletons/Lang";
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import calculateSvg from "../../imgs/dashIcons/calculate.svg?raw"
 import summarySvg from "../../imgs/dashIcons/summary.svg?raw"
@@ -11,8 +11,8 @@ import webAccessSvg from "../../imgs/devices/web.svg?raw"
 import publicStatisticsSvg from "../../imgs/dashIcons/publicStatistics.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import merlinLogsSvg from "../../imgs/dashIcons/merlinLogs.svg?raw"
-import {Section} from "../site/Section";
-import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
+import { Section } from "../site/Section";
+import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -21,16 +21,38 @@ export class Content extends SectionContent {
 	public title(): string {
 		return Lang.get("data")
 	}
-	
+
 	public hasAlternatives(): boolean {
 		return true
 	}
 	public getAlternatives(): SectionAlternative[] | null {
 		return SharedUrlAlternatives.studyAlternatives(this, "data")
 	}
-	
+
 	public getView(): Vnode<any, any> {
 		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.section.getStaticInt("id") || 0] || false
+		const useSimplified = !this.hasPermission('read', this.section.getStaticInt("id") || 0)
+		if (useSimplified) {
+			return <div>
+				<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
+				{DashRow(
+					DashElement(null, {
+						template: {
+							title: Lang.get("participants"),
+							icon: m.trust(participantsSvg)
+						},
+						href: this.getUrl("statsParticipants")
+					}),
+					DashElement(null, {
+						template: {
+							title: Lang.get("public_statistics"),
+							icon: m.trust(publicStatisticsSvg)
+						},
+						href: this.getUrl("publicStatistics")
+					})
+				)}
+			</div>
+		}
 		return <div>
 			<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
 			{DashRow(
@@ -91,7 +113,7 @@ export class Content extends SectionContent {
 					},
 					href: this.getUrl("rewardCodes")
 				})
-				)
+			)
 			}</div>
 	}
 }

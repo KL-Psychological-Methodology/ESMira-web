@@ -5,6 +5,7 @@ export const DATA_MAIN_KEYS = [
 	"appVersion",
 	"studyId",
 	"studyVersion",
+	"studyLang",
 	"questionnaireName",
 	"eventType",
 	"timezone",
