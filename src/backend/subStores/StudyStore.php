@@ -33,6 +33,8 @@ interface StudyStore extends BaseStudyStore
 	 */
 	public function emptyStudy(int $studyId, array $questionnaireKeys);
 
+	public function deleteBackups(int $studyId);
+
 	/**
 	 * @throws CriticalException
 	 */
