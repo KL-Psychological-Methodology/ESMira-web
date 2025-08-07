@@ -63,6 +63,7 @@ $classIndex = [
     'FreezeStudy' => 'backend\admin\features\writePermission\FreezeStudy',
     'GetNewId' => 'backend\admin\features\writePermission\GetNewId',
     'EmptyData' => 'backend\admin\features\writePermission\EmptyData',
+    'DeleteBackups' => 'backend\admin\features\writePermission\DeleteBackups',
     'CheckChanged' => 'backend\admin\features\writePermission\CheckChanged',
     'BackupStudy' => 'backend\admin\features\writePermission\BackupStudy',
     'SaveStudy' => 'backend\admin\features\writePermission\SaveStudy',
