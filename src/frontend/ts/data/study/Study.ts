@@ -25,7 +25,7 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 	public publishedIOS = this.primitive<boolean>("publishedIOS", true)
 	public studyOver = this.primitive<boolean>("studyOver", false)
 	public sendMessagesAllowed = this.primitive<boolean>("sendMessagesAllowed", true)
-	public randomGroups = this.primitive<number>("randomGroups", 0)
+	public randomGroups = this.primitive<number>("randomGroups", 1)
 	public enableRewardSystem = this.primitive<boolean>("enableRewardSystem", false)
 	public rewardVisibleAfterDays = this.primitive<number>("rewardVisibleAfterDays", 0)
 	public defaultLang = this.primitive<string>("defaultLang", "en")
@@ -97,6 +97,16 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 			}
 		})
 		return hasMedia
+	}
+
+	public hasMerlinScripts(): boolean {
+		return this.questionnaires.get().some((questionnaire) => {
+			questionnaire.endScriptBlock.get() !== "" || questionnaire.pages.get().some((page) => {
+				page.relevance.get() !== "" || page.inputs.get().some((input) => {
+					input.relevance.get() !== "" || input.textScript.get() !== ""
+				})
+			})
+		})
 	}
 
 	public getInputNamesPerType(): Record<InputMediaTypes, string[]> {

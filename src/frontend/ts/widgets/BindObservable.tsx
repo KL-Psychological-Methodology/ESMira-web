@@ -27,15 +27,20 @@ const OptimusPrimeNumberTransformer: Transformer = {
 export class ConstrainedNumberTransformer implements Transformer {
 	private readonly min?: number;
 	private readonly max?: number;
+	private readonly allowEmpty: boolean;
 
-	constructor(min?: number, max?: number) {
+	constructor(min?: number, max?: number, allowEmpty: boolean = false) {
 		this.min = min;
 		this.max = max;
+		this.allowEmpty = allowEmpty
 	}
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return value;
 	}
 	public toObs(value: string): PrimitiveType {
+		if (this.allowEmpty && value === "") {
+			return "";
+		}
 		let num = parseInt(value) || 0;
 		if (typeof this.min === "number") num = Math.max(this.min, num);
 		if (typeof this.max === "number") num = Math.min(this.max, num);

@@ -52,7 +52,7 @@ export class Content extends SectionContent {
 									{BtnTrash(this.removeChart.bind(this, publicCharts, index))}
 									{BtnCopy(this.copyChart.bind(this, publicCharts, chart, index))}
 									<a href={this.getUrl(`chartEdit:public,chartI:${index}`)}>
-										<span>{chart.title.get()}</span>
+										<span>{chart.title.get() !== "" ? chart.title.get() : Lang.get("unnamed_chart")}</span>
 									</a>
 								</div>
 							)

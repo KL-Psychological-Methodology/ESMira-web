@@ -5,6 +5,7 @@ import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { BindObservable } from "../widgets/BindObservable";
 import { RichText } from "../widgets/RichText";
 import { Section } from "../site/Section";
+import { RegexTextInput } from "../widgets/RegexTextInput";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -29,12 +30,13 @@ export class Content extends SectionContent {
 				{ObservableLangChooser(study)}
 			</label>
 
-			<label>
-				<small>{Lang.getWithColon("contactEmail")}</small>
-				<input type="text" {...BindObservable(study.contactEmail)} />
-				{ObservableLangChooser(study)}
-			</label>
-
+			{
+				RegexTextInput(
+					Lang.getWithColon("contactEmail"),
+					study.contactEmail,
+					/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/,
+					Lang.get("validator_warning_email"))
+			}
 
 			<div class="fakeLabel spacingTop line">
 				<small>{Lang.getWithColon("description")}</small>

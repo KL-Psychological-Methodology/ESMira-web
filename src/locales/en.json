@@ -31,6 +31,7 @@
 	"allow_incoming_messages": "Allow participants to write messages",
 	"Android": "Android",
 	"apply_changes": "Apply changes",
+	"app": "Smartphone App",
 	"app_type": "App type",
 	"app_type_per_questionnaire": "App type for questionnaires",
 	"app_version": "App version",
@@ -113,6 +114,7 @@
 	"confirm_backup": "Do you want to back all data from study %s?",
 	"confirm_delete_account": "Do you really want to delete the user '%s' ?",
 	"confirm_delete_data": "Do you want to remove all data from '%s'?\nThey can not be restored!",
+	"confirm_delete_backups": "Do you want to remove all backups from '%s'?\nThey cannot be restored!",
 	"confirm_delete_study": "Do you really want to delete the study '%s'?\n\nALL ITS DATA WILL BE DELETED AS WELL!",
 	"confirm_distribute_message": "The following message will be sent:\n\n%s",
 	"confirm_delete_message": "Delete message?",
@@ -173,6 +175,7 @@
 	"empty_data": "Empty data",
 	"empty_questionnaire": "Empty questionnaire",
 	"empty_study": "Empty study",
+	"empty_backups": "Delete backups",
 	"endDate": "End date",
 	"endTime": "End time",
 	"error_accessKey_wrong_format": "Access keys need to start with a character and can only contain characters and numbers.",
@@ -647,5 +650,10 @@
 	"axis_y_threshold_color": "threshold color",
 	"axis_use_threshold_on_client": "Use threshold in ESMira application",
 	"ai_translation": "AI-generated translation",
-	"unnamed_chart": "<Unnamed Chart>"
+	"unnamed_chart": "<Unnamed Chart>",
+	"validator_warning_email": "Not a valid Email address",
+	"validator_warning_package_id": "Likely not a valid pachage id",
+	"validator_warning_input_binary": "Only '0' (for left option) or '1' (for right option) allowed",
+	"validator_warning_input_duration": "Requires the total number of minutes",
+	"validator_warning_numeric": "Requires number"
 }

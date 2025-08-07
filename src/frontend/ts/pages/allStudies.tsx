@@ -316,33 +316,36 @@ export class Content extends StudiesContent {
 		const newMessagesList = this.getTools().messagesLoader.studiesWithNewMessagesList || {}
 		const hasNewMerlinLogs = !!this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsCount.get()
 		const newMerlinLogsList = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList || {}
+		const publishedStudies = this.studies.filter((study) => { return study.published.get() && !study.accessKeys.get().length })
+		const numRestrictedStudies = this.studies.filter((study) => { return study.published.get() && study.accessKeys.get().length }).length
+		const concludedStudies = this.studies.filter((study) => { return study.studyOver.get() })
+		const numDisabledStudies = this.studies.filter((study) => { return !study.published.get() }).length
+
 		return TabBar(this.selectedTab, [
 			{
 				title: Lang.get("all"),
 				highlight: true,
 				view: () => this.getStudyListView(this.studies)
 			},
-			{
+			hasNewMessages && {
 				title: m.trust(messageSvg),
 				highlight: hasNewMessages,
 				view: () => this.getStudyListView(this.studies.filter((study) => {
 					return newMessagesList[study.id.get()]
 				}))
 			},
-			{
+			hasNewMerlinLogs && {
 				title: m.trust(merlinLogsSvg),
 				highlight: hasNewMerlinLogs,
 				view: () => this.getStudyListView(this.studies.filter((study) => {
 					return newMerlinLogsList[study.id.get()]
 				}))
 			},
-			{
+			publishedStudies.length > 0 && {
 				title: Lang.get("public_studies"),
-				view: () => this.getStudyListView(this.studies.filter((study) => {
-					return study.published.get() && !study.accessKeys.get().length
-				}))
+				view: () => this.getStudyListView(publishedStudies)
 			},
-			{
+			numRestrictedStudies > 0 && {
 				title: Lang.get("hidden_studies"),
 				view: () => {
 					return TabBar(
@@ -352,13 +355,11 @@ export class Content extends StudiesContent {
 					)
 				}
 			},
-			{
+			concludedStudies.length > 0 && {
 				title: Lang.get("concluded_studies"),
-				view: () => this.getStudyListView(this.studies.filter((study) => {
-					return study.studyOver.get()
-				}))
+				view: () => this.getStudyListView(concludedStudies)
 			},
-			{
+			numDisabledStudies > 0 && {
 				title: Lang.get("disabled"),
 				view: () => {
 					return TabBar(

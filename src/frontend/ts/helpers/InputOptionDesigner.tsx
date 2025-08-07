@@ -13,6 +13,7 @@ import { BaseObservable } from "../observable/BaseObservable";
 import { NotCompatibleIcon, PossibleDevices } from "../widgets/NotCompatibleIcon";
 import { BtnAdd, BtnTrash } from "../widgets/BtnWidgets";
 import { CodeEditor } from "../widgets/CodeEditor";
+import { RegexTextInput } from "../widgets/RegexTextInput";
 
 
 const InputCategories = {
@@ -44,7 +45,7 @@ export class InputOptionDesigner {
 	private readonly inputTypes: InputType = {
 		"ambient_light": {
 			title: Lang.get("input_ambient_light"),
-			helpUrl: "",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#ambient-light",
 			category: "sensor",
 			notCompatible: ["Web", "iOS"],
 			view: () => [
@@ -64,18 +65,22 @@ export class InputOptionDesigner {
 					{this.requiredOption()}
 				</div>,
 				<div>
-					<label>
-						<small>{Lang.get("packageId")}</small>
-						<input class="big" type="text" {...BindObservable(this.input.packageId)} />
-						<small>{Lang.get("packageId_desc")}</small>
-					</label>
+					{
+						RegexTextInput(
+							Lang.get("packageId"),
+							this.input.packageId,
+							/^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/,
+							Lang.get("validator_warning_package_id"),
+							Lang.get("packageId_desc")
+						)
+					}
 				</div>
 			]
 
 		},
 		"battery_level": {
 			title: Lang.get("input_battery_level"),
-			helpUrl: "",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#battery-level",
 			category: "sensor",
 			notCompatible: ["Web"],
 			view: () => [
@@ -92,7 +97,7 @@ export class InputOptionDesigner {
 				<div>
 					{this.requiredOption()}
 				</div>,
-				this.defaultValueOption(),
+				this.defaultValueOption(/^[01]$/, Lang.get("validator_warning_input_binary")),
 				this.leftRightLabelOption()
 			]
 		},
@@ -101,7 +106,7 @@ export class InputOptionDesigner {
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-of-bluetooth-devices",
 			category: "sensor",
 			notCompatible: ["Web"],
-			view: () => this.onlyRequiredAndDefaultOptions()
+			view: () => [<div>{this.requiredOption()}</div>]
 		},
 		"compass": {
 			title: Lang.get("input_compass"),
@@ -113,8 +118,7 @@ export class InputOptionDesigner {
 					{this.requiredOption()}
 					{this.showValueOption()}
 					{this.checkedOptionElement(this.input.numberHasDecimal, Lang.get("allow_decimal_input"))}
-				</div>,
-				this.defaultValueOption()
+				</div>
 			]
 		},
 		"countdown": {
@@ -148,9 +152,9 @@ export class InputOptionDesigner {
 		},
 		"duration": {
 			title: Lang.get("input_duration"),
-			helpUrl: "",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#duration-item",
 			category: "classic",
-			view: () => this.onlyRequiredAndDefaultOptions()
+			view: () => this.onlyRequiredAndDefaultOptions(/^[1-9]\d*$/, Lang.get("validator_warning_input_duration"))
 		},
 		"dynamic_input": {
 			title: Lang.get("input_dynamic_input"),
@@ -203,15 +207,13 @@ export class InputOptionDesigner {
 			title: Lang.get("input_file_upload"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Image-upload",
 			category: "media",
-			view: () => this.onlyRequiredAndDefaultOptions()
+			view: () => [<div>{this.requiredOption()}</div>]
 		},
 		"image": {
 			title: Lang.get("input_image"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Image",
 			category: "passive",
-			view: () =>
-				[this.urlOption()]
-
+			view: () => [this.urlOption()]
 		},
 		"likert": {
 			title: Lang.get("input_likert"),
@@ -223,7 +225,12 @@ export class InputOptionDesigner {
 					{this.showValueOption()}
 				</div>,
 				<div>
-					{this.inputOptionElement(this.input.likertSteps, Lang.get("likert_number_of_points"))}
+					<label class="line noDesc">
+						<small>{Lang.get("likert_number_of_points")}</small>
+						<input type="number" min="2" {...BindObservable(this.input.likertSteps, new ConstrainedNumberTransformer(2, undefined))} />
+					</label>
+
+					{this.constrainedNumberInputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), 1, this.input.likertSteps.get(), true)}
 				</div>,
 				this.leftRightLabelOption(),
 				<div>
@@ -315,7 +322,7 @@ export class InputOptionDesigner {
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Record-audio",
 			category: "media",
 			notCompatible: ["Web"],
-			view: () => this.onlyRequiredAndDefaultOptions()
+			view: () => [<div>{this.requiredOption()}</div>]
 		},
 		"share": {
 			title: Lang.get("input_share"),
@@ -360,10 +367,10 @@ export class InputOptionDesigner {
 					{this.showValueOption()}
 				</div>,
 				<div>
-					{this.inputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), "", "number")}
+					{this.constrainedNumberInputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), 0, this.input.maxValue.get() === 0 ? 100 : this.input.maxValue.get(), true)}
 					<label class="spacingTop">
 						<small>{Lang.get("max_value")}</small>
-						<input type="number" {...BindObservable(this.input.maxValue, new ConstrainedNumberTransformer(1, undefined))} />
+						<input type="number" min="0" {...BindObservable(this.input.maxValue, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("max_value_vas_desc")}</small>
 					</label>
 				</div>,
@@ -400,10 +407,10 @@ export class InputOptionDesigner {
 		this.sortedInputTypeKeys = inputTypeKeys
 	}
 
-	private onlyRequiredAndDefaultOptions(): Vnode<any, any>[] {
+	private onlyRequiredAndDefaultOptions(regex: RegExp | undefined = undefined, warningMessage: string = ""): Vnode<any, any>[] {
 		return [
 			<div>{this.requiredOption()}</div>,
-			this.defaultValueOption()
+			this.defaultValueOption(regex, warningMessage)
 		]
 	}
 
@@ -411,6 +418,13 @@ export class InputOptionDesigner {
 		return <label class="line noDesc">
 			<small>{title}</small>
 			<input type={type} class={className} {...BindObservable(obs)} />
+			{ObservableLangChooser(this.study)}
+		</label>
+	}
+	private constrainedNumberInputOptionElement(obs: BaseObservable<PrimitiveType>, title: string, min: number | undefined, max: number | undefined, allowEmpty: boolean = false, className = ""): Vnode<any, any> {
+		return <label class="line noDesc">
+			<small>{title}</small>
+			<input type="number" min={min === undefined ? "" : min} max={max === undefined ? "" : max} class={className} {...BindObservable(obs, new ConstrainedNumberTransformer(min, max, allowEmpty))} />
 			{ObservableLangChooser(this.study)}
 		</label>
 	}
@@ -432,7 +446,21 @@ export class InputOptionDesigner {
 	private showValueOption(): Vnode<any, any> {
 		return this.checkedOptionElement(this.input.showValue, Lang.get("show_value"))
 	}
-	private defaultValueOption(): Vnode<any, any> {
+	private defaultValueOption(regex: RegExp | undefined = undefined, warningMessage: string = ""): Vnode<any, any> {
+		if (regex !== undefined) {
+			return <div>{RegexTextInput(
+				Lang.get("prefilledValue"),
+				this.input.defaultValue,
+				regex,
+				warningMessage,
+				"line noDesc",
+				"big",
+				"",
+				true,
+				this.study,
+				this.input.required.get()
+			)}</div>
+		}
 		return <div>
 			<label class="line noDesc">
 				<small>{Lang.get("prefilledValue")}</small>

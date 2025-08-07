@@ -64,6 +64,9 @@ export class Content extends SectionContent {
 
 	private changeQrSize(e: InputEvent): void {
 		this.qrSize = parseInt((e.target as HTMLInputElement).value)
+		if (this.qrSize < 1) {
+			this.qrSize = 1
+		}
 	}
 	private changeQrUrl(urlIndex: number): void {
 		this.currentUrl = urlIndex
@@ -225,7 +228,7 @@ export class Content extends SectionContent {
 							<div class="center">
 								<label>
 									<small>{Lang.get("size")}</small>
-									<input type="number" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
+									<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
 								</label>
 							</div>
 							<div class="center">

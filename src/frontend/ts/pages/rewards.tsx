@@ -1,23 +1,23 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
-import {Lang} from "../singletons/Lang";
-import {BindObservable, OnBeforeChangeTransformer} from "../widgets/BindObservable";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {RichText} from "../widgets/RichText";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../widgets/DashRow";
+import { DashElement } from "../widgets/DashElement";
+import { Lang } from "../singletons/Lang";
+import { BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer } from "../widgets/BindObservable";
+import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
+import { RichText } from "../widgets/RichText";
 import warnSvg from "../../imgs/icons/warn.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
-import {Section} from "../site/Section";
-import {BtnCustom} from "../widgets/BtnWidgets";
+import { Section } from "../site/Section";
+import { BtnCustom } from "../widgets/BtnWidgets";
 
 export class Content extends SectionContent {
 	private faultyEmailContent = false
-	
+
 	public static preLoad(section: Section): Promise<any>[] {
 		return [section.getStudyPromise()]
 	}
-	
+
 	public title(): string {
 		return Lang.get("reward_system")
 	}
@@ -28,7 +28,7 @@ export class Content extends SectionContent {
 			</a>
 			: null
 	}
-	
+
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
 		return <div>
@@ -37,12 +37,12 @@ export class Content extends SectionContent {
 					content:
 						<div>
 							<span>{Lang.get("desc_reward_system")}</span>
-							
-							<br/>
-							<br/>
+
+							<br />
+							<br />
 							<div class="center">
 								<label class="noTitle noDesc">
-									<input type="checkbox"{... BindObservable(study.enableRewardSystem)}/>
+									<input type="checkbox"{...BindObservable(study.enableRewardSystem)} />
 									<span>{Lang.get("enable_reward_system")}</span>
 								</label>
 							</div>
@@ -57,7 +57,7 @@ export class Content extends SectionContent {
 								<div class="center">
 									<h2>{Lang.getWithColon("visible_after")}</h2>
 									<label class="noDesc noTitle">
-										<input type="number" {... BindObservable(study.rewardVisibleAfterDays)}/>
+										<input type="number" min="0" {...BindObservable(study.rewardVisibleAfterDays), new ConstrainedNumberTransformer(0, undefined)} />
 										<span>{Lang.get("days")}</span>
 									</label>
 								</div>
@@ -67,7 +67,7 @@ export class Content extends SectionContent {
 						content:
 							<div class="listParent">
 								<h2 class="center">{Lang.getWithColon("minimal_number_of_entries_required")}</h2>
-								
+
 								<table class="listChild">
 									{study.questionnaires.get().map((questionnaire) =>
 										<tr>
@@ -75,20 +75,20 @@ export class Content extends SectionContent {
 												<span>{questionnaire.getTitle()}</span>
 											</td>
 											<td>
-												<input type="number" {... BindObservable(questionnaire.minDataSetsForReward)}/>
+												<input type="number" {...BindObservable(questionnaire.minDataSetsForReward)} />
 											</td>
 										</tr>)}
-									
+
 								</table>
 							</div>
 					}),
-					
+
 					DashElement("stretched", {
 						content:
 							<div>
 								<h2 class="center">{Lang.get("email_content")}</h2>
 								<label class="spacingTop line">
-									<textarea {... BindObservable(
+									<textarea {...BindObservable(
 										study.rewardEmailContent,
 										new OnBeforeChangeTransformer<string>((_, after) => {
 											const newValue = after
@@ -115,7 +115,7 @@ export class Content extends SectionContent {
 							</div>
 					})
 				)
-				
+
 			}
 		</div>
 	}

@@ -95,7 +95,7 @@ export class Content extends SectionContent {
 						<div>
 							<label class="line">
 								<small>{Lang.get("number_of_reminders")}</small>
-								<input min="0" type="number" {...BindObservable(action.reminder_count)} />
+								<input min="0" type="number" {...BindObservable(action.reminder_count, new ConstrainedNumberTransformer(0, undefined))} />
 							</label>
 						</div>
 				},
@@ -105,7 +105,7 @@ export class Content extends SectionContent {
 						<div>
 							<label class="line">
 								<small>{Lang.get("time_delay")}</small>
-								<input min="0" type="number" {...BindObservable(action.reminder_delay_minu)} />
+								<input min="0" type="number" {...BindObservable(action.reminder_delay_minu, new ConstrainedNumberTransformer(0, undefined))} />
 								<span>{Lang.get("minutes")}</span>
 							</label>
 						</div>
@@ -115,7 +115,7 @@ export class Content extends SectionContent {
 					<div>
 						<label class="line">
 							<small>{Lang.get("timeout_after_last_reminder")}</small>
-							<input min="0" type="number" {...BindObservable(action.timeout)} />
+							<input min="0" type="number" {...BindObservable(action.timeout, new ConstrainedNumberTransformer(0, undefined))} />
 							<span class="spacingRight">{Lang.get("minutes")}</span>
 							{NotCompatibleIcon("iOS", "Web")}
 							<small>{Lang.get("info_timeout_notifications")}</small>
@@ -180,7 +180,7 @@ export class Content extends SectionContent {
 								{event.randomDelay.get() &&
 									<label class="horizontal">
 										<small>{Lang.get("from")}</small>
-										<input min="0" type="number" {...BindObservable(event.delayMinimumSec)} />
+										<input min="0" type="number" {...BindObservable(event.delayMinimumSec, new ConstrainedNumberTransformer(0, undefined))} />
 										<small>{Lang.get("seconds")}</small>
 									</label>
 								}
@@ -188,7 +188,7 @@ export class Content extends SectionContent {
 									{event.randomDelay.get() &&
 										<small>{Lang.get("to")}</small>
 									}
-									<input min={event.delayMinimumSec.get()} type="number" {...BindObservable(event.delaySec)} />
+									<input min={event.delayMinimumSec.get()} type="number" {...BindObservable(event.delaySec, new ConstrainedNumberTransformer(event.delayMinimumSec.get(), undefined))} />
 									<small>{Lang.get("seconds")}</small>
 								</label>
 							</div>

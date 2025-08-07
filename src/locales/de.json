@@ -31,6 +31,7 @@
 	"allow_incoming_messages": "Erlaube Teilnehmenden Nachrichten zu schreiben",
 	"Android": "Android",
 	"apply_changes": "Änderungen übernehmen",
+	"app": "Smartphoneapp",
 	"app_type": "App Typ",
 	"app_type_per_questionnaire": "App Typ bei Fragebögen",
 	"app_version": "App Version",
@@ -113,6 +114,7 @@
 	"confirm_backup": "Soll ein Backup aller Daten für die Studie %s durchgeführt werden?",
 	"confirm_delete_account": "Soll der User '%s' wirklich gelöscht werden?",
 	"confirm_delete_data": "Sollen die Daten von '%s' wirklich gelöscht werden?\nSie können NICHT wiederhergestellt werden!",
+	"confirm_delete_backups": "Sollen die Backups von '%s' wirklich gelöscht werden?\nSie können NICHT wiederhergestellt werden!",
 	"confirm_delete_study": "Soll die Studie '%s' wirklich gelöscht werden?\n\nSÄMTLICHE STUDIEN-DATEN WERDEN EBENFALLS GELÖSCHT!",
 	"confirm_distribute_message": "Folgende Nachricht wird versendet:\n\n%s",
 	"confirm_delete_message": "Nachricht löschen?",
@@ -173,6 +175,7 @@
 	"empty_data": "Daten leeren",
 	"empty_questionnaire": "Leerer Fragebogen",
 	"empty_study": "Leere Studie",
+	"empty_backups": "Backups löschen",
 	"endDate": "End-Datum",
 	"endTime": "End-Zeit",
 	"error_accessKey_wrong_format": "Zugangsschlüssel müssen mit einem Buchstaben beginnen und dürfen nur Buchstaben und Zahlen enthalten.",
@@ -647,5 +650,10 @@
 	"axis_y_threshold_color": "Schwellenwertfarbe",
 	"axis_use_threshold_on_client": "Verwende Schwellenwert in ESMira App",
 	"ai_translation": "KI-generierte Übersetzung",
-	"unnamed_chart": "<Unbenanntes Diagramm>"
+	"unnamed_chart": "<Unbenanntes Diagramm>",
+	"validator_warning_email": "Keine gültige Emailadresse",
+	"validator_warning_package_id": "Wahrscheinlich keine gültige Package Id",
+	"validator_warning_input_binary": "Nur '0' (linke Option) oder '1' (rechte Option) erlaubt",
+	"validator_warning_input_duration": "Gesamtanzahl an Minuten erforderlich",
+	"validator_warning_numeric": "Zahl erforderlich"
 }
