@@ -1,3 +1,21 @@
 {
-    "add": "Dodaj"
+    "add": "Dodaj",
+    "info_required": "* wymagane dane",
+    "informed_consent": "Świadoma zgoda",
+    "messages": "Wiadomości",
+    "reload": "Przeładuj",
+    "save": "Zapisz",
+    "no": "Nie",
+    "yes": "Tak",
+    "statistics": "Statystyki",
+    "user_id": "Identyfikator użytkownika",
+    "please_select": "Wybierz",
+    "today": "Dziś",
+    "study_description": "Opis badania",
+    "more_information": "Więcej informacji",
+    "questionnaires": "Kwestionariusze",
+    "settings": "Ustawienia",
+    "delete_study": "Usuń badanie",
+    "i_agree": "Zgadzam się",
+    "send": "Wyślij"
 }
