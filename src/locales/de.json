@@ -661,3 +661,6 @@
 	"validator_warning_numeric": "Zahl erforderlich",
 	"signal_time_across_midnight": "Ende des Intervalls liegt vor dem Anfang. Dies resultiert in einem Intervall das Mitternacht inkludiert und bis zum nächsten Tag dauert.",
 	"signal_time_faulty": "%d Zeitpunkte mit Mindestabstand von %d Minuten können nicht sicher im angegebenen Zeitraum geplant werden.",
+	"urls_access_key": "Links mit Access Key",
+	"urls_id": "Links mit Studien-Id"
+}

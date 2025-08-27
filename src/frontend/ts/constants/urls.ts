@@ -21,3 +21,7 @@ export const FILE_GET_QUESTIONNAIRE = 'api/questionnaire.php?id=%d1&qid=%d2&acce
 export const FILE_SERVER_STATISTICS = 'api/server_statistics.php'
 export const FILE_STATISTICS = 'api/statistics.php?id=%d&access_key=%s'
 export const FILE_STUDIES = 'api/studies.php'
+
+// help urls (wiki)
+
+export const URL_WIKI_DIFFERENCE_LINKS = "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Publication-Links--QR-code#difference-between-links-with-access-key-and-links-with-study-id"

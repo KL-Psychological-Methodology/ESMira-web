@@ -8,15 +8,16 @@ import { TabBar, TabContent } from "../widgets/TabBar";
 import { createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl } from "../constants/methods";
 import qrcode from "qrcode-generator"
 import { Section } from "../site/Section";
-import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
+import { BtnAdd, BtnCopy, BtnCustom, BtnTrash } from "../widgets/BtnWidgets";
 import { DashRow } from "../widgets/DashRow";
 import { DashElement, DashViewOptions } from "../widgets/DashElement";
 import { closeDropdown, openDropdown } from "../widgets/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
+import questionSvg from "../../imgs/icons/question.svg?raw"
 import { safeConfirm } from "../constants/methods";
 import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN } from "../constants/urls";
+import { FILE_ADMIN, URL_WIKI_DIFFERENCE_LINKS } from "../constants/urls";
 
 export class Content extends SectionContent {
 	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
@@ -250,10 +251,12 @@ export class Content extends SectionContent {
 		const appInstrTitle = Lang.get("app_installation_instructions")
 		const fallbackUrl = study.useFallback.get() && this.fallbackUrls.length > 0 ? this.fallbackUrls[0] : ""
 		const fallbackAppInstallUrl = createFallbackAppUrl(accessKey, study.id.get(), fallbackUrl)
+		const hasAccessKeys = accessKey.length > 0
 
 		return [
 			{
 				content: <div>
+					<h2>{Lang.getWithColon(hasAccessKeys ? "urls_access_key" : "urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), false, "https"))}
 					</div>
@@ -265,8 +268,9 @@ export class Content extends SectionContent {
 					}
 				</div>
 			},
-			accessKey.length > 0 && {
+			hasAccessKeys && {
 				content: <div>
+					<h2>{Lang.getWithColon("urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true, "https"))}
 					</div>
