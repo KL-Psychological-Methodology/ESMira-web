@@ -47,3 +47,11 @@ export function timeStampToTimeString(timestamp: number) {
 	const d = new Date(timestamp)
 	return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 }
+
+export function getFromUrlFriendly(s: string): string {
+	return atob(s.replace(/\-/g, '+').replace(/\_/g, '/'))
+}
+
+export function makeUrlFriendly(s: string): string {
+	return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '')
+}

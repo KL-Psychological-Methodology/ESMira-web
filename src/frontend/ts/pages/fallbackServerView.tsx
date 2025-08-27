@@ -2,11 +2,12 @@ import m, { Vnode } from "mithril";
 import { Lang } from "../singletons/Lang";
 import { SectionContent } from "../site/SectionContent";
 import { FILE_ADMIN } from "../constants/urls";
+import { getFromUrlFriendly } from "../constants/methods";
 
 export class Content extends SectionContent {
 	public title(): string {
 		const fallbackServerUrl = this.getStaticString("fallbackUrl")
-		return fallbackServerUrl ? Lang.get("fallback_server_title", atob(fallbackServerUrl)) : "Error"
+		return fallbackServerUrl ? Lang.get("fallback_server_title", getFromUrlFriendly(fallbackServerUrl)) : "Error"
 	}
 
 	public getView(): Vnode<any, any> {

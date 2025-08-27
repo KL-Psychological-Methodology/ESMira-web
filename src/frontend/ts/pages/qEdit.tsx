@@ -16,7 +16,7 @@ import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { BindObservable } from "../widgets/BindObservable";
 import { TitleRow } from "../widgets/TitleRow";
 import { Page } from "../data/study/Page";
-import { safeConfirm } from "../constants/methods";
+import { makeUrlFriendly, safeConfirm } from "../constants/methods";
 import { Input } from "../data/study/Input";
 import { createUniqueName } from "../helpers/UniqueName";
 import { DragContainer, DragTools } from "../widgets/DragContainer";
@@ -144,7 +144,7 @@ export class Content extends SectionContent {
 			return
 
 		questionnaire.pages.get()[pageI].inputs.push({ name: name })
-		this.newSection(`inputEdit,input:${btoa(name)}`)
+		this.newSection(`inputEdit,input:${makeUrlFriendly(name)}`)
 	}
 	private copyInput(input: Input, index: number): void {
 		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
@@ -305,7 +305,7 @@ export class Content extends SectionContent {
 							<div class="nowrap flexCenter">
 								{BtnTrash(this.deleteInput.bind(this, page, inputIndex))}
 								{BtnCopy(this.copyInput.bind(this, input, inputIndex + 1))}
-								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${btoa(input.name.get())}`)}>
+								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${makeUrlFriendly(input.name.get())}`)}>
 									{BtnEdit()}
 								</a>
 							</div>
