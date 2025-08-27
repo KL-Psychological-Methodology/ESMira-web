@@ -18,6 +18,7 @@ import { BaseObservable } from "../observable/BaseObservable";
 import { Action } from "../data/study/Action";
 import { Study } from "../data/study/Study";
 import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
+import warnSvg from "../../imgs/icons/warn.svg?raw";
 
 class SpecificQuestionnaireTransformer implements Transformer {
 	private readonly eventTrigger: EventTrigger
@@ -72,6 +73,26 @@ export class Content extends SectionContent {
 
 	private hasSchedule(actionTrigger: ActionTrigger): boolean {
 		return actionTrigger.schedules.get().length != 0
+	}
+
+	private isSignalTimeValid(signalTime: SignalTime): boolean {
+		if (!signalTime.random.get() || signalTime.frequency.get() <= 1) {
+			return true
+		}
+		// mirrors from Schaduler.scheduleSignalTime() in shared code of smartphone application
+		const msBetween = signalTime.minutesBetween.get() * 60000
+		const end = signalTime.endTimeOfDay.get()
+		var start = signalTime.startTimeOfDay.get()
+		if (start > end) {
+			start += 86400000 //1000*60*60*24
+		}
+		const period = Math.abs(end - start) // simplification
+		const block = period / signalTime.frequency.get()
+		return block >= msBetween
+	}
+
+	private isSignalTimeAcrossMidnight(signalTime: SignalTime): boolean {
+		return signalTime.random.get() && signalTime.startTimeOfDay.get() > signalTime.endTimeOfDay.get()
 	}
 
 	private getActionView(study: Study, action: Action): (Vnode<any, any> | false)[] {
@@ -224,52 +245,61 @@ export class Content extends SectionContent {
 	}
 
 	private getSignalTimeView(schedule: Schedule, signalTime: SignalTime, index: number): Vnode<any, any> {
-		return <div class="nowrap">
-			<label class="horizontal middle center">
-				<small class="smallText">{Lang.get("random")}</small>
-				<input type="checkbox" {...BindObservable(signalTime.random)} />
-			</label>
-
-			{signalTime.random.get() &&
-				<label class="horizontal middle spacingLeft">
-					<small>{Lang.get("random_fixed")}</small>
-					<select {...BindObservable(signalTime.randomFixed, BooleanTransformer)}>
-						<option value="1">{Lang.get("random_fixed_true")}</option>
-						<option value="0">{Lang.get("random_fixed_false")}</option>
-					</select>
+		return <div class="spacingBottom">
+			<div class="nowrap center">
+				<label class="horizontal middle center">
+					<small class="smallText">{Lang.get("random")}</small>
+					<input type="checkbox" {...BindObservable(signalTime.random)} />
 				</label>
+
+				{signalTime.random.get() &&
+					<label class="horizontal middle spacingLeft">
+						<small>{Lang.get("random_fixed")}</small>
+						<select {...BindObservable(signalTime.randomFixed, BooleanTransformer)}>
+							<option value="1">{Lang.get("random_fixed_true")}</option>
+							<option value="0">{Lang.get("random_fixed_false")}</option>
+						</select>
+					</label>
+				}
+
+
+				<label class="horizontal middle spacingLeft">
+					<small>{signalTime.random.get() ? Lang.get("startTime") : Lang.get("time")}</small>
+					<input type="time" {...BindObservable(signalTime.startTimeOfDay, TimeTransformer)} />
+				</label>
+
+				{signalTime.random.get() &&
+					<label class="horizontal middle spacingLeft">
+						<small>{Lang.get("endTime")}</small>
+						<input type="time" {...BindObservable(signalTime.endTimeOfDay, TimeTransformer)} />
+					</label>
+				}
+
+				{signalTime.random.get() &&
+					<label class="horizontal middle spacingLeft">
+						<small>{Lang.get("frequency")}</small>
+						<input type="number" min="1" {...BindObservable(signalTime.frequency)} />
+					</label>
+				}
+
+				{signalTime.random.get() && signalTime.frequency.get() > 1 &&
+					<label class="horizontal middle spacingLeft">
+						<small>{Lang.get("minutes_between")}</small>
+						<input type="number" min="0" {...BindObservable(signalTime.minutesBetween)} />
+						<span>{Lang.get("minutes")}</span>
+					</label>
+				}
+
+				{BtnCopy(this.copySignalTime.bind(this, schedule, signalTime, index))}
+				{BtnTrash(this.removeSignalTime.bind(this, schedule, index))}
+			</div>
+			{this.isSignalTimeAcrossMidnight(signalTime) &&
+				<div><small>{Lang.get("signal_time_across_midnight")}</small></div>
+			}
+			{!this.isSignalTimeValid(signalTime) &&
+				<small><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("signal_time_faulty", signalTime.frequency.get(), signalTime.minutesBetween.get())}</small>
 			}
 
-
-			<label class="horizontal middle spacingLeft">
-				<small>{signalTime.random.get() ? Lang.get("startTime") : Lang.get("time")}</small>
-				<input type="time" {...BindObservable(signalTime.startTimeOfDay, TimeTransformer)} />
-			</label>
-
-			{signalTime.random.get() &&
-				<label class="horizontal middle spacingLeft">
-					<small>{Lang.get("endTime")}</small>
-					<input type="time" {...BindObservable(signalTime.endTimeOfDay, TimeTransformer)} />
-				</label>
-			}
-
-			{signalTime.random.get() &&
-				<label class="horizontal middle spacingLeft">
-					<small>{Lang.get("frequency")}</small>
-					<input type="number" min="1" {...BindObservable(signalTime.frequency)} />
-				</label>
-			}
-
-			{signalTime.random.get() && signalTime.frequency.get() > 1 &&
-				<label class="horizontal middle spacingLeft">
-					<small>{Lang.get("minutes_between")}</small>
-					<input type="number" min="0" {...BindObservable(signalTime.minutesBetween)} />
-					<span>{Lang.get("minutes")}</span>
-				</label>
-			}
-
-			{BtnCopy(this.copySignalTime.bind(this, schedule, signalTime, index))}
-			{BtnTrash(this.removeSignalTime.bind(this, schedule, index))}
 		</div>
 	}
 

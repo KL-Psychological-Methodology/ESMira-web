@@ -655,5 +655,6 @@
 	"validator_warning_package_id": "Wahrscheinlich keine gültige Package Id",
 	"validator_warning_input_binary": "Nur '0' (linke Option) oder '1' (rechte Option) erlaubt",
 	"validator_warning_input_duration": "Gesamtanzahl an Minuten erforderlich",
-	"validator_warning_numeric": "Zahl erforderlich"
-}
+	"validator_warning_numeric": "Zahl erforderlich",
+	"signal_time_across_midnight": "Ende des Intervalls liegt vor dem Anfang. Dies resultiert in einem Intervall das Mitternacht inkludiert und bis zum nächsten Tag dauert.",
+	"signal_time_faulty": "%d Zeitpunkte mit Mindestabstand von %d Minuten können nicht sicher im angegebenen Zeitraum geplant werden.",
