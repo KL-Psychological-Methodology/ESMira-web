@@ -86,7 +86,7 @@
 	"postInstallInstructions": "Instructions after joining (only in app; can be left empty)",
 	"questionnaire_availability": "Availability of questionnaire",
 	"qrCode": "QR-Code",
-	"number_of_reminders": "number of reminders",
+	"number_of_reminders": "Number of reminders",
 	"recipient": "Recipient",
 	"runtime": "Runtime",
 	"settings": "Settings",
