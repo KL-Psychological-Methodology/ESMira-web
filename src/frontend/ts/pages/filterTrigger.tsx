@@ -48,6 +48,7 @@ export class Content extends SectionContent {
 	}
 	private copyActionTrigger(questionnaire: Questionnaire, actionTrigger: ActionTrigger, index: number): void {
 		questionnaire.actionTriggers.addCopy(actionTrigger, index)
+		this.newSection(`triggerEdit,qId:${questionnaire.internalId.get()},triggerI:${questionnaire.actionTriggers.get().length - 1}`)
 	}
 
 	private addSchedule(questionnaire: Questionnaire): void {

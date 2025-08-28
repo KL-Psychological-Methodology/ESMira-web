@@ -152,6 +152,7 @@ export class Content extends SectionContent {
 			return
 		const newInput = (input.parent as ObservableArray<ObservableStructureDataType, Input>).addCopy(input, index)
 		newInput.name.set(newName)
+		this.newSection(`inputEdit,input:${makeUrlFriendly(newName)}`)
 	}
 	private deleteInput(page: Page, index: number): void {
 		if (!safeConfirm(Lang.get("confirm_delete_input")))
