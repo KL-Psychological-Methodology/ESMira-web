@@ -348,6 +348,7 @@
 	"repeat_every": "Repeat every",
 	"repeat_password": "Repeat password",
 	"required_desc": "Must be filled out",
+	"optional_desc": "Can be skipped without warning",
 	"save": "Save",
 	"save_as_minutes": "Save as minutes",
 	"save_as_number": "Save as number",
