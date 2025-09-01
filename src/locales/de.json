@@ -645,7 +645,7 @@
 	"study_over": "Studie ist vorbei",
 	"study_over_message": "Diese Studie ist nicht mehr aktiv.",
 	"concluded_studies": "Abeschlossene Studien",
-	"post_study_note": "Nachricht nach Studienende (wird auf Infoseiten angezeigt, nachdem Studie vorüber ist",
+	"post_study_note": "Nachricht nach Studienende (wird auf Infoseiten angezeigt, nachdem Studie vorüber ist)",
 	"forward_error_report": "Fehlerbericht weiterleiten",
 	"send_to": "Sende an",
 	"additional_information": "Zusätzliche Informationen",
@@ -663,5 +663,6 @@
 	"signal_time_across_midnight": "Ende des Intervalls liegt vor dem Anfang. Dies resultiert in einem Intervall das Mitternacht inkludiert und bis zum nächsten Tag dauert.",
 	"signal_time_faulty": "%d Zeitpunkte mit Mindestabstand von %d Minuten können nicht sicher im angegebenen Zeitraum geplant werden.",
 	"urls_access_key": "Links mit Access Key",
-	"urls_id": "Links mit Studien-Id"
+	"urls_id": "Links mit Studien-Id",
+	"faqs": "Häufig gestellte Fragen"
 }

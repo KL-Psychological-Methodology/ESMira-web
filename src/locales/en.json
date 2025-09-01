@@ -663,5 +663,6 @@
 	"signal_time_across_midnight": "End of interval is before start. This will result in an interval including midnight and lasting into the next day.",
 	"signal_time_faulty": "%d time points separated by at least %d minutes cannot be safely scheduled in the specified time frame.",
 	"urls_access_key": "Links with access key",
-	"urls_id": "Links with study id"
+	"urls_id": "Links with study id",
+	"faqs": "Frequently Asked Quistions"
 }

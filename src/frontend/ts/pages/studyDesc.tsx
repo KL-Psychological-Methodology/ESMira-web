@@ -45,7 +45,7 @@ export class Content extends SectionContent {
 			</div>
 
 			<label class="spacingTop line">
-				<small>{Lang.getWithColon("informed_consent")} ({Lang.getWithColon("can_be_left_empty")})</small>
+				<small>{Lang.get("informed_consent")} ({Lang.get("can_be_left_empty")}):</small>
 				<textarea {...BindObservable(study.informedConsentForm)}></textarea>
 				{ObservableLangChooser(this.getStudyOrThrow())}
 			</label>
@@ -53,6 +53,12 @@ export class Content extends SectionContent {
 			<div class="fakeLabel spacingTop line">
 				<small>{Lang.getWithColon("postInstallInstructions")}</small>
 				{RichText(study.postInstallInstructions)}
+				{ObservableLangChooser(this.getStudyOrThrow())}
+			</div>
+
+			<div class="fakeLabel spacingTop line">
+				<small>{Lang.get("faqs")} ({Lang.get("can_be_left_empty")}):</small>
+				{RichText(study.faq)}
 				{ObservableLangChooser(this.getStudyOrThrow())}
 			</div>
 
