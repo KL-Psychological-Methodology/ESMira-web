@@ -57,7 +57,7 @@
         "markdown-it": "^14.0.0",
         "mini-css-extract-plugin": "^2.7.2",
         "mini-svg-data-uri": "^1.4.4",
-        "mithril": "^2.2.2",
+        "mithril": "<2.3.0",
         "node-json-minify": "^3.0.0",
         "papaparse": "^5.3.2",
         "qrcode-generator": "^1.4.4",
