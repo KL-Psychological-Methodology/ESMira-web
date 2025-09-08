@@ -42,7 +42,12 @@
 	"nb_NO": {
 		"name": "Norsk",
 		"aiTranslation": true,
-		"flag": "<svg xmlns='http://www.w3.org/2000/svg'width='12' height='9' viewBox='0 0 640 480'><path fill='#ed2939' d='M0 0h640v480H0z'/> <path fill='#fff' d='M180 0h120v480H180z'/> <path fill='#fff' d='M0 180h640v120H0z'/> <path fill='#002664' d='M210 0h60v480h-60z'/> <path fill='#002664' d='M0 210h640v60H0z'/></svg>"
+		"flag": "<svg xmlns='http://www.w3.org/2000/svg' width='12' height='9' viewBox='0 0 640 480'><path fill='#ed2939' d='M0 0h640v480H0z'/> <path fill='#fff' d='M180 0h120v480H180z'/> <path fill='#fff' d='M0 180h640v120H0z'/> <path fill='#002664' d='M210 0h60v480h-60z'/> <path fill='#002664' d='M0 210h640v60H0z'/></svg>"
+	},
+	"pl": {
+		"name": "Polski",
+		"aiTranslation": false,
+		"flag": "<svg xmlns='http://www.w3.org/2000/svg' width='12' height='9' viewBox='0 0 640 480'> <g fill-rule='evenodd'> <path fill='#fff' d='M640 480H0V0h640z'/> <path fill='#dc143c' d='M640 480H0V240h640z'/> </g></svg>"
 	},
 	"pt": {
 		"name": "Português",
