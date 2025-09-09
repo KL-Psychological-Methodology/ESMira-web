@@ -223,6 +223,7 @@ export class Content extends SectionContent {
 		return {
 			title: accessKey,
 			view: () => DashRow(
+				DashElement("vertical", ...urlList),
 				DashElement(null, {
 					content:
 						<div>
@@ -239,8 +240,7 @@ export class Content extends SectionContent {
 							</div>
 							<p class="vertical smallText">{Lang.get("desc_qrCode")}</p>
 						</div>
-				}),
-				DashElement("vertical", ...urlList)
+				})
 			)
 		}
 	}
