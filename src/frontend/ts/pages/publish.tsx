@@ -249,7 +249,8 @@ export class Content extends SectionContent {
 		this.allUrls = []
 		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
 		const appInstrTitle = Lang.get("app_installation_instructions")
-		const fallbackUrl = study.useFallback.get() && this.fallbackUrls.length > 0 ? this.fallbackUrls[0] : ""
+		const usesFallback = study.useFallback.get() && this.fallbackUrls.length > 0
+		const fallbackUrl = usesFallback ? this.fallbackUrls[0] : ""
 		const fallbackAppInstallUrl = createFallbackAppUrl(accessKey, study.id.get(), fallbackUrl)
 		const hasAccessKeys = accessKey.length > 0
 
@@ -289,12 +290,12 @@ export class Content extends SectionContent {
 					)}
 				</div>
 			},
-			study.useFallback && {
+			usesFallback && {
 				content: <div
 					onpointerenter={this.onPointerEnterUrl.bind(null, fallbackAppInstallUrl)}
 					onpointerleave={this.onPointerLeaveUrl.bind(null)}
 				>
-					<label class="noTitle noDesc">{Lang.get("fallback_app_installation_instructions")}</label>
+					<h2>{Lang.get("fallback_app_installation_instructions")}</h2>
 					&nbsp;
 					<span class="middle">
 						{BtnCopy(() => navigator.clipboard.writeText(fallbackAppInstallUrl))}
