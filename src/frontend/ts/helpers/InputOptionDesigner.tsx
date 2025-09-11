@@ -230,7 +230,7 @@ export class InputOptionDesigner {
 						<input type="number" min="2" {...BindObservable(this.input.likertSteps, new ConstrainedNumberTransformer(2, undefined))} />
 					</label>
 
-					{this.constrainedNumberInputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), 1, this.input.likertSteps.get(), true)}
+					{this.defaultValueOption()}
 				</div>,
 				this.leftRightLabelOption(),
 				<div>
@@ -367,7 +367,7 @@ export class InputOptionDesigner {
 					{this.showValueOption()}
 				</div>,
 				<div>
-					{this.constrainedNumberInputOptionElement(this.input.defaultValue, Lang.get("prefilledValue"), 0, this.input.maxValue.get() === 0 ? 100 : this.input.maxValue.get(), true)}
+					{this.defaultValueOption()}
 					<label class="spacingTop">
 						<small>{Lang.get("max_value")}</small>
 						<input type="number" min="0" {...BindObservable(this.input.maxValue, new ConstrainedNumberTransformer(0, undefined))} />
