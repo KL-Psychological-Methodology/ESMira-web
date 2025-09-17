@@ -417,6 +417,7 @@
 	"studyTut_participate_chooseYesForQR": "जब आपसे <b>क्यूआर कोड</b> के लिए पूछा जाए, तो \"<b style='color:red'>हां</b>\" चुनें।",
 	"studyTut_participate_chooseNoForQR": "जब आपसे <b>क्यूआर कोड</b> के लिए पूछा जाए, तो \"<b style='color:red'>नहीं</b>\" चुनें।",
 	"studyTut_participate_description": "आपको केवल ईएसमिरा ऐप की आवश्यकता है जिससे आप इस अध्ययन में शामिल हो सकते हैं।<br/><br/>इसमें केवल एक मिनट लगेगा। बस वह स्थिति चुनें जो आपके लिए उपयुक्त हो:",
+	"studyTut_participate_description_step_1": "आपको केवल ईएसमिरा ऐप की आवश्यकता है जिससे आप इस अध्ययन में शामिल हो सकते हैं।हो:",
 	"studyTut_participate_install_app": "ईएसमिरा इंस्टॉल करें",
 	"studyTut_participate_method_x_header": "विकल्प %d:",
 	"studyTut_participate_method_manual": "आपके फोन में <u>कैमरा नहीं</u> है और यह <u>दूसरा उपकरण</u> है।",
