@@ -255,7 +255,7 @@ export class Content extends SectionContent {
 				{signalTime.random.get() &&
 					<label class="horizontal middle spacingLeft">
 						<small>{Lang.get("random_fixed")}</small>
-						<select {...BindObservable(signalTime.randomFixed, BooleanTransformer)}>
+						<select {...BindObservable(signalTime.randomFixed, BooleanTransformer, "value")}>
 							<option value="1">{Lang.get("random_fixed_true")}</option>
 							<option value="0">{Lang.get("random_fixed_false")}</option>
 						</select>
