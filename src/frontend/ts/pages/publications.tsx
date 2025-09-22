@@ -34,7 +34,7 @@ export class Content extends SectionContent {
 						<div>
 							<div class="spacingLeft spacingRight">
 								<p class="hanging">
-									Lewetz, D., Stieger, S. (2024). ESMira: A decentralized open-source application for collecting experience sampling
+									Lewetz, D., & Stieger, S. (2024). ESMira: A decentralized open-source application for collecting experience sampling
 									data. <i>Behavior Research Methods</i>, <i>56</i>, 4421-4434.
 									<br />
 									<a class="showArrow" href="https://doi.org/10.3758/s13428-023-02194-2" target="_blank">https://doi.org/10.3758/s13428-023-02194-2</a>
