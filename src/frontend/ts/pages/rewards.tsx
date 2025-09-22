@@ -57,7 +57,7 @@ export class Content extends SectionContent {
 								<div class="center">
 									<h2>{Lang.getWithColon("visible_after")}</h2>
 									<label class="noDesc noTitle">
-										<input type="number" min="0" {...BindObservable(study.rewardVisibleAfterDays), new ConstrainedNumberTransformer(0, undefined)} />
+										<input type="number" min="0" {...BindObservable(study.rewardVisibleAfterDays, new ConstrainedNumberTransformer(0, undefined))} />
 										<span>{Lang.get("days")}</span>
 									</label>
 								</div>
@@ -75,7 +75,7 @@ export class Content extends SectionContent {
 												<span>{questionnaire.getTitle()}</span>
 											</td>
 											<td>
-												<input type="number" {...BindObservable(questionnaire.minDataSetsForReward)} />
+												<input type="number" min="0" {...BindObservable(questionnaire.minDataSetsForReward, new ConstrainedNumberTransformer(0, undefined))} />
 											</td>
 										</tr>)}
 
