@@ -1,6 +1,7 @@
 services:
   esmira:
     image: jodlidev/esmira:latest
+    platform: linux/amd64  # Can be changed to linux/arm64 for ARM64 systems
     restart: "unless-stopped"
     ports:
       - "80:80"
