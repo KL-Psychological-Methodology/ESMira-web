@@ -664,5 +664,8 @@
 	"signal_time_faulty": "%d Zeitpunkte mit Mindestabstand von %d Minuten können nicht sicher im angegebenen Zeitraum geplant werden.",
 	"urls_access_key": "Links mit Access Key",
 	"urls_id": "Links mit Studien-Id",
-	"faqs": "Häufig gestellte Fragen"
+	"faqs": "Häufig gestellte Fragen",
+	"duplicate_access_key": "Zugangsschlüssel nicht eindeutig auf Server",
+	"duplicate_access_key_tooltip": "Dieser Zugangsschlüssel wird auch von anderen Studien auf diesem Server verwendet. Links basierend auf diesem Zugangsschlüssel werden nicht direkt zu dieser Studie führen.",
+	"info_links_with_study_id": "Diese Links werden immer direkt zur dieser Studie führen."
 }

@@ -69,6 +69,7 @@ $classIndex = [
     'SaveStudy' => 'backend\admin\features\writePermission\SaveStudy',
     'MarkStudyAsUpdated' => 'backend\admin\features\writePermission\MarkStudyAsUpdated',
     'GetOutboundFallbackUrls' => 'backend\admin\features\writePermission\GetOutboundFallbackUrls',
+	'GetDuplicateAccessKeys' => 'backend\admin\features\writePermission\GetDuplicateAccessKeys',
 
     //create
     'CreateStudy' => 'backend\admin\features\createPermission\CreateStudy',
