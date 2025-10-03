@@ -221,7 +221,7 @@ export class Content extends SectionContent {
 						icon: m.trust(studyDesc),
 						title: Lang.get("hint_to_best_practices")
 					},
-					href: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-problems"
+					href: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-common-problems"
 				}),
 
 				DashElement("stretched", {
