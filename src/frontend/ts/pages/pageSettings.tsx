@@ -40,7 +40,7 @@ export class Content extends SectionContent {
 						<div class="center spacingTop">
 							<label>
 								<small>{Lang.get("skip_page_after_secs")}</small>
-								<input type="number" min="0" {...BindObservable(page.skipAfterSecs), new ConstrainedNumberTransformer(0, undefined)} />
+								<input type="number" min="0" {...BindObservable(page.skipAfterSecs, new ConstrainedNumberTransformer(0, undefined))} />
 								<span>{Lang.get("seconds")}</span>
 							</label>
 						</div>
