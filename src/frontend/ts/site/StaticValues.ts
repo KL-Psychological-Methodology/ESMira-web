@@ -1,5 +1,5 @@
 /**
- * Static values are expected not to change after a page has loaded. Each page has their own set of static values which are expected not to change once the page has been initialized
+ * Static values are expected not to change after a section has been initialized. Each section has their own set of static values.
  */
 export type StaticValues =
 	"id" |

@@ -1,5 +1,5 @@
 import m, {Vnode} from "mithril";
-import {Content as AttendContent} from "../pages/attend";
+import {Content as AttendContent} from ".././sections/attend";
 import {FILE_GET_QUESTIONNAIRE} from "../constants/urls";
 import {Lang} from "../singletons/Lang";
 import {Section} from "../site/Section";

@@ -44,14 +44,14 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 
 export class NavigationRow {
 	private readonly view: HTMLElement
-	private readonly pages: Array<Section>
+	private readonly sections: Array<Section>
 	private widthPercent: number = 100
 	private posRightPercent: number = 0
 	private siteData: SiteData
 	
-	constructor(view: HTMLElement, pages: Array<Section>, siteData: SiteData) {
+	constructor(view: HTMLElement, sections: Section[], siteData: SiteData) {
 		this.view = view.appendChild(document.createElement("div"))
-		this.pages = pages
+		this.sections = sections
 		this.siteData = siteData
 		this.renderView()
 		
@@ -63,10 +63,10 @@ export class NavigationRow {
 	}
 	
 	public positionNavi(percent: number): void {
-		if(this.pages.length <= 1)
+		if(this.sections.length <= 1)
 			return
-		const visiblePagesCount = Math.min(this.pages.length, Math.floor(100 / percent))
-		this.posRightPercent = (100 - percent * visiblePagesCount) / 2
+		const visibleSectionCount = Math.min(this.sections.length, Math.floor(100 / percent))
+		this.posRightPercent = (100 - percent * visibleSectionCount) / 2
 		this.widthPercent = percent
 	}
 	
@@ -136,9 +136,9 @@ export class NavigationRow {
 				const currentSelection = this.siteData.currentSection
 				let sections: Section[]
 				if(this.siteData.onlyShowLastSection)
-					sections = [this.pages[this.pages.length-1]]
+					sections = [this.sections[this.sections.length-1]]
 				else
-					sections = this.pages
+					sections = this.sections
 				
 				return (
 					<div id="navigationRow" class={sections.length > 1 ? "visible" : ""} style={`right: ${this.posRightPercent}%; width: ${this.widthPercent}%`}>

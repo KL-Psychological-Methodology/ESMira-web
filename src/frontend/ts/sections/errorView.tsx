@@ -5,7 +5,6 @@ import { Section } from "../site/Section";
 import { Requests } from "../singletons/Requests";
 import { FILE_ADMIN } from "../constants/urls";
 import { ErrorReportInfo } from "../data/errorReports/ErrorReportInfo";
-import { BtnCustom } from "../widgets/BtnWidgets";
 import transferSvg from "../../imgs/icons/transfer.svg?raw"
 
 interface ErrorReportComponentOptions {

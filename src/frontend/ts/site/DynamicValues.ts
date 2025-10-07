@@ -3,7 +3,7 @@ import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {ObservablePrimitiveRecord} from "../observable/ObservableRecord";
 
 /**
- * Dynamic values are a way of communicating between pages. They are shared between pages and can change at any time.
+ * Dynamic values are a way of communicating between sections. They are shared between sections and can change at any time.
  * They are saved in an observable and have to be loaded (or checked for changes) on each redraw
  */
 export interface DynamicValues {

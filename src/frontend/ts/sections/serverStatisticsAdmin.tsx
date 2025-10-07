@@ -7,7 +7,7 @@ import {getChartColor} from "../helpers/ChartJsBox";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {StatisticsEntry} from "../data/statistics/StatisticsEntry";
 import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
-import {Content as ServerStatisticsContent} from "../pages/serverStatistics";
+import {Content as ServerStatisticsContent} from ".././sections/serverStatistics";
 import {TabBar} from "../widgets/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 

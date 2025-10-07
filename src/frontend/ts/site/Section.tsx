@@ -91,21 +91,21 @@ export class Section {
 				await Lang.awaitPromise()
 				
 				const adminSuccessOrNotNeeded = await this.getAdmin().init()
-				let actualPageName
+				let actualSectionName
 				if(!adminSuccessOrNotNeeded) {
 					this.siteData.onlyShowLastSection = true
-					actualPageName = "login"
+					actualSectionName = "login"
 				}
 				else
-					actualPageName = this.sectionName
+					actualSectionName = this.sectionName
 				
 				let Content
 				try {
-					const importedContent = await import(`../pages/${actualPageName}.tsx`)
+					const importedContent = await import(`../sections/${actualSectionName}.tsx`)
 					Content = importedContent.Content
 				}
 				catch(e: any) {
-					reject(Lang.get("error_pageNotFound", actualPageName))
+					reject(Lang.get("error_pageNotFound", actualSectionName))
 					return
 				}
 				

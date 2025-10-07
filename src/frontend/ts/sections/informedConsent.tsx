@@ -1,9 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {BindObservable} from "../widgets/BindObservable";
-import {RichText} from "../widgets/RichText";
 import {Section} from "../site/Section";
 
 export class Content extends SectionContent {

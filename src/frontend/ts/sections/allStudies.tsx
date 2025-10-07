@@ -7,7 +7,7 @@ import { Study } from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
 import merlinLogsSvg from "../../imgs/icons/merlinLogs.svg?raw";
 import { StudiesDataType } from "../loader/StudyLoader";
-import { Content as StudiesContent } from "../pages/studies";
+import { Content as StudiesContent } from ".././sections/studies";
 import { SectionAlternative } from "../site/SectionContent";
 import { BindObservable } from "../widgets/BindObservable";
 
