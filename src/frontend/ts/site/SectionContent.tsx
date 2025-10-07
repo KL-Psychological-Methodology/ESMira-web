@@ -9,6 +9,7 @@ import {PrimitiveType} from "../observable/types/PrimitiveType";
 import {AccountPermissions} from "../admin/AccountPermissions";
 import {AdminToolsInterface} from "../admin/AdminToolsInterface";
 import {Admin} from "../admin/Admin";
+import {SECTION_DELIMITER} from "../singletons/HashData";
 
 export interface SectionAlternative {
 	title: string
@@ -119,14 +120,24 @@ export abstract class SectionContent {
 		return this.getAdmin().isLoggedIn() && (this.getTools().hasPermission(name, studyId) ?? false)
 	}
 	
+	/**
+	 * Creates the hash url to a provided section. The returned hash also includes the path to the sections to the left of the current section.
+	 * By default, the new section is added to the right of the current section (current depth + 1).
+	 * By providing a depth, the new section is added to the specified depth instead.
+	 *
+	 * @see {@link HashData}
+	 * @param name - The name (including its data code) of the target section.
+	 * @param depth - Optional. The depth to add the new section to. Defaults to the current depth + 1.
+	 * @returns The full url hash.
+	 */
 	public getUrl(name: string, depth: number = this.section.depth): string {
-		return `${this.section.getHash(depth)}/${name}`
+		return `${this.section.getHash(depth)}${SECTION_DELIMITER}${name}`
 	}
 	public goTo(target: string): void {
 		window.location.hash = "#"+target;
 	}
 	public newSection(target: string, depth: number = this.section.depth): void {
-		window.location.hash = depth == -1 ? target : `${this.section.getHash(depth)}/${target}`
+		window.location.hash = depth == -1 ? target : `${this.section.getHash(depth)}${SECTION_DELIMITER}${target}`
 	}
 	
 	

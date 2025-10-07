@@ -1,33 +1,20 @@
-import { Section } from "./Section";
+import {Section} from "./Section";
 import langIndex from "../locales.json";
-import { NavigationRow } from "./NavigationRow";
-import { SiteData } from "./SiteData";
+import {NavigationRow} from "./NavigationRow";
+import {SiteData} from "./SiteData";
 import m from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Admin } from "../admin/Admin";
-import { DropdownMenu } from "../widgets/DropdownMenu";
+import {HashData, SectionData} from "../singletons/HashData";
+import {Lang} from "../singletons/Lang";
+import {Admin} from "../admin/Admin";
+import {DropdownMenu} from "../widgets/DropdownMenu";
 
 const SECTION_MIN_WIDTH = 650;
 
 /**
  * Root class that is responsible for all views
- * General concept.
- * {@link Site} holds an array of {@link Section} - one Section for each section you see displayed.
- * {@link Section} is responsible for displaying the {@link LoaderState} and loading the content.
- * The content is dynamically loaded and inherits from {@link SectionContent}.
- *
- * Each {@link Section} is fully independent of each other. Their main source of data comes from
- * - {@link SiteData}: Holds the {@link StudyLoader} and other data and convenience methods. It is shared between all sections.
- * - {@link DynamicValues}: A Record with observables that are shared between all sections - the only means of communicating between sections.
- * 		Should not be cached. That means the value needs to be reloaded every time the view gets recreated
- * - {@link StaticValues}: Values that are not changed (for the section) after initialisation of a section.
- * 		Each section has their own copy which includes copies of values from all previous sections.
- * 		It is not meant to store data but only as a way of accessing variables from the url hash
- *
- * Url hash-syntax:
- * Each section is separated by "/". Each section has the same structure:
- * [sectionName]:[sectionValue?],[firstKey]:[firstValue],[secondKey]:[secondValue]...
- * See implementation in {@link onhashchange()}, {@link addSectionToIndex()} and {@link Section.constructor()}
+ * General concept:
+ * {@link Site} holds an array of {@link Section} - one Section for each page you see displayed.
+ * {@link onhashchange()} creates (or removes) sections using {@link HashData}
  *
  * Admin-Panel:
  * See description of {@link Admin} for more information
@@ -60,7 +47,7 @@ export class Site {
 		//TODO: do in php
 		document.getElementById("headerServerName")!.innerText = serverName
 
-		if (this.sectionsView)
+		if(this.sectionsView)
 			this.sectionsView.innerHTML = ""
 
 		window.onhashchange = this.onhashchange.bind(this)
@@ -68,7 +55,7 @@ export class Site {
 
 		document.getElementById("sectionBoxWidthSetter")?.addEventListener("change", (e) => {
 			const p = (e.target as HTMLInputElement).value
-			if (this.sectionsView)
+			if(this.sectionsView)
 				this.sectionsView.style.width = p + "%"
 
 			this.sectionWidthPercent = +p
@@ -118,7 +105,7 @@ export class Site {
 	private updateSectionDimensions(): void {
 		const siteWidth = window.innerWidth || document.documentElement.clientWidth;
 
-		if (siteWidth > SECTION_MIN_WIDTH) {
+		if(siteWidth > SECTION_MIN_WIDTH) {
 			if (!this.overrideSectionWidth) {
 				this.sectionWidthPercent = Math.round(100 / (siteWidth / SECTION_MIN_WIDTH))
 				document.body.classList.remove("smallScreen")
@@ -131,15 +118,15 @@ export class Site {
 		}
 
 		const view = document.getElementById("sectionBoxWidthSetter") as HTMLInputElement
-		if (view)
+		if(view)
 			view.value = Math.round(this.sectionWidthPercent).toString();
 
 		this.navigationRow.positionNavi(this.sectionWidthPercent)
 	}
 
 
-	private addSectionToIndex(dataCode: string): void {
-		const section = new Section(dataCode, this.siteData, this.sections)
+	private addSectionToIndex(sectionData: SectionData): void {
+		const section = new Section(sectionData, this.siteData, this.sections)
 		section.load()
 		this.sections.push(section)
 		this.siteData.currentSection = this.sections.length - 1
@@ -158,7 +145,7 @@ export class Site {
 			view: () => {
 				let sections: Section[]
 				let currentSection: number
-				if (this.siteData.onlyShowLastSection) {
+				if(this.siteData.onlyShowLastSection) {
 					sections = [this.sections[this.sections.length - 1]]
 					currentSection = 0
 				}
@@ -192,55 +179,44 @@ export class Site {
 	/**
 	 * replace css-rules to highlight clicked a tags
 	 */
-	private async updateHighlightedLinksCss(newSectionsData: string[]): Promise<void> {
-		const aRules: string[] = []
-		const dashRules: string[] = []
-		const svgRules: string[] = []
-		let connectedCode = "#" + newSectionsData[0]
-
-		for (let i = 1; i < newSectionsData.length; ++i) {
-			connectedCode += "/" + newSectionsData[i]
-			const aRule = `.section.${this.sections[i - 1].sectionName} a[href="${connectedCode}"]`
-			aRules.push(`${aRule}, ${aRule} span`)
-			dashRules.push(`${aRule}.dashLink`)
-			svgRules.push(`${aRule} svg`)
-		}
+	private async updateHighlightedLinksCss(): Promise<void> {
 		const cssRules = new CSSStyleSheet()
-
-		await cssRules.replace(`${aRules.join(",")}{color:#dc4e9d !important; text-decoration: underline !important;}\n${svgRules.join(",")}{fill: #dc4e9d;}\n${dashRules.join(",")}{background-color:#9fe0f7;}`)
+		const slice = this.sections.slice(1)
+		
+		await cssRules.replace(
+			`${slice.map(section => section.cssRules.aHeader).join(",")}{color:#dc4e9d !important; text-decoration: underline !important;}
+			${slice.map(section => section.cssRules.dashHeader).join(",")}{background-color:#9fe0f7;}
+			${slice.map(section => section.cssRules.svgHeader).join(",")}{fill: #dc4e9d;}`
+		)
+		// we have to fully replace adoptedStyleSheets because mutability was only added around 2022 (https://caniuse.com/mdn-api_document_adoptedstylesheets_mutable)
 		document.adoptedStyleSheets = [cssRules]
 	}
-
+	
 	private onhashchange(): void {
-		let hash = window.location.hash
-		if (hash.length === 0)
-			hash = this.startHash
-		else
-			hash = hash.substring(1)
-
-		if (hash.startsWith("admin"))
+		const hashData = new HashData(this.startHash)
+		const newLength = hashData.getSectionCount()
+		
+		if(hashData.needsAdmin()) {
 			this.siteData.admin.enableAdmin()
-
-		const newSectionData = hash.split("/")
-		if (hash.slice(-1) === "/")
-			newSectionData.pop()
-
+		}
+		
 		//find unneeded sections:
 		let firstI = 0
-		while (firstI < newSectionData.length && firstI < this.sections.length && newSectionData[firstI] === this.sections[firstI].dataCode) {
+		while(firstI < newLength && firstI < this.sections.length && hashData.getSectionCode(firstI) === this.sections[firstI].dataCode) {
 			++firstI
 		}
-
+		
 		//remove unneeded sections:
-		for (let i = this.sections.length - 1; i >= firstI; --i)
+		for(let i = this.sections.length - 1; i >= firstI; --i) {
 			this.removeSection(i)
-
-		//add new sections:
-		for (let i = firstI, max = newSectionData.length; i < max; ++i) {
-			this.addSectionToIndex(newSectionData[i])
 		}
-
+		
+		//add new sections:
+		for(let i = firstI, max = newLength; i < max; ++i) {
+			this.addSectionToIndex(hashData.getSectionData(i))
+		}
+		
 		this.updateSectionDimensions()
-		this.updateHighlightedLinksCss(newSectionData)
+		this.updateHighlightedLinksCss()
 	}
 }

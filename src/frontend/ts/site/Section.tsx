@@ -6,6 +6,7 @@ import {SectionContent} from "./SectionContent";
 import backSvg from "../../imgs/icons/back.svg?raw";
 import starEmptySvg from "../../imgs/icons/star_empty.svg?raw";
 import starFilledSvg from "../../imgs/icons/star_filled.svg?raw";
+import {SECTION_DELIMITER, SectionData} from "../singletons/HashData";
 import {StaticValues} from "./StaticValues";
 import {Study} from "../data/study/Study";
 import {StudiesDataType} from "../loader/StudyLoader";
@@ -16,10 +17,24 @@ import {AdminToolsInterface} from "../admin/AdminToolsInterface";
 import {Admin} from "../admin/Admin";
 import { BookmarkLoader } from "../loader/BookmarkLoader";
 
+/**
+ * {@link Section} is responsible for displaying the {@link LoaderState} and loading the content.
+ * The content is dynamically loaded and inherits from {@link SectionContent}.
+ * Each {@link Section} is fully independent of each other. Their main source of data comes from
+ * - {@link SiteData}: Holds the {@link StudyLoader} and other data and convenience methods. It is shared between all sections.
+ * - {@link DynamicValues}: A Record saved in {@link SiteData} with observables that are shared between all sections - the only means of communicating between sections.
+ * 		Should not be cached. That means the value needs to be reloaded every time the view gets recreated
+ * - {@link StaticValues}: Values that are not changed (for the section) after initialisation of a section.
+ * 		Each section has their own copy which includes copies of values from all previous sections.
+ * 		It is not meant to store data but only as a way of accessing variables from the url hash
+ *
+ */
 export class Section {
 	public readonly depth: number
 	public readonly dataCode: string
+	public readonly fullDataCode: string
 	private readonly staticValues: Record<string, string>
+	public readonly cssRules: {aHeader: string, dashHeader: string, svgHeader: string}
 	
 	public readonly allSections: Array<Section>
 	public readonly sectionName: string
@@ -32,9 +47,12 @@ export class Section {
 	
 	public isMarked = false
 	
-	constructor(dataCode: string, siteData: SiteData, allSections: Array<Section>, depth: number = allSections.length) {
+	constructor(sectionData: SectionData, siteData: SiteData, allSections: Array<Section>, depth: number = allSections.length) {
+		const lastSection: Section | null = depth ? allSections[depth - 1] : null
+		
 		this.depth = depth
-		this.dataCode = dataCode
+		this.dataCode = sectionData.dataCode
+		this.fullDataCode = lastSection ? lastSection.fullDataCode + SECTION_DELIMITER + sectionData.dataCode : sectionData.dataCode
 		this.allSections = allSections
 		this.siteData = siteData
 		this.initPromise = new Promise<Section>((resolve) => {
@@ -43,21 +61,28 @@ export class Section {
 		
 		this.loader = new LoaderState()
 		
-		const variables = dataCode.split(",")
-		const [pageName, pageValue] = variables[0].split(":")
-		
-		const lastPage: Section | null = this.depth ? allSections[this.depth - 1] : null
-		const lastStaticValues: Record<string, any> = lastPage?.staticValues || {}
+		const lastStaticValues: Record<string, any> = lastSection?.staticValues || {}
 		this.staticValues = { ... lastStaticValues } //creates a copy
+		const [sectionName, sectionValue] = sectionData.getValues(this.staticValues)
 		
-		// additional values are variables:
-		for (let i = variables.length - 1; i >= 1; --i) {
-			const [key, value] = variables[i].split(":")
-			this.staticValues[key] = value == undefined ? "1" : value
+		this.sectionName = sectionName
+		this.sectionValue = sectionValue
+		
+		if(lastSection) {
+			const aRule = `.section.${lastSection.sectionName} a[href="#${this.fullDataCode}"]`
+			this.cssRules = {
+				aHeader: `${aRule}, ${aRule} span`,
+				dashHeader: `${aRule}.dashLink`,
+				svgHeader: `${aRule} svg`
+			}
 		}
-		
-		this.sectionName = pageName
-		this.sectionValue = pageValue
+		else {
+			this.cssRules = {
+				aHeader: "",
+				dashHeader: "",
+				svgHeader: ""
+			}
+		}
 	}
 	
 	public async load(): Promise<void> {
@@ -85,11 +110,10 @@ export class Section {
 				}
 				
 				const loadResponses = await Promise.all(Content.preLoad(this))
-				
-				const sectionContent = new Content(this, ...loadResponses)
+				const sectionContent = new Content(this, ...loadResponses) as SectionContent
 				await sectionContent.preInit(... loadResponses)
 				this.sectionContent = sectionContent
-				m.redraw()
+				
 				resolve()
 				this.setInitDone(this)
 			}
@@ -100,7 +124,7 @@ export class Section {
 	}
 	public reload(): Promise<void> {
 		this.destroy()
-		const section = new Section(this.dataCode, this.siteData, this.allSections, this.depth)
+		const section = new Section(new SectionData(this.dataCode), this.siteData, this.allSections, this.depth)
 		this.allSections[this.depth] = section
 		return section.load()
 	}
@@ -268,12 +292,11 @@ export class Section {
 	}
 
 	public getHash(depth: number = this.depth): string {
-		const sections = this.allSections;
-		const dataCodes: string[] = []
-		for(let i = 0, max = Math.min(sections.length, depth + 1); i < max; ++i) {
-			dataCodes.push(sections[i].dataCode)
+		if(!this.allSections.length) {
+			return "#"
 		}
-		return `#${dataCodes.join("/")}`;
+		const allowedDepth = Math.min(this.allSections.length - 1, Math.max(depth, 0))
+		return `#${this.allSections[allowedDepth].fullDataCode}`
 	}
 	public backHash(): string {
 		return this.getHash(this.depth-1)
