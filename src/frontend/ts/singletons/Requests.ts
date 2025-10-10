@@ -64,5 +64,21 @@ export const Requests = {
 		else {
 			throw Lang.get("error_from_server", obj.error || response)
 		}
+	},
+	
+	/**
+	 * Loads a JavaScript module from the specified URL and returns the imported module from `import()`.
+	 * The external code is expected to have `export` definitions
+	 *
+	 * @param url - The URL of the module to be loaded.
+	 * @param type - The HTTP request type to use (e.g., "get", "post").
+	 * @param requestData - The data to send with the request (if using "post").
+	 * @returns A promise that resolves with the imported module.
+	 * @throws error_connection_failed If the creation of the request fails.
+	 */
+	async loadCodeModule(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<any> {
+		const source = await this.loadRaw(url, type, requestData)
+		const objectURL = URL.createObjectURL(new Blob([source], {type: "application/javascript"}))
+		return await import(/*webpackIgnore: true*/ `${objectURL}`)
 	}
 }
