@@ -1,4 +1,3 @@
-import m from "mithril"
 import { PrimitiveType } from "../observable/types/PrimitiveType";
 import { BaseObservable } from "../observable/BaseObservable";
 import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
@@ -110,6 +109,14 @@ export const TimeTransformer: Transformer = {
 	}
 }
 
+/**
+ * binds the value of a form element (e.g. input, select, ...) to an observable and automatically updates the observable when the value changes.
+ * @param obs - the observable to bind to
+ * @param transformer - an optional transformer to assure that the value adheres to a certain format (e.g. number, date, ...)
+ * @param attr - the attribute of the form element to bind to (e.g. value, checked, ...). Usually the correct attribute can be inferred from the data type of the observable.
+ * @param event - which event to listen to. Uses `onchange` by default.
+ * @returns a Record with the attribute and event handler which is meant to be passed via spread operator (`...`) to the element attributes.
+ */
 export function BindObservable(obs: BaseObservable<PrimitiveType>, transformer?: Transformer, attr?: keyof HTMLInputElement, event: keyof HTMLInputElement = "onchange"): Record<string, any> {
 	const attrValue = obs.get()
 	if (!transformer) {
