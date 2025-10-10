@@ -1,4 +1,4 @@
-import m, {Vnode} from "mithril";
+import {Vnode} from "mithril";
 import {Section} from "./Section";
 import {Study} from "../data/study/Study";
 import {StaticValues} from "./StaticValues";
@@ -78,12 +78,12 @@ export abstract class SectionContent {
 	public getStaticString<T extends StaticValues>(key: T): string | null {
 		return this.section.getStaticString(key)
 	}
-	protected getStudyOrNull(id: number = this.getStaticInt("id") ?? -1): Study | null {
-		const studies = this.section.siteData.studyLoader.getStudies()
-		if(id == -1)
-			return studies.getCount() == 1 ? (studies.getFirst() || null) : null
-		
-		return studies.getEntry(id) ?? null
+	
+	/**
+	 * @see {@link Section.getStudyOrNull()}
+	 */
+	public getStudyOrNull(id: number = this.getStaticInt("id") ?? -1): Study | null {
+		return this.section.getStudyOrNull(id)
 	}
 	public getStudyOrThrow(id: number = this.getStaticInt("id") ?? -1): Study {
 		const study = this.getStudyOrNull(id)
@@ -91,7 +91,7 @@ export abstract class SectionContent {
 			throw new Error(`Study ${id} does not exist!`)
 		return study
 	}
-	protected getQuestionnaireOrNull(qId: number = this.getStaticInt("qId") ?? -1, study: Study | null = this.getStudyOrNull()): Questionnaire | null {
+	public getQuestionnaireOrNull(qId: number = this.getStaticInt("qId") ?? -1, study: Study | null = this.getStudyOrNull()): Questionnaire | null {
 		if(!study)
 			return null
 		const questionnaires = this.getStudyOrThrow().questionnaires.get()
@@ -101,7 +101,7 @@ export abstract class SectionContent {
 		}
 		return null
 	}
-	protected getQuestionnaireOrThrow(qId: number = this.getStaticInt("qId") ?? -1): Questionnaire {
+	public getQuestionnaireOrThrow(qId: number = this.getStaticInt("qId") ?? -1): Questionnaire {
 		const questionnaire = this.getQuestionnaireOrNull(qId, this.getStudyOrThrow())
 		if(!questionnaire)
 			throw new Error(`Questionnaire ${qId} does not exist!`)
@@ -121,17 +121,10 @@ export abstract class SectionContent {
 	}
 	
 	/**
-	 * Creates the hash url to a provided section. The returned hash also includes the path to the sections to the left of the current section.
-	 * By default, the new section is added to the right of the current section (current depth + 1).
-	 * By providing a depth, the new section is added to the specified depth instead.
-	 *
-	 * @see {@link HashData}
-	 * @param name - The name (including its data code) of the target section.
-	 * @param depth - Optional. The depth to add the new section to. Defaults to the current depth + 1.
-	 * @returns The full url hash.
+	 * @see {@link Section.getUrl()}
 	 */
 	public getUrl(name: string, depth: number = this.section.depth): string {
-		return `${this.section.getHash(depth)}${SECTION_DELIMITER}${name}`
+		return this.section.getUrl(name, depth)
 	}
 	public goTo(target: string): void {
 		window.location.hash = "#"+target;

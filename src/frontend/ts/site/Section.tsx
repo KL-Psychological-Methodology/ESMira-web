@@ -302,6 +302,33 @@ export class Section {
 		return this.getHash(this.depth-1)
 	}
 	
+	/**
+	 * Creates the hash url to a provided section. The returned hash also includes the path to the sections to the left of the current section.
+	 * By default, the new section is added to the right of the current section (current depth + 1).
+	 * By providing a depth, the new section is added to the specified depth instead.
+	 *
+	 * @see {@link HashData}
+	 * @param name - The name (including its data code) of the target section.
+	 * @param depth - Optional. The depth to add the new section to. Defaults to the current depth + 1.
+	 * @returns The full url hash.
+	 */
+	public getUrl(name: string, depth: number = this.depth): string {
+		return `${this.getHash(depth)}${SECTION_DELIMITER}${name}`
+	}
+	
+	/**
+	 * Returns the study associated with this section (or a second before this) or null if no study is associated.
+	 * @param id - the study id. If not provided uses the hash url variable `id` instead.
+	 * @returns the study or null if no study is associated.
+	 */
+	public getStudyOrNull(id: number = this.getStaticInt("id") ?? -1): Study | null {
+		const studies = this.siteData.studyLoader.getStudies()
+		if(id == -1)
+			return studies.getCount() == 1 ? (studies.getFirst() || null) : null
+		
+		return studies.getEntry(id) ?? null
+	}
+	
 	
 	private eventClick(): void {
 		this.siteData.currentSection = this.depth
