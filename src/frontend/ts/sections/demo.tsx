@@ -2,19 +2,19 @@ import m, {Vnode} from "mithril";
 import {Content as AttendContent} from ".././sections/attend";
 import {FILE_GET_QUESTIONNAIRE} from "../constants/urls";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {ObserverId} from "../observable/BaseObservable";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {Study} from "../data/study/Study";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends AttendContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
 	private readonly indexObserverId: ObserverId
 	private langObserverId: ObserverId
 	
-	constructor(section: Section, study: Study) {
-		super(section)
+	constructor(sectionData: SectionData, study: Study) {
+		super(sectionData)
 		this.questionnaireIndex = this.getDynamic("questionnaireIndex", 0)
 		this.indexObserverId = this.questionnaireIndex.addObserver(() => {
 			this.loadQuestionnaire()
@@ -38,7 +38,7 @@ export class Content extends AttendContent {
 	}
 	
 	protected getAttendQuestionnaire(): Questionnaire {
-		if(this.section.sectionValue == "static") {
+		if(this.sectionData.sectionValue == "static") {
 			return this.getQuestionnaireOrThrow()
 		}
 		else {

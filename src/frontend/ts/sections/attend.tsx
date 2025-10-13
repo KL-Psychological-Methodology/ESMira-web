@@ -1,12 +1,12 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Component, Vnode, VnodeDOM } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Study } from "../data/study/Study";
-import { Questionnaire } from "../data/study/Questionnaire";
-import { Input } from "../data/study/Input";
-import { FILE_GET_QUESTIONNAIRE } from "../constants/urls";
-import { Section } from "../site/Section";
-import { AddJsToServerHtml } from "../helpers/AddJsToServerHtml";
+import {SectionContent} from "../site/SectionContent";
+import m, {Component, Vnode, VnodeDOM} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {Study} from "../data/study/Study";
+import {Questionnaire} from "../data/study/Questionnaire";
+import {Input} from "../data/study/Input";
+import {FILE_GET_QUESTIONNAIRE} from "../constants/urls";
+import {AddJsToServerHtml} from "../helpers/AddJsToServerHtml";
+import {SectionData} from "../site/SectionData";
 
 interface ServerResponse {
 	dataType: "questionnaire" | "finished" | "forwarded"
@@ -24,8 +24,8 @@ export class Content extends SectionContent {
 	protected noCookieSID: string = ""
 	private isFinished: boolean = false
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public preInit(_study: Study): Promise<void> {
@@ -61,7 +61,7 @@ export class Content extends SectionContent {
 	}
 
 	public async loadQuestionnaire(formData: string = "load"): Promise<void> {
-		const response: ServerResponse = await this.section.loader.loadJson(this.createUrl(), "post", formData)
+		const response: ServerResponse = await this.sectionData.loader.loadJson(this.createUrl(), "post", formData)
 		this.noCookieSID = response.sid
 		this.pageTitle = response.pageTitle
 

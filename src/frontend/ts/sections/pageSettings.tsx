@@ -1,18 +1,18 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { Lang } from "../singletons/Lang";
-import { BindObservable, ConstrainedNumberTransformer } from "../widgets/BindObservable";
-import { RichText } from "../widgets/RichText";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { DashElement } from "../widgets/DashElement";
-import { Section } from "../site/Section";
-import { CodeEditor } from "../widgets/CodeEditor";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {Lang} from "../singletons/Lang";
+import {BindObservable} from "../widgets/BindObservable";
+import {RichText} from "../widgets/RichText";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {DashElement} from "../widgets/DashElement";
+import {CodeEditor} from "../widgets/CodeEditor";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public title(): string {

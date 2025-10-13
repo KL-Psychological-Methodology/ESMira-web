@@ -1,21 +1,21 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {Section} from "../site/Section";
 import {Requests} from "../singletons/Requests";
 import {FILE_STATISTICS} from "../constants/urls";
 import {Study} from "../data/study/Study";
 import {ChartView} from "../widgets/ChartView";
 import {ObservablePromise} from "../observable/ObservablePromise";
 import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly publicStatisticsPromises: ObservablePromise<LoadedStatistics>[]
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		return [ section.getStudyPromise() ]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [ sectionData.getStudyPromise() ]
 	}
-	constructor(section: Section, study: Study) {
-		super(section)
+	constructor(sectionData: SectionData, study: Study) {
+		super(sectionData)
 		
 		const promise = this.loadPublicStatistics()
 		this.publicStatisticsPromises = study.publicStatistics.charts.get().map(
@@ -44,7 +44,7 @@ export class Content extends SectionContent {
 			return { mainStatistics: publicStatistics }
 		}
 		catch(e: any) {
-			this.section.loader.error(e.message || e)
+			this.sectionData.loader.error(e.message || e)
 			return { mainStatistics: {} }
 		}
 	}

@@ -19,9 +19,9 @@ export class AddDropdownMenus {
 	}
 	
 	public async addStudy(target: Element): Promise<void> {
-		const loaderState = this.sectionContent.section.loader
-		const studyLoader = this.sectionContent.section.siteData.studyLoader
-		await this.sectionContent.section.getStrippedStudyListPromise()
+		const loaderState = this.sectionContent.sectionData.loader
+		const studyLoader = this.sectionContent.sectionData.siteData.studyLoader
+		await this.sectionContent.sectionData.getStrippedStudyListPromise()
 		await loaderState.showLoader(studyLoader.loadStrippedStudyList())
 		
 		openDropdown(
@@ -40,9 +40,9 @@ export class AddDropdownMenus {
 		)
 	}
 	
-	private addStudyView(addStudy: (studyData: ObservableStructureDataType) => any): Vnode<any, any> {
-		const loaderState = this.sectionContent.section.loader
-		const studyLoader = this.sectionContent.section.siteData.studyLoader
+	private addStudyView(addStudy: (studyData: DataStructureInputType) => any): Vnode<any, any> {
+		const loaderState = this.sectionContent.sectionData.loader
+		const studyLoader = this.sectionContent.sectionData.siteData.studyLoader
 		
 		return <div class="content">
 			{DashRow(
@@ -82,8 +82,8 @@ export class AddDropdownMenus {
 	}
 	
 	public async addQuestionnaire(study: Study, target: Element): Promise<void> {
-		const loaderState = this.sectionContent.section.loader
-		const studyLoader = this.sectionContent.section.siteData.studyLoader
+		const loaderState = this.sectionContent.sectionData.loader
+		const studyLoader = this.sectionContent.sectionData.siteData.studyLoader
 		await loaderState.showLoader(studyLoader.loadStrippedStudyList())
 		
 		openDropdown(
@@ -94,8 +94,8 @@ export class AddDropdownMenus {
 					close()
 					const questionnaire = await loaderState.showLoader(studyLoader.addQuestionnaire(study, studyData))
 					
-					if(this.sectionContent.section.sectionName == "qEdit")
-						this.sectionContent.newSection(`qEdit,q:${questionnaire.internalId.get()}`, this.sectionContent.section.depth - 1)
+					if(this.sectionContent.sectionData.sectionName == "qEdit")
+						this.sectionContent.newSection(`qEdit,q:${questionnaire.internalId.get()}`, this.sectionContent.sectionData.depth - 1)
 					else
 						this.sectionContent.newSection(`qEdit,q:${questionnaire.internalId.get()}`)
 					this.sectionContent.setDynamic("questionnaireIndex", study.questionnaires.get().length - 1)
@@ -105,9 +105,9 @@ export class AddDropdownMenus {
 			}
 		)
 	}
-	private addQuestionnaireView(addSQuestionnaire: (questionnaireData: ObservableStructureDataType) => any): Vnode<any, any> {
-		const loaderState = this.sectionContent.section.loader
-		const studyLoader = this.sectionContent.section.siteData.studyLoader
+	private addQuestionnaireView(addSQuestionnaire: (questionnaireData: DataStructureInputType) => any): Vnode<any, any> {
+		const loaderState = this.sectionContent.sectionData.loader
+		const studyLoader = this.sectionContent.sectionData.siteData.studyLoader
 		const openedStudies: Record<number, boolean> = {}
 		
 		return <div class="content">
@@ -168,7 +168,7 @@ export class AddDropdownMenus {
 			}),
 			(close) => <ul class="content">
 				<h2>{Lang.get("select_a_study")}</h2>
-				{ this.sectionContent.section.siteData.studyLoader.getSortedStudyList()
+				{ this.sectionContent.sectionData.siteData.studyLoader.getSortedStudyList()
 					.filter((study) =>
 						tools.isAdmin || tools.permissions.write.indexOf(study.id.get()) != -1
 					)

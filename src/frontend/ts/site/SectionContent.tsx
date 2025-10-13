@@ -1,5 +1,4 @@
 import {Vnode} from "mithril";
-import {Section} from "./Section";
 import {Study} from "../data/study/Study";
 import {StaticValues} from "./StaticValues";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
@@ -9,7 +8,8 @@ import {PrimitiveType} from "../observable/types/PrimitiveType";
 import {AccountPermissions} from "../admin/AccountPermissions";
 import {AdminToolsInterface} from "../admin/AdminToolsInterface";
 import {Admin} from "../admin/Admin";
-import {SECTION_DELIMITER} from "../singletons/HashData";
+import {SECTION_DELIMITER} from "./HashData";
+import {SectionData} from "./SectionData";
 
 export interface SectionAlternative {
 	title: string
@@ -31,17 +31,17 @@ export interface SectionAlternative {
  * Have a look at the implementation in {@link Section.load()} for more information
  */
 export abstract class SectionContent {
-	public readonly section: Section
+	public readonly sectionData: SectionData
 	
-	constructor(section: Section) {
-		this.section = section
+	constructor(section: SectionData) {
+		this.sectionData = section
 	}
 	
 	/**
 	 * Is always called before anything else.
 	 * @returns Promise array. The section will be in loading state and not other methods will be called as long as these Promises are loading
 	 */
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(_sectionData: SectionData): Promise<any>[] {
 		return []
 	}
 	
@@ -51,6 +51,9 @@ export abstract class SectionContent {
 	 */
 	public preInit(... _responses: any): Promise<any> {
 		return Promise.resolve()
+	}
+	public getSectionCallback(): any {
+		return null
 	}
 	public hasAlternatives(): boolean {
 		return false
@@ -67,23 +70,23 @@ export abstract class SectionContent {
 	
 	
 	public getDynamic<T extends PrimitiveType>(key: keyof DynamicValues, defaultValue: T): ObservablePrimitive<T> {
-		return this.section.getDynamic(key, defaultValue)
+		return this.sectionData.getDynamic(key, defaultValue)
 	}
 	public setDynamic<T extends PrimitiveType>(key: keyof DynamicValues, newValue: T) {
-		this.section.siteData.dynamicValues.setChild(key, newValue)
+		this.sectionData.siteData.dynamicValues.setChild(key, newValue)
 	}
 	public getStaticInt<T extends StaticValues>(key: T): number | null {
-		return this.section.getStaticInt(key)
+		return this.sectionData.getStaticInt(key)
 	}
 	public getStaticString<T extends StaticValues>(key: T): string | null {
-		return this.section.getStaticString(key)
+		return this.sectionData.getStaticString(key)
 	}
 	
 	/**
-	 * @see {@link Section.getStudyOrNull()}
+	 * @see {@link SectionData.getStudyOrNull()}
 	 */
 	public getStudyOrNull(id: number = this.getStaticInt("id") ?? -1): Study | null {
-		return this.section.getStudyOrNull(id)
+		return this.sectionData.getStudyOrNull(id)
 	}
 	public getStudyOrThrow(id: number = this.getStaticInt("id") ?? -1): Study {
 		const study = this.getStudyOrNull(id)
@@ -110,10 +113,10 @@ export abstract class SectionContent {
 	}
 	
 	public getTools(): AdminToolsInterface {
-		return this.section.getTools()
+		return this.sectionData.getTools()
 	}
 	public getAdmin(): Admin {
-		return this.section.getAdmin()
+		return this.sectionData.getAdmin()
 	}
 	
 	public hasPermission(name: keyof AccountPermissions, studyId: number): boolean {
@@ -121,33 +124,18 @@ export abstract class SectionContent {
 	}
 	
 	/**
-	 * @see {@link Section.getUrl()}
+	 * @see {@link SectionData.getUrl()}
 	 */
-	public getUrl(name: string, depth: number = this.section.depth): string {
-		return this.section.getUrl(name, depth)
+	public getUrl(name: string, depth: number = this.sectionData.depth): string {
+		return this.sectionData.getUrl(name, depth)
 	}
 	public goTo(target: string): void {
 		window.location.hash = "#"+target;
 	}
-	public newSection(target: string, depth: number = this.section.depth): void {
-		window.location.hash = depth == -1 ? target : `${this.section.getHash(depth)}${SECTION_DELIMITER}${target}`
+	public newSection(target: string, depth: number = this.sectionData.depth): void {
+		window.location.hash = depth == -1 ? target : `${this.sectionData.getHash(depth)}${SECTION_DELIMITER}${target}`
 	}
 	
-	
-	/**
-	 * Remember: Values or references of observables should NOT be cached (also when the value is an observable itself)
-	 * It would lead to new values not being updated properly on {@link m.redraw()}
-	 *
-	 * Examples:
-	 * You can cache: {@link StudyLoader.studyCache}. Because this observable is readonly and will never be replaced
-	 * You can NOT cache {@link StudyLoader.studyCache.get()} or {@link getStudyOrThrow()} or {@link getStudy().questionnaires.get()[2]}.
-	 * 		Because all study entries in StudyLoader might have been replaced or removed between {@link m.redraw()}
-	 *
-	 * You can cache: {@link SiteData.dynamicValues["accessKey"]} because {@link Container} uses Singletons (see {@link Container.getOrCreateObs()})
-	 * You can not cache: {@link SiteData.dynamicValues["accessKey"].get()} because its value might change
-	 *
-	 * In conclusion: {@link getView()} always needs to work with fresh values. Starting, for example, with {@link getStudyOrThrow()}
-	 */
 	public abstract getView(): Vnode<any, any>
 	
 	public destroy(): void {

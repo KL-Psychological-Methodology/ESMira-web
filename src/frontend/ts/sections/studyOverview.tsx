@@ -1,24 +1,24 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { TitleRow } from "../widgets/TitleRow";
-import { FILE_SAVE_ACCESS } from "../constants/urls";
-import { Requests } from "../singletons/Requests";
-import { StudiesDataType } from "../loader/StudyLoader";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TitleRow} from "../widgets/TitleRow";
+import {FILE_SAVE_ACCESS} from "../constants/urls";
+import {Requests} from "../singletons/Requests";
+import {StudiesDataType} from "../loader/StudyLoader";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly isRedirected: boolean = false
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.siteData.studyLoader.loadAvailableStudies(section.getDynamic("accessKey", "").get())
+			sectionData.siteData.studyLoader.loadAvailableStudies(sectionData.getDynamic("accessKey", "").get())
 		]
 	}
-	constructor(section: Section, studies: StudiesDataType) {
-		super(section)
+	constructor(sectionData: SectionData, studies: StudiesDataType) {
+		super(sectionData)
 		const count = studies.getCount()
 
 		let study
@@ -27,24 +27,24 @@ export class Content extends SectionContent {
 		else if (count == 1) {
 			study = studies.getFirst()
 			if (study)
-				this.section.setStatic("id", study.id.get())
+				this.sectionData.setStatic("id", study.id.get())
 		}
 		else
 			study = this.getStudyOrNull()
 
 
 		if (!study) {
-			this.newSection("studies:studyOverview", this.section.depth - 1)
+			this.newSection("studies:studyOverview", this.sectionData.depth - 1)
 			this.isRedirected = true
 			return
 		}
 		else if (!study.publishedWeb.get()) {
-			this.newSection("appInstall", this.section.depth - 1)
+			this.newSection("appInstall", this.sectionData.depth - 1)
 			this.isRedirected = true
 			return
 		}
 
-		Requests.loadJson(FILE_SAVE_ACCESS, "post", `study_id=${study.id.get()}&page_name=${this.section.depth ? "study" : "navigatedFromHome"}`)
+		Requests.loadJson(FILE_SAVE_ACCESS, "post", `study_id=${study.id.get()}&page_name=${this.sectionData.depth ? "study" : "navigatedFromHome"}`)
 	}
 
 	public title(): string {

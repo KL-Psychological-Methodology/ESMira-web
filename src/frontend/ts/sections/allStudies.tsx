@@ -1,15 +1,15 @@
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { TabBar, TabContent } from "../widgets/TabBar";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { Study } from "../data/study/Study";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TabBar, TabContent} from "../widgets/TabBar";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {Study} from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
 import merlinLogsSvg from "../../imgs/icons/merlinLogs.svg?raw";
-import { StudiesDataType } from "../loader/StudyLoader";
-import { Content as StudiesContent } from ".././sections/studies";
-import { SectionAlternative } from "../site/SectionContent";
-import { BindObservable } from "../widgets/BindObservable";
+import {StudiesDataType} from "../loader/StudyLoader";
+import {Content as StudiesContent} from ".././sections/studies";
+import {SectionAlternative} from "../site/SectionContent";
+import {BindObservable} from "../widgets/BindObservable";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends StudiesContent {
 	protected targetPage: string
@@ -26,30 +26,30 @@ export class Content extends StudiesContent {
 	protected studies: Study[] = []
 	private readonly destroyImpl: (() => void)
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getStrippedStudyListPromise()
+			sectionData.getStrippedStudyListPromise()
 		]
 	}
 
-	constructor(section: Section, studiesObs: StudiesDataType) {
-		super(section)
-		this.ownerRegister = section.siteData.studyLoader.ownerRegister
-		this.selectedOwner = section.siteData.dynamicValues.getOrCreateObs("owner", "~")
-		this.selectedPublicAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("publicAccessKeyIndex", 0)
-		this.selectedDisabledAccessKeyTab = section.siteData.dynamicValues.getOrCreateObs("disabledAccessKeyIndex", 0)
+	constructor(sectionData: SectionData, studiesObs: StudiesDataType) {
+		super(sectionData)
+		this.ownerRegister = sectionData.siteData.studyLoader.ownerRegister
+		this.selectedOwner = sectionData.siteData.dynamicValues.getOrCreateObs("owner", "~")
+		this.selectedPublicAccessKeyTab = sectionData.siteData.dynamicValues.getOrCreateObs("publicAccessKeyIndex", 0)
+		this.selectedDisabledAccessKeyTab = sectionData.siteData.dynamicValues.getOrCreateObs("disabledAccessKeyIndex", 0)
 
-		this.selectedTab = section.siteData.dynamicValues.getOrCreateObs("studiesIndex", 0)
-		switch (section.sectionValue) {
+		this.selectedTab = sectionData.siteData.dynamicValues.getOrCreateObs("studiesIndex", 0)
+		switch (sectionData.sectionValue) {
 			case "data":
 				this.targetPage = "dataStatistics"
-				if (section.getTools().merlinLogsLoader.studiesWithNewMerlinLogsCount.get())
+				if (sectionData.getTools().merlinLogsLoader.studiesWithNewMerlinLogsCount.get())
 					this.selectedTab.set(2)
 				this.titleString = Lang.get("data")
 				break
 			case "msgs":
 				this.targetPage = "messagesOverview"
-				if (section.getTools().messagesLoader.studiesWithNewMessagesCount.get())
+				if (sectionData.getTools().messagesLoader.studiesWithNewMessagesCount.get())
 					this.selectedTab.set(1)
 				this.titleString = Lang.get("messages")
 				break
@@ -107,8 +107,8 @@ export class Content extends StudiesContent {
 		return this.studies.length > 1
 	}
 	public getAlternatives(): SectionAlternative[] | null {
-		const allSections = this.section.allSections
-		const depth = this.section.depth
+		const allSections = this.sectionData.allSections
+		const depth = this.sectionData.depth
 		const id = allSections.length > depth + 1 ? allSections[depth + 1].getStaticInt("id") : null
 
 		return this.studies.map((study) => {
@@ -121,8 +121,8 @@ export class Content extends StudiesContent {
 	}
 
 	protected updateSortedStudies(unsortedStudies: Study[]): void {
-		const studies = this.section.siteData.studyLoader.getSortedStudyList(unsortedStudies)
-		switch (this.section.sectionValue) {
+		const studies = this.sectionData.siteData.studyLoader.getSortedStudyList(unsortedStudies)
+		switch (this.sectionData.sectionValue) {
 			case "data":
 				this.studies = studies.filter((study) => (this.hasPermission("read", study.id.get())) || this.hasPermission("readSimplified", study.id.get()))
 				break

@@ -1,11 +1,11 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Component, Vnode, VnodeDOM } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN } from "../constants/urls";
-import { ErrorReportInfo } from "../data/errorReports/ErrorReportInfo";
+import {SectionContent} from "../site/SectionContent";
+import m, {Component, Vnode, VnodeDOM} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {Requests} from "../singletons/Requests";
+import {FILE_ADMIN} from "../constants/urls";
+import {ErrorReportInfo} from "../data/errorReports/ErrorReportInfo";
 import transferSvg from "../../imgs/icons/transfer.svg?raw"
+import {SectionData} from "../site/SectionData";
 
 interface ErrorReportComponentOptions {
 	report: string
@@ -158,13 +158,13 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 
 export class Content extends SectionContent {
 	private readonly report: string
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			Requests.loadRaw(`${FILE_ADMIN}?type=GetError&timestamp=${section.getStaticInt("timestamp")}`)
+			Requests.loadRaw(`${FILE_ADMIN}?type=GetError&timestamp=${sectionData.getStaticInt("timestamp")}`)
 		]
 	}
-	constructor(section: Section, report: string) {
-		super(section)
+	constructor(sectionData: SectionData, report: string) {
+		super(sectionData)
 		this.report = report
 	}
 

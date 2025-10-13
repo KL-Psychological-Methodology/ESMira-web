@@ -1,24 +1,23 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../widgets/BindObservable";
-import { Study } from "../data/study/Study";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { TabBar, TabContent } from "../widgets/TabBar";
-import { createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl } from "../constants/methods";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {BindObservable} from "../widgets/BindObservable";
+import {Study} from "../data/study/Study";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {TabBar, TabContent} from "../widgets/TabBar";
+import {createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl, safeConfirm} from "../constants/methods";
 import qrcode from "qrcode-generator"
-import { Section } from "../site/Section";
-import { BtnAdd, BtnCopy, BtnCustom, BtnTrash } from "../widgets/BtnWidgets";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement, DashViewOptions } from "../widgets/DashElement";
-import { closeDropdown, openDropdown } from "../widgets/DropdownMenu";
+import {BtnAdd, BtnCopy, BtnCustom, BtnTrash} from "../widgets/BtnWidgets";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement, DashViewOptions} from "../widgets/DashElement";
+import {closeDropdown, openDropdown} from "../widgets/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
 import questionSvg from "../../imgs/icons/question.svg?raw"
-import { safeConfirm } from "../constants/methods";
-import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN, URL_WIKI_DIFFERENCE_LINKS } from "../constants/urls";
+import {Requests} from "../singletons/Requests";
+import {FILE_ADMIN, URL_WIKI_DIFFERENCE_LINKS} from "../constants/urls";
 import warnSvg from "../../imgs/icons/warn.svg?raw";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
@@ -28,16 +27,16 @@ export class Content extends SectionContent {
 	private fallbackUrls: string[]
 	private duplicateAccessKeys: string[]
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackUrls&study_id=${section.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
-			Requests.loadJson(`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${section.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
-			section.getStudyPromise()
+			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackUrls&study_id=${sectionData.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
+			Requests.loadJson(`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${sectionData.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
+			sectionData.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, fallbackUrls: string[], duplicateAccessKeys: string[]) {
-		super(section)
+	constructor(sectionData: SectionData, fallbackUrls: string[], duplicateAccessKeys: string[]) {
+		super(sectionData)
 		this.fallbackUrls = fallbackUrls
 		this.duplicateAccessKeys = duplicateAccessKeys
 		const study = this.getStudyOrNull()
@@ -79,8 +78,8 @@ export class Content extends SectionContent {
 			return
 		}
 		const accessKeyString = study.accessKeys.get().map((key) => key.get()).join(",")
-		this.duplicateAccessKeys = await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${this.section.getStaticInt("id") ?? 0}`,
+		this.duplicateAccessKeys = await this.sectionData.loader.loadJson(
+			`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${this.sectionData.getStaticInt("id") ?? 0}`,
 			"post",
 			`accessKeys=${accessKeyString}`
 		).catch(() => { return [] })

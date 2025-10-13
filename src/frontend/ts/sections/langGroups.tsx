@@ -1,21 +1,21 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { BindObservable, ConstrainedNumberTransformer } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
-import { Section } from "../site/Section";
-import { ChangeLanguageList } from "../widgets/ChangeLanguageList";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {BindObservable, ConstrainedNumberTransformer} from "../widgets/BindObservable";
+import {TitleRow} from "../widgets/TitleRow";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {ChangeLanguageList} from "../widgets/ChangeLanguageList";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private changeLanguageList: ChangeLanguageList
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
-	constructor(sitePage: Section) {
-		super(sitePage)
+	constructor(sectionData: SectionData) {
+		super(sectionData)
 		this.changeLanguageList = new ChangeLanguageList(() => {
 			return this.getStudyOrThrow()
 		})

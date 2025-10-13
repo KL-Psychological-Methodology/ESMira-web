@@ -1,8 +1,8 @@
-import { SectionAlternative, SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import calculateSvg from "../../imgs/dashIcons/calculate.svg?raw"
 import summarySvg from "../../imgs/dashIcons/summary.svg?raw"
@@ -11,12 +11,12 @@ import webAccessSvg from "../../imgs/devices/web.svg?raw"
 import publicStatisticsSvg from "../../imgs/dashIcons/publicStatistics.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import merlinLogsSvg from "../../imgs/dashIcons/merlinLogs.svg?raw"
-import { Section } from "../site/Section";
-import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
+import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("data")
@@ -34,8 +34,8 @@ export class Content extends SectionContent {
 		const usesMerlinScripts = study.hasMerlinScripts()
 		const hasPublicCharts = study.publicStatistics.charts.get().length > 0
 		const usesRewardSystem = study.enableRewardSystem.get()
-		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.section.getStaticInt("id") || 0] || false
-		const useSimplified = !this.hasPermission('read', this.section.getStaticInt("id") || 0)
+		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.sectionData.getStaticInt("id") || 0] || false
+		const useSimplified = !this.hasPermission('read', this.sectionData.getStaticInt("id") || 0)
 		if (useSimplified) {
 			return <div>
 				<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>

@@ -1,11 +1,11 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("informed_consent")

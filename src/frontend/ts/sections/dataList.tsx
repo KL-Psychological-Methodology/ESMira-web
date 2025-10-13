@@ -1,17 +1,17 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import questionnaireSvg from "../../imgs/icons/questionnaire.svg?raw"
 import backupSvg from "../../imgs/icons/backup.svg?raw"
-import { Section } from "../site/Section";
-import { FILE_ADMIN, FILE_MEDIA, FILE_CREATE_MEDIA, FILE_RESPONSES } from "../constants/urls";
-import { Study } from "../data/study/Study";
-import { TitleRow } from "../widgets/TitleRow";
-import { Requests } from "../singletons/Requests";
-import { safeConfirm } from "../constants/methods";
-import { Questionnaire } from "../data/study/Questionnaire";
-import { BtnTrash } from "../widgets/BtnWidgets";
+import {FILE_ADMIN, FILE_CREATE_MEDIA, FILE_MEDIA, FILE_RESPONSES} from "../constants/urls";
+import {Study} from "../data/study/Study";
+import {TitleRow} from "../widgets/TitleRow";
+import {Requests} from "../singletons/Requests";
+import {safeConfirm} from "../constants/methods";
+import {Questionnaire} from "../data/study/Questionnaire";
+import {BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 interface DataLineEntry {
 	title: string
@@ -23,16 +23,16 @@ export class Content extends SectionContent {
 	private is_generating_zip: boolean = false
 	private readonly backupEntries: DataLineEntry[]
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getStudyPromise(),
-			Requests.loadJson(`${FILE_ADMIN}?type=ListData&study_id=${section.getStaticInt("id") ?? 0}`),
-			section.getAdmin().init()
+			sectionData.getStudyPromise(),
+			Requests.loadJson(`${FILE_ADMIN}?type=ListData&study_id=${sectionData.getStaticInt("id") ?? 0}`),
+			sectionData.getAdmin().init()
 		]
 	}
 
-	constructor(section: Section, study: Study, dataEntries: string[]) {
-		super(section)
+	constructor(sectionData: SectionData, study: Study, dataEntries: string[]) {
+		super(sectionData)
 
 		const questionnaires = study.questionnaires.get()
 		const questionnaireIndex: Record<number, Questionnaire> = {};
@@ -62,29 +62,29 @@ export class Content extends SectionContent {
 		if (!confirm(Lang.get("confirm_backup", study.title.get())))
 			return
 
-		await this.section.loader.loadJson(`${FILE_ADMIN}?type=BackupStudy`, "post", `study_id=${study.id.get()}`)
-		await this.section.reload()
-		this.section.loader.info(Lang.get("info_successful"))
+		await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=BackupStudy`, "post", `study_id=${study.id.get()}`)
+		await this.sectionData.callbacks?.reload()
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async emptyData(study: Study): Promise<any> {
 		if (!safeConfirm(Lang.get("confirm_delete_data", study.title.get())))
 			return;
 
-		await this.section.loader.loadJson(`${FILE_ADMIN}?type=EmptyData`, "post", `study_id=${study.id.get()}`)
-		await this.section.reload()
+		await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=EmptyData`, "post", `study_id=${study.id.get()}`)
+		await this.sectionData.callbacks?.reload()
 
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async deleteBackups(study: Study): Promise<any> {
 		if (!safeConfirm(Lang.get("confirm_delete_backups", study.title.get())))
 			return
 
-		await this.section.loader.loadJson(`${FILE_ADMIN}?type=DeleteBackups`, "post", `study_id=${study.id.get()}`)
-		await this.section.reload()
+		await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DeleteBackups`, "post", `study_id=${study.id.get()}`)
+		await this.sectionData.callbacks?.reload()
 
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	public getView(): Vnode<any, any> {

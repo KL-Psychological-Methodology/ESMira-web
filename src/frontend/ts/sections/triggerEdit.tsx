@@ -1,24 +1,24 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { BindObservable, BooleanTransformer, ConstrainedNumberTransformer, TimeTransformer, Transformer } from "../widgets/BindObservable";
-import { ActionTrigger } from "../data/study/ActionTrigger";
-import { Schedule } from "../data/study/Schedule";
-import { EventTrigger } from "../data/study/EventTrigger";
-import { TitleRow } from "../widgets/TitleRow";
-import { PrimitiveType } from "../observable/types/PrimitiveType";
-import { ACTION_INVITATION } from "../constants/actions";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
-import { SignalTime } from "../data/study/SignalTime";
-import { Section } from "../site/Section";
-import { BaseObservable } from "../observable/BaseObservable";
-import { Action } from "../data/study/Action";
-import { Study } from "../data/study/Study";
-import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {BindObservable, BooleanTransformer, ConstrainedNumberTransformer, TimeTransformer, Transformer} from "../widgets/BindObservable";
+import {ActionTrigger} from "../data/study/ActionTrigger";
+import {Schedule} from "../data/study/Schedule";
+import {EventTrigger} from "../data/study/EventTrigger";
+import {TitleRow} from "../widgets/TitleRow";
+import {PrimitiveType} from "../observable/types/PrimitiveType";
+import {ACTION_INVITATION} from "../constants/actions";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {SignalTime} from "../data/study/SignalTime";
+import {BaseObservable} from "../observable/BaseObservable";
+import {Action} from "../data/study/Action";
+import {Study} from "../data/study/Study";
+import {BtnAdd, BtnCopy, BtnTrash} from "../widgets/BtnWidgets";
 import warnSvg from "../../imgs/icons/warn.svg?raw";
+import {SectionData} from "../site/SectionData";
 
 class SpecificQuestionnaireTransformer implements Transformer {
 	private readonly eventTrigger: EventTrigger
@@ -54,8 +54,8 @@ class CombinedValueTransformer implements Transformer {
 export class Content extends SectionContent {
 	private editEventAsTitle: boolean = false
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return this.editEventAsTitle ? Lang.get("edit_event") : Lang.get("edit_schedule")

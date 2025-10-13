@@ -1,7 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {Study} from "../data/study/Study";
 import {Calendar, EventInput} from "@fullcalendar/core";
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -23,6 +22,7 @@ import {getMidnightMillis} from "../constants/methods";
 import {ActionTrigger} from "../data/study/ActionTrigger";
 import {BtnReload} from "../widgets/BtnWidgets";
 import {TitleRow} from "../widgets/TitleRow";
+import {SectionData} from "../site/SectionData";
 
 interface FullcalendarComponentOptions {
 	study: Study
@@ -280,8 +280,8 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 }
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("study_description")
@@ -296,7 +296,7 @@ export class Content extends SectionContent {
 			return m(FullcalendarComponent, {
 				study: study,
 				joinTimestamp: this.getDynamic("joinTimestamp", Date.now()),
-				onError: (msg) => this.section.loader.error(msg)
+				onError: (msg) => this.sectionData.loader.error(msg)
 			})
 	}
 }

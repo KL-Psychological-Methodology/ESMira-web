@@ -1,17 +1,17 @@
-import { SectionAlternative, SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { TitleRow } from "../widgets/TitleRow";
-import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
-import { BtnReload } from "../widgets/BtnWidgets";
-import { makeUrlFriendly } from "../constants/methods";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TitleRow} from "../widgets/TitleRow";
+import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
+import {BtnReload} from "../widgets/BtnWidgets";
+import {makeUrlFriendly} from "../constants/methods";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getStudyPromise(),
-			section.getTools().messagesLoader.getReloadedMessageParticipantInfoList(section.getStaticInt("id") ?? -1)
+			sectionData.getStudyPromise(),
+			sectionData.getTools().messagesLoader.getReloadedMessageParticipantInfoList(sectionData.getStaticInt("id") ?? -1)
 		]
 	}
 
@@ -20,7 +20,7 @@ export class Content extends SectionContent {
 	}
 
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
+		return BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))
 	}
 
 	public hasAlternatives(): boolean {

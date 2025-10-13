@@ -5,7 +5,7 @@ export class SharedUrlAlternatives {
 	public static studyAlternatives(sectionContent: SectionContent, indexName: "edit" | "msgs" | "data"): SectionAlternative[] {
 		const study = sectionContent.getStudyOrThrow()
 		const studyId = study.id.get()
-		const depth = sectionContent.section.depth - 1
+		const depth = sectionContent.sectionData.depth - 1
 		return [
 			{
 				title: Lang.get("edit_study"),

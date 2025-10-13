@@ -23,7 +23,7 @@ export class Content extends SectionContent {
 	private selectedIndex = new ObservablePrimitive(0, null, "fallbackSystem")
 
 	private recentToken: string | null = null
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`),
 			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackTokensInfo`),
@@ -43,7 +43,7 @@ export class Content extends SectionContent {
 	}
 
 	private async reloadInboundTokenList(): Promise<void> {
-		const inboundFallbackTokens = await this.section.loader.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`)
+		const inboundFallbackTokens = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=GetInboundFallbackTokens`)
 		this.inboundTokens = this.sortInboundTokens(inboundFallbackTokens)
 	}
 
@@ -62,7 +62,7 @@ export class Content extends SectionContent {
 		if (!confirm(Lang.get("confirm_delete_inbound_fallback_token", atob(token.otherServerUrl))))
 			return
 
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=DeleteInboundFallbackToken`,
 			"post",
 			`url=${token.otherServerUrl}&user=${token.user}`
@@ -71,7 +71,7 @@ export class Content extends SectionContent {
 	}
 
 	private async issueInboundToken(): Promise<void> {
-		const response = await this.section.loader.loadJson(
+		const response = await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=IssueFallbackSetupToken`,
 			"post",
 			""
@@ -81,7 +81,7 @@ export class Content extends SectionContent {
 	}
 
 	private async addOutboundToken(url: string, token: string): Promise<any> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=SetupFallbackSystem`,
 			"post",
 			`otherUrl=${btoa(url)}&ownUrl=${btoa(getBaseUrl())}&setupToken=${token}`
@@ -92,11 +92,11 @@ export class Content extends SectionContent {
 
 	private async deleteOutboundToken(index: number): Promise<any> {
 		this.outboundTokenUrls.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 
 	private async updateOutpboundFallbackTokenList(): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=SetOutboundFallbackTokensList`,
 			"post",
 			`urlList=${JSON.stringify(this.outboundTokenUrls.get().map((token) => btoa(token.url.get())))}`
@@ -125,7 +125,7 @@ export class Content extends SectionContent {
 	}
 
 	private getInboundView(): Vnode<any, any> {
-		const isAdmin = this.section.getTools().isAdmin
+		const isAdmin = this.sectionData.getTools().isAdmin
 		return <div>
 			<span>{Lang.get("inbound_fallback_token_info")}</span>
 
@@ -161,7 +161,7 @@ export class Content extends SectionContent {
 			</div>
 
 			{TitleRow(Lang.get("add_fallback_token"))}
-			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.section.loader.error(msg) })}
+			{AddOutboundToken(this.addOutboundToken.bind(this), (msg) => { this.sectionData.loader.error(msg) })}
 
 		</div>
 	}

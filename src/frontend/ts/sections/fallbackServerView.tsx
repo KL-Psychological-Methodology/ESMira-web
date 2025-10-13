@@ -1,8 +1,8 @@
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { SectionContent } from "../site/SectionContent";
-import { FILE_ADMIN } from "../constants/urls";
-import { getFromUrlFriendly } from "../constants/methods";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {SectionContent} from "../site/SectionContent";
+import {FILE_ADMIN} from "../constants/urls";
+import {getFromUrlFriendly} from "../constants/methods";
 
 export class Content extends SectionContent {
 	public title(): string {
@@ -27,7 +27,7 @@ export class Content extends SectionContent {
 			alert(Lang.get("fallback_url_parameter_error"))
 			return
 		}
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=PingFallbackServer`,
 			"post",
 			`url=${url}`
@@ -41,11 +41,11 @@ export class Content extends SectionContent {
 			alert(Lang.get("fallback_url_parameter_error"))
 			return
 		}
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=SynchAllStudiesToFallback`,
 			"post",
 			`url=${url}`
 		)
-		this.section.loader.showMessage(Lang.get("info_successful"))
+		this.sectionData.loader.showMessage(Lang.get("info_successful"))
 	}
 }

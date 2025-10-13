@@ -1,20 +1,20 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { TabBar } from "../widgets/TabBar";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { FILE_ADMIN, URL_RELEASES_LIST } from "../constants/urls";
-import { BindObservable } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { RichText } from "../widgets/RichText";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { ChangeLanguageList } from "../widgets/ChangeLanguageList";
-import { Section } from "../site/Section";
-import { ObserverId } from "../observable/BaseObservable";
-import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TabBar} from "../widgets/TabBar";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {FILE_ADMIN, URL_RELEASES_LIST} from "../constants/urls";
+import {BindObservable} from "../widgets/BindObservable";
+import {TitleRow} from "../widgets/TitleRow";
+import {RichText} from "../widgets/RichText";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {ChangeLanguageList} from "../widgets/ChangeLanguageList";
+import {ObserverId} from "../observable/BaseObservable";
+import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
-import { Requests } from "../singletons/Requests";
-import { PackageVersionComparator } from "../singletons/PackageVersionComparator";
+import {Requests} from "../singletons/Requests";
+import {PackageVersionComparator} from "../singletons/PackageVersionComparator";
+import {SectionData} from "../site/SectionData";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
 
@@ -32,21 +32,21 @@ export class Content extends SectionContent {
 	private debuggingOn = process.env.NODE_ENV !== "production"
 	private changeLanguageList: ChangeLanguageList
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getTools().settingsLoader.init(),
+			sectionData.getTools().settingsLoader.init(),
 		]
 	}
 
-	constructor(sitePage: Section, loader: ServerSettingsLoader) {
-		super(sitePage)
+	constructor(sectionData: SectionData, loader: ServerSettingsLoader) {
+		super(sectionData)
 		this.loader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
 			return this.loader.getSettings()
 		})
 
 		this.observerId = loader.getSettings().addObserver(this.updateSaveState.bind(this))
-		this.section.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
+		this.sectionData.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
 		this.updateSaveState()
 	}
 
@@ -63,15 +63,15 @@ export class Content extends SectionContent {
 	}
 
 	private getUpdateUrl(): string {
-		return `${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.section.siteData.packageVersion}`
+		return `${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.sectionData.siteData.packageVersion}`
 	}
 
 	private async rebuildStudyIndex(): Promise<void> {
-		await this.section.loader.loadJson(`${FILE_ADMIN}?type=RebuildStudyIndex`).then(() => { this.section.loader.showMessage(Lang.get("info_successful")) })
+		await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=RebuildStudyIndex`).then(() => { this.sectionData.loader.showMessage(Lang.get("info_successful")) })
 	}
 
 	private async saveServerSettings(): Promise<void> {
-		await this.section.loader.showLoader(
+		await this.sectionData.loader.showLoader(
 			this.getTools().settingsLoader.saveSettings()
 		)
 	}
@@ -79,7 +79,7 @@ export class Content extends SectionContent {
 	private async loadUpdates(): Promise<void> {
 		let jsonString: string = ""
 		try {
-			jsonString = await this.section.loader.loadRaw(URL_RELEASES_LIST)
+			jsonString = await this.sectionData.loader.loadRaw(URL_RELEASES_LIST)
 			this.noConnection = false
 		}
 		catch (e) {
@@ -97,7 +97,7 @@ export class Content extends SectionContent {
 		for (let i = releases.length - 1; i >= 0; --i) {
 			let { tag_name: tagName, prerelease, body, published_at: publishedAt, assets } = releases[i];
 
-			if (!PackageVersionComparator(this.section.siteData.packageVersion).isBelowThen(tagName))
+			if (!PackageVersionComparator(this.sectionData.siteData.packageVersion).isBelowThen(tagName))
 				continue
 
 			let data = { version: tagName, date: new Date(publishedAt), changeLog: body, downloadUrl: assets[0]["browser_download_url"] };
@@ -125,7 +125,7 @@ export class Content extends SectionContent {
 			if (!confirm(Lang.get("confirm_prerelease_update")))
 				return;
 		}
-		const loader = this.section.loader
+		const loader = this.sectionData.loader
 		await loader.showLoader(new Promise(async (resolve, reject) => {
 			try {
 				await Requests.loadJson(`${FILE_ADMIN}?type=DownloadUpdate`, "post", `url=${this.newestVersionDownloadUrl}`)
@@ -134,7 +134,7 @@ export class Content extends SectionContent {
 				await Requests.loadJson(`${FILE_ADMIN}?type=DoUpdate`)
 
 				loader.update(Lang.get("state_finish_installing"))
-				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.section.siteData.packageVersion}`)
+				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.sectionData.siteData.packageVersion}`)
 				resolve(null)
 			}
 			catch (e) {
@@ -188,7 +188,7 @@ export class Content extends SectionContent {
 				</label>
 			</div>
 
-			{TitleRow(Lang.getWithColon("server_update", this.section.siteData.packageVersion))}
+			{TitleRow(Lang.getWithColon("server_update", this.sectionData.siteData.packageVersion))}
 
 			<label class="right">
 				<small>{Lang.get("update_version")}</small>
@@ -281,7 +281,7 @@ export class Content extends SectionContent {
 	public destroy(): void {
 		this.observerId.removeObserver()
 		this.setDynamic("showSaveButton", false)
-		this.section.siteData.dynamicCallbacks.save = undefined
+		this.sectionData.siteData.dynamicCallbacks.save = undefined
 		super.destroy();
 	}
 }

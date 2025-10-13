@@ -1,7 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {FILE_RESPONSES} from "../constants/urls";
@@ -11,7 +10,8 @@ import {
 	CONDITION_OPERATOR_GREATER,
 	CONDITION_OPERATOR_LESS,
 	CONDITION_TYPE_AND,
-	STATISTICS_CHARTTYPES_BARS, STATISTICS_CHARTTYPES_PIE,
+	STATISTICS_CHARTTYPES_BARS,
+	STATISTICS_CHARTTYPES_PIE,
 	STATISTICS_DATATYPES_FREQ_DISTR,
 	STATISTICS_VALUETYPES_COUNT
 } from "../constants/statistics";
@@ -25,6 +25,7 @@ import {ValueListInfo} from "../loader/csv/ValueListInfo";
 import {BindObservable} from "../widgets/BindObservable";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private csvLoader: CsvLoader
@@ -41,16 +42,16 @@ export class Content extends SectionContent {
 	private readonly totalChartPromise: ObservablePromise<LoadedStatistics>
 	private readonly perMonthsPromise: ObservablePromise<LoadedStatistics>
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		const url = FILE_RESPONSES.replace('%1', (section.getStaticInt("id") ?? 0).toString()).replace('%2', 'web_access');
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		const url = FILE_RESPONSES.replace('%1', (sectionData.getStaticInt("id") ?? 0).toString()).replace('%2', 'web_access');
 		return [
-			CsvLoader.fromUrl(section.loader, url),
-			section.getStudyPromise()
+			CsvLoader.fromUrl(sectionData.loader, url),
+			sectionData.getStudyPromise()
 		]
 	}
 	
-	constructor(section: Section, csvLoader: CsvLoader) {
-		super(section)
+	constructor(sectionData: SectionData, csvLoader: CsvLoader) {
+		super(sectionData)
 		this.csvLoader = csvLoader
 		
 		this.totalChart = this.createPieChartData(Lang.get("total_pageViews"))
@@ -77,7 +78,7 @@ export class Content extends SectionContent {
 				<span>{Lang.getWithColon("months")}</span>
 				<input type="number" {... BindObservable(this.monthsCount)}/>
 			</label>
-			{BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))}
+			{BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))}
 		</div>
 	}
 	

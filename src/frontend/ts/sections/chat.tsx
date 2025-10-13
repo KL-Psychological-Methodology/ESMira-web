@@ -1,22 +1,22 @@
-import { SectionAlternative, SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../widgets/BindObservable";
-import { Section } from "../site/Section";
-import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN } from "../constants/urls";
-import { Message } from "../data/messages/Message";
-import { TitleRow } from "../widgets/TitleRow";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { SearchWidget } from "../widgets/SearchWidget";
-import { DropdownMenu } from "../widgets/DropdownMenu";
-import { ParticipantMessagesContainer } from "../data/messages/ParticipantMessagesContainer";
-import { SendMessage } from "../data/messages/SendMessage";
-import { MessageAsRead } from "../data/messages/MessageAsRead";
-import { getFromUrlFriendly, safeConfirm } from "../constants/methods";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {BindObservable} from "../widgets/BindObservable";
+import {Requests} from "../singletons/Requests";
+import {FILE_ADMIN} from "../constants/urls";
+import {Message} from "../data/messages/Message";
+import {TitleRow} from "../widgets/TitleRow";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {SearchWidget} from "../widgets/SearchWidget";
+import {DropdownMenu} from "../widgets/DropdownMenu";
+import {ParticipantMessagesContainer} from "../data/messages/ParticipantMessagesContainer";
+import {SendMessage} from "../data/messages/SendMessage";
+import {MessageAsRead} from "../data/messages/MessageAsRead";
+import {getFromUrlFriendly, safeConfirm} from "../constants/methods";
 import participantsSvg from "../../imgs/icons/participants.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
-import { BtnCustom, BtnOk, BtnReload, BtnTrash } from "../widgets/BtnWidgets";
+import {BtnCustom, BtnOk, BtnReload, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly userIdList: string[]
@@ -31,16 +31,16 @@ export class Content extends SectionContent {
 	private messageContent: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "messageContent")
 	private isLoading: boolean = false
 
-	public static preLoad(section: Section): Promise<any>[] {
-		const studyId = section.getStaticInt("id") ?? -1
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		const studyId = sectionData.getStaticInt("id") ?? -1
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=ListParticipants&study_id=${studyId}`),
-			section.getStudyPromise()
+			sectionData.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, userIdList: string[]) {
-		super(section)
+	constructor(sectionData: SectionData, userIdList: string[]) {
+		super(sectionData)
 		this.studyId = this.getStaticInt("id") ?? -1
 		userIdList.sort()
 		this.userIdList = userIdList
@@ -61,7 +61,7 @@ export class Content extends SectionContent {
 			const userIdAddition = this.getStaticString("userId") ? "" : `,userId:${btoa(this.userId)}`
 			return <div>
 				{BtnReload(
-					() => this.section.loader.showLoader(this.loadParticipantMessages()),
+					() => this.sectionData.loader.showLoader(this.loadParticipantMessages()),
 					Lang.get("reload")
 				)}
 				{DropdownMenu("fileOptions",
@@ -87,14 +87,14 @@ export class Content extends SectionContent {
 		return true
 	}
 	public getAlternatives(): Promise<SectionAlternative[]> {
-		return this.section.getTools().messagesLoader.getReloadedMessageParticipantInfoList(this.section.getStaticInt("id") ?? -1)
+		return this.sectionData.getTools().messagesLoader.getReloadedMessageParticipantInfoList(this.sectionData.getStaticInt("id") ?? -1)
 			.then((participantList) => {
 				const output: SectionAlternative[] = []
 				participantList.get().forEach((entry) => {
 					const currentUserId = entry.name.get()
 					output.push({
 						title: currentUserId,
-						target: this.userId != currentUserId && this.getUrl(`chat,userId:${btoa(currentUserId)}`, this.section.depth - 1)
+						target: this.userId != currentUserId && this.getUrl(`chat,userId:${btoa(currentUserId)}`, this.sectionData.depth - 1)
 					})
 				})
 				return output
@@ -137,7 +137,7 @@ export class Content extends SectionContent {
 
 		const studyId = this.getStaticInt("id") ?? -1
 
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=DeleteMessage&study_id=${studyId}`,
 			"post",
 			`"study_id=${studyId}&userId=${this.userId}&sent=${message.sent}`
@@ -157,11 +157,11 @@ export class Content extends SectionContent {
 		const studyId = this.getStaticInt("id") ?? -1
 
 		if (content.length < 2) {
-			this.section.loader.info(Lang.get("error_short_message"))
+			this.sectionData.loader.info(Lang.get("error_short_message"))
 			return
 		}
 		else if (!toAll && (!recipient || !recipient.length)) {
-			this.section.loader.info(Lang.get("error_not_selected_recipient"))
+			this.sectionData.loader.info(Lang.get("error_not_selected_recipient"))
 			return
 		}
 		if (!confirm(Lang.get("confirm_distribute_message", content)))
@@ -177,7 +177,7 @@ export class Content extends SectionContent {
 			timestamps: this.getUnreadTimestamps()
 		}
 
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=SendMessage&study_id=${studyId}`,
 			"post",
 			JSON.stringify(sendMessage)
@@ -196,7 +196,7 @@ export class Content extends SectionContent {
 			timestamps: this.getUnreadTimestamps()
 		}
 
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=MessageSetRead&study_id=${studyId}`,
 			"post",
 			JSON.stringify(data)

@@ -1,31 +1,32 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { TitleRow } from "../widgets/TitleRow";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { FILE_RESPONSES } from "../constants/urls";
-import { CsvLoader } from "../loader/csv/CsvLoader";
-import { ChartData } from "../data/study/ChartData";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TitleRow} from "../widgets/TitleRow";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {FILE_RESPONSES} from "../constants/urls";
+import {CsvLoader} from "../loader/csv/CsvLoader";
+import {ChartData} from "../data/study/ChartData";
 import {
 	CONDITION_OPERATOR_GREATER,
 	CONDITION_OPERATOR_LESS,
 	CONDITION_TYPE_AND,
-	STATISTICS_CHARTTYPES_BARS, STATISTICS_CHARTTYPES_PIE,
-	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM,
+	STATISTICS_CHARTTYPES_PIE,
+	STATISTICS_DATATYPES_FREQ_DISTR,
+	STATISTICS_DATATYPES_SUM,
 	STATISTICS_VALUETYPES_COUNT
 } from "../constants/statistics";
-import { getChartColor } from "../helpers/ChartJsBox";
-import { LoadedStatistics } from "../loader/csv/CsvLoaderCollectionFromCharts";
-import { ObservablePromise } from "../observable/ObservablePromise";
-import { ChartView } from "../widgets/ChartView";
-import { JsonTypes } from "../observable/types/JsonTypes";
-import { SearchBox } from "../widgets/SearchBox";
-import { ValueListInfo } from "../loader/csv/ValueListInfo";
-import { BindObservable, ConstrainedNumberTransformer } from "../widgets/BindObservable";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { BtnReload } from "../widgets/BtnWidgets";
+import {getChartColor} from "../helpers/ChartJsBox";
+import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
+import {ObservablePromise} from "../observable/ObservablePromise";
+import {ChartView} from "../widgets/ChartView";
+import {JsonTypes} from "../observable/types/JsonTypes";
+import {SearchBox} from "../widgets/SearchBox";
+import {ValueListInfo} from "../loader/csv/ValueListInfo";
+import {BindObservable} from "../widgets/BindObservable";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {BtnReload} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 const ONE_DAY_MS = 86400000
 export class Content extends SectionContent {
@@ -60,16 +61,16 @@ export class Content extends SectionContent {
 	private readonly appVersionPerDayPromise: ObservablePromise<LoadedStatistics>
 	private readonly studyVersionPerDayPromise: ObservablePromise<LoadedStatistics>
 
-	public static preLoad(section: Section): Promise<any>[] {
-		const url = FILE_RESPONSES.replace('%1', (section.getStaticInt("id") ?? 0).toString()).replace('%2', 'events');
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		const url = FILE_RESPONSES.replace('%1', (sectionData.getStaticInt("id") ?? 0).toString()).replace('%2', 'events');
 		return [
-			CsvLoader.fromUrl(section.loader, url),
-			section.getStudyPromise()
+			CsvLoader.fromUrl(sectionData.loader, url),
+			sectionData.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, csvLoader: CsvLoader) {
-		super(section)
+	constructor(sectionData: SectionData, csvLoader: CsvLoader) {
+		super(sectionData)
 		this.csvLoader = csvLoader
 		this.enableGroupStatistics = csvLoader.hasColumn("group")
 
@@ -119,7 +120,7 @@ export class Content extends SectionContent {
 				<span>{Lang.getWithColon("days")}</span>
 				<input type="number" min="1" {...BindObservable(this.days), new ConstrainedNumberTransformer(1, undefined)} />
 			</label>
-			{BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))}
+			{BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))}
 		</div>
 	}
 

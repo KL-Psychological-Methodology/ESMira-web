@@ -10,7 +10,7 @@ export class Content extends SectionContent {
 	private async formLogin(e: SubmitEvent): Promise<void> {
 		e.preventDefault()
 		const formData = new FormData(e.target as HTMLFormElement)
-		const success = await this.section.loader.showLoader(
+		const success = await this.sectionData.loader.showLoader(
 			this.getAdmin().login(
 				formData.get("accountName")?.toString() || "",
 				formData.get("password")?.toString() || "",
@@ -18,7 +18,7 @@ export class Content extends SectionContent {
 			)
 		)
 		if(!success)
-			this.section.loader.info(Lang.get("error_wrong_login"));
+			this.sectionData.loader.info(Lang.get("error_wrong_login"));
 	}
 	
 	public getView(): Vnode<any, any> {

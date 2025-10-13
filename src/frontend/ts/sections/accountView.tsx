@@ -1,30 +1,30 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { FILE_ADMIN } from "../constants/urls";
-import { Account } from "../data/accounts/Account";
-import { ChangeAccount } from "../widgets/ChangeAccount";
-import { TitleRow } from "../widgets/TitleRow";
-import { BindObservable } from "../widgets/BindObservable";
-import { AccountPermissions } from "../admin/AccountPermissions";
-import { closeDropdown, DropdownMenu } from "../widgets/DropdownMenu";
-import { AccountsLoader } from "../loader/AccountsLoader";
-import { BtnAdd, BtnTrash } from "../widgets/BtnWidgets";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {FILE_ADMIN} from "../constants/urls";
+import {Account} from "../data/accounts/Account";
+import {ChangeAccount} from "../widgets/ChangeAccount";
+import {TitleRow} from "../widgets/TitleRow";
+import {BindObservable} from "../widgets/BindObservable";
+import {AccountPermissions} from "../admin/AccountPermissions";
+import {closeDropdown, DropdownMenu} from "../widgets/DropdownMenu";
+import {AccountsLoader} from "../loader/AccountsLoader";
+import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader
 	private readonly isOwnAccount: boolean
 	private showPasswordField = false
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getTools().accountsLoader.init(),
-			section.getStrippedStudyListPromise()
+			sectionData.getTools().accountsLoader.init(),
+			sectionData.getStrippedStudyListPromise()
 		]
 	}
-	constructor(section: Section, accountsLoader: AccountsLoader) {
-		super(section)
+	constructor(sectionData: SectionData, accountsLoader: AccountsLoader) {
+		super(sectionData)
 		this.accountsLoader = accountsLoader
 		const account = this.getAccount()
 		this.isOwnAccount = account.accountName.get() == this.getTools().accountName
@@ -48,7 +48,7 @@ export class Content extends SectionContent {
 		if (!newAccountName)
 			return
 
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangeAccountName`,
 			"post",
 			`accountName=${oldAccountName}&new_account=${newAccountName}`
@@ -58,16 +58,16 @@ export class Content extends SectionContent {
 
 		account.accountName.set(newAccountName)
 
-		this.section.loader.info(Lang.get("info_successful"));
+		this.sectionData.loader.info(Lang.get("info_successful"));
 	}
 
 	private async changePassword(account: Account, password: string): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangePassword`,
 			"post",
 			`accountName=${account.accountName.get()}&new_pass=${password}`
 		)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async toggleAdmin(): Promise<any> {
@@ -76,37 +76,37 @@ export class Content extends SectionContent {
 			account.admin.set(true)
 			return
 		}
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ToggleAccountPermission`,
 			"post",
 			`accountName=${account.accountName.get()}&admin=${(account.admin.get() ? "1" : "0")}`
 		)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async toggleCreate(): Promise<void> {
 		const account = this.getAccount()
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ToggleAccountPermission`,
 			"post",
 			`accountName=${account.accountName.get()}&create=${(account.create.get() ? "1" : "0")}`
 		)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async toggleIssueFallbackToken(): Promise<void> {
 		const account = this.getAccount()
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ToggleAccountPermission`,
 			"post",
 			`accountName=${account.accountName.get()}&issueFallbackToken=${(account.issueFallbackToken.get() ? "1" : "0")}`
 		)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 
 	private async addPermission(account: Account, permissionName: keyof AccountPermissions, studyId: number): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=AddStudyPermission`,
 			"post",
 			`accountName=${account.accountName.get()}&permission=${permissionName}&study_id=${studyId}`
@@ -126,11 +126,11 @@ export class Content extends SectionContent {
 		if (permissionName == "publish" && account.write.indexOf(studyId) == -1)
 			account.write.push(studyId)
 		closeDropdown("addPermission")
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	private async removePermission(account: Account, permissionName: keyof AccountPermissions, studyId: number): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=DeleteStudyPermission`,
 			"post",
 			`accountName=${account.accountName.get()}&permission=${permissionName}&study_id=${studyId}`
@@ -146,7 +146,7 @@ export class Content extends SectionContent {
 		const index = list.indexOf(studyId)
 		if (index != -1)
 			list.remove(index)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
 	public getView(): Vnode<any, any> {
@@ -163,7 +163,7 @@ export class Content extends SectionContent {
 							close()
 							return true
 						},
-						(msg) => { this.section.loader.error(msg) },
+						(msg) => { this.sectionData.loader.error(msg) },
 						account.accountName.get(),
 						Lang.get("change_password")
 					)
@@ -223,7 +223,7 @@ export class Content extends SectionContent {
 								() =>
 									<ul>
 										<h2>{Lang.get("select_a_study")}</h2>
-										{this.section.siteData.studyLoader.getSortedStudyList()
+										{this.sectionData.siteData.studyLoader.getSortedStudyList()
 											.filter((study) => {
 												const id = study.id.get()
 												for (const obs of permission.get()) {

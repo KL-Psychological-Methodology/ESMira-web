@@ -1,13 +1,13 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {ChangeAccount} from "../widgets/ChangeAccount";
 import {TitleRow} from "../widgets/TitleRow";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 interface LoginToken {
 	lastUsed: number
@@ -18,13 +18,13 @@ interface LoginToken {
 export class Content extends SectionContent {
 	private loginToken: LoginToken[]
 	
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=GetTokenList`)
 		]
 	}
-	constructor(section: Section, loginToken: LoginToken[]) {
-		super(section)
+	constructor(sectionData: SectionData, loginToken: LoginToken[]) {
+		super(sectionData)
 		
 		this.sortLoginToken(loginToken)
 		this.loginToken = loginToken
@@ -51,28 +51,28 @@ export class Content extends SectionContent {
 		if(!newAccountName)
 			return
 		
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangeAccountName`,
 			"post",
 			`accountName=${oldAccountName}&new_account=${newAccountName}`
 		)
 		this.getTools().accountName = oldAccountName
-		this.section.loader.info(Lang.get("info_successful"));
+		this.sectionData.loader.info(Lang.get("info_successful"));
 	}
 	private async changePassword(password: string): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangePassword`,
 			"post",
 			`accountName=${this.getTools().accountName}&new_pass=${password}`
 		)
-		this.section.loader.info(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 	
 	private async removeLoginToken(loginToken: LoginToken): Promise<void> {
 		if(!confirm())
 			return
 		
-		const newLoginToken = await this.section.loader.loadJson(`${FILE_ADMIN}?type=RemoveToken`, "post", `token_id=${loginToken.tokenId}`)
+		const newLoginToken = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=RemoveToken`, "post", `token_id=${loginToken.tokenId}`)
 		this.sortLoginToken(newLoginToken)
 		this.loginToken = newLoginToken
 		
@@ -92,7 +92,7 @@ export class Content extends SectionContent {
 							close()
 							return true
 						},
-						(msg) => { this.section.loader.error(msg) },
+						(msg) => { this.sectionData.loader.error(msg) },
 						this.getTools().accountName,
 						Lang.get("change_password")
 					)

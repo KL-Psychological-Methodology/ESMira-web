@@ -2,14 +2,14 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
-import {ObservableStructureDataType} from "../observable/ObservableStructure";
-import {Section} from "../site/Section";
+import {DataStructureInputType} from "../data/DataStructure";
 import {BtnCustom} from "../widgets/BtnWidgets";
 import {JsonSourceComponent} from "../helpers/JsonSourceComponent";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("study_source")
@@ -29,8 +29,8 @@ export class Content extends SectionContent {
 				if(JSON.stringify(json) == JSON.stringify(study.createJson()))
 					return
 				
-				const newStudy = this.section.siteData.studyLoader.updateStudyJson(study, json)
-				newStudy.setDifferent(true)
+				const newStudy = this.sectionData.siteData.studyLoader.updateStudyJson(study, json)
+				newStudy.setIsDifferent(true)
 			}
 		})
 	}

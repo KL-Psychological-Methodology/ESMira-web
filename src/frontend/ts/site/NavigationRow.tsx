@@ -1,4 +1,3 @@
-import {Section} from "./Section";
 import m, {Component, Vnode, VnodeDOM} from 'mithril';
 import {Lang} from "../singletons/Lang";
 import {SiteData} from "./SiteData";
@@ -6,6 +5,8 @@ import publishSvg from "../../imgs/icons/increaseVersion.svg?raw";
 import {DropdownMenu} from "../widgets/DropdownMenu";
 import {SectionAlternative} from "./SectionContent";
 import {LoadingSpinner} from "../widgets/LoadingSpinner";
+
+import {SectionData} from "./SectionData";
 
 interface DropDownOptions {
 	alternatives: SectionAlternative[] | Promise<SectionAlternative[]>
@@ -44,14 +45,14 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 
 export class NavigationRow {
 	private readonly view: HTMLElement
-	private readonly sections: Array<Section>
+	private readonly sectionDataArray: SectionData[]
 	private widthPercent: number = 100
 	private posRightPercent: number = 0
 	private siteData: SiteData
 	
-	constructor(view: HTMLElement, sections: Section[], siteData: SiteData) {
+	constructor(view: HTMLElement, sectionDataArray: SectionData[], siteData: SiteData) {
 		this.view = view.appendChild(document.createElement("div"))
-		this.sections = sections
+		this.sectionDataArray = sectionDataArray
 		this.siteData = siteData
 		this.renderView()
 		
@@ -63,59 +64,58 @@ export class NavigationRow {
 	}
 	
 	public positionNavi(percent: number): void {
-		if(this.sections.length <= 1)
+		if(this.sectionDataArray.length <= 1)
 			return
-		const visibleSectionCount = Math.min(this.sections.length, Math.floor(100 / percent))
+		const visibleSectionCount = Math.min(this.sectionDataArray.length, Math.floor(100 / percent))
 		this.posRightPercent = (100 - percent * visibleSectionCount) / 2
 		this.widthPercent = percent
 	}
 	
-	private eventClick(section: Section, e: Event): void {
+	private eventClick(data: SectionData, e: Event): void {
 		e.preventDefault();
-		this.siteData.currentSection = section.depth
+		this.siteData.currentSection = data.depth
 		m.redraw()
 	}
-	private eventPointerEnter(section: Section): void {
-		section.isMarked = true
-		m.redraw()
+	private eventPointerEnter(data: SectionData): void {
+		data.callbacks?.setMarked(true)
 	}
-	private eventPointerLeave(section: Section): void {
-		section.isMarked = false
+	private eventPointerLeave(data: SectionData): void {
+		data.callbacks?.setMarked(false)
 		m.redraw()
 	}
 	
-	private getSectionEntry(section: Section): Vnode<any, any> {
-		return <span onpointerenter={this.eventPointerEnter.bind(this, section)} onpointerleave={this.eventPointerLeave.bind(this, section)}>
-			{section.sectionContent?.hasAlternatives() &&
+	private getSectionEntry(data: SectionData): Vnode<any, any> {
+		return <span onpointerenter={this.eventPointerEnter.bind(this, data)} onpointerleave={this.eventPointerLeave.bind(this, data)}>
+			{data.callbacks?.hasAlternatives() &&
 				DropdownMenu("alternative",
 					<span class="dropdownOpener"></span>,
-					(close) => this.getAlternativeContent(section, close),
+					(close) => this.getAlternativeContent(data, close),
 					{ dontCenter: true }
 				)
 			}
 			
-			{this.getAlternativeLink(section)}
+			{this.getAlternativeLink(data)}
 		</span>
 	}
-	private getCurrentSectionEntry(section: Section): Vnode<any, any> {
+	private getCurrentSectionEntry(data: SectionData): Vnode<any, any> {
 		return DropdownMenu("alternative",
-			<span onpointerenter={this.eventPointerEnter.bind(this, section)} onpointerleave={this.eventPointerLeave.bind(this, section)}>
+			<span onpointerenter={this.eventPointerEnter.bind(this, data)} onpointerleave={this.eventPointerLeave.bind(this, data)}>
 				<span class="dropdownOpener"></span>
-				{this.getAlternativeLink(section)}
+				{this.getAlternativeLink(data)}
 			</span>,
-			(close) => this.getAlternativeContent(section, close),
+			(close) => this.getAlternativeContent(data, close),
 			{ dontCenter: true }
 		)
 	}
 	
 	
-	private getAlternativeLink(section: Section): Vnode<any, any> {
-		return <a href={section.getHash()} onclick={this.eventClick.bind(this, section)}>
-			{section.getSectionTitle() || Lang.get("state_loading")}
+	private getAlternativeLink(data: SectionData): Vnode<any, any> {
+		return <a href={data.getHash()} onclick={this.eventClick.bind(this, data)}>
+			{data.callbacks?.getSectionTitle() || Lang.get("state_loading")}
 		</a>
 	}
-	private getAlternativeContent(section: Section, close: () => void): Vnode<any, any> {
-		const alternatives = section.sectionContent?.getAlternatives()
+	private getAlternativeContent(data: SectionData, close: () => void): Vnode<any, any> {
+		const alternatives = data.callbacks?.getAlternatives()
 		if(alternatives) {
 			return m(DropDownComponent, {alternatives: alternatives, close: close})
 		}
@@ -134,28 +134,28 @@ export class NavigationRow {
 			},
 			view: () => {
 				const currentSelection = this.siteData.currentSection
-				let sections: Section[]
+				let dataArray: SectionData[]
 				if(this.siteData.onlyShowLastSection)
-					sections = [this.sections[this.sections.length-1]]
+					dataArray = [this.sectionDataArray[this.sectionDataArray.length-1]]
 				else
-					sections = this.sections
+					dataArray = this.sectionDataArray
 				
 				return (
-					<div id="navigationRow" class={sections.length > 1 ? "visible" : ""} style={`right: ${this.posRightPercent}%; width: ${this.widthPercent}%`}>
+					<div id="navigationRow" class={dataArray.length > 1 ? "visible" : ""} style={`right: ${this.posRightPercent}%; width: ${this.widthPercent}%`}>
 						<div id="navigationRowPositioner">
 							<div id="titleBoxRoot">
 								<div id="titleBoxAbsolute">
 									<div id="titleBox">
 										<div id="navMenu">
 											<div id="navContent">{
-												sections.map((section) => {
-													return <span onpointerenter={this.eventPointerEnter.bind(this, section)} onpointerleave={this.eventPointerLeave.bind(this, section)}>
-														{section.sectionContent?.hasAlternatives()
-															? (currentSelection == section.depth
-																? this.getCurrentSectionEntry(section)
-																: this.getSectionEntry(section)
+												dataArray.map((data) => {
+													return <span onpointerenter={this.eventPointerEnter.bind(this, data)} onpointerleave={this.eventPointerLeave.bind(this, data)}>
+														{data.callbacks?.hasAlternatives()
+															? (currentSelection == data.depth
+																? this.getCurrentSectionEntry(data)
+																: this.getSectionEntry(data)
 															)
-															: this.getAlternativeLink(section)
+															: this.getAlternativeLink(data)
 														}
 													</span>
 												})

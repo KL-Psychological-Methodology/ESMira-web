@@ -1,9 +1,9 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
-import { Section } from "../site/Section";
-import { FILE_ADMIN } from "../constants/urls";
+import {FILE_ADMIN} from "../constants/urls";
 import {Requests} from "../singletons/Requests";
-import { Lang } from "../singletons/Lang";
+import {Lang} from "../singletons/Lang";
+import {SectionData} from "../site/SectionData";
 
 
 interface MerlinLogComponentOptions {
@@ -32,13 +32,13 @@ class MerlinLogComponent implements Component<MerlinLogComponentOptions, any> {
 
 export class Content extends SectionContent {
     private readonly merlinLog: string
-    public static preLoad(section: Section): Promise<any>[] {
+    public static preLoad(sectionData: SectionData): Promise<any>[] {
         return [
-            Requests.loadRaw(`${FILE_ADMIN}?type=GetMerlinLog&study_id=${section.getStaticInt("id") ?? 0}&timestamp=${section.getStaticInt("timestamp")}`)
+            Requests.loadRaw(`${FILE_ADMIN}?type=GetMerlinLog&study_id=${sectionData.getStaticInt("id") ?? 0}&timestamp=${sectionData.getStaticInt("timestamp")}`)
         ]
     }
-    constructor(section: Section, merlinLog: string) {
-        super(section)
+    constructor(sectionData: SectionData, merlinLog: string) {
+        super(sectionData)
         this.merlinLog = merlinLog
     }
 

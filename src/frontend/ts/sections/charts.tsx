@@ -1,34 +1,34 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { TitleRow } from "../widgets/TitleRow";
-import { DragContainer } from "../widgets/DragContainer";
-import { ObservableStructureDataType } from "../observable/ObservableStructure";
-import { ChartData } from "../data/study/ChartData";
-import { Section } from "../site/Section";
-import { ArrayInterface } from "../observable/interfaces/ArrayInterface";
-import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {TitleRow} from "../widgets/TitleRow";
+import {DragContainer} from "../widgets/DragContainer";
+import {DataStructureInputType} from "../data/DataStructure";
+import {ChartData} from "../data/study/ChartData";
+import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
+import {BtnAdd, BtnCopy, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public title(): string {
 		return Lang.get("create_charts")
 	}
 
-	private removeChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, index: number): void {
+	private removeChart(list: ArrayInterface<DataStructureInputType, ChartData>, index: number): void {
 		if (!confirm())
 			return
 		list.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
-	private addChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, url: string): void {
+	private addChart(list: ArrayInterface<DataStructureInputType, ChartData>, url: string): void {
 		list.push({})
 		this.newSection(url)
 	}
-	private copyChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, chart: ChartData, index: number, url: string): void {
+	private copyChart(list: ArrayInterface<DataStructureInputType, ChartData>, chart: ChartData, index: number, url: string): void {
 		list.addCopy(chart, index)
 		this.newSection(url)
 	}

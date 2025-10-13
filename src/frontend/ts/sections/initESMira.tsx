@@ -1,11 +1,11 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN, FILE_CHECK_HTACCESS} from "../constants/urls";
 import {TitleRow} from "../widgets/TitleRow";
 import {ChangeAccount} from "../widgets/ChangeAccount";
+import {SectionData} from "../site/SectionData";
 
 interface FolderData {
 	dirBase: string
@@ -18,15 +18,15 @@ export class Content extends SectionContent {
 	private folderData: FolderData
 	private reuseFolder: boolean = false
 	
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=InitESMiraPrep`),
 			Requests.loadJson(FILE_CHECK_HTACCESS,)
 		]
 	}
 	
-	constructor(section: Section, folderData: FolderData, serverData: {htaccess: boolean, modRewrite: boolean}) {
-		super(section)
+	constructor(sectionData: SectionData, folderData: FolderData, serverData: {htaccess: boolean, modRewrite: boolean}) {
+		super(sectionData)
 		this.folderData = folderData
 		this.htaccessEnabled = serverData.htaccess
 		this.modRewriteEnabled = serverData.modRewrite
@@ -40,12 +40,12 @@ export class Content extends SectionContent {
 		const value = (e.target as HTMLInputElement).value
 		this.folderData.dirBase = value
 		
-		const folderData = await this.section.loader.loadJson(`${FILE_ADMIN}?type=DataFolderExists`, "post", `data_location=${value}`)
+		const folderData = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DataFolderExists`, "post", `data_location=${value}`)
 		this.folderData.dataFolderExists = folderData.dataFolderExists
 		m.redraw()
 	}
 	private async createESMira(accountName: string, password: string): Promise<boolean> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=InitESMira`,
 			"post",
 			`new_account=${accountName}&pass=${password}&data_location=${this.folderData.dirBase}&reuseFolder=${this.reuseFolder ? "1" : "0"}`
@@ -106,7 +106,7 @@ export class Content extends SectionContent {
 			<div class="center">
 				{ChangeAccount(
 					this.createESMira.bind(this),
-					this.section.loader.error.bind(this.section.loader)
+					this.sectionData.loader.error.bind(this.sectionData.loader)
 				)}
 			</div>
 		</div>

@@ -1,24 +1,24 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {ErrorReportInfo} from "../data/errorReports/ErrorReportInfo";
 import commentSvg from "../../imgs/icons/comment.svg?raw"
 import {BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private knownReports: ErrorReportInfo[] = []
 	private newReports: ErrorReportInfo[] = []
 	
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=ListErrors`)
 		]
 	}
-	constructor(section: Section, reports: ErrorReportInfo[]) {
-		super(section)
+	constructor(sectionData: SectionData, reports: ErrorReportInfo[]) {
+		super(sectionData)
 		
 		this.sortErrorReports(reports)
 	}
@@ -28,7 +28,7 @@ export class Content extends SectionContent {
 	}
 	
 	private async reloadErrorReports(): Promise<void> {
-		const reports = await this.section.loader.loadJson(`${FILE_ADMIN}?type=ListErrors`)
+		const reports = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListErrors`)
 		this.sortErrorReports(reports)
 	}
 	
@@ -60,7 +60,7 @@ export class Content extends SectionContent {
 		if(!confirm(Lang.get("confirm_delete_error", this.getName(report))))
 			return
 		
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=DeleteError`,
 			"post",
 			`timestamp=${report.timestamp}&note=${report.note}&seen=${report.seen ? 1 : 0}`
@@ -68,7 +68,7 @@ export class Content extends SectionContent {
 		await this.reloadErrorReports()
 	}
 	private async markReportAsSeen(report: ErrorReportInfo): Promise<void> {
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangeError`,
 			"post",
 			`timestamp=${report.timestamp}&note=${report.note}&seen=1`
@@ -80,7 +80,7 @@ export class Content extends SectionContent {
 		if(!newNote)
 			return
 		
-		await this.section.loader.loadJson(
+		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ChangeError`,
 			"post",
 			`timestamp=${report.timestamp}&note=${newNote}&seen=${report.seen ? 1 : 0}`

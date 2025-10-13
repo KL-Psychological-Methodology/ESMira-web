@@ -1,23 +1,23 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { Account } from "../data/accounts/Account";
-import { ChangeAccount } from "../widgets/ChangeAccount";
-import { TitleRow } from "../widgets/TitleRow";
-import { AccountsLoader } from "../loader/AccountsLoader";
-import { BtnEdit, BtnTrash } from "../widgets/BtnWidgets";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {Account} from "../data/accounts/Account";
+import {ChangeAccount} from "../widgets/ChangeAccount";
+import {TitleRow} from "../widgets/TitleRow";
+import {AccountsLoader} from "../loader/AccountsLoader";
+import {BtnEdit, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getTools().accountsLoader.init()
+			sectionData.getTools().accountsLoader.init()
 		]
 	}
-	constructor(section: Section, accountsLoader: AccountsLoader) {
-		super(section)
+	constructor(sectionData: SectionData, accountsLoader: AccountsLoader) {
+		super(sectionData)
 		this.accountsLoader = accountsLoader
 	}
 
@@ -26,14 +26,14 @@ export class Content extends SectionContent {
 	}
 
 	private async createAccount(accountName: string, password: string): Promise<any> {
-		const index = await this.section.loader.showLoader(this.accountsLoader.addAccount(accountName, password))
+		const index = await this.sectionData.loader.showLoader(this.accountsLoader.addAccount(accountName, password))
 		this.newSection(`accountView,accountI:${index}`)
 	}
 
 	private async deleteAccount(account: Account, index: number) {
-		const deleted = await this.section.loader.showLoader(this.accountsLoader.deleteAccount(account, index))
+		const deleted = await this.sectionData.loader.showLoader(this.accountsLoader.deleteAccount(account, index))
 		if (deleted) {
-			window.location.hash = `${this.section.getHash(this.section.depth)}`
+			window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 		}
 	}
 
@@ -101,7 +101,7 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.getWithColon("add"))}
 
 			{
-				ChangeAccount(this.createAccount.bind(this), (msg) => { this.section.loader.error(msg) })
+				ChangeAccount(this.createAccount.bind(this), (msg) => { this.sectionData.loader.error(msg) })
 			}
 
 		</div>

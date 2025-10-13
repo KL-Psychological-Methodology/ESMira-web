@@ -1,7 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {TitleRow} from "../widgets/TitleRow";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
@@ -17,6 +16,7 @@ import {StatisticsCollection} from "../data/statistics/StatisticsCollection";
 import {Study} from "../data/study/Study";
 import {AxisContainer} from "../data/study/AxisContainer";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly csvLoader: CsvLoader
@@ -39,18 +39,18 @@ export class Content extends SectionContent {
 	private readonly joinedPerDayPromise: ObservablePromise<LoadedStatistics>
 	private readonly personalChartPromises: ObservablePromise<LoadedStatistics>[]
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		const url = FILE_RESPONSES.replace('%1', (section.getStaticInt("id") ?? 0).toString()).replace('%2', 'events');
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		const url = FILE_RESPONSES.replace('%1', (sectionData.getStaticInt("id") ?? 0).toString()).replace('%2', 'events');
 		return [
-			CsvLoader.fromUrl(section.loader, url),
-			section.getStudyPromise()
+			CsvLoader.fromUrl(sectionData.loader, url),
+			sectionData.getStudyPromise()
 		]
 	}
 	
-	constructor(section: Section, csvLoader: CsvLoader, study: Study) {
-		super(section)
+	constructor(sectionData: SectionData, csvLoader: CsvLoader, study: Study) {
+		super(sectionData)
 		this.csvLoader = csvLoader
-		this.personalStatisticsCsvLoaderCollection = new CsvLoaderCollectionFromCharts(section.loader, this.getStudyOrThrow())
+		this.personalStatisticsCsvLoaderCollection = new CsvLoaderCollectionFromCharts(sectionData.loader, this.getStudyOrThrow())
 		
 		this.enableGroupStatistics = csvLoader.hasColumn("group")
 		
@@ -81,7 +81,7 @@ export class Content extends SectionContent {
 		return Lang.get("participants")
 	}
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
+		return BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))
 	}
 	
 	private async loadParticipants(): Promise<void> {
@@ -139,7 +139,7 @@ export class Content extends SectionContent {
 		await this.csvLoader.filterByValue(true, "eventType", "quit")
 		this.quitTimeList = await this.csvLoader.getValueListInfo("responseTime")
 		
-		this.section.loader.update(Lang.get("state_loading_file", Lang.get("statistics")))
+		this.sectionData.loader.update(Lang.get("state_loading_file", Lang.get("statistics")))
 		
 		
 		const loadedStatisticsData = await this.personalStatisticsCsvLoaderCollection.loadStatisticsFromFiles(userId, !!this.publicStatistics)

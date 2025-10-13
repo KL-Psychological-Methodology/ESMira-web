@@ -6,13 +6,13 @@ import {TitleRow} from "../widgets/TitleRow";
 import {ObservableArray} from "../observable/ObservableArray";
 import {createUniqueName} from "../helpers/UniqueName";
 import {StudyDataValues} from "../helpers/StudyDataValues";
-import {Section} from "../site/Section";
 import {BaseObservable} from "../observable/BaseObservable";
 import {BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return this.getQuestionnaireOrThrow().sumScores.get()[this.getStaticInt("sumScoreI") ?? 0].name.get()

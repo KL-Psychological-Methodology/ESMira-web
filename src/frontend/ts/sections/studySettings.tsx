@@ -1,32 +1,32 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { Study } from "../data/study/Study";
-import { safeConfirm } from "../constants/methods";
-import { FILE_ADMIN } from "../constants/urls";
-import { Requests } from "../singletons/Requests";
-import { Section } from "../site/Section";
-import { BtnTrash } from "../widgets/BtnWidgets";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { StudyMetadata } from "../loader/StudyLoader";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {BindObservable} from "../widgets/BindObservable";
+import {TitleRow} from "../widgets/TitleRow";
+import {Study} from "../data/study/Study";
+import {safeConfirm} from "../constants/methods";
+import {FILE_ADMIN} from "../constants/urls";
+import {Requests} from "../singletons/Requests";
+import {BtnTrash} from "../widgets/BtnWidgets";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {StudyMetadata} from "../loader/StudyLoader";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private isFrozen: boolean = false
 	private hasFallbackUrls: boolean
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			Requests.loadJson(`${FILE_ADMIN}?type=IsFrozen&study_id=${section.getStaticInt("id")}`),
-			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackUrls&study_id=${section.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
-			section.getStudyPromise()
+			Requests.loadJson(`${FILE_ADMIN}?type=IsFrozen&study_id=${sectionData.getStaticInt("id")}`),
+			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackUrls&study_id=${sectionData.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
+			sectionData.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, [frozen]: boolean[], fallbackUrls: string[]) {
-		super(section);
+	constructor(sectionData: SectionData, [frozen]: boolean[], fallbackUrls: string[]) {
+		super(sectionData);
 		this.isFrozen = frozen
 		this.hasFallbackUrls = fallbackUrls.length != 0
 	}
@@ -37,23 +37,23 @@ export class Content extends SectionContent {
 
 	private async toggleFreezeStudy(study: Study, e: InputEvent): Promise<void> {
 		const sendFrozen = (e.target as HTMLInputElement).checked
-		const [loadFrozen]: boolean[] = await this.section.loader.loadJson(`${FILE_ADMIN}?type=FreezeStudy${sendFrozen ? "&frozen" : ""}&study_id=${study.id.get()}`)
+		const [loadFrozen]: boolean[] = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=FreezeStudy${sendFrozen ? "&frozen" : ""}&study_id=${study.id.get()}`)
 		this.isFrozen = loadFrozen
-		this.section.loader.info(this.isFrozen ? Lang.get("info_study_frozen") : Lang.get("info_study_unfrozen"))
+		this.sectionData.loader.info(this.isFrozen ? Lang.get("info_study_frozen") : Lang.get("info_study_unfrozen"))
 	}
 
 	private async deleteStudy(study: Study): Promise<void> {
 		if (!safeConfirm(Lang.get("confirm_delete_study", study.title.get())))
 			return
 
-		await this.section.loader.showLoader(this.section.siteData.studyLoader.deleteStudy(study))
+		await this.sectionData.loader.showLoader(this.sectionData.siteData.studyLoader.deleteStudy(study))
 
 		this.goTo("admin/allStudies:edit")
 	}
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
-		const studyMetadata: StudyMetadata | null = this.section.siteData.studyLoader.studyMetadata[study.id.get()]
+		const studyMetadata: StudyMetadata | null = this.sectionData.siteData.studyLoader.studyMetadata[study.id.get()]
 		const uploadSettings = study.eventUploadSettings
 		return <div>
 			{DashRow(

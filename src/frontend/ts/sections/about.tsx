@@ -7,19 +7,19 @@ import repositorySvg from "../../imgs/dashIcons/github.svg?raw"
 import googlePng from "../../imgs/google-play-badge-en.png"
 import applePng from "../../imgs/apple-store-badge-en.png"
 import {TitleRow} from "../widgets/TitleRow";
-import {Section} from "../site/Section";
 import {AboutESMiraInterface, AboutESMiraLoader} from "../loader/AboutESMiraLoader";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private about: AboutESMiraInterface
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(_section: SectionData): Promise<any>[] {
 		return [
 			AboutESMiraLoader.load()
 		]
 	}
 	
-	constructor(section: Section, about: AboutESMiraInterface) {
-		super(section)
+	constructor(sectionData: SectionData, about: AboutESMiraInterface) {
+		super(sectionData)
 		this.about = about
 	}
 	

@@ -1,25 +1,25 @@
-import m, { Vnode } from "mithril";
-import { getBaseUrl } from "../constants/methods";
-import { FILE_ADMIN } from "../constants/urls";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { Lang } from "../singletons/Lang";
-import { Requests } from "../singletons/Requests";
-import { Section } from "../site/Section";
-import { SectionContent } from "../site/SectionContent";
-import { BindObservable } from "../widgets/BindObservable";
+import m, {Vnode} from "mithril";
+import {getBaseUrl} from "../constants/methods";
+import {FILE_ADMIN} from "../constants/urls";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {Lang} from "../singletons/Lang";
+import {Requests} from "../singletons/Requests";
+import {SectionContent} from "../site/SectionContent";
+import {BindObservable} from "../widgets/BindObservable";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly report: string
 	private recipient: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "recipient")
 	private errorInfo: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "errorInfo")
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			Requests.loadRaw(`${FILE_ADMIN}?type=GetError&timestamp=${section.getStaticInt("timestamp")}`)
+			Requests.loadRaw(`${FILE_ADMIN}?type=GetError&timestamp=${sectionData.getStaticInt("timestamp")}`)
 		]
 	}
-	constructor(section: Section, report: string) {
-		super(section)
+	constructor(sectionData: SectionData, report: string) {
+		super(sectionData)
 		this.report = report
 	}
 	public title(): string {
@@ -47,6 +47,6 @@ export class Content extends SectionContent {
 		}
 		message += this.report
 
-		this.section.loader.loadJson(`${FILE_ADMIN}?type=ForwardErrorReport`, "post", `recipient=${this.recipient.get()}&report=${message}`)
+		this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ForwardErrorReport`, "post", `recipient=${this.recipient.get()}&report=${message}`)
 	}
 }

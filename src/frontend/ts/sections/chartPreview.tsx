@@ -1,8 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
+import {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
-import {ChartEditSectionContent} from "./chartEdit";
+import {ChartEditSectionCallback} from "./chartEdit";
 import {CsvLoaderCollectionFromCharts, LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
 import {ChartView} from "../widgets/ChartView";
 import {ObservablePromise} from "../observable/ObservablePromise";
@@ -10,20 +9,21 @@ import {ObserverId} from "../observable/BaseObservable";
 import {AxisContainer} from "../data/study/AxisContainer";
 import {CsvLoader} from "../loader/csv/CsvLoader";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 const ONE_DAY_MS = 86400000
 
 export class Content extends SectionContent {
-	private readonly connectedSection: ChartEditSectionContent
+	private readonly connectedSectionCallback: ChartEditSectionCallback
 	private readonly randomContent: boolean
 	private readonly csvLoaderCollection: CsvLoaderCollectionFromCharts
 	private readonly promise: ObservablePromise<LoadedStatistics>
 	private readonly chartObserverId: ObserverId
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		let connectedSection: Section | undefined = undefined
-		const sections = section.allSections
-		for(let i=section.depth-1; i>0; --i) {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		let connectedSection: SectionData | undefined = undefined
+		const sections = sectionData.allSections
+		for(let i=sectionData.depth-1; i>0; --i) {
 			const currentSection = sections[i]
 			if(currentSection.sectionName == "chartEdit") {
 				connectedSection = currentSection
@@ -34,22 +34,22 @@ export class Content extends SectionContent {
 			throw new Error("Could not find a proper chartEdit section")
 		
 		return [
-			connectedSection.initPromise,
-			section.getStudyPromise()
+			connectedSection.callbacks!.getSectionCallback(),
+			sectionData.getStudyPromise()
 		]
 	}
-	constructor(section: Section, connectedSection: Section) {
-		super(section)
+	constructor(sectionData: SectionData, connectedSectionCallback: ChartEditSectionCallback) {
+		super(sectionData)
 		
-		if(!connectedSection || !(connectedSection.sectionContent instanceof ChartEditSectionContent))
+		if(!connectedSectionCallback)
 			throw new Error("Could not find a proper chartEdit section")
 		
-		this.connectedSection = connectedSection.sectionContent
-		this.randomContent = connectedSection.sectionValue != "calc"
-		this.csvLoaderCollection = new CsvLoaderCollectionFromCharts(section.loader, this.getStudyOrThrow())
+		this.connectedSectionCallback = connectedSectionCallback
+		this.randomContent = !connectedSectionCallback.isCalc
+		this.csvLoaderCollection = new CsvLoaderCollectionFromCharts(sectionData.loader, this.getStudyOrThrow())
 		this.promise = new ObservablePromise<LoadedStatistics>(this.loadStatistics(), null, "chartPreview")
 		
-		this.chartObserverId = this.connectedSection.getChart().addObserver(() => {
+		this.chartObserverId = this.connectedSectionCallback.getChart().addObserver(() => {
 			this.promise.set(this.loadStatistics())
 		})
 	}
@@ -63,8 +63,8 @@ export class Content extends SectionContent {
 	
 	private async loadStatistics(): Promise<LoadedStatistics> {
 		if(this.randomContent) {
-			const chart = this.connectedSection.getChart()
-			const csvLoader = await CsvLoader.fromCsv(this.section.loader, this.createRandomCsv())
+			const chart = this.connectedSectionCallback.getChart()
+			const csvLoader = await CsvLoader.fromCsv(this.sectionData.loader, this.createRandomCsv())
 			
 			return {
 				mainStatistics: await csvLoader.getStatistics(chart.axisContainer.get(), chart.dataType.get()),
@@ -72,7 +72,7 @@ export class Content extends SectionContent {
 			}
 		}
 		else {
-			await this.csvLoaderCollection.setupLoadersForCharts([this.connectedSection.getChart()])
+			await this.csvLoaderCollection.setupLoadersForCharts([this.connectedSectionCallback.getChart()])
 			return this.csvLoaderCollection.loadStatisticsFromFiles()
 		}
 	}
@@ -117,7 +117,7 @@ export class Content extends SectionContent {
 	}
 	
 	private createRandomCsv(): string[][] {
-		const chart = this.connectedSection.getChart()
+		const chart = this.connectedSectionCallback.getChart()
 		const lines: string[][] = [[]]
 		
 		for(const axisContainer of chart.axisContainer.get()) {
@@ -137,7 +137,7 @@ export class Content extends SectionContent {
 	
 	
 	public getView(): Vnode<any, any> {
-		return ChartView(this.connectedSection.getChart(), this.promise)
+		return ChartView(this.connectedSectionCallback.getChart(), this.promise)
 	}
 	
 	public destroy(): void {

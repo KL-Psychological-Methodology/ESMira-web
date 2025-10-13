@@ -1,8 +1,8 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
 import addSvg from "../../imgs/icons/add.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
 import editSvg from "../../imgs/icons/change.svg?raw"
@@ -14,14 +14,11 @@ import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
-import { TitleRow } from "../widgets/TitleRow";
-import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
-import { RssFetcher, RssItem } from "../singletons/RssFetcher";
-import { NewsItem } from "../widgets/NewsItem";
-import { Section } from "../site/Section";
-import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN } from "../constants/urls";
-import { BtnTrash } from "../widgets/BtnWidgets";
+import {TitleRow} from "../widgets/TitleRow";
+import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
+import {RssFetcher, RssItem} from "../singletons/RssFetcher";
+import {NewsItem} from "../widgets/NewsItem";
+import {SectionData} from "../site/SectionData";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -32,17 +29,17 @@ export class Content extends SectionContent {
 	private readonly addDropdownMenus = new AddDropdownMenus(this)
 	private rssItems: RssItem[]
 
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
 			RssFetcher.loadFeed(3)
 				.catch(() => {
-					section.loader.error(Lang.get("error_news"))
+					sectionData.loader.error(Lang.get("error_news"))
 					return []
 				})
 		]
 	}
 
-	constructor(section: Section, rssItems: RssItem[]) {
+	constructor(section: SectionData, rssItems: RssItem[]) {
 		super(section)
 		this.rssItems = rssItems
 	}
@@ -56,7 +53,7 @@ export class Content extends SectionContent {
 	}
 
 	private logout(): Promise<void> {
-		return this.section.loader.showLoader(this.getAdmin().logout())
+		return this.sectionData.loader.showLoader(this.getAdmin().logout()) ?? Promise.resolve()
 	}
 
 	private editBookmark(url: string, oldName: string) {

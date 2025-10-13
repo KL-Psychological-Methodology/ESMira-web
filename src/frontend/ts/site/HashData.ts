@@ -1,23 +1,8 @@
-export const SECTION_DELIMITER = "/"
+import {SectionData} from "./SectionData";
+import {SiteData} from "./SiteData";
+import m from "mithril";
 
-export class SectionData {
-	public readonly dataCode: string
-	
-	constructor(dataCode: string) {
-		this.dataCode = dataCode
-	}
-	
-	public getValues(existingValues: Record<string, string>): [string, string] {
-		const variables = this.dataCode.split(",")
-		
-		for (let i = variables.length - 1; i >= 1; --i) {
-			const [key, value] = variables[i].split(":")
-			existingValues[key] = value ?? "1"
-		}
-		
-		return variables[0].split(":") as [string, string]
-	}
-}
+export const SECTION_DELIMITER = "/"
 
 /**
  * Url hash-syntax:
@@ -25,32 +10,70 @@ export class SectionData {
  * [sectionName]:[sectionValue?],[firstKey]:[firstValue],[secondKey]:[secondValue]...
  */
 export class HashData {
-	private readonly sectionCodes: string[] = []
+	private readonly startHash: string
+	private readonly sectionDataArray: SectionData[] = []
+	private readonly siteData: SiteData
 	
-	constructor(startHash: string) {
+	constructor(startHash: string, siteData: SiteData) {
+		this.startHash = startHash
+		this.siteData = siteData
+	}
+	
+	public reapplyHash() {
 		let hash = window.location.hash
-		if(hash.length === 0)
-			hash = startHash
-		else
+		if(hash.length === 0) {
+			hash = this.startHash
+		}
+		else {
 			hash = hash.substring(1)
+		}
 		
-		this.sectionCodes = hash.split(SECTION_DELIMITER)
-		if(hash.slice(-1) === SECTION_DELIMITER)
-			this.sectionCodes.pop()
+		const sectionCodes = hash.split(SECTION_DELIMITER)
+		if(hash.slice(-1) === SECTION_DELIMITER) {
+			sectionCodes.pop()
+		}
+		const newLength = sectionCodes.length
+		
+		
+		//find unneeded sections:
+		let firstI = 0
+		while(firstI < newLength && firstI < this.sectionDataArray.length && sectionCodes[firstI] === this.sectionDataArray[firstI].dataCode) {
+			++firstI
+		}
+		
+		//remove unneeded sections:
+		this.sectionDataArray.splice(firstI)
+		
+		//add new sections:
+		for(let i = firstI, max = newLength; i < max; ++i) {
+			const sectionData = new SectionData(i, sectionCodes[i], this.sectionDataArray, this.siteData)
+			this.sectionDataArray[i] = sectionData
+			this.siteData.currentSection = sectionData.depth
+		}
+		
+		//Fix currentSection
+		if(this.siteData.currentSection >= this.sectionDataArray.length) { //happens when sections were removed
+			this.siteData.currentSection = this.sectionDataArray.length -1
+		}
+		m.redraw()
 	}
-	public needsAdmin() {
-		return window.location.hash.startsWith("admin")
+	public getAllSectionData(): SectionData[] {
+		return this.sectionDataArray
+	}
+	public getSectionData(index: number): SectionData | null {
+		return this.sectionDataArray[index] ?? null
+	}
+	public getLastSectionData(): SectionData {
+		return this.sectionDataArray[this.sectionDataArray.length - 1]
+	}
+	public getCurrentHash(): string {
+		return window.location.hash
+	}
+	public needsAdmin(): boolean {
+		return HashData.needsAdmin(this.startHash)
 	}
 	
-	public getSectionCount(): number {
-		return this.sectionCodes.length
-	}
-	
-	public getSectionCode(index: number): string {
-		return this.sectionCodes[index]
-	}
-	
-	public getSectionData(index: number): SectionData {
-		return new SectionData(this.sectionCodes[index])
+	public static needsAdmin(startHash: string): boolean {
+		return startHash.startsWith("admin") || window.location.hash.startsWith("#admin")
 	}
 }

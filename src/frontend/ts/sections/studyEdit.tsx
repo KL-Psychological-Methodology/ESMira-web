@@ -17,33 +17,33 @@ import settingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import {Study} from "../data/study/Study";
 import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
 import {ObserverId} from "../observable/BaseObservable";
-import {Section} from "../site/Section";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly studyObserverId: ObserverId
 	private readonly addDropdownMenus = new AddDropdownMenus(this)
 	
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			section.getStudyPromise()
+			sectionData.getStudyPromise()
 		]
 	}
 	
-	constructor(section: Section, study: Study) {
-		super(section)
+	constructor(sectionData: SectionData, study: Study) {
+		super(sectionData)
 		this.updateSaveState()
 		
 		this.studyObserverId = study.addObserver(this.updateSaveState.bind(this))
-		this.section.siteData.dynamicCallbacks.save = async () => {
-			await this.section.allSections[this.section.allSections.length-1].loader.showLoader(
-				this.section.siteData.studyLoader.saveStudy(this.getStudyOrThrow())
+		this.sectionData.siteData.dynamicCallbacks.save = async () => {
+			await this.sectionData.allSections[this.sectionData.allSections.length-1].loader.showLoader(
+				this.sectionData.siteData.studyLoader.saveStudy(this.getStudyOrThrow())
 			)
 		}
-		this.section.siteData.dynamicCallbacks.publish = async () => {
-			await this.section.allSections[this.section.allSections.length-1].loader.showLoader(
-				this.section.siteData.studyLoader.publishStudy(this.getStudyOrThrow())
+		this.sectionData.siteData.dynamicCallbacks.publish = async () => {
+			await this.sectionData.allSections[this.sectionData.allSections.length-1].loader.showLoader(
+				this.sectionData.siteData.studyLoader.publishStudy(this.getStudyOrThrow())
 			)
 		}
 	}
@@ -107,8 +107,8 @@ export class Content extends SectionContent {
 	public destroy(): void {
 		this.studyObserverId.removeObserver()
 		this.clearSaveState()
-		this.section.siteData.dynamicCallbacks.save = undefined
-		this.section.siteData.dynamicCallbacks.publish = undefined
+		this.sectionData.siteData.dynamicCallbacks.save = undefined
+		this.sectionData.siteData.dynamicCallbacks.publish = undefined
 		super.destroy();
 	}
 }

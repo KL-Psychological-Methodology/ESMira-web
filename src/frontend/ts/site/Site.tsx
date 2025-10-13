@@ -1,12 +1,13 @@
-import {Section} from "./Section";
 import langIndex from "../locales.json";
 import {NavigationRow} from "./NavigationRow";
 import {SiteData} from "./SiteData";
 import m from "mithril";
-import {HashData, SectionData} from "../singletons/HashData";
+import {HashData} from "./HashData";
 import {Lang} from "../singletons/Lang";
 import {Admin} from "../admin/Admin";
 import {DropdownMenu} from "../widgets/DropdownMenu";
+import {SectionData} from "./SectionData";
+import {Section} from "./Section";
 
 const SECTION_MIN_WIDTH = 650;
 
@@ -23,23 +24,22 @@ const SECTION_MIN_WIDTH = 650;
 export class Site {
 	public readonly siteData: SiteData
 	public readonly serverVersion: number
-	private readonly startHash: string
 	private readonly sectionsView: HTMLElement
-	private readonly sections: Array<Section> = []
 	private readonly navigationRow: NavigationRow
+	private readonly hashData: HashData
 
 	private sectionWidthPercent: number = 100
 	private overrideSectionWidth: boolean = false
 
 	constructor(serverName: string, startHash: string, serverVersion: number, packageVersion: string, serverAccessKey: string) {
 		this.siteData = new SiteData(
-			new Admin(startHash.startsWith("admin") || window.location.hash.startsWith("#admin"), this),
+			new Admin(HashData.needsAdmin(startHash), this),
 			serverVersion,
 			packageVersion
 		)
+		this.hashData = new HashData(startHash, this.siteData)
 		this.serverVersion = serverVersion
-		this.startHash = startHash
-		this.navigationRow = new NavigationRow(document.body, this.sections, this.siteData)
+		this.navigationRow = new NavigationRow(document.body, this.hashData.getAllSectionData(), this.siteData)
 		this.sectionsView = document.getElementById("sectionContainer")!
 
 		this.siteData.dynamicValues.getOrCreateObs("accessKey", serverAccessKey)
@@ -73,7 +73,6 @@ export class Site {
 		this.renderView()
 
 		// Language selector:
-		const self = this
 		const selectedEntry = langIndex[Lang.code as keyof typeof langIndex]
 		m.render(
 			document.getElementById("siteLangChooser")!,
@@ -83,7 +82,7 @@ export class Site {
 					<span class="desc">{selectedEntry.name}</span>
 				</div>,
 				() => {
-					const hash = self.sections[self.sections.length - 1].getHash()
+					const hash = this.hashData.getCurrentHash()
 					return <div>{
 						Object.keys(langIndex).map((code) => {
 							const entry = langIndex[code as keyof typeof langIndex]
@@ -124,46 +123,33 @@ export class Site {
 		this.navigationRow.positionNavi(this.sectionWidthPercent)
 	}
 
-
-	private addSectionToIndex(sectionData: SectionData): void {
-		const section = new Section(sectionData, this.siteData, this.sections)
-		section.load()
-		this.sections.push(section)
-		this.siteData.currentSection = this.sections.length - 1
-		m.redraw()
-	}
-
-	private removeSection(depth: number): void {
-		this.sections[depth].destroy()
-		this.sections.splice(depth, 1)
-		this.siteData.currentSection = this.sections.length - 1
-		m.redraw()
-	}
-
 	public renderView(): void {
 		const view = {
 			view: () => {
-				let sections: Section[]
+				let data: SectionData[]
 				let currentSection: number
 				if(this.siteData.onlyShowLastSection) {
-					sections = [this.sections[this.sections.length - 1]]
+					data = [this.hashData.getLastSectionData()]
 					currentSection = 0
 				}
 				else {
-					sections = this.sections
+					data = this.hashData.getAllSectionData()
 					currentSection = this.siteData.currentSection
 				}
-				window.document.title = this.sections[currentSection]?.getSectionTitle() || Lang.get("state_loading")
+				window.document.title = this.hashData.getSectionData(currentSection)?.callbacks?.getSectionTitle() || Lang.get("state_loading")
 
 				//if there are too many elements, we only divide by max number that fits on the screen:
-				const visibleSectionsCount = Math.min(sections.length, Math.floor(100 / this.sectionWidthPercent))
+				const visibleSectionsCount = Math.min(data.length, Math.floor(100 / this.sectionWidthPercent))
 
 				//we move it by -50% because section is already centered:
 				const sectionPositionPercent = (currentSection + 1 - visibleSectionsCount) * 100 + (visibleSectionsCount * 50 - 50)
 
 				return (
 					<div id="sectionsView" style={`width: ${this.sectionWidthPercent}%; transform: translate(-${sectionPositionPercent}%)`}>{
-						sections.map((section) => section.getView())
+						data.map((sectionData) => m(Section, {
+							sectionData: sectionData,
+							siteData: this.siteData,
+						}))
 					}</div>
 				)
 			}
@@ -173,7 +159,7 @@ export class Site {
 	}
 
 	public async reload(): Promise<any> {
-		return Promise.all(this.sections.map((section) => section.reload()))
+		return Promise.all(this.hashData.getAllSectionData().map((section) => section.callbacks?.reload()))
 	}
 
 	/**
@@ -181,40 +167,22 @@ export class Site {
 	 */
 	private async updateHighlightedLinksCss(): Promise<void> {
 		const cssRules = new CSSStyleSheet()
-		const slice = this.sections.slice(1)
+		const slice = this.hashData.getAllSectionData().slice(1)
 		
 		await cssRules.replace(
-			`${slice.map(section => section.cssRules.aHeader).join(",")}{color:#dc4e9d !important; text-decoration: underline !important;}
-			${slice.map(section => section.cssRules.dashHeader).join(",")}{background-color:#9fe0f7;}
-			${slice.map(section => section.cssRules.svgHeader).join(",")}{fill: #dc4e9d;}`
+			`${slice.map(data => data.cssRules.aHeader).join(",")}{color:#dc4e9d !important; text-decoration: underline !important;}
+			${slice.map(data => data.cssRules.dashHeader).join(",")}{background-color:#9fe0f7;}
+			${slice.map(data => data.cssRules.svgHeader).join(",")}{fill: #dc4e9d;}`
 		)
 		// we have to fully replace adoptedStyleSheets because mutability was only added around 2022 (https://caniuse.com/mdn-api_document_adoptedstylesheets_mutable)
 		document.adoptedStyleSheets = [cssRules]
 	}
 	
 	private onhashchange(): void {
-		const hashData = new HashData(this.startHash)
-		const newLength = hashData.getSectionCount()
-		
-		if(hashData.needsAdmin()) {
+		if(this.hashData.needsAdmin()) {
 			this.siteData.admin.enableAdmin()
 		}
-		
-		//find unneeded sections:
-		let firstI = 0
-		while(firstI < newLength && firstI < this.sections.length && hashData.getSectionCode(firstI) === this.sections[firstI].dataCode) {
-			++firstI
-		}
-		
-		//remove unneeded sections:
-		for(let i = this.sections.length - 1; i >= firstI; --i) {
-			this.removeSection(i)
-		}
-		
-		//add new sections:
-		for(let i = firstI, max = newLength; i < max; ++i) {
-			this.addSectionToIndex(hashData.getSectionData(i))
-		}
+		this.hashData.reapplyHash()
 		
 		this.updateSectionDimensions()
 		this.updateHighlightedLinksCss()

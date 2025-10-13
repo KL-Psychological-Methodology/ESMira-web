@@ -1,21 +1,21 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
-import { BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer } from "../widgets/BindObservable";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { RichText } from "../widgets/RichText";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
+import {BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer} from "../widgets/BindObservable";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {RichText} from "../widgets/RichText";
 import warnSvg from "../../imgs/icons/warn.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
-import { Section } from "../site/Section";
-import { BtnCustom } from "../widgets/BtnWidgets";
+import {BtnCustom} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private faultyEmailContent = false
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public title(): string {

@@ -1,10 +1,9 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Study} from "../data/study/Study";
-import {StudiesDataType} from "../loader/StudyLoader";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	protected targetPage: string
@@ -13,7 +12,7 @@ export class Content extends SectionContent {
 	
 	protected studies: Study[] = []
 	
-	constructor(section: Section) {
+	constructor(section: SectionData) {
 		super(section)
 		this.accessKey = this.getDynamic("accessKey", "")
 		
@@ -38,8 +37,8 @@ export class Content extends SectionContent {
 	}
 	
 	public title(): string {
-		const allSections = this.section.allSections
-		const depth = this.section.depth
+		const allSections = this.sectionData.allSections
+		const depth = this.sectionData.depth
 		if(allSections.length > depth+1) {
 			const id = allSections[depth+1].getStaticInt("id")
 			if(id)
@@ -49,8 +48,8 @@ export class Content extends SectionContent {
 	}
 	
 	protected updateSortedStudies(unsortedStudies: Study[]): void {
-		const studies = this.section.siteData.studyLoader.getSortedStudyList(unsortedStudies)
-		switch(this.section.sectionValue) {
+		const studies = this.sectionData.siteData.studyLoader.getSortedStudyList(unsortedStudies)
+		switch(this.sectionData.sectionValue) {
 			case "statistics":
 				this.studies = studies.filter((study) => study.publicStatistics.charts.get().length != 0)
 				break
@@ -74,8 +73,8 @@ export class Content extends SectionContent {
 		document.cookie = `accessKey=${accessKey}`
 		this.accessKey.set(accessKey)
 		try {
-			const studiesObs = await this.section.loader.showLoader(this.section.siteData.studyLoader.loadAvailableStudies(this.accessKey.get(), true))
-			this.section.loader.closeLoader() //this will not be run if there is an error
+			const studiesObs = await this.sectionData.loader.showLoader(this.sectionData.siteData.studyLoader.loadAvailableStudies(this.accessKey.get(), true))
+			this.sectionData.loader.closeLoader() //this will not be run if there is an error
 			this.updateSortedStudies(Object.values(studiesObs.get()))
 		}
 		catch(e) {

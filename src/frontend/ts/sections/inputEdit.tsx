@@ -1,28 +1,28 @@
-import { SectionAlternative, SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Study } from "../data/study/Study";
-import { BindObservable, OnBeforeChangeTransformer } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { Input } from "../data/study/Input";
-import { createUniqueName } from "../helpers/UniqueName";
-import { DashRow } from "../widgets/DashRow";
-import { InputOptionDesigner } from "../helpers/InputOptionDesigner";
-import { DashElement } from "../widgets/DashElement";
-import { Section } from "../site/Section";
-import { SearchWidget } from "../widgets/SearchWidget";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
-import { BtnCustom } from "../widgets/BtnWidgets";
+import {SectionAlternative, SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {Study} from "../data/study/Study";
+import {BindObservable, OnBeforeChangeTransformer} from "../widgets/BindObservable";
+import {TitleRow} from "../widgets/TitleRow";
+import {Input} from "../data/study/Input";
+import {createUniqueName} from "../helpers/UniqueName";
+import {DashRow} from "../widgets/DashRow";
+import {InputOptionDesigner} from "../helpers/InputOptionDesigner";
+import {DashElement} from "../widgets/DashElement";
+import {SearchWidget} from "../widgets/SearchWidget";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {BtnCustom} from "../widgets/BtnWidgets";
 import questionSvg from "../../imgs/icons/question.svg?raw"
-import { getFromUrlFriendly } from "../constants/methods";
+import {getFromUrlFriendly} from "../constants/methods";
+import {SectionData} from "../site/SectionData";
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 
 export class Content extends SectionContent {
 	private indexContainer: IndexContainer = null
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public title(): string {
@@ -37,7 +37,7 @@ export class Content extends SectionContent {
 	public getAlternatives(): SectionAlternative[] | null {
 		const study = this.getStudyOrThrow()
 		const alternatives: SectionAlternative[] = []
-		const depth = this.section.depth - 1
+		const depth = this.sectionData.depth - 1
 		const inputName = getFromUrlFriendly(this.getStaticString("input") ?? "")
 
 		study.questionnaires.get().forEach((questionnaire) => {
@@ -90,7 +90,7 @@ export class Content extends SectionContent {
 		const input = this.getInputFromIndices(study)
 		if (input) {
 			if (input.name.get() != inputName)
-				this.newSection(`inputEdit,input:${btoa(input.name.get())}`, this.section.depth - 1)
+				this.newSection(`inputEdit,input:${btoa(input.name.get())}`, this.sectionData.depth - 1)
 			return input
 		}
 

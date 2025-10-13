@@ -1,7 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Requests} from "../singletons/Requests";
@@ -12,19 +11,24 @@ import {ObservablePromise} from "../observable/ObservablePromise";
 import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
 import {
 	STATISTICS_CHARTTYPES_BARS,
-	STATISTICS_CHARTTYPES_LINE, STATISTICS_CHARTTYPES_LINE_FILLED,
+	STATISTICS_CHARTTYPES_LINE,
+	STATISTICS_CHARTTYPES_LINE_FILLED,
 	STATISTICS_CHARTTYPES_PIE,
 	STATISTICS_DATATYPES_DAILY,
-	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_STORAGE_TYPE_FREQ_DISTR, STATISTICS_STORAGE_TYPE_TIMED,
-	STATISTICS_VALUETYPES_COUNT, STATISTICS_VALUETYPES_SUM
+	STATISTICS_DATATYPES_FREQ_DISTR,
+	STATISTICS_STORAGE_TYPE_FREQ_DISTR,
+	STATISTICS_STORAGE_TYPE_TIMED,
+	STATISTICS_VALUETYPES_COUNT,
+	STATISTICS_VALUETYPES_SUM
 } from "../constants/statistics";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {StatisticsEntry} from "../data/statistics/StatisticsEntry";
-import { StatisticsEntryTimed} from "../data/statistics/StatisticsDataRecord";
+import {StatisticsEntryTimed} from "../data/statistics/StatisticsDataRecord";
 import {DayEntry} from "../data/serverStatistics/DayEntry";
 import {WeekEntry} from "../data/serverStatistics/WeekEntry";
 import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
 import {BtnReload} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 const SMALLEST_TIMED_DISTANCE = 675
 export class Content extends SectionContent {
@@ -44,13 +48,13 @@ export class Content extends SectionContent {
 	private readonly weekdaysQuestionnairePromise: ObservablePromise<LoadedStatistics>
 	private readonly weekdaysJoinedPromise: ObservablePromise<LoadedStatistics>
 	
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(_sectionData: SectionData): Promise<any>[] {
 		return [
 			Requests.loadJson(FILE_SERVER_STATISTICS)
 		]
 	}
-	constructor(section: Section, serverStatistics: ServerStatistics) {
-		super(section)
+	constructor(sectionData: SectionData, serverStatistics: ServerStatistics) {
+		super(sectionData)
 		this.serverStatistics = serverStatistics
 		
 		this.appTypeChart = this.createAppTypeChart()
@@ -77,7 +81,7 @@ export class Content extends SectionContent {
 	
 	
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
+		return BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))
 	}
 	
 	protected createChartPromise(variable: string, entries: StatisticsEntry[]): ObservablePromise<LoadedStatistics> {

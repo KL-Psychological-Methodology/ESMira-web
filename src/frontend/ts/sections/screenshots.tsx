@@ -4,25 +4,25 @@ import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
 import {Lang} from "../singletons/Lang";
 import {TitleRow} from "../widgets/TitleRow";
-import {Section} from "../site/Section";
 import {AboutESMiraInterface, AboutESMiraLoader} from "../loader/AboutESMiraLoader";
 import {URL_ABOUT_ESMIRA_SOURCE} from "../constants/urls";
 import {DropdownMenu} from "../widgets/DropdownMenu";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private about: AboutESMiraInterface
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			AboutESMiraLoader.load()
 		]
 	}
 	
-	constructor(section: Section, about: AboutESMiraInterface) {
-		super(section)
+	constructor(sectionData: SectionData, about: AboutESMiraInterface) {
+		super(sectionData)
 		this.about = about
 		
 		window.setTimeout(() => {
-			const img = document.getElementById(`screenshots_${this.section.sectionValue}`)
+			const img = document.getElementById(`screenshots_${this.sectionData.sectionValue}`)
 			if(img)
 				img.scrollIntoView({behavior: 'smooth'})
 		}, 500)

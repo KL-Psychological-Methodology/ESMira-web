@@ -1,57 +1,69 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { BindObservable } from "../widgets/BindObservable";
-import { RichText } from "../widgets/RichText";
-import { TitleRow } from "../widgets/TitleRow";
-import { ChartData } from "../data/study/ChartData";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {BindObservable} from "../widgets/BindObservable";
+import {RichText} from "../widgets/RichText";
+import {TitleRow} from "../widgets/TitleRow";
+import {ChartData} from "../data/study/ChartData";
 import {
-	CONDITION_TYPE_ALL, CONDITION_TYPE_AND, CONDITION_TYPE_OR,
+	CONDITION_TYPE_ALL,
+	CONDITION_TYPE_AND,
+	CONDITION_TYPE_OR,
 	STATISTICS_CHARTTYPES_PIE,
 	STATISTICS_CHARTTYPES_SCATTER,
 	STATISTICS_DATATYPES_DAILY,
-	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM, STATISTICS_DATATYPES_XY
+	STATISTICS_DATATYPES_FREQ_DISTR,
+	STATISTICS_DATATYPES_SUM,
+	STATISTICS_DATATYPES_XY
 } from "../constants/statistics";
-import { DATA_MAIN_KEYS } from "../constants/data";
-import { ObservableStructureDataType } from "../observable/ObservableStructure";
-import { AxisContainer } from "../data/study/AxisContainer";
-import { DragContainer } from "../widgets/DragContainer";
-import { Study } from "../data/study/Study";
-import { StudyDataValues } from "../helpers/StudyDataValues";
-import { AxisData } from "../data/study/AxisData";
-import { DashRow } from "../widgets/DashRow";
-import { DropdownMenu } from "../widgets/DropdownMenu";
-import { DashElement } from "../widgets/DashElement";
-import { Section } from "../site/Section";
-import { ArrayInterface } from "../observable/interfaces/ArrayInterface";
-import { BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash } from "../widgets/BtnWidgets";
+import {DATA_MAIN_KEYS} from "../constants/data";
+import {DataStructureInputType} from "../data/DataStructure";
+import {AxisContainer} from "../data/study/AxisContainer";
+import {DragContainer} from "../widgets/DragContainer";
+import {Study} from "../data/study/Study";
+import {StudyDataValues} from "../helpers/StudyDataValues";
+import {AxisData} from "../data/study/AxisData";
+import {DashRow} from "../widgets/DashRow";
+import {DropdownMenu} from "../widgets/DropdownMenu";
+import {DashElement} from "../widgets/DashElement";
+import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
+import {BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash} from "../widgets/BtnWidgets";
 import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
+import {SectionData} from "../site/SectionData";
 
-export abstract class ChartEditSectionContent extends SectionContent {
-	abstract getChart(): ChartData
+export interface ChartEditSectionCallback {
+	getChart(): ChartData
+	isCalc: boolean
 }
 
-export class Content extends ChartEditSectionContent {
+export class Content extends SectionContent {
 	private calcChart: ChartData | null = null
 	private readonly isCalc: boolean
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
-	constructor(section: Section) {
-		super(section)
-		this.isCalc = this.section.sectionValue == "calc"
+	constructor(sectionData: SectionData) {
+		super(sectionData)
+		this.isCalc = this.sectionData.sectionValue == "calc"
 	}
-
+	
+	getSectionCallback(): ChartEditSectionCallback {
+		return {
+			getChart: this.getChart.bind(this),
+			isCalc: this.isCalc
+		};
+	}
+	
 	public title(): string {
 		return Lang.get("edit_chart")
 	}
 
 	public titleExtra(): Vnode<any, any> | null {
 		return <a href={this.getUrl("chartPreview")}>
-			{BtnCustom(m.trust(statisticsSvg), undefined, Lang.get(this.section.sectionValue == "calc" ? "calculate" : "preview"))}
+			{BtnCustom(m.trust(statisticsSvg), undefined, Lang.get(this.sectionData.sectionValue == "calc" ? "calculate" : "preview"))}
 		</a>
 	}
 
@@ -62,7 +74,7 @@ export class Content extends ChartEditSectionContent {
 				this.calcChart = new ChartData({}, null, "chartCalc")
 			return this.calcChart
 		}
-		switch (this.section.sectionValue) {
+		switch (this.sectionData.sectionValue) {
 			case "public":
 				return study.publicStatistics.charts.get()[this.getStaticInt("chartI") ?? 0]
 			case "personal":
@@ -71,10 +83,10 @@ export class Content extends ChartEditSectionContent {
 		}
 	}
 
-	private copyAxisContainer(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, axis: AxisContainer, index: number): void {
+	private copyAxisContainer(list: ArrayInterface<DataStructureInputType, AxisContainer>, axis: AxisContainer, index: number): void {
 		list.addCopy(axis, index)
 	}
-	private removeAxisContainer(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, index: number): void {
+	private removeAxisContainer(list: ArrayInterface<DataStructureInputType, AxisContainer>, index: number): void {
 		list.remove(index)
 	}
 	private removeCondition(list: AxisData, index: number): void {
@@ -90,7 +102,7 @@ export class Content extends ChartEditSectionContent {
 
 		element.selectedIndex = 0
 	}
-	private addVariable(list: ArrayInterface<ObservableStructureDataType, AxisContainer>, study: Study): void {
+	private addVariable(list: ArrayInterface<DataStructureInputType, AxisContainer>, study: Study): void {
 		const studyVariables = StudyDataValues.getStudyVariables(study)
 		const variableName = studyVariables.length ? studyVariables[0] : ""
 
@@ -125,7 +137,7 @@ export class Content extends ChartEditSectionContent {
 		const study = this.getStudyOrThrow()
 		const chart = this.getChart()
 		return <div>
-			{this.section.sectionValue != "calc" &&
+			{this.sectionData.sectionValue != "calc" &&
 				<div>
 					{TitleRow(Lang.getWithColon("description"))}
 					{DashRow(
@@ -262,7 +274,7 @@ export class Content extends ChartEditSectionContent {
 							</label>
 						</div>
 				}),
-				this.section.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
+				this.sectionData.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
 					content:
 						<div>
 							<label>
@@ -291,7 +303,7 @@ export class Content extends ChartEditSectionContent {
 		</div>
 	}
 
-	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<ObservableStructureDataType, AxisContainer>): Vnode<any, any> {
+	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<DataStructureInputType, AxisContainer>): Vnode<any, any> {
 		const studyVariables = StudyDataValues.getStudyVariables(study)
 		return DragContainer((dragTools) =>
 			DashRow(

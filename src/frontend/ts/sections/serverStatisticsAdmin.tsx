@@ -1,6 +1,5 @@
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN, FILE_SERVER_STATISTICS} from "../constants/urls";
 import {getChartColor} from "../helpers/ChartJsBox";
@@ -10,6 +9,7 @@ import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
 import {Content as ServerStatisticsContent} from ".././sections/serverStatistics";
 import {TabBar} from "../widgets/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {SectionData} from "../site/SectionData";
 
 const SECONDS_14_DAYS = 60*60*24*14
 
@@ -21,16 +21,16 @@ export class Content extends ServerStatisticsContent {
 	private readonly totalUsedSpace: number
 	
 	
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
 			Requests.loadJson(FILE_SERVER_STATISTICS),
 			Requests.loadJson(`${FILE_ADMIN}?type=GetLastActivities`),
 			Requests.loadJson(`${FILE_ADMIN}?type=GetUsedSpacePerStudy`),
-			section.getStrippedStudyListPromise()
+			sectionData.getStrippedStudyListPromise()
 		]
 	}
-	constructor(section: Section, serverStatistics: ServerStatistics, lastActivities: Record<number, number>, usedSpace: Record<number, number>) {
-		super(section, serverStatistics)
+	constructor(sectionData: SectionData, serverStatistics: ServerStatistics, lastActivities: Record<number, number>, usedSpace: Record<number, number>) {
+		super(sectionData, serverStatistics)
 		
 		//lastActivities:
 		const lastActivitiesList: { id: number, timestamp: number }[] = []
@@ -111,7 +111,7 @@ export class Content extends ServerStatisticsContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		const studies = this.section.siteData.studyLoader.getStudies()
+		const studies = this.sectionData.siteData.studyLoader.getStudies()
 		return TabBar(this.tabIndex, [
 			{
 				title: Lang.get("server_statistics"),
@@ -135,7 +135,7 @@ export class Content extends ServerStatisticsContent {
 			{
 				title: Lang.get("disk_space"),
 				view: () => {
-					const tools = this.section.getTools()
+					const tools = this.sectionData.getTools()
 					return <table style="width: 100%">
 						<tr class="highlight">
 							<td>{Lang.getWithColon("disk_space")}</td>

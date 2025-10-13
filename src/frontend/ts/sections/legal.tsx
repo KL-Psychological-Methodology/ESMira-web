@@ -1,8 +1,8 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
 import chartJsIco from "../../imgs/libFavicons/chartJs.ico"
 import jsonEditorIco from "../../imgs/libFavicons/jsonEditor.ico"
 import fullCalendarPng from "../../imgs/libFavicons/fullCalendar.png"
@@ -12,13 +12,13 @@ import tiptapSvg from "../../imgs/libFavicons/tiptap.svg"
 import webpackIco from "../../imgs/libFavicons/webpack.ico"
 import ktorPng from "../../imgs/libFavicons/ktor.png"
 import markwonIco from "../../imgs/libFavicons/markwon.ico"
-import { Section } from "../site/Section";
-import { PromiseCache } from "../singletons/PromiseCache";
-import { FILE_SETTINGS } from "../constants/urls";
-import { Requests } from "../singletons/Requests";
-import { TabBar } from "../widgets/TabBar";
-import { TitleRow } from "../widgets/TitleRow";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
+import {PromiseCache} from "../singletons/PromiseCache";
+import {FILE_SETTINGS} from "../constants/urls";
+import {Requests} from "../singletons/Requests";
+import {TabBar} from "../widgets/TabBar";
+import {TitleRow} from "../widgets/TitleRow";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private tabIndex = new ObservablePrimitive(0, null, "legal")
@@ -26,7 +26,7 @@ export class Content extends SectionContent {
 	private readonly impressum: string
 	private readonly privacyPolicy: string
 
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			PromiseCache.get("legal", () => {
 				return Requests.loadJson(FILE_SETTINGS.replace("%1", Lang.code).replace("%2", "legal"))
@@ -34,8 +34,8 @@ export class Content extends SectionContent {
 		]
 	}
 
-	constructor(section: Section, legal: { impressum: string, privacyPolicy: string }) {
-		super(section)
+	constructor(sectionData: SectionData, legal: { impressum: string, privacyPolicy: string }) {
+		super(sectionData)
 		this.impressum = legal.impressum
 		this.privacyPolicy = legal.privacyPolicy
 		this.showTabs = !!this.impressum || !!this.privacyPolicy

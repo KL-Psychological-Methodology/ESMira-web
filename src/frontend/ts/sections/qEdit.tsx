@@ -35,13 +35,13 @@ export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
 	private readonly addDropdownMenus = new AddDropdownMenus(this)
 
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
-	constructor(section: Section) {
-		super(section)
-		this.questionnaireIndex = section.siteData.dynamicValues.getOrCreateObs("questionnaireIndex", 0)
+	constructor(sectionData: SectionData) {
+		super(sectionData)
+		this.questionnaireIndex = sectionData.siteData.dynamicValues.getOrCreateObs("questionnaireIndex", 0)
 	}
 
 	public title(): string {
@@ -62,7 +62,7 @@ export class Content extends SectionContent {
 	}
 	private copyQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
 		const newQuestionnaire = study.questionnaires.addCopy(questionnaire, index)
-		this.section.siteData.studyLoader.autoValidateQuestionnaire(study, newQuestionnaire)
+		this.sectionData.siteData.studyLoader.autoValidateQuestionnaire(study, newQuestionnaire)
 	}
 	private deleteQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
 		if (!safeConfirm(Lang.get("confirm_delete_questionnaire", questionnaire.getTitle())))
@@ -97,7 +97,7 @@ export class Content extends SectionContent {
 		const study = this.getStudyOrThrow()
 		const newPage = (page.parent as ObservableArray<DataStructureInputType, Page>).addCopy(page, index)
 
-		this.section.siteData.studyLoader.autoValidatePage(study, newPage)
+		this.sectionData.siteData.studyLoader.autoValidatePage(study, newPage)
 	}
 	private transferPage(oldQuestionnaire: Questionnaire, oldPageIndex: number, newQuestionnaire: Questionnaire, close: () => void): void {
 		newQuestionnaire.pages.moveFromOtherList(oldQuestionnaire.pages, oldPageIndex, newQuestionnaire.pages.get().length)
@@ -108,7 +108,7 @@ export class Content extends SectionContent {
 			return
 
 		questionnaire.pages.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 	private movePage(questionnaire: Questionnaire, pIndex: number, direction: number): void {
 		const pagesObs = questionnaire.pages;
@@ -128,10 +128,6 @@ export class Content extends SectionContent {
 	}
 	private movePageDown(questionnaire: Questionnaire, pIndex: number): void {
 		this.movePage(questionnaire, pIndex, +1)
-	}
-
-	private hasPages(questionnaire: Questionnaire): boolean {
-		return questionnaire.pages.get().length > 0
 	}
 
 	private hasInputs(questionnaire: Questionnaire): boolean {
@@ -159,7 +155,7 @@ export class Content extends SectionContent {
 			return
 
 		page.inputs.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 
 
@@ -235,7 +231,7 @@ export class Content extends SectionContent {
 			{
 				DragContainer((dragTools) => {
 					return <div id="questionnaireEditBox">
-						{questionnaire.pages.get().map((page, pageIndex) => this.getPageView(dragTools, study, questionnaire, qIndex, page, pageIndex))}
+						{questionnaire.pages.get().map((page, pageIndex) => this.getPageView(dragTools, study, questionnaire, page, pageIndex))}
 					</div>
 				})
 			}
@@ -246,7 +242,7 @@ export class Content extends SectionContent {
 		</div >
 	}
 
-	private getPageView(dragTools: DragTools, study: Study, questionnaire: Questionnaire, qIndex: number, page: Page, pageIndex: number): Vnode<any, any> {
+	private getPageView(dragTools: DragTools, study: Study, questionnaire: Questionnaire, page: Page, pageIndex: number): Vnode<any, any> {
 		return <div class="spacingTop" >
 			{
 				TitleRow(

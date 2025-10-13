@@ -3,16 +3,15 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {TitleRow} from "../widgets/TitleRow";
 import {Questionnaire} from "../data/study/Questionnaire";
-import {Section} from "../site/Section";
 import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
 import {createUniqueName} from "../helpers/UniqueName";
-import { SumScore } from "../data/study/SumScore";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("edit_sumScores")
@@ -27,7 +26,7 @@ export class Content extends SectionContent {
 	}
 	private removeSumScore(questionnaire: Questionnaire, index: number): void {
 		questionnaire.sumScores.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 
 	private addVirtualInput(questionnaire: Questionnaire): void {

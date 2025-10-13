@@ -1,7 +1,6 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {FILE_ADMIN, FILE_AUDIO, FILE_IMAGE, FILE_RESPONSES} from "../constants/urls";
 import {CsvLoader} from "../loader/csv/CsvLoader";
 import {closeDropdown, createNativeDropdown, DropdownMenu} from "../widgets/DropdownMenu";
@@ -14,6 +13,7 @@ import {DATAVIEWER_SKIPPED_COLUMNS} from "../constants/csv";
 import {StaticValues} from "../site/StaticValues";
 import {BtnReload} from "../widgets/BtnWidgets";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {SectionData} from "../site/SectionData";
 
 const ROW_HEIGHT = 25;
 
@@ -415,27 +415,27 @@ class DataComponent implements Component<DataComponentInterface, any> {
 export class Content extends SectionContent {
 	private readonly csvLoader: CsvLoader
 	
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		if(!window.Worker) {
-			section.loader.error(Lang.get('error_no_webWorkers'))
+			sectionData.loader.error(Lang.get('error_no_webWorkers'))
 			return []
 		}
-		switch(section.sectionValue) {
+		switch(sectionData.sectionValue) {
 			case "logins":
 				return [
-					CsvLoader.fromUrl(section.loader, `${FILE_ADMIN}?type=GetLoginHistory`)
+					CsvLoader.fromUrl(sectionData.loader, `${FILE_ADMIN}?type=GetLoginHistory`)
 				]
 			case "questionnaire":
 			case "backup":
 			case "general":
 			default:
 				return [
-					section.getStudyPromise().then((study) => {
+					sectionData.getStudyPromise().then((study) => {
 						const studyId = study.id.get()
-						const fileName = section.getStaticString(section.sectionValue == "questionnaire" ? "qId" : "file") ?? "error"
+						const fileName = sectionData.getStaticString(sectionData.sectionValue == "questionnaire" ? "qId" : "file") ?? "error"
 						
 						return CsvLoader.fromUrl(
-							section.loader,
+							sectionData.loader,
 							FILE_RESPONSES.replace('%1', studyId.toString()).replace('%2', fileName),
 							study.getInputNamesPerType()
 						)
@@ -444,18 +444,18 @@ export class Content extends SectionContent {
 		}
 	}
 	
-	constructor(section: Section, csvLoader: CsvLoader) {
-		super(section)
+	constructor(sectionData: SectionData, csvLoader: CsvLoader) {
+		super(sectionData)
 		this.csvLoader = csvLoader
 	}
 	
 	public titleExtra(): Vnode<any, any> | null {
-		return BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))
+		return BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))
 	}
 	
 	public title(): string {
 		const titlePart = `(${Lang.get("entry_count", this.csvLoader.visibleRowsCount)})`
-		switch(this.section.sectionValue) {
+		switch(this.sectionData.sectionValue) {
 			case "logins":
 				return Lang.get("login_history")
 			case "questionnaire":

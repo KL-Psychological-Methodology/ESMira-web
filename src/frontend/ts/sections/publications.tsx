@@ -1,21 +1,21 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Lang } from "../singletons/Lang";
-import { Section } from "../site/Section";
-import { AboutESMiraLoader, ESMiraPublicationsInterface } from "../loader/AboutESMiraLoader";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {Lang} from "../singletons/Lang";
+import {AboutESMiraLoader, ESMiraPublicationsInterface} from "../loader/AboutESMiraLoader";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private publications: ESMiraPublicationsInterface
-	public static preLoad(_section: Section): Promise<any>[] {
+	public static preLoad(): Promise<any>[] {
 		return [
 			AboutESMiraLoader.loadPublications()
 		]
 	}
 
-	constructor(section: Section, publications: ESMiraPublicationsInterface) {
-		super(section)
+	constructor(sectionData: SectionData, publications: ESMiraPublicationsInterface) {
+		super(sectionData)
 		this.publications = publications
 	}
 

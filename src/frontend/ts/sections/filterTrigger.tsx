@@ -1,24 +1,23 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { Questionnaire } from "../data/study/Questionnaire";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {Questionnaire} from "../data/study/Questionnaire";
 import calendarSvg from "../../imgs/icons/calendar.svg?raw"
 import schedulesSvg from "../../imgs/icons/schedules.svg?raw"
 import eventsSvg from "../../imgs/icons/events.svg?raw"
-import { ActionTrigger } from "../data/study/ActionTrigger";
-import { EventTrigger } from "../data/study/EventTrigger";
-import { Schedule } from "../data/study/Schedule";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { Section } from "../site/Section";
-import { DropdownMenu } from "../widgets/DropdownMenu";
-import { BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer } from "../widgets/BindObservable";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
-import { BtnCollection } from "../widgets/BtnCollection";
-import { TabBar } from "../widgets/TabBar";
-import { BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash } from "../widgets/BtnWidgets";
-import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
-
+import {ActionTrigger} from "../data/study/ActionTrigger";
+import {EventTrigger} from "../data/study/EventTrigger";
+import {Schedule} from "../data/study/Schedule";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {DropdownMenu} from "../widgets/DropdownMenu";
+import {BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer} from "../widgets/BindObservable";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {BtnCollection} from "../widgets/BtnCollection";
+import {TabBar} from "../widgets/TabBar";
+import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {getMidnightMillis, timeStampToTimeString} from "../constants/methods";
+import {SectionData} from "../site/SectionData";
 
 
 interface FilterEntry {
@@ -34,8 +33,8 @@ interface FilterEntry {
  * But since we suspect that this will not be used often, and it is easier to grasp for configuration, we removed that functionality in the admin panel
  */
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 
 	public title(): string {
@@ -44,7 +43,7 @@ export class Content extends SectionContent {
 
 	private removeActionTrigger(questionnaire: Questionnaire, index: number): void {
 		questionnaire.actionTriggers.remove(index)
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 	private copyActionTrigger(questionnaire: Questionnaire, actionTrigger: ActionTrigger, index: number): void {
 		questionnaire.actionTriggers.addCopy(actionTrigger, index)

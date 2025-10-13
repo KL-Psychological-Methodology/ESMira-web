@@ -1,10 +1,11 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
 import {AddJsToServerHtml} from "../helpers/AddJsToServerHtml";
 import {Requests} from "../singletons/Requests";
 import {FILE_APP_INSTALL_INSTRUCTIONS} from "../constants/urls";
+import {SectionData} from "../site/SectionData";
+
 interface AppInstallComponentOptions {
 	sectionContent: SectionContent
 	html: string
@@ -17,7 +18,7 @@ class AppInstallComponent implements Component<AppInstallComponentOptions, any> 
 			AddJsToServerHtml.process(vNode.dom as HTMLElement, sectionContent)
 		}
 		catch(e: any) {
-			sectionContent.section.loader.error(e.message || e)
+			sectionContent.sectionData.loader.error(e.message || e)
 		}
 	}
 	
@@ -30,23 +31,23 @@ export class Content extends SectionContent {
 	private readonly pageHtml: string
 	private readonly pageTitle: string
 	
-	public static preLoad(section: Section): Promise<any>[] {
-		const accessKey = section.getDynamic("accessKey", "").get()
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		const accessKey = sectionData.getDynamic("accessKey", "").get()
 		return [
 			Requests.loadJson(
 				FILE_APP_INSTALL_INSTRUCTIONS
-					.replace("%d1", (section.getStaticInt("id") ?? 0).toString())
+					.replace("%d1", (sectionData.getStaticInt("id") ?? 0).toString())
 					.replace("%s1", accessKey)
 					.replace("%s2", Lang.code)
 			),
-			section.getAvailableStudiesPromise(accessKey)
+			sectionData.getAvailableStudiesPromise(accessKey)
 		]
 	}
 	
-	constructor(section: Section, html: { pageHtml: string, pageTitle: string, forwarded: boolean }) {
-		super(section)
+	constructor(sectionData: SectionData, html: { pageHtml: string, pageTitle: string, forwarded: boolean }) {
+		super(sectionData)
 		if(html.forwarded)
-			this.newSection("studies:appInstall", this.section.depth - 1)
+			this.newSection("studies:appInstall", this.sectionData.depth - 1)
 		
 		this.pageHtml = html.pageHtml
 		this.pageTitle = html.pageTitle

@@ -1,15 +1,15 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { BindObservable } from "../widgets/BindObservable";
-import { RichText } from "../widgets/RichText";
-import { Section } from "../site/Section";
-import { RegexTextInput } from "../widgets/RegexTextInput";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {BindObservable} from "../widgets/BindObservable";
+import {RichText} from "../widgets/RichText";
+import {RegexTextInput} from "../widgets/RegexTextInput";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
-	public static preLoad(section: Section): Promise<any>[] {
-		return [section.getStudyPromise()]
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
 	}
 	public title(): string {
 		return Lang.get("study_description")

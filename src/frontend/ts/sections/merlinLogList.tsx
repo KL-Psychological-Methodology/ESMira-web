@@ -3,24 +3,24 @@ import m, {Vnode} from "mithril";
 import {MerlinLogInfo} from "../data/merlinLogs/MerlinLogInfo";
 import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
-import {Section} from "../site/Section";
 import {SectionContent} from "../site/SectionContent";
 import commentSvg from "../../imgs/icons/comment.svg?raw"
 import {BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {SectionData} from "../site/SectionData";
 
 
 export class Content extends SectionContent {
 	private readLogs: MerlinLogInfo[] = []
 	private unreadLogs: MerlinLogInfo[] = []
 	
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			Requests.loadJson(`${FILE_ADMIN}?type=ListMerlinLogs&study_id=${section.getStaticInt("id") ?? 0}`)
+			Requests.loadJson(`${FILE_ADMIN}?type=ListMerlinLogs&study_id=${sectionData.getStaticInt("id") ?? 0}`)
 		]
 	}
 	
-	constructor(section: Section, merlinLogs: MerlinLogInfo[]) {
-		super(section)
+	constructor(sectionData: SectionData, merlinLogs: MerlinLogInfo[]) {
+		super(sectionData)
 		
 		this.sortMerlinLogs(merlinLogs)
 	}
@@ -30,9 +30,9 @@ export class Content extends SectionContent {
 	}
 	
 	private async reloadMerlinLogs(): Promise<void> {
-		const logs = await this.section.loader.loadJson(`${FILE_ADMIN}?type=ListMerlinLogs&study_id=${this.section.getStaticInt("id") ?? 0}`)
+		const logs = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListMerlinLogs&study_id=${this.sectionData.getStaticInt("id") ?? 0}`)
 		this.sortMerlinLogs(logs)
-		this.getTools().merlinLogsLoader.setStudyNewLogsRemaining(this.section.getStaticInt("id") ?? 0, this.unreadLogs.length > 0)
+		this.getTools().merlinLogsLoader.setStudyNewLogsRemaining(this.sectionData.getStaticInt("id") ?? 0, this.unreadLogs.length > 0)
 	}
 	
 	private sortMerlinLogs(merlinLogs: MerlinLogInfo[]) {
@@ -62,18 +62,18 @@ export class Content extends SectionContent {
 		if(!confirm(Lang.get("confirm_delete_merlin_log", this.getName(merlinLog))))
 			return
 		
-		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=DeleteMerlinLog&study_id=${this.section.getStaticInt("id") ?? 0}`,
+		await this.sectionData.loader.loadJson(
+			`${FILE_ADMIN}?type=DeleteMerlinLog&study_id=${this.sectionData.getStaticInt("id") ?? 0}`,
 			"post",
 			`timestamp=${merlinLog.timestamp}`
 		)
 		await this.reloadMerlinLogs()
-		window.location.hash = `${this.section.getHash(this.section.depth)}`
+		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 	
 	private async markMerlinLogAsSeen(merlinLog: MerlinLogInfo): Promise<void> {
-		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=ChangeMerlinLog&study_id=${this.section.getStaticInt("id") ?? 0}`,
+		await this.sectionData.loader.loadJson(
+			`${FILE_ADMIN}?type=ChangeMerlinLog&study_id=${this.sectionData.getStaticInt("id") ?? 0}`,
 			"post",
 			`timestamp=${merlinLog.timestamp}&note=${merlinLog.note}&seen=1`
 		)
@@ -85,8 +85,8 @@ export class Content extends SectionContent {
 		if(!newNote)
 			return
 		
-		await this.section.loader.loadJson(
-			`${FILE_ADMIN}?type=ChangeMerlinLog&study_id=${this.section.getStaticInt("id") ?? 0}`,
+		await this.sectionData.loader.loadJson(
+			`${FILE_ADMIN}?type=ChangeMerlinLog&study_id=${this.sectionData.getStaticInt("id") ?? 0}`,
 			"post",
 			`timestamp=${merlinLog.timestamp}&note=${newNote}&seen=${merlinLog.seen ? 1 : 0}`
 		)

@@ -9,7 +9,7 @@ import {SearchBox} from "../widgets/SearchBox";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {Section} from "../site/Section";
+import {SectionData} from "../site/SectionData";
 
 interface EntriesPerQuestionnaire {
 	title: string
@@ -34,17 +34,17 @@ export class Content extends SectionContent {
 	private codeResponse: CodeResponse | null = null
 	private readonly currentCode = new ObservablePrimitive<string>("", null, "currentRewardCode")
 	
-	public static preLoad(section: Section): Promise<any>[] {
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
 			Requests.loadJson(
-				`${FILE_ADMIN}?type=GetRewardCodeData`, "post", `study_id=${section.getStaticInt("id") ?? 0}`
+				`${FILE_ADMIN}?type=GetRewardCodeData`, "post", `study_id=${sectionData.getStaticInt("id") ?? 0}`
 			),
-			section.getStrippedStudyListPromise()
+			sectionData.getStrippedStudyListPromise()
 		]
 	}
 	
-	constructor(section: Section, rewardCodeData: RewardCodeData) {
-		super(section)
+	constructor(sectionData: SectionData, rewardCodeData: RewardCodeData) {
+		super(sectionData)
 		
 		rewardCodeData.rewardCodes.sort()
 		rewardCodeData.userIdsWithRewardCode.sort()
@@ -68,7 +68,7 @@ export class Content extends SectionContent {
 			return
 		const studyId = this.getStaticInt("id") ?? 0
 		
-		const codeResponse: CodeResponse = await this.section.loader.loadJson(
+		const codeResponse: CodeResponse = await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=ValidateRewardCode`,
 			"post",
 			`study_id=${studyId}&code=${this.currentCode.get()}`
