@@ -1,6 +1,6 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
-export class EventTrigger extends ObservableStructure {
+export class EventTrigger extends DataStructure {
 	public label								= this.primitive<string>(		"label",							"Event")
 	public cueCode								= this.primitive<string>(		"cueCode",							"joined")
 	public skipThisQuestionnaire				= this.primitive<boolean>(		"skipThisQuestionnaire",			false)

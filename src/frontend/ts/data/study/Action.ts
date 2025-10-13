@@ -1,6 +1,6 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
-export class Action extends ObservableStructure {
+export class Action extends DataStructure {
 	public type								= this.primitive<number>(		"type",					1) //is Invitation
 	public timeout							= this.primitive<number>(		"timeout",					0)
 	public reminder_count					= this.primitive<number>(		"reminder_count",			0)

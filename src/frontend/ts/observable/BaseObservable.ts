@@ -1,163 +1,222 @@
 import {ObservableTypes} from "./types/ObservableTypes";
-import {SharedForObservable} from "./SharedForObservable";
 import {JsonTypes} from "./types/JsonTypes";
+import {SharedMemory} from "./SharedMemory";
 
 
 export class ObserverId {
-	public readonly shared: SharedForObservable
+	public readonly sharedMemory: SharedMemory
 	public readonly id: number
-	public readonly address: string
 	
-	constructor(shared: SharedForObservable, id: number, address: string) {
-		this.shared = shared
+	constructor(sharedMemory: SharedMemory, id: number) {
+		this.sharedMemory = sharedMemory
 		this.id = id
-		this.address = address
 	}
 	
 	public removeObserver() {
-		if(this.shared.observerContainer.hasOwnProperty(this.address))
-			delete this.shared.observerContainer[this.address][this.id]
+		delete this.sharedMemory.observers[this.id]
 	}
 }
 
 export type ObserverCallbackType<T extends ObservableTypes> = (obj: BaseObservable<T>, turnedDifferent: boolean, bubbled: boolean) => void
+export type ObserverKeyType = string | number
 
 export type JsonCreatorOptions = { dontFilterDefaults?: boolean }
 
 /**
  * Observables are wrappers that hold a value which can be retrieved via {@link get()} and changed via {@link set()}.
- * Each Observable can have multiples Observers which are essentially callbacks that are called when an Observable was changed.
+ * Each Observable can have multiple observers which are essentially callbacks that are called when the value of an Observable was changed.
  * Changes are monitored and bubbled upwards in the structure (meaning that when a child is changed, its parent and parent parents are also informed about it).
- * When an observer notices a change (in itself or its children) it runs {@link hasMutated} which will run all its observers (added via {@link addObserver()}) in {@link runObservers()}.
+ * When an observer notices a change (in itself or its children), it runs {@link hasMutated} which will run all its observers (added via {@link addObserver()}) in {@link runObservers()}.
  * and then runs its parent {@link hasMutated}.
  *
- * Important: Changes can only be noticed if their respective {@link set()} method is used. If a value was changed directly
- * (and / or if it is not wrapped in an observable), its change will go unnoticed.
- *
- * Note that observers are stored in {@link shared} which always reference the object from their root-parent container
- * (see code in {@link constructor} and {@link addObserver()} and documentation in {@link SharedForObservable}).
- * So in each structure, only a single {@link SharedForObservable}, that is shared between all its members, exists.
- * This means that a child structure can be replaced entirely without their observers being lost
- * (as long as the root parent is preserved or its {@link shared} is reused).
+ * Important notes:
+ * - Changes can only be noticed if their respective {@link set()} method is used. If a value was changed directly
+ *   (and / or if it is not wrapped in an observable), its change will go unnoticed.
+ * - Copies / Replacements of observables will always be identical, even if one of them changes (this is new and a lot of old code still assumes that observables cannot be cached):
+ *   Each Observable has a {@link keyName} and saves its value and connected observers into a storage that is shared between all children ({@link SharedMemory}).
+ *   When a child is replaced or copied, each child (or copy of a child) will reconnect to the same shared storage and retain its value and observers
+ *   as long as its root {@link parent} is connected to the same {@link parent} and its {@link keyName} and position in the structure remained the same.
+ *   See ({@link StudyLoader.studyCache}) for an example.
+ * - The code assumes that the last created observable has the most up-to-date data.
+ *   That means a newly created observable checks if there already is a shared memory object and overwrites its values (which will affect other copies of that observable).
  */
-export abstract class BaseObservable<T extends ObservableTypes>{
-	public readonly shared: SharedForObservable
+export abstract class BaseObservable<T extends ObservableTypes, DefaultT extends ObservableTypes = T>{
+	protected sharedMemory: SharedMemory
 	public parent: BaseObservable<ObservableTypes> | null
-	private address: string
-	public keyName: string
+	public keyName: ObserverKeyType
 	
-	protected constructor(parent: BaseObservable<ObservableTypes> | null, key: string) {
-		this.shared = parent?.shared ?? new SharedForObservable()
+	protected constructor(parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) {
+		if(parent) {
+			this.sharedMemory = parent.sharedMemory.getOrAddChild(key)
+			this.sharedMemory.isDifferent = false // New structures always overwrite their value. So isDifferent can never be true
+		}
+		else {
+			this.sharedMemory = new SharedMemory()
+		}
 		this.keyName = key
 		this.parent = parent
-		this.address = this.createAddress()
+	}
+	
+	protected getChildrenCount(): number {
+		return this.sharedMemory.childrenCount
 	}
 	
 	/**
-	 * Calculates the address of this observable using its key and its parent address.
-	 * The address is used to find the correct Observers (which are stored in {@link shared} to run.
-	 * Each observable address needs to be unique inside a structure.
-	 */
-	private createAddress(): string {
-		return `${this.parent?.createAddress() || ""}>${this.keyName}`
-	}
-	
-	/**
-	 * Runs all added Observers (added via {@link addObserver}) for this observer
-	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value)
-	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer
+	 * Runs all added Observers (added via {@link addObserver}) for this observer.
+	 * Does not bubble to the parent's observers. hasMutated bubbles instead.
+	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value).
+	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer.
 	 */
 	protected runObservers(turnedDifferent: boolean, target: BaseObservable<ObservableTypes> = this): void {
 		const bubbled = target != this
-		
-		if(this.shared.observerContainer.hasOwnProperty(this.address)) {
-			const observers = this.shared.observerContainer[this.address]
-			for(const id in observers) {
-				observers[id](target, turnedDifferent, bubbled)
-			}
+		const observers = this.sharedMemory.observers
+		for(const id in observers) {
+			observers[id](target, turnedDifferent, bubbled)
 		}
 	}
 	
 	/**
-	 * Runs {@param callback} whenever {@link runObservers()} is called (by {@link hasMutated()} when the value is changed)
+	 * Runs {@param callback} whenever {@link runObservers()} is called (by {@link hasMutated()} when the value is changed).
 	 * Note that observers are stored in {@link shared} which is copied from the root-parent container (see code in {@link constructor}).
 	 * That means that the observable structure can be replaced entirely without observers being lost (as long as the root parent is preserved or its {@link shared} is reused).
-	 * As long as {@link address} stays the same, observers will still function
-	 * @param callback Runs whenever {@link runObservers()} is called (by {@link hasMutated()} or {@link set()})
-	 * @param existingId only save this {@param callback} if {@param existingId} does not exist yet
+	 * As long as {@link address} stays the same, observers will still function.
+	 * @param callback Runs whenever {@link runObservers()} is called (by {@link hasMutated()} or {@link set()}).
+	 * @param existingId only save this {@param callback} if {@param existingId} does not exist yet.
+	 * @returns an id object that can be used to remove the observer via {@link ObserverId.removeObserver()}
 	 */
 	public addObserver(callback: ObserverCallbackType<T>, existingId?: ObserverId): ObserverId {
-		if(existingId && this.shared.observerContainer.hasOwnProperty(existingId.address) && this.shared.observerContainer[existingId.address].hasOwnProperty(existingId.id))
+		if(existingId && this.sharedMemory.observers.hasOwnProperty(existingId.id))
 			existingId.removeObserver()
 		
-		const id = this.shared.idCounter++
+		const id = this.sharedMemory.idCounter++
 		
-		if(!this.shared.observerContainer.hasOwnProperty(this.address))
-			this.shared.observerContainer[this.address] = {}
-		this.shared.observerContainer[this.address][id] = callback
+		this.sharedMemory.observers[id] = callback
 		
-		return new ObserverId(this.shared, id, this.address)
+		return new ObserverId(this.sharedMemory, id)
 	}
 	
 	/**
-	 * Copies all observers from another structure to this structure.
-	 * This method assumes that this observable has the same key and address
-	 * @param other
+	 * Removes all observers from this observable but not from its children.
 	 */
-	public importObserverData(other: BaseObservable<T>): void {
-		const shared = other.shared
-		this.shared.observerContainer = shared.observerContainer
-		this.shared.idCounter = shared.idCounter
-	}
-	
-	public removeAllConnectedObservers(): void {
-		delete this.shared.observerContainer[this.address]
-	}
-	
-	/**
-	 * Updates the keyName, parent and recalculates address (even if keyName has not changed because it is assumed that keyName changed in a parent)
-	 * @param keyName
-	 * @param parent
-	 */
-	public updateKeyName(keyName?: string, parent?: BaseObservable<ObservableTypes>): void {
-		if(parent)
-			this.parent = parent
-		if(keyName && this.keyName != keyName)
-			this.keyName = keyName
-		
-		const oldAddress = this.address
-		const newAddress = this.createAddress()
-		if(oldAddress != newAddress) {
-			this.address = newAddress
-			
-			const observerContainer = this.shared.observerContainer
-			observerContainer[newAddress] = observerContainer[oldAddress]
-			delete observerContainer[oldAddress]
+	public removeConnectedObservers(): void {
+		for(const key in this.sharedMemory.observers) {
+			delete this.sharedMemory.observers[key]
 		}
+	}
+	
+	/**
+	 * Updates the keyName and its representation in the parent sharedMemory.
+	 * @param keyName - The keyName for this observable and its representation in the parent sharedMemory.
+	 */
+	public updateKeyName(keyName: ObserverKeyType): void {
+		if(keyName == this.keyName) {
+			return
+		}
+		if(this.parent) {
+			this.parent.sharedMemory.children[keyName] = this.sharedMemory
+			delete this.parent.sharedMemory.children[this.keyName]
+		}
+		this.keyName = keyName
 	}
 	
 	/**
 	 * Called when the value of an observable has changed.
 	 * Will only be called if the new value is actually different from the old (or if changed can not be detected properly).
-	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value)
-	 * @param forceIsDifferent Force hasMutated() to assume that the value just changed from its default value
-	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer
+	 * @param turnedDifferent ONLY true if the value just turned different from its DEFAULT VALUE (will not be true if it was already different from its default value).
+	 * @param forceIsDifferent Force hasMutated() to assume that the value just changed from its default value (mostly true when bubbling from a child that is different).
+	 * @param target Where the change originated from. Also used to determine the value of bubbled (true when this observable is not the source of the change) in the observer.
 	 */
 	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
 		const wasDifferent = this.isDifferent()
-		this.reCalcIsDifferent(forceIsDifferent)
+		if(!this.sharedMemory.preventIsDifferentRecalculations) {
+			this.reCalcIsDifferent(forceIsDifferent)
+		}
+		turnedDifferent = turnedDifferent || this.turnedDifferent(wasDifferent)
 		this.runObservers(turnedDifferent, target)
-		if(this.parent)
+		if(this.parent) {
 			this.parent.hasMutated(!wasDifferent && turnedDifferent, forceIsDifferent || this.isDifferent(), target)
+		}
 	}
 	
 	/**
-	 * Forces the observable to recalculate if it was changed from its default value. Is usually called when its value was changed.
-	 * @param forceIsDifferent Force reCalcIsDifferent() to assume that the value just changed from its default value
+	 * Retrieves the value associated with this observable.
 	 */
-	abstract reCalcIsDifferent(forceIsDifferent: boolean): void
-	abstract get(): T
-	abstract set(value: T, silently?: boolean): void
-	abstract createJson(options?: JsonCreatorOptions): JsonTypes
-	abstract isDifferent(): boolean
+	public get(): T {
+		return this.sharedMemory.data
+	}
+	
+	/**
+	 * Changes the value associated with this observable.
+	 * If `silently` is not provided or false, {@link hasMutated()} will be called.
+	 * @param value - the value to set.
+	 * @param silently - if false or undefined, {@link hasMutated()} will not be called.
+	 */
+	public set(value: T, silently: boolean = false): void {
+		this.sharedMemory.data = value
+		if(!silently) {
+			this.hasMutated()
+		}
+	}
+	
+	/**
+	 * @returns the default value for this observable.
+	 */
+	protected getDefault(): DefaultT {
+		return this.sharedMemory.default
+	}
+	
+	/**
+	 * Sets the default value for this observable.
+	 * @param value - the default value to set.
+	 */
+	protected setDefault(value: DefaultT): void {
+		this.sharedMemory.default = value
+	}
+	
+	/**
+	 * Sets the internal `isDifferent`state of this observable.
+	 * When isDifferent is set to true and silent is false, the internal `isDifferent` state is set permanently
+	 * (meaning it will always stay true on future mutations until manually set to false again).
+	 * @param isDifferent - the state to set.
+	 * @param silently - if false or undefined, {@link hasMutated()} will not be called.
+	 * If true and `silently` is true, the internal `isDifferent` state will be set permanently (by setting {@link sharedMemory.preventIsDifferentRecalculations} to true).
+	 */
+	public setIsDifferent(isDifferent: boolean, silently: boolean = false): void {
+		this.sharedMemory.isDifferent = isDifferent
+		if(!silently) {
+			this.sharedMemory.preventIsDifferentRecalculations = isDifferent
+			this.hasMutated(isDifferent)
+		}
+	}
+	
+	/**
+	 * @returns the internal `isDifferent`state of this observable.
+	 */
+	public isDifferent(): boolean {
+		return this.sharedMemory.isDifferent
+	}
+	
+	/**
+	 * Returns true if the value just turned different from its default value.
+	 * This is meant to be overridden by subclasses
+	 * @param wasDifferent - the `isDifferent` state of the observable before the change
+	 * @returns true if the value just turned different from its default value.
+	 */
+	protected turnedDifferent(wasDifferent: boolean): boolean {
+		return !wasDifferent && this.isDifferent()
+	}
+	
+	/**
+	 * Forces the observable to recalculate if it was changed from its default value and set its `isDifferent`state. Is usually called when its value was changed.
+	 * @param forceIsDifferent Force reCalcIsDifferent() to assume that the value just changed from its default value.
+	 */
+	protected abstract reCalcIsDifferent(forceIsDifferent: boolean): void
+	
+	/**
+	 * Generate a JSON value from its value based on the provided options.
+	 *
+	 * @param options - Optional configuration object to customize the JSON creation process.
+	 * @return The resulting JSON structure.
+	 */
+	public abstract createJson(options?: JsonCreatorOptions): JsonTypes
 }

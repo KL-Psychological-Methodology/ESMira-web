@@ -1,11 +1,11 @@
 import m, {Vnode} from "mithril"
 import {Lang} from "../singletons/Lang";
-import {TranslationRootInterface} from "../observable/interfaces/TranslationRootInterface";
+import {TranslatableRootInterface} from "../observable/interfaces/TranslatableRootInterface";
 
 
 let langNames: Record<string, string> | null = null
 
-export function ObservableLangChooser(obs: TranslationRootInterface): Vnode<any, any> {
+export function ObservableLangChooser(obs: TranslatableRootInterface): Vnode<any, any> {
 	if(obs.langCodes.get().length <= 1)
 		return <div></div>
 	else if(langNames == null) {

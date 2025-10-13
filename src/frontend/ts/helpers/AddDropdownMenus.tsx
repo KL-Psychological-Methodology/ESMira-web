@@ -1,5 +1,5 @@
 import {DropdownMenu, openDropdown} from "../widgets/DropdownMenu";
-import {ObservableStructureDataType} from "../observable/ObservableStructure";
+import {DataStructureInputType} from "../data/DataStructure";
 import m, {Vnode} from "mithril";
 import {DashRow} from "../widgets/DashRow";
 import {DashElement} from "../widgets/DashElement";
@@ -8,8 +8,6 @@ import editSvg from "../../imgs/icons/change.svg?raw"
 import copySvg from "../../imgs/icons/copy.svg?raw"
 import {SectionContent} from "../site/SectionContent";
 import {Study} from "../data/study/Study";
-import {BtnOk} from "../widgets/BtnWidgets";
-import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {JsonSourceComponent} from "./JsonSourceComponent";
 import {Mode} from "vanilla-jsoneditor";
 
@@ -68,7 +66,7 @@ export class AddDropdownMenus {
 					(close) => {
 						return <div class="content">
 							{m(JsonSourceComponent, {
-								setJson: (json: ObservableStructureDataType) => {
+								setJson: (json: DataStructureInputType) => {
 									addStudy(json)
 									close()
 								},

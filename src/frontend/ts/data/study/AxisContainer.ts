@@ -1,12 +1,12 @@
-import { ObservableStructure } from "../../observable/ObservableStructure";
-import { AxisData } from "./AxisData";
-import { JsonTypes } from "../../observable/types/JsonTypes";
-import { CONDITION_OPERATOR_EQUAL, CONDITION_TYPE_AND } from "../../constants/statistics";
-import { Lang } from "../../singletons/Lang";
-import { getChartColor } from "../../helpers/ChartJsBox";
-import { CsvLoader } from "../../loader/csv/CsvLoader";
+import {DataStructure} from "../DataStructure";
+import {AxisData} from "./AxisData";
+import {JsonTypes} from "../../observable/types/JsonTypes";
+import {CONDITION_OPERATOR_EQUAL, CONDITION_TYPE_AND} from "../../constants/statistics";
+import {Lang} from "../../singletons/Lang";
+import {getChartColor} from "../../helpers/ChartJsBox";
+import {CsvLoader} from "../../loader/csv/CsvLoader";
 
-export class AxisContainer extends ObservableStructure {
+export class AxisContainer extends DataStructure {
 	public color = this.primitive<string>("color", "#00bbff")
 	public threshold = this.primitive<number>("threshold", 0)
 	public thresholdColor = this.primitive<string>("thresholdColor", "#dc4e9d")

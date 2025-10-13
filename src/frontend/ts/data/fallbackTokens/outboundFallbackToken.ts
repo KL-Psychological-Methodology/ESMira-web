@@ -1,5 +1,5 @@
-import { ObservableStructure } from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
-export class OutboundFallbackToken extends ObservableStructure {
+export class OutboundFallbackToken extends DataStructure {
 	public url = this.primitive<string>("url", "")
 }

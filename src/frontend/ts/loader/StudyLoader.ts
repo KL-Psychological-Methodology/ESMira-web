@@ -10,10 +10,10 @@ import {ObserverId} from "../observable/BaseObservable";
 import {RepairStudy} from "../helpers/RepairStudy";
 import {Page} from "../data/study/Page";
 import {createUniqueName} from "../helpers/UniqueName";
-import {TranslatableObjectRecord} from "../observable/ObservableRecord";
-import {ObservableStructureDataType} from "../observable/ObservableStructure";
+import {DataStructureInputType} from "../data/DataStructure";
+import {TranslatableObject} from "../observable/TranslatableObject";
 
-export type StudiesDataType = TranslatableObjectRecord<number, Study>
+export type StudiesDataType = TranslatableObject<Study>
 
 export interface StudyMetadata {
 	owner: string
@@ -33,7 +33,14 @@ export interface StudyDataFromServer extends StudyMetadata {
  * Note, that because of how {@link BaseObservable} work, all observers are stored in {@link studyCache} which means, when a study gets replaced, its observer will persist
  */
 export class StudyLoader {
-	private readonly studyCache = new TranslatableObjectRecord<number, Study>({}, "studies")
+	/**
+	 * Stores all studies.
+	 * Because all studies are saved in the same observable, all of their shared storage is connected (Explanation of what that means in {@link BaseObservable}).
+	 * When saving a study, the study observable is replaced with a new observable containing the study returned from the backend.
+	 * But because the old and new study observable both share the same parent through {@link studyCache}, they will behave exactly the same.
+	 * @see Code documentation in {@link BaseObservable}
+	 */
+	private readonly studyCache = new TranslatableObject<Study>(null, "studies")
 	private readonly questionnaireRegister: Record<number, number> = {}
 	private readonly observerIds: Record<number, ObserverId> = {}
 	private readonly serverVersion: number
@@ -47,7 +54,7 @@ export class StudyLoader {
 		this.packageVersion = packageVersion
 		this.repair = new RepairStudy(serverVersion, packageVersion)
 		
-		this.studyCache.addObserver((_origin, bubbled) => {
+		this.studyCache.addObserver(() => {
 			m.redraw() //redraw is asynchronous, so this should be executed after all other observers
 		})
 	}
@@ -104,8 +111,9 @@ export class StudyLoader {
 				const id = studyData.id
 				const study = new Study(studyData, this.studyCache, Math.round(Date.now() / 1000), null)
 				
-				if(!this.studyCache.exists(id))
-					this.studyCache.add(id, study)
+				if(!this.studyCache.contains(id)) {
+					this.studyCache.insert(id, study, undefined, true)
+				}
 				this.updateMetadata(id, studyData)
 			}
 			
@@ -121,18 +129,16 @@ export class StudyLoader {
 			PromiseCache.remove("strippedStudies")
 			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_STUDIES}?access_key=${accessKey}`)
 			if(!studiesJson.length) {
-				this.studyCache.set({})
+				this.studyCache.empty(true)
 				throw new Error(Lang.get("error_wrong_accessKey"))
 			}
 			
-			const filteredStudies: Record<number, Study> = {}
 			studiesJson.forEach((studyData: Record<string, any>) => {
 				try {
 					const id = studyData["id"]
 					const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
-					filteredStudies[id] = study
 					
-					this.studyCache.add(id, study)
+					this.studyCache.insert(id, study, undefined, true)
 					
 					for(const questionnaire of study.questionnaires.get()) {
 						this.questionnaireRegister[questionnaire.internalId.get()] = id
@@ -143,7 +149,6 @@ export class StudyLoader {
 				}
 			})
 			
-			this.studyCache.set(filteredStudies)
 			return this.studyCache
 		})
 	}
@@ -164,7 +169,7 @@ export class StudyLoader {
 				study.addLanguage(langCode, studyData.languages[langCode])
 			}
 			
-			this.studyCache.add(id, study)
+			this.studyCache.insert(id, study, undefined, true)
 			
 			this.observerIds[id] = study.addObserver(async (_obs, turnedDifferent) => {
 				const currentStudy = this.studyCache.get()[id]
@@ -224,7 +229,7 @@ export class StudyLoader {
 		return studyList
 	}
 	
-	public async addStudy(studyData: ObservableStructureDataType): Promise<number | null> {
+	public async addStudy(studyData: DataStructureInputType): Promise<number | null> {
 		const id: number = await Requests.loadJson(`${FILE_ADMIN}?type=GetNewId&for=study&study_id=-1`)
 		
 		studyData.id = id
@@ -234,25 +239,23 @@ export class StudyLoader {
 		this.updateMetadata(id, {} as StudyMetadata)
 		
 		const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
-		this.studyCache.add(id, study)
+		this.studyCache.insert(id, study, undefined, true)
 		PromiseCache.save(`study${id}`, Promise.resolve(study)) // studies are loaded through the PromiseCache
-		study.setDifferent(true)
+		study.setIsDifferent(true)
 		
 		return id
 	}
 	
 	public updateStudy(oldStudy: Study, newStudy: Study): Study {
 		const id = oldStudy.id.get()
-		this.studyCache.remove(id)
-		this.studyCache.add(id, newStudy)
+		this.studyCache.insert(id, newStudy, undefined, true)
 		return newStudy
 	}
-	public updateStudyJson(study: Study, data: ObservableStructureDataType): Study {
+	public updateStudyJson(study: Study, data: DataStructureInputType): Study {
 		const id = study.id.get()
-		this.studyCache.remove(id)
 		data[id] = id
 		const newStudy = new Study(data, this.studyCache, study.lastChanged, this.repair)
-		this.studyCache.add(id, newStudy)
+		this.studyCache.insert(id, newStudy, undefined, true)
 		return newStudy
 	}
 	
@@ -266,17 +269,17 @@ export class StudyLoader {
 		if(response != id)
 			throw new Error(Lang.get("error_unknown"))
 		
-		study.removeAllConnectedObservers()
+		study.removeConnectedObservers()
 		
 		this.removeFromMetadata(study)
 		
 		//make sure the study is removed after the page got a chance to clear. If not, several getStudy() calls would cause exceptions!
 		window.setTimeout(() => {
-			this.studyCache.remove(id)
+			this.studyCache.remove(id, true)
 		}, 500)
 	}
 	
-	public async addQuestionnaire(study: Study, questionnaireData: ObservableStructureDataType): Promise<Questionnaire> {
+	public async addQuestionnaire(study: Study, questionnaireData: DataStructureInputType): Promise<Questionnaire> {
 		const questionnaires = study.questionnaires.get()
 		const filtered = []
 		for(const questionnaire of questionnaires) {
@@ -326,7 +329,7 @@ export class StudyLoader {
 			`${FILE_ADMIN}?type=${saveType}&study_id=${study.id.get()}&lastChanged=${study.lastChanged}`,
 			"post",
 			JSON.stringify(studies)
-		) as { metaData: StudyMetadata, json: Record<string, ObservableStructureDataType> }
+		) as { metaData: StudyMetadata, json: Record<string, DataStructureInputType> }
 		
 		study.lastChanged = response.metaData.lastSavedAt
 		this.updateMetadata(study.id.get(), response.metaData)

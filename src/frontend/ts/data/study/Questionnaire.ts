@@ -1,16 +1,16 @@
-import { ObservableStructure, ObservableStructureDataType } from "../../observable/ObservableStructure";
-import { ActionTrigger } from "./ActionTrigger";
-import { Page } from "./Page";
-import { SumScore } from "./SumScore";
-import { BaseObservable } from "../../observable/BaseObservable";
-import { ObservableTypes } from "../../observable/types/ObservableTypes";
+import {DataStructure, DataStructureInputType} from "../DataStructure";
+import {ActionTrigger} from "./ActionTrigger";
+import {Page} from "./Page";
+import {SumScore} from "./SumScore";
+import {BaseObservable} from "../../observable/BaseObservable";
+import {ObservableTypes} from "../../observable/types/ObservableTypes";
 import "../../number.extensions"
-import { Lang } from "../../singletons/Lang";
-import { Scheduler } from "../../helpers/Scheduler";
+import {Lang} from "../../singletons/Lang";
+import {Scheduler} from "../../helpers/Scheduler";
 
 const ONE_DAY_MS = 86400000
 
-export class Questionnaire extends ObservableStructure {
+export class Questionnaire extends DataStructure {
 	public internalId = this.primitive<number>("internalId", -1)
 	public publishedAndroid = this.primitive<boolean>("publishedAndroid", true)
 	public publishedIOS = this.primitive<boolean>("publishedIOS", true)
@@ -42,11 +42,11 @@ export class Questionnaire extends ObservableStructure {
 	public pages = this.objectArray("pages", Page)
 	public sumScores = this.objectArray("sumScores", SumScore)
 
-	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null) {
-		super(data, parent, data["internalId"] as string)
+	constructor(data: DataStructureInputType, parent: BaseObservable<ObservableTypes> | null) {
+		super(data, parent, data["internalId"]?.toString() ?? "0")
 	}
-	public updateKeyName(_keyName: string, parent?: BaseObservable<ObservableTypes>) {
-		super.updateKeyName(this.internalId.get().toString(), parent)
+	public updateKeyName(_keyName: string) {
+		super.updateKeyName(this.internalId.get().toString())
 	}
 
 	public getTitle(): string {
@@ -58,7 +58,7 @@ export class Questionnaire extends ObservableStructure {
 
 	public hasSchedules(): boolean {
 		const schedule = this.actionTriggers.get().find((actionTrigger) => {
-			return actionTrigger.get().schedules.get().length
+			return actionTrigger.schedules.get().length
 		})
 		return !!schedule
 	}

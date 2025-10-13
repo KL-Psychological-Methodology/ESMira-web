@@ -1,7 +1,7 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
 let idCounter = 0
-export class SignalTime extends ObservableStructure {
+export class SignalTime extends DataStructure {
 	public readonly id = ++idCounter //only used for Scheduler
 	public startTimeOfDay				= this.primitive<number>(		"startTimeOfDay",			0)
 	public endTimeOfDay					= this.primitive<number>(		"endTimeOfDay",			0)

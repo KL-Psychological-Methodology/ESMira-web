@@ -1,15 +1,15 @@
-import { ObservableStructure, ObservableStructureDataType } from "../../observable/ObservableStructure";
+import {DataStructure, DataStructureInputType} from "../DataStructure";
 import { Statistics } from "./Statistics";
 import { Questionnaire } from "./Questionnaire";
 import { ObservableTypes } from "../../observable/types/ObservableTypes";
 import { EventUploadSettings } from "./EventUploadSettings";
 import { BaseObservable } from "../../observable/BaseObservable";
-import { TranslationRootInterface } from "../../observable/interfaces/TranslationRootInterface";
+import {TranslatableRootInterface} from "../../observable/interfaces/TranslatableRootInterface";
 import { Input, InputMediaTypes } from "./Input";
 import { RepairStudy } from "../../helpers/RepairStudy";
 import { Lang } from "../../singletons/Lang";
 
-export class Study extends ObservableStructure implements TranslationRootInterface {
+export class Study extends DataStructure implements TranslatableRootInterface {
 	public lastChanged: number
 
 	public id = this.primitive<number>("id", 0)
@@ -54,7 +54,7 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 	public publicStatistics = this.object("publicStatistics", Statistics)
 	public personalStatistics = this.object("personalStatistics", Statistics)
 
-	constructor(data: ObservableStructureDataType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
+	constructor(data: DataStructureInputType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
 		if (repair != null && !repair.repairStudy(data))
 			throw Lang.get("error_study_not_compatible", data["title"]?.toString() ?? "Error")
 
@@ -65,9 +65,9 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 		super(data, parent, data["id"] as string ?? "-1", defaultLang)
 		this.lastChanged = lastChanged
 	}
-
-	public updateKeyName(_keyName: string, parent?: BaseObservable<ObservableTypes>) {
-		super.updateKeyName(this.id.get().toString(), parent)
+	
+	public updateKeyName() {
+		super.updateKeyName(this.id.get().toString())
 	}
 
 	/**

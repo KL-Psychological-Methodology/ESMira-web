@@ -24,7 +24,7 @@ export class Content extends SectionContent {
 	public getView(): Vnode<any, any> {
 		return m(JsonSourceComponent, {
 			getStudy: () => this.getStudyOrThrow(),
-			setJson: (json: ObservableStructureDataType) => {
+			setJson: (json: DataStructureInputType) => {
 				const study = this.getStudyOrThrow()
 				if(JSON.stringify(json) == JSON.stringify(study.createJson()))
 					return

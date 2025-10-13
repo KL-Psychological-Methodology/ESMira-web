@@ -1,20 +1,19 @@
 import {ObservableTypes} from "./types/ObservableTypes";
-import {BaseObservable} from "./BaseObservable";
-import { JsonTypes } from "./types/JsonTypes";
+import {BaseObservable, ObserverKeyType} from "./BaseObservable";
+import {JsonTypes} from "./types/JsonTypes";
 
 /**
- * A observable Wrapper that can hold a Promise
+ * An observable that can hold a Promise.
+ * @see {@link BaseObservable}
  */
 export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
-	protected backingField: Promise<T>
-	
-	constructor(value: Promise<T>, parent: BaseObservable<ObservableTypes> | null, key: string) {
+	constructor(value: Promise<T>, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) {
 		super(parent, key)
 		this.keyName = key
-		this.backingField = value
+		this.set(value, true)
 	}
 	
-	public reCalcIsDifferent(_: boolean = false): void {
+	protected reCalcIsDifferent(_: boolean = false): void {
 		//do nothing
 	}
 	
@@ -22,18 +21,10 @@ export class ObservablePromise<T> extends BaseObservable<Promise<T>> {
         return ""
     }
 	
-	public isDifferent(): boolean {
-		return false
+	protected turnedDifferent(_: boolean): boolean {
+		return true
 	}
 	
-	public get(): Promise<any> {
-		return this.backingField
-	}
-	public set(value: Promise<T>, silently: boolean = false): void {
-		this.backingField = value
-		if(!silently)
-			this.hasMutated(true, true)
-	}
 	public setValue(value: T, silently: boolean = false) {
 		this.set(Promise.resolve(value), silently)
 	}

@@ -1,6 +1,6 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
-export class EventUploadSettings extends ObservableStructure {
+export class EventUploadSettings extends DataStructure {
 	public actions_executed			= this.primitive<boolean>(		"actions_executed",		true)
 	public invitation				= this.primitive<boolean>(		"invitation",				true)
 	public invitation_missed		= this.primitive<boolean>(		"invitation_missed",		false)

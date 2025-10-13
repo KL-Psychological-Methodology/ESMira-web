@@ -1,15 +1,15 @@
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {BindObservable, OnBeforeChangeTransformer} from "./BindObservable";
-import {TranslationRootInterface} from "../observable/interfaces/TranslationRootInterface";
+import {TranslatableRootInterface} from "../observable/interfaces/TranslatableRootInterface";
 import {BtnTrash} from "./BtnWidgets";
 
 export class ChangeLanguageList {
 	public readonly promise: Promise<void>
 	private readonly langCodeNames: { langName: string, langCode: string }[] = []
-	private readonly getTranslationRoot: () => TranslationRootInterface
+	private readonly getTranslationRoot: () => TranslatableRootInterface
 	
-	constructor(getTranslationRoot: () => TranslationRootInterface) {
+	constructor(getTranslationRoot: () => TranslatableRootInterface) {
 		this.getTranslationRoot = getTranslationRoot
 		this.promise = import(`../../langCodes/${Lang.code}.json`)
 			.then(({default: data}) => data)
@@ -20,7 +20,7 @@ export class ChangeLanguageList {
 			})
 	}
 	
-	private addLang(translationRoot: TranslationRootInterface, e: InputEvent): void {
+	private addLang(translationRoot: TranslatableRootInterface, e: InputEvent): void {
 		const element = e.target as HTMLSelectElement
 		const langCode = element.value
 		
@@ -30,7 +30,7 @@ export class ChangeLanguageList {
 		console.log(translationRoot, langCode)
 	}
 	
-	private removeLang(translationRoot: TranslationRootInterface, langCode: string): void {
+	private removeLang(translationRoot: TranslatableRootInterface, langCode: string): void {
 		const index = translationRoot.langCodes.indexOf(langCode)
 		translationRoot.langCodes.remove(index)
 		translationRoot.removeLanguage(langCode)

@@ -1,53 +1,58 @@
 import {PrimitiveType} from "./types/PrimitiveType";
 import {ObservableTypes} from "./types/ObservableTypes";
-import {BaseObservable, JsonCreatorOptions} from "./BaseObservable";
-import {ObservableStructureDataType} from "./ObservableStructure";
+import {BaseObservable, JsonCreatorOptions, ObserverKeyType} from "./BaseObservable";
+import {DataStructureInputType} from "../data/DataStructure";
 import {JsonTypes} from "./types/JsonTypes";
 import {ArrayInterface} from "./interfaces/ArrayInterface";
 
 /**
  * An observable Array that can hold any Observable or primitive types (string, number, boolean).
- * Primitive types will internally be packed into an {@link ObservablePrimitive}
+ * @see {@link BaseObservable}
  */
 export class ObservableArray<
-	InputT extends ObservableStructureDataType | PrimitiveType,
+	InputT extends DataStructureInputType | PrimitiveType,
 	ObsT extends BaseObservable<ObservableTypes> | BaseObservable<PrimitiveType>
-> extends BaseObservable<any[]> implements ArrayInterface<InputT, ObsT> {
-	private _isDifferent = false
+> extends BaseObservable<ObsT[], string[]> implements ArrayInterface<InputT, ObsT> {
 	private readonly constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes>, key: string) => ObsT
-	private backingField: ObsT[]
-	private readonly defaultField: ObsT[]
 	
 	constructor(
 		defaultFields: InputT[],
 		parent: BaseObservable<ObservableTypes> | null,
-		key: string,
-		constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes> | null, key: string) => ObsT
+		key: ObserverKeyType,
+		constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) => ObsT
 	) {
 		super(parent, key)
 		const values: ObsT[] = []
-		const defaultObsValues: ObsT[] = []
-		this.backingField = values
-		this.defaultField = defaultObsValues
+		const defaultObsValues: string[] = []
+		this.set(values, true)
+		this.setDefault(defaultObsValues)
 		this.constructObservable = constructObservable
 		
-		defaultFields.forEach((value, index) => {
-			if(value == null) //happens when value has the wrong type (source was faulty)
-				return
-			const obs = constructObservable(value, this, index.toString())
+		for(let i = 0; i < defaultFields.length; ++i) {
+			const value = defaultFields[i];
+			if(value == null) { //happens when value has the wrong type (the source was faulty)
+				continue;
+			}
+			const obs = constructObservable(value, this, i.toString())
 			values.push(obs)
-			defaultObsValues.push(obs)
-		})
+			defaultObsValues.push(obs.keyName.toString())
+		}
+		
+		//cleanup dangling children from previous observable:
+		for(let i = values.length; i < this.sharedMemory.childrenCount; ++i) {
+			delete this.sharedMemory.children[i]
+		}
 	}
 	
 	public createJson(options?: JsonCreatorOptions): JsonTypes {
-		return this.backingField.map((obs) => { return obs.createJson(options)})
+		return this.get().map((obs) => { return obs.createJson(options)})
 	}
 	
 	
-	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
-		if(forceIsDifferent || this.defaultField.length != this.backingField.length) {
-			this._isDifferent = true
+	protected reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		const data = this.get()
+		if(forceIsDifferent || this.getDefault().length != data.length) {
+			this.setIsDifferent(true, true)
 			return
 		}
 		else {
@@ -55,100 +60,92 @@ export class ObservableArray<
 			//keyName (which, normally, is just the array index) is always synced with the order in backingField.
 			// That means the keyNames in defaultFiled will be out of order
 			
-			for(let i = this.backingField.length - 1; i>=0; --i) {
-				const backingField = this.backingField[i]
-				const defaultValue = this.defaultField[i]
-				if(backingField.isDifferent() || defaultValue.keyName != backingField.keyName) {
-					this._isDifferent = true
+			for(let i = data.length - 1; i>=0; --i) {
+				const field = data[i]
+				const defaultValue = this.getDefault()[i]
+				if(field.isDifferent() || defaultValue != field.keyName) {
+					this.setIsDifferent(true, true)
 					return
 				}
 			}
 		}
-		this._isDifferent = false
-	}
-	public isDifferent(): boolean {
-		return this._isDifferent
-    }
-	public get(): ObsT[] {
-		return this.backingField
-    }
-	public set(_value: ObsT[], _silently?: boolean): void {
-        throw new Error("Method not implemented.");
-    }
-	
-	public updateKeyName(keyName?: string, parent?: BaseObservable<ObservableTypes>): void {
-		super.updateKeyName(keyName, parent)
-		this.backingField.forEach((obs) => obs.updateKeyName())
+		this.setIsDifferent(false, true)
 	}
 	
-	public addCopy(original: ObsT, index: number = this.backingField.length): ObsT {
+	public addCopy(original: ObsT, index: number = this.get().length): ObsT {
 		const jsonObj = original.createJson()
 		const newObs = this.constructObservable(jsonObj as InputT, this, index.toString())
-		this.backingField.push(newObs)
-		if(index != this.backingField.length-1)
-			this.move( this.backingField.length-1, index)
+		this.get().push(newObs)
+		if(index != this.get().length-1)
+			this.move( this.get().length-1, index)
 		else
-			this.hasMutated(!this._isDifferent)
+			this.hasMutated(!this.isDifferent())
 		return newObs
 	}
 	public push(value: InputT): ObsT {
-		const obs = this.constructObservable(value, this, this.backingField.length.toString())
-		this.backingField.push(obs)
-		this.hasMutated(!this._isDifferent)
+		const obs = this.constructObservable(value, this, this.get().length.toString())
+		this.get().push(obs)
+		this.hasMutated(!this.isDifferent())
 		return obs
 	}
 	
 	public remove(index: number): ObsT {
-		const oldEntry = this.backingField[index]
-		this.backingField.splice(index, 1)
-		oldEntry.removeAllConnectedObservers()
+		const data = this.get()
+		const oldEntry = data[index]
+		data.splice(index, 1)
+		oldEntry.removeConnectedObservers()
 		
-		for(let i = index, max = this.backingField.length; i < max; ++i) {
-			this.backingField[i].updateKeyName(i.toString())
+		for(let i = index, max = data.length; i < max; ++i) {
+			data[i].updateKeyName(i.toString()) //also takes care of this.sharedMemory.children
 		}
-		this.hasMutated(!this._isDifferent)
+		this.hasMutated(!this.isDifferent())
 		return oldEntry
 	}
 	public replace(values: InputT[], silent: boolean = false): void {
-		this.backingField = []
+		const newData: ObsT[] = []
+		this.set(newData, true)
 		for(const value of values) {
-			const obs = this.constructObservable(value, this, this.backingField.length.toString())
-			this.backingField.push(obs)
+			const obs = this.constructObservable(value, this, newData.length.toString())
+			newData.push(obs)
 		}
 		if(!silent)
-			this.hasMutated(!this._isDifferent)
+			this.hasMutated(!this.isDifferent())
 	}
 	public move(oldIndex: number, newIndex: number): void {
-		const oldEntry = this.backingField[oldIndex]
+		const data = this.get()
+		const oldEntry = data[oldIndex]
 		if(oldIndex == newIndex)
 			return
-		this.backingField.splice(oldIndex, 1)
-		this.backingField.splice(newIndex, 0, oldEntry)
+		data.splice(oldIndex, 1)
+		data.splice(newIndex, 0, oldEntry)
 		
 		oldEntry.updateKeyName("~temp")
 		for(let i = oldIndex; i < newIndex; ++i) {
-			this.backingField[i].updateKeyName(i.toString())
+			data[i].updateKeyName(i.toString())
 		}
 		oldEntry.updateKeyName(newIndex.toString())
 		this.hasMutated()
 	}
 	
 	public moveFromOtherList(oldList: ArrayInterface<InputT, ObsT>, oldIndex: number, newIndex: number): void {
+		const data = this.get()
 		const oldEntry = oldList.get()[oldIndex]
 		oldList.remove(oldIndex)
 		
-		this.backingField.splice(newIndex, 0, oldEntry)
+		data.splice(newIndex, 0, oldEntry)
 		oldEntry.updateKeyName("~temp")
-		for(let i = this.backingField.length - 1; i >= newIndex; --i) {
-			this.backingField[i].updateKeyName(i.toString(), this)
+		for(let i = data.length - 1; i >= newIndex; --i) {
+			data[i].parent = this
+			data[i].updateKeyName(i.toString())
 		}
 		oldEntry.updateKeyName(newIndex.toString())
 		this.hasMutated()
 	}
 	
 	public indexOf(searchElement: PrimitiveType, fromIndex: number = 0): number {
-		for(let i = fromIndex, max = this.backingField.length; i < max; ++i) {
-			if(this.backingField[i].get() == searchElement)
+		const data = this.get()
+		for(let i = fromIndex, max = data.length; i < max; ++i) {
+			if(data[i].get() == searchElement)
 				return i
 		}
 		return -1

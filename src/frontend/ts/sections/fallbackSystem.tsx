@@ -1,25 +1,25 @@
-import m, { Vnode } from "mithril";
-import { getBaseUrl, makeUrlFriendly } from "../constants/methods";
-import { FILE_ADMIN } from "../constants/urls";
-import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
-import { OutboundFallbackToken } from "../data/fallbackTokens/outboundFallbackToken";
-import { ObservableArray } from "../observable/ObservableArray";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { ObservableStructureDataType } from "../observable/ObservableStructure";
-import { Lang } from "../singletons/Lang";
-import { Requests } from "../singletons/Requests";
-import { Section } from "../site/Section";
-import { SectionContent } from "../site/SectionContent";
-import { AddOutboundToken } from "../widgets/AddOutboundToken";
-import { BtnAdd, BtnTrash, BtnCopy, BtnEdit } from "../widgets/BtnWidgets";
-import { DragContainer } from "../widgets/DragContainer";
-import { TabBar } from "../widgets/TabBar";
-import { TitleRow } from "../widgets/TitleRow";
+import m, {Vnode} from "mithril";
+import {getBaseUrl, makeUrlFriendly} from "../constants/methods";
+import {FILE_ADMIN} from "../constants/urls";
+import {InboundFallbackTokenInfo} from "../data/fallbackTokens/inboundFallbackToken";
+import {OutboundFallbackToken} from "../data/fallbackTokens/outboundFallbackToken";
+import {ObservableArray} from "../observable/ObservableArray";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {DataStructureInputType} from "../data/DataStructure";
+import {Lang} from "../singletons/Lang";
+import {Requests} from "../singletons/Requests";
+import {SectionContent} from "../site/SectionContent";
+import {AddOutboundToken} from "../widgets/AddOutboundToken";
+import {BtnAdd, BtnCopy, BtnEdit, BtnTrash} from "../widgets/BtnWidgets";
+import {DragContainer} from "../widgets/DragContainer";
+import {TabBar} from "../widgets/TabBar";
+import {TitleRow} from "../widgets/TitleRow";
+import {SectionData} from "../site/SectionData";
 
 // noinspection JSUnusedGlobalSymbols
 export class Content extends SectionContent {
 	private inboundTokens: Map<string, InboundFallbackTokenInfo[]> = new Map()
-	private outboundTokenUrls: ObservableArray<ObservableStructureDataType, OutboundFallbackToken>
+	private outboundTokenUrls: ObservableArray<DataStructureInputType, OutboundFallbackToken>
 	private selectedIndex = new ObservablePrimitive(0, null, "fallbackSystem")
 
 	private recentToken: string | null = null
@@ -29,11 +29,11 @@ export class Content extends SectionContent {
 			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackTokensInfo`),
 		]
 	}
-	constructor(section: Section, inboundTokens: InboundFallbackTokenInfo[], outboundTokens: ObservableStructureDataType[]) {
-		super(section)
+	constructor(sectionData: SectionData, inboundTokens: InboundFallbackTokenInfo[], outboundTokens: DataStructureInputType[]) {
+		super(sectionData)
 
 		this.inboundTokens = this.sortInboundTokens(inboundTokens);
-		this.outboundTokenUrls = new ObservableArray<ObservableStructureDataType, OutboundFallbackToken>(
+		this.outboundTokenUrls = new ObservableArray<DataStructureInputType, OutboundFallbackToken>(
 			outboundTokens,
 			null,
 			"outboundTokenUrls",

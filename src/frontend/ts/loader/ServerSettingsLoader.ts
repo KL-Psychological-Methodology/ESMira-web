@@ -44,9 +44,7 @@ export class ServerSettingsLoader {
 			JSON.stringify(exportData)
 		)
 		
-		
-		this.settings = new ServerData(json, settings.defaultLang.get())
-		this.settings.importObserverData(settings)
+		this.settings = new ServerData(json, settings.defaultLang.get(), settings)
 		this.settings.currentLangCode.set(settings.currentLangCode.get())
 		this.settings.hasMutated()
 		document.getElementById("headerServerName")!.innerText = this.settings.siteTranslations.serverName.get()

@@ -1,6 +1,6 @@
 import {PrimitiveType} from "../observable/types/PrimitiveType";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {ObservablePrimitiveRecord} from "../observable/ObservableRecord";
+import {ObservableObject} from "../observable/ObservableObject";
 
 /**
  * Dynamic values are a way of communicating between sections. They are shared between sections and can change at any time.
@@ -19,29 +19,25 @@ export interface DynamicValues {
 	owner: string,
 }
 /**
- * This is just a {@link ObservableRecord} which is very similar to {@link ObservablePrimitiveRecord}
- * but it can hold different primitiveTypes at the same time and also has convenience functions that return the correct type depending on the key.
+ * This is just an {@link ObservableObject} that can dynamically create fields and has convenience functions that return the correct type depending on the key.
  */
-export class DynamicValueContainer extends ObservablePrimitiveRecord<
-	string,
-	PrimitiveType
-> {
+export class DynamicValueContainer extends ObservableObject<ObservablePrimitive<any>> {
 	constructor() {
-		super({}, "dynamicValues");
+		super(null, "dynamicValues");
 	}
 	
 	public getOrCreateObs<T extends PrimitiveType>(key: keyof DynamicValues, value: T): ObservablePrimitive<T> {
 		const keyString = key.toString()
-		if(this.backingField.hasOwnProperty(keyString))
-			return this.backingField[keyString] as ObservablePrimitive<T>
+		if(this.contains(keyString))
+			return this.getEntry(keyString)!
 		else {
 			const obs = new ObservablePrimitive(value, null, keyString)
-			this.backingField[keyString] = obs
+			this.insert(keyString, obs)
 			return obs
 		}
 	}
 	public getChild<T extends keyof DynamicValues>(key: T): DynamicValues[T] | null {
-		return this.backingField[key.toString()]?.get() as DynamicValues[T]
+		return this.getEntry(key)?.get() as DynamicValues[T]
 	}
 	
 	public setChild<T extends PrimitiveType>(key: keyof DynamicValues, value: T): ObservablePrimitive<T> {

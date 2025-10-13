@@ -164,7 +164,7 @@ export class Content extends SectionContent {
 	}
 	
 	public destroy(): void {
-		this.currentCode.removeAllConnectedObservers()
+		this.currentCode.removeConnectedObservers()
 		super.destroy()
 	}
 }

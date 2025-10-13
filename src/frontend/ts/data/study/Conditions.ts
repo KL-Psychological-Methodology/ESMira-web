@@ -1,7 +1,7 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 import {JsonTypes} from "../../observable/types/JsonTypes";
 
-export class Conditions extends ObservableStructure {
+export class Conditions extends DataStructure {
 	public key					= this.primitive<string>(		"key",				"")
 	public value				= this.primitive<string>(		"value",			"")
 	public operator				= this.primitive<number>(		"operator",		0)

@@ -1,7 +1,7 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 import {SignalTime} from "./SignalTime";
 
-export class Schedule extends ObservableStructure {
+export class Schedule extends DataStructure {
 	public userEditable					= this.primitive<boolean>(		"userEditable",		true)
 	public dailyRepeatRate				= this.primitive<number>(		"dailyRepeatRate",		1)
 	public skipFirstInLoop				= this.primitive<boolean>(		"skipFirstInLoop",		false)

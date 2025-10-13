@@ -1,7 +1,7 @@
-import {ObservableStructure} from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 import {Input} from "./Input";
 
-export class Page extends ObservableStructure {
+export class Page extends DataStructure {
 	public randomized					= this.primitive<boolean>(		"randomized",					false)
 	public skipAfterSecs				= this.primitive<number>(		"skipAfterSecs",				0)
 	

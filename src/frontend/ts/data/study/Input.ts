@@ -1,4 +1,4 @@
-import { ObservableStructure } from "../../observable/ObservableStructure";
+import {DataStructure} from "../DataStructure";
 
 export type InputResponseType =
 	"ambient_light" |
@@ -29,7 +29,7 @@ export type InputResponseType =
 
 export type InputMediaTypes = "image" | "audio"
 
-export class Input extends ObservableStructure {
+export class Input extends DataStructure {
 	public responseType = this.primitive<InputResponseType>("responseType", "text_input")
 	public name = this.primitive<string>("name", "input")
 	public required = this.primitive<boolean>("required", false)

@@ -1,123 +1,149 @@
 import {ObservablePrimitive} from "./ObservablePrimitive";
 import {ObservableTypes} from "./types/ObservableTypes";
-import {BaseObservable} from "./BaseObservable";
+import {BaseObservable, ObserverKeyType} from "./BaseObservable";
 import {PrimitiveType} from "./types/PrimitiveType";
 import {JsonTypes} from "./types/JsonTypes";
-import {BaseTranslatable, TranslatableJsonCreatorOptions} from "./BaseTranslatable";
+import {defineCurrentLangCode, Translatable, TranslatableJsonCreatorOptions} from "./interfaces/Translatable";
 
 type LanguageData<T> = Record<string, T>
 
 /**
- * A translatable Wrapper that can hold any primitive (string, number, boolean)
+ * An observable that is translatable and can hold any primitive (string, number, boolean).
+ * @see {@link ObservablePrimitive}
+ * @see {@link Translatable}
+ * @see {@link BaseObservable}
  */
-export class TranslatablePrimitive<T extends PrimitiveType> extends BaseTranslatable<T> {
-	private readonly observables: Record<string, ObservablePrimitive<T>> = {}
-	private langCount: number = 0
-	private readonly defaultValue: T
+export class TranslatablePrimitive<T extends PrimitiveType> extends BaseObservable<T> implements Translatable<T> {
+	public readonly currentLangCode: ObservablePrimitive<string>
 	
-	constructor(value: T | LanguageData<T>, parent: BaseObservable<ObservableTypes> | null, key: string, newLang?: string) {
-		super(parent, key, newLang)
+	constructor(value: T | LanguageData<T>, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType, newLang?: string) {
+		super(parent, key)
+		this.currentLangCode = defineCurrentLangCode(parent, newLang)
 		
-		if(value != null && typeof value == "object") {  // value will be null when it has the wrong type (source was faulty)
-			for(let langCode in value) {
-				this.observables[langCode] = new ObservablePrimitive<T>(value[langCode], this.parent, this.keyName)
-				++this.langCount
-			}
-			this.defaultValue = value[this.currentLangCode.get()]
+		if(value != null && typeof value == "object") { // value will be null when it has the wrong type (source was faulty)
+			this.sharedMemory.data = value //we cannot use set() because it does not expect a LanguageData type
+			this.setDefaultRecord({...value})
 		}
 		else {
-			this.defaultValue = value
-			this.observables[this.currentLangCode.get()] = new ObservablePrimitive<T>(value, this.parent, this.keyName)
-			this.langCount = 1
+			const langCode = this.currentLangCode.get()
+			const record: LanguageData<T> = {
+				[langCode]: value,
+			}
+			this.sharedMemory.data = record //we cannot use set() because it does not expect a LanguageData type
+			this.setDefaultRecord({...record})
 		}
 	}
 	
-	public updateKeyName(keyName: string, parent?: BaseObservable<ObservableTypes> | undefined): void {
-		super.updateKeyName(keyName, parent)
-		for(let key in this.observables) {
-			this.observables[key].updateKeyName(keyName, parent)
-		}
-    }
+	private getDataRecord(): LanguageData<T> {
+		return this.sharedMemory.data
+	}
+	private getDefaultRecord(): LanguageData<T> {
+		return this.sharedMemory.default
+	}
+	
+	private setDefaultRecord(value: Record<string, T>): void {
+		this.sharedMemory.default = value
+	}
 	
 	public createJson(options?: TranslatableJsonCreatorOptions): JsonTypes {
-		if(options?.dontIncludeAllLanguages || this.langCount <= 1)
+		if(options?.dontIncludeAllLanguages)
 			return this.get()
 		else {
+			const record = this.getDataRecord()
 			let lastValue: T | null = null
 			let hasDifferentValues = false
-			const r: LanguageData<T> = {}
-			for(const langCode in this.observables) {
-				const value = this.observables[langCode].get()
-				r[langCode] = value
-				if(lastValue != null && value != lastValue)
+			for(const langCode in record) {
+				const value = record[langCode]
+				if(lastValue != null && value != lastValue) {
 					hasDifferentValues = true
+					break;
+				}
 				lastValue = value
 			}
-			return hasDifferentValues ?  r : (lastValue ?? this.defaultValue)
+			return hasDifferentValues ? record : (lastValue ?? this.getDefault())
 		}
     }
 	
-	public addLanguage(langCode: string, value: T = this.defaultValue): void {
-		if(this.observables.hasOwnProperty(langCode)) {
+	public addLanguage(langCode: string, value: T = this.getDefault()): void {
+		const record = this.getDataRecord()
+		if(record.hasOwnProperty(langCode)) {
 			console.log(`Language "${langCode}" already exists in ${this.keyName}`)
 			return
 		}
-		this.observables[langCode] = new ObservablePrimitive<T>(value, this.parent, this.keyName)
-		++this.langCount
+		record[langCode] = value
+		this.getDefaultRecord()[langCode] = value
 	}
 	public renameLanguage(oldLangCode: string, newLangCode: string): void {
-		if(!this.observables.hasOwnProperty(oldLangCode))
-			return
-		this.observables[newLangCode] = this.observables[oldLangCode]
-		delete this.observables[oldLangCode]
+		const record = this.getDataRecord()
+		const defaultRecord = this.getDefaultRecord()
+		if(record.hasOwnProperty(oldLangCode)) {
+			record[newLangCode] = record[oldLangCode]
+			delete record[oldLangCode]
+		}
+		if(defaultRecord.hasOwnProperty(oldLangCode)) {
+			defaultRecord[newLangCode] = defaultRecord[oldLangCode]
+			delete defaultRecord[oldLangCode]
+		}
 		if(this.currentLangCode.get() == oldLangCode)
 			this.currentLangCode.set(newLangCode)
 	}
 	public removeLanguage(langCode: string): void {
-		delete this.observables[langCode]
-		--this.langCount
+		const record = this.getDataRecord()
+		delete record[langCode]
 		
 		if(this.currentLangCode.get() == langCode) {
 			let firstLangKey = "en"
-			for(let observablesKey in this.observables) {
+			for(let observablesKey in record) {
 				firstLangKey = observablesKey
 				break
 			}
 			this.currentLangCode.set(firstLangKey)
 		}
+		if(!this.sharedMemory.preventIsDifferentRecalculations) {
+			this.reCalcIsDifferent()
+		}
 	}
 	
-	public reCalcIsDifferent(forceIsDifferent: boolean = false): void {
-		this.getObs()?.reCalcIsDifferent(forceIsDifferent)
-	}
-	
-	public hasMutated(turnedDifferent: boolean = false, forceIsDifferent: boolean = false, target: BaseObservable<ObservableTypes> = this): void {
-		this.getObs()?.hasMutated(turnedDifferent, forceIsDifferent, target)
-	}
-	public isDifferent(): boolean {
+	protected reCalcIsDifferent(forceIsDifferent: boolean = false): void {
+		if(forceIsDifferent) {
+			this.setIsDifferent(true, true)
+			return
+		}
+		const record = this.getDataRecord()
+		const defaultRecord = this.getDefaultRecord()
 		let isDifferent = false
-		for(let key in this.observables) {
-			if(this.observables[key].isDifferent()) {
+		for(const key in record) {
+			const defaultValue = defaultRecord[key as keyof typeof defaultRecord]
+			if(defaultValue != record[key]) {
 				isDifferent = true
 				break;
 			}
 		}
-		return isDifferent
+		this.setIsDifferent(isDifferent, true)
 	}
 	
-	private getObs(): ObservablePrimitive<T> | null {
-		const langCode = this.currentLangCode.get()
-		if(!this.observables.hasOwnProperty(langCode)) {
-			this.observables[langCode] = new ObservablePrimitive<T>(this.defaultValue, this.parent, this.keyName)
-			++this.langCount
-		}
-		return this.observables[langCode]
+	protected getDefault(): T {
+		const record = this.getDefaultRecord()
+		return record[this.currentLangCode.get() as keyof typeof record]
 	}
-	
+	protected setDefault(value: T): void {
+		const record = this.getDefaultRecord()
+		record[this.currentLangCode.get() as keyof typeof record] = value
+	}
 	public get(): T {
-		return this.getObs()!.get()
+		const record = this.getDataRecord()
+		const langCode = this.currentLangCode.get() as keyof typeof record
+		if(!record.hasOwnProperty(langCode)) {
+			record[langCode] = this.getDefault()
+		}
+		return record[langCode]
 	}
-	public set(value: T): void {
-		this.getObs()?.set(value)
+	public set(value: T, silently: boolean = false): void {
+		const record = this.getDataRecord()
+		record[this.currentLangCode.get() as keyof typeof record] = value
+		
+		if(!silently) {
+			this.hasMutated()
+		}
 	}
 }

@@ -6,6 +6,7 @@ use backend\admin\IsLoggedIn;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\Permission;
+use stdClass;
 
 class GetStrippedStudyList extends IsLoggedIn {
     /**
@@ -16,7 +17,7 @@ class GetStrippedStudyList extends IsLoggedIn {
         return [
             'id' => $studyId,
             'published' => $studyMetadataStore->isPublished(),
-            'questionnaires' => $studyMetadataStore->hasQuestionnaires() ? [[]] : [],
+            'questionnaires' => $studyMetadataStore->hasQuestionnaires() ? [new stdClass()] : [],
             'title' => $studyMetadataStore->getTitle(),
             'accessKeys' => $studyMetadataStore->getAccessKeys(),
             'owner' => $studyMetadataStore->getOwner(),

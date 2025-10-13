@@ -1,24 +1,24 @@
 import m from "mithril";
-import { PromiseCache } from "../singletons/PromiseCache";
-import { FILE_ADMIN } from "../constants/urls";
-import { Requests } from "../singletons/Requests";
-import { Lang } from "../singletons/Lang";
-import { ObservableStructure, ObservableStructureDataType } from "../observable/ObservableStructure";
-import { ObservableArray } from "../observable/ObservableArray";
+import {PromiseCache} from "../singletons/PromiseCache";
+import {FILE_ADMIN} from "../constants/urls";
+import {Requests} from "../singletons/Requests";
+import {Lang} from "../singletons/Lang";
+import {DataStructure, DataStructureInputType} from "../data/DataStructure";
+import {ObservableArray} from "../observable/ObservableArray";
 
 
-export class Bookmark extends ObservableStructure {
+export class Bookmark extends DataStructure {
 	public url = this.primitive<string>("url", "")
 	public alias = this.primitive<string>("alias", "")
 }
 
 export class BookmarkLoader {
-	private bookmarks?: ObservableArray<ObservableStructureDataType, Bookmark>
+	private bookmarks?: ObservableArray<DataStructureInputType, Bookmark>
 
 	public async init(): Promise<BookmarkLoader> {
 		return PromiseCache.get("bookmarsList", async () => {
 			const bookmarksJson = await Requests.loadJson(`${FILE_ADMIN}?type=GetBookmarks`)
-			this.bookmarks = new ObservableArray<ObservableStructureDataType, Bookmark>(
+			this.bookmarks = new ObservableArray<DataStructureInputType, Bookmark>(
 				bookmarksJson,
 				null,
 				"bookmarksList",

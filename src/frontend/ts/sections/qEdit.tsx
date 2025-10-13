@@ -1,35 +1,35 @@
-import { SectionContent } from "../site/SectionContent";
-import m, { Vnode } from "mithril";
-import { Lang } from "../singletons/Lang";
+import {SectionContent} from "../site/SectionContent";
+import m, {Vnode} from "mithril";
+import {Lang} from "../singletons/Lang";
 import upSvg from "../../imgs/icons/moveUp.svg?raw"
 import copySvg from "../../imgs/icons/copy.svg?raw"
 import downSvg from "../../imgs/icons/moveDown.svg?raw"
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import deleteSvg from "../../imgs/icons/trash.svg?raw"
 import warnSvg from "../../imgs/icons/warn.svg?raw"
-import { TabBar } from "../widgets/TabBar";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { Section } from "../site/Section";
-import { Study } from "../data/study/Study";
-import { Questionnaire } from "../data/study/Questionnaire";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { BindObservable } from "../widgets/BindObservable";
-import { TitleRow } from "../widgets/TitleRow";
-import { Page } from "../data/study/Page";
-import { makeUrlFriendly, safeConfirm } from "../constants/methods";
-import { Input } from "../data/study/Input";
-import { createUniqueName } from "../helpers/UniqueName";
-import { DragContainer, DragTools } from "../widgets/DragContainer";
-import { DashRow } from "../widgets/DashRow";
-import { DashElement } from "../widgets/DashElement";
-import { ObservableArray } from "../observable/ObservableArray";
-import { ObservableStructureDataType } from "../observable/ObservableStructure";
-import { BtnLikeSpacer } from "../widgets/BtnLikeSpacer";
-import { DropdownMenu } from "../widgets/DropdownMenu";
-import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
-import { BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash } from "../widgets/BtnWidgets";
-import { CodeEditor } from "../widgets/CodeEditor";
-import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
+import {TabBar} from "../widgets/TabBar";
+import {ObservablePrimitive} from "../observable/ObservablePrimitive";
+import {Study} from "../data/study/Study";
+import {Questionnaire} from "../data/study/Questionnaire";
+import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {BindObservable} from "../widgets/BindObservable";
+import {TitleRow} from "../widgets/TitleRow";
+import {Page} from "../data/study/Page";
+import {makeUrlFriendly, safeConfirm} from "../constants/methods";
+import {Input} from "../data/study/Input";
+import {createUniqueName} from "../helpers/UniqueName";
+import {DragContainer, DragTools} from "../widgets/DragContainer";
+import {DashRow} from "../widgets/DashRow";
+import {DashElement} from "../widgets/DashElement";
+import {ObservableArray} from "../observable/ObservableArray";
+import {DataStructureInputType} from "../data/DataStructure";
+import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
+import {DropdownMenu} from "../widgets/DropdownMenu";
+import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
+import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
+import {CodeEditor} from "../widgets/CodeEditor";
+import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
@@ -95,7 +95,7 @@ export class Content extends SectionContent {
 	}
 	private copyPage(page: Page, index: number): void {
 		const study = this.getStudyOrThrow()
-		const newPage = (page.parent as ObservableArray<ObservableStructureDataType, Page>).addCopy(page, index)
+		const newPage = (page.parent as ObservableArray<DataStructureInputType, Page>).addCopy(page, index)
 
 		this.section.siteData.studyLoader.autoValidatePage(study, newPage)
 	}
@@ -150,7 +150,7 @@ export class Content extends SectionContent {
 		const newName = createUniqueName(this.getStudyOrThrow(), input.name.get())
 		if (!newName)
 			return
-		const newInput = (input.parent as ObservableArray<ObservableStructureDataType, Input>).addCopy(input, index)
+		const newInput = (input.parent as ObservableArray<DataStructureInputType, Input>).addCopy(input, index)
 		newInput.name.set(newName)
 		this.newSection(`inputEdit,input:${makeUrlFriendly(newName)}`)
 	}
