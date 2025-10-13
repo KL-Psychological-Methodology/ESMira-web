@@ -125,7 +125,7 @@ class AppInstall implements Page {
 
         $output .= '<br/><br/>';
 
-        if ((!$this->study->studyOver ?? false) && (( $this->study->publishedAndroid ?? true ) || ( $this->study->publishedIOS ?? true ))) {
+        if ((!( $this->study->studyOver ?? false )) && (( $this->study->publishedAndroid ?? true ) || ( $this->study->publishedIOS ?? true ))) {
             $output .= '<div class="titleRow">' . Lang::get('how_to_participate_step_1') . '</div>
 		
 		<div class="center">';
