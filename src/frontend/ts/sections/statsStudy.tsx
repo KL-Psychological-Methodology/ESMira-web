@@ -1,9 +1,9 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {TitleRow} from "../components/TitleRow";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {FILE_RESPONSES} from "../constants/urls";
 import {CsvLoader} from "../loader/csv/CsvLoader";
 import {ChartData} from "../data/study/ChartData";
@@ -19,13 +19,13 @@ import {
 import {getChartColor} from "../helpers/ChartJsBox";
 import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
 import {ObservablePromise} from "../observable/ObservablePromise";
-import {ChartView} from "../widgets/ChartView";
+import {ChartView} from "../components/ChartView";
 import {JsonTypes} from "../observable/types/JsonTypes";
-import {SearchBox} from "../widgets/SearchBox";
+import {SearchBox} from "../components/SearchBox";
 import {ValueListInfo} from "../loader/csv/ValueListInfo";
-import {BindObservable} from "../widgets/BindObservable";
+import {BindObservable} from "../components/BindObservable";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {BtnReload} from "../widgets/BtnWidgets";
+import {BtnReload} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 const ONE_DAY_MS = 86400000

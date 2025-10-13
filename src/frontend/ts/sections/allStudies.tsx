@@ -1,6 +1,6 @@
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TabBar, TabContent} from "../widgets/TabBar";
+import {TabBar, TabContent} from "../components/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Study} from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
@@ -8,7 +8,7 @@ import merlinLogsSvg from "../../imgs/icons/merlinLogs.svg?raw";
 import {StudiesDataType} from "../loader/StudyLoader";
 import {Content as StudiesContent} from ".././sections/studies";
 import {SectionAlternative} from "../site/SectionContent";
-import {BindObservable} from "../widgets/BindObservable";
+import {BindObservable} from "../components/BindObservable";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends StudiesContent {

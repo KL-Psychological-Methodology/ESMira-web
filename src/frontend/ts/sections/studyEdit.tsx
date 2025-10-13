@@ -1,7 +1,7 @@
 import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import studyDescSvg from "../../imgs/dashIcons/studyDesc.svg?raw"
 import addSvg from "../../imgs/icons/add.svg?raw"
@@ -15,7 +15,7 @@ import publishSvg from "../../imgs/dashIcons/publish.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import settingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import {Study} from "../data/study/Study";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
 import {ObserverId} from "../observable/BaseObservable";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";

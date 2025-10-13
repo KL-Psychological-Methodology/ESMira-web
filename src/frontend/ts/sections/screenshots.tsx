@@ -1,12 +1,12 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {AboutESMiraInterface, AboutESMiraLoader} from "../loader/AboutESMiraLoader";
 import {URL_ABOUT_ESMIRA_SOURCE} from "../constants/urls";
-import {DropdownMenu} from "../widgets/DropdownMenu";
+import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

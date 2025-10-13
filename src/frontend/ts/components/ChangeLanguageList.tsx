@@ -2,7 +2,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {BindObservable, OnBeforeChangeTransformer} from "./BindObservable";
 import {TranslatableRootInterface} from "../observable/interfaces/TranslatableRootInterface";
-import {BtnTrash} from "./BtnWidgets";
+import {BtnTrash} from "./Buttons";
 
 export class ChangeLanguageList {
 	public readonly promise: Promise<void>

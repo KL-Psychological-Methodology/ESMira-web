@@ -1,14 +1,14 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
-import {BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer} from "../widgets/BindObservable";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {RichText} from "../widgets/RichText";
+import {BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer} from "../components/BindObservable";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
+import {RichText} from "../components/RichText";
 import warnSvg from "../../imgs/icons/warn.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
-import {BtnCustom} from "../widgets/BtnWidgets";
+import {BtnCustom} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

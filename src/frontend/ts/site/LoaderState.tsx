@@ -2,7 +2,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Requests, RequestType} from "../singletons/Requests";
 import closeX from "../../imgs/icons/closeX.svg?raw";
-import {LoadingSpinner} from "../widgets/LoadingSpinner";
+import {LoadingSpinner} from "../components/LoadingSpinner";
 
 export class LoaderState {
 	private isEnabled = false

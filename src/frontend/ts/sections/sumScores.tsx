@@ -1,12 +1,12 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {Questionnaire} from "../data/study/Questionnaire";
-import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnTrash} from "../components/Buttons";
 import {createUniqueName} from "../helpers/UniqueName";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

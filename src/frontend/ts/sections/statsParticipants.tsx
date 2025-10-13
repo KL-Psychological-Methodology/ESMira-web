@@ -1,21 +1,21 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {TitleRow} from "../components/TitleRow";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {FILE_RESPONSES} from "../constants/urls";
 import {CsvLoader} from "../loader/csv/CsvLoader";
 import {ChartData} from "../data/study/ChartData";
 import {CsvLoaderCollectionFromCharts, LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
 import {ObservablePromise} from "../observable/ObservablePromise";
-import {ChartView} from "../widgets/ChartView";
-import {SearchBox} from "../widgets/SearchBox";
+import {ChartView} from "../components/ChartView";
+import {SearchBox} from "../components/SearchBox";
 import {ValueListInfo} from "../loader/csv/ValueListInfo";
 import {StatisticsCollection} from "../data/statistics/StatisticsCollection";
 import {Study} from "../data/study/Study";
 import {AxisContainer} from "../data/study/AxisContainer";
-import {BtnReload} from "../widgets/BtnWidgets";
+import {BtnReload} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

@@ -1,10 +1,10 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {BindObservable} from "../widgets/BindObservable";
-import {RichText} from "../widgets/RichText";
-import {TitleRow} from "../widgets/TitleRow";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
+import {BindObservable} from "../components/BindObservable";
+import {RichText} from "../components/RichText";
+import {TitleRow} from "../components/TitleRow";
 import {ChartData} from "../data/study/ChartData";
 import {
 	CONDITION_TYPE_ALL,
@@ -20,15 +20,15 @@ import {
 import {DATA_MAIN_KEYS} from "../constants/data";
 import {DataStructureInputType} from "../data/DataStructure";
 import {AxisContainer} from "../data/study/AxisContainer";
-import {DragContainer} from "../widgets/DragContainer";
+import {DragContainer} from "../components/DragContainer";
 import {Study} from "../data/study/Study";
 import {StudyDataValues} from "../helpers/StudyDataValues";
 import {AxisData} from "../data/study/AxisData";
-import {DashRow} from "../widgets/DashRow";
-import {DropdownMenu} from "../widgets/DropdownMenu";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DropdownMenu} from "../components/DropdownMenu";
+import {DashElement} from "../components/DashElement";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
-import {BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash} from "../components/Buttons";
 import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
 import {SectionData} from "../site/SectionData";
 

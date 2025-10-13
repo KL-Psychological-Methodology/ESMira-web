@@ -3,12 +3,12 @@ import {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {ChartEditSectionCallback} from "./chartEdit";
 import {CsvLoaderCollectionFromCharts, LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
-import {ChartView} from "../widgets/ChartView";
+import {ChartView} from "../components/ChartView";
 import {ObservablePromise} from "../observable/ObservablePromise";
 import {ObserverId} from "../observable/BaseObservable";
 import {AxisContainer} from "../data/study/AxisContainer";
 import {CsvLoader} from "../loader/csv/CsvLoader";
-import {BtnReload} from "../widgets/BtnWidgets";
+import {BtnReload} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 const ONE_DAY_MS = 86400000

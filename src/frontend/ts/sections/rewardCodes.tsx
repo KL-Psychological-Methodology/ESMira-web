@@ -1,11 +1,11 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
-import {SearchBox} from "../widgets/SearchBox";
+import {BindObservable} from "../components/BindObservable";
+import {TitleRow} from "../components/TitleRow";
+import {SearchBox} from "../components/SearchBox";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";

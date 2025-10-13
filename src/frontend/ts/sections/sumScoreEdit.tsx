@@ -1,13 +1,13 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BindObservable, OnBeforeChangeTransformer} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
+import {BindObservable, OnBeforeChangeTransformer} from "../components/BindObservable";
+import {TitleRow} from "../components/TitleRow";
 import {ObservableArray} from "../observable/ObservableArray";
 import {createUniqueName} from "../helpers/UniqueName";
 import {StudyDataValues} from "../helpers/StudyDataValues";
 import {BaseObservable} from "../observable/BaseObservable";
-import {BtnTrash} from "../widgets/BtnWidgets";
+import {BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

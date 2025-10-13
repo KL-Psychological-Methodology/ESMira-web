@@ -1,7 +1,7 @@
 import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import calculateSvg from "../../imgs/dashIcons/calculate.svg?raw"

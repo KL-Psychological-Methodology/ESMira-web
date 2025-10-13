@@ -1,9 +1,9 @@
 import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
-import {BtnReload} from "../widgets/BtnWidgets";
+import {BtnReload} from "../components/Buttons";
 import {makeUrlFriendly} from "../constants/methods";
 import {SectionData} from "../site/SectionData";
 

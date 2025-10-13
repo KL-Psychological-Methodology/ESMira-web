@@ -1,10 +1,10 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {BindObservable} from "../widgets/BindObservable";
-import {RichText} from "../widgets/RichText";
-import {RegexTextInput} from "../widgets/RegexTextInput";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
+import {BindObservable} from "../components/BindObservable";
+import {RichText} from "../components/RichText";
+import {RegexTextInput} from "../components/RegexTextInput";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

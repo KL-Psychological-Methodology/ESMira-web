@@ -1,11 +1,11 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Requests} from "../singletons/Requests";
 import {FILE_SERVER_STATISTICS} from "../constants/urls";
-import {ChartView} from "../widgets/ChartView";
+import {ChartView} from "../components/ChartView";
 import {ChartData} from "../data/study/ChartData";
 import {ObservablePromise} from "../observable/ObservablePromise";
 import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
@@ -27,7 +27,7 @@ import {StatisticsEntryTimed} from "../data/statistics/StatisticsDataRecord";
 import {DayEntry} from "../data/serverStatistics/DayEntry";
 import {WeekEntry} from "../data/serverStatistics/WeekEntry";
 import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
-import {BtnReload} from "../widgets/BtnWidgets";
+import {BtnReload} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 const SMALLEST_TIMED_DISTANCE = 675

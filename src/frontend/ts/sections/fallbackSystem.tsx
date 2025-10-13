@@ -9,11 +9,11 @@ import {DataStructureInputType} from "../data/DataStructure";
 import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
 import {SectionContent} from "../site/SectionContent";
-import {AddOutboundToken} from "../widgets/AddOutboundToken";
-import {BtnAdd, BtnCopy, BtnEdit, BtnTrash} from "../widgets/BtnWidgets";
-import {DragContainer} from "../widgets/DragContainer";
-import {TabBar} from "../widgets/TabBar";
-import {TitleRow} from "../widgets/TitleRow";
+import {AddOutboundToken} from "../components/AddOutboundToken";
+import {BtnAdd, BtnCopy, BtnEdit, BtnTrash} from "../components/Buttons";
+import {DragContainer} from "../components/DragContainer";
+import {TabBar} from "../components/TabBar";
+import {TitleRow} from "../components/TitleRow";
 import {SectionData} from "../site/SectionData";
 
 // noinspection JSUnusedGlobalSymbols

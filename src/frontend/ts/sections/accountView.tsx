@@ -3,13 +3,13 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {FILE_ADMIN} from "../constants/urls";
 import {Account} from "../data/accounts/Account";
-import {ChangeAccount} from "../widgets/ChangeAccount";
-import {TitleRow} from "../widgets/TitleRow";
-import {BindObservable} from "../widgets/BindObservable";
+import {ChangeAccount} from "../components/ChangeAccount";
+import {TitleRow} from "../components/TitleRow";
+import {BindObservable} from "../components/BindObservable";
 import {AccountPermissions} from "../admin/AccountPermissions";
-import {closeDropdown, DropdownMenu} from "../widgets/DropdownMenu";
+import {closeDropdown, DropdownMenu} from "../components/DropdownMenu";
 import {AccountsLoader} from "../loader/AccountsLoader";
-import {BtnAdd, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

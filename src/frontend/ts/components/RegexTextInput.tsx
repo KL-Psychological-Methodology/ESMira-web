@@ -2,7 +2,6 @@ import m, { Component, Vnode, VnodeDOM } from "mithril"
 import { failStyle, neutralStyle } from "../constants/formStyles"
 import { Study } from "../data/study/Study"
 import { BaseObservable } from "../observable/BaseObservable"
-import { PrimitiveType } from "../observable/types/PrimitiveType"
 import { BindObservable } from "./BindObservable"
 import { ObservableLangChooser } from "./ObservableLangChooser"
 

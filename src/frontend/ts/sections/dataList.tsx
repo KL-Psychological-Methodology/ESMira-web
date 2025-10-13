@@ -6,11 +6,11 @@ import questionnaireSvg from "../../imgs/icons/questionnaire.svg?raw"
 import backupSvg from "../../imgs/icons/backup.svg?raw"
 import {FILE_ADMIN, FILE_CREATE_MEDIA, FILE_MEDIA, FILE_RESPONSES} from "../constants/urls";
 import {Study} from "../data/study/Study";
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {Requests} from "../singletons/Requests";
 import {safeConfirm} from "../constants/methods";
 import {Questionnaire} from "../data/study/Questionnaire";
-import {BtnTrash} from "../widgets/BtnWidgets";
+import {BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 interface DataLineEntry {

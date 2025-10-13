@@ -5,7 +5,7 @@ import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
 import {SectionContent} from "../site/SectionContent";
 import commentSvg from "../../imgs/icons/comment.svg?raw"
-import {BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnOk, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 

@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import {DataStructureInputType} from "../data/DataStructure";
-import {BtnCustom} from "../widgets/BtnWidgets";
+import {BtnCustom} from "../components/Buttons";
 import {JsonSourceComponent} from "../helpers/JsonSourceComponent";
 import {SectionData} from "../site/SectionData";
 

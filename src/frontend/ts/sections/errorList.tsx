@@ -5,7 +5,7 @@ import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {ErrorReportInfo} from "../data/errorReports/ErrorReportInfo";
 import commentSvg from "../../imgs/icons/comment.svg?raw"
-import {BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnOk, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

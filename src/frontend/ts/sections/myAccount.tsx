@@ -1,12 +1,12 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {ChangeAccount} from "../widgets/ChangeAccount";
-import {TitleRow} from "../widgets/TitleRow";
+import {ChangeAccount} from "../components/ChangeAccount";
+import {TitleRow} from "../components/TitleRow";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
-import {DropdownMenu} from "../widgets/DropdownMenu";
-import {BtnTrash} from "../widgets/BtnWidgets";
+import {DropdownMenu} from "../components/DropdownMenu";
+import {BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 interface LoginToken {

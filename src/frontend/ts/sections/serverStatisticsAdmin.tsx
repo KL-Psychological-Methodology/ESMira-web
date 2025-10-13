@@ -7,7 +7,7 @@ import {JsonTypes} from "../observable/types/JsonTypes";
 import {StatisticsEntry} from "../data/statistics/StatisticsEntry";
 import {ServerStatistics} from "../data/serverStatistics/ServerStatistics";
 import {Content as ServerStatisticsContent} from ".././sections/serverStatistics";
-import {TabBar} from "../widgets/TabBar";
+import {TabBar} from "../components/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {SectionData} from "../site/SectionData";
 

@@ -1,21 +1,21 @@
 import {SectionAlternative, SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../widgets/BindObservable";
+import {BindObservable} from "../components/BindObservable";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import {Message} from "../data/messages/Message";
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {SearchWidget} from "../widgets/SearchWidget";
-import {DropdownMenu} from "../widgets/DropdownMenu";
+import {SearchWidget} from "../components/SearchWidget";
+import {DropdownMenu} from "../components/DropdownMenu";
 import {ParticipantMessagesContainer} from "../data/messages/ParticipantMessagesContainer";
 import {SendMessage} from "../data/messages/SendMessage";
 import {MessageAsRead} from "../data/messages/MessageAsRead";
 import {getFromUrlFriendly, safeConfirm} from "../constants/methods";
 import participantsSvg from "../../imgs/icons/participants.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
-import {BtnCustom, BtnOk, BtnReload, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnCustom, BtnOk, BtnReload, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

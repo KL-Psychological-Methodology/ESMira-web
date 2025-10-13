@@ -7,28 +7,28 @@ import downSvg from "../../imgs/icons/moveDown.svg?raw"
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import deleteSvg from "../../imgs/icons/trash.svg?raw"
 import warnSvg from "../../imgs/icons/warn.svg?raw"
-import {TabBar} from "../widgets/TabBar";
+import {TabBar} from "../components/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Study} from "../data/study/Study";
 import {Questionnaire} from "../data/study/Questionnaire";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {BindObservable} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
+import {BindObservable} from "../components/BindObservable";
+import {TitleRow} from "../components/TitleRow";
 import {Page} from "../data/study/Page";
 import {makeUrlFriendly, safeConfirm} from "../constants/methods";
 import {Input} from "../data/study/Input";
 import {createUniqueName} from "../helpers/UniqueName";
-import {DragContainer, DragTools} from "../widgets/DragContainer";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DragContainer, DragTools} from "../components/DragContainer";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {ObservableArray} from "../observable/ObservableArray";
 import {DataStructureInputType} from "../data/DataStructure";
-import {BtnLikeSpacer} from "../widgets/BtnLikeSpacer";
-import {DropdownMenu} from "../widgets/DropdownMenu";
+import {BtnLikeSpacer} from "../components/BtnLikeSpacer";
+import {DropdownMenu} from "../components/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
-import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../widgets/BtnWidgets";
-import {CodeEditor} from "../widgets/CodeEditor";
-import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../components/Buttons";
+import {CodeEditor} from "../components/CodeEditor";
+import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

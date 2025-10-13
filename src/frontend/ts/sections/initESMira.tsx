@@ -3,8 +3,8 @@ import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN, FILE_CHECK_HTACCESS} from "../constants/urls";
-import {TitleRow} from "../widgets/TitleRow";
-import {ChangeAccount} from "../widgets/ChangeAccount";
+import {TitleRow} from "../components/TitleRow";
+import {ChangeAccount} from "../components/ChangeAccount";
 import {SectionData} from "../site/SectionData";
 
 interface FolderData {

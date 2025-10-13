@@ -1,7 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import addSvg from "../../imgs/icons/add.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
@@ -14,10 +14,10 @@ import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {RssFetcher, RssItem} from "../singletons/RssFetcher";
-import {NewsItem} from "../widgets/NewsItem";
+import {NewsItem} from "../components/NewsItem";
 import {SectionData} from "../site/SectionData";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb

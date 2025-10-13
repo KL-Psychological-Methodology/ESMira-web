@@ -1,16 +1,16 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../widgets/BindObservable";
+import {BindObservable} from "../components/BindObservable";
 import {Study} from "../data/study/Study";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {TabBar, TabContent} from "../widgets/TabBar";
+import {TabBar, TabContent} from "../components/TabBar";
 import {createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl, safeConfirm} from "../constants/methods";
 import qrcode from "qrcode-generator"
-import {BtnAdd, BtnCopy, BtnCustom, BtnTrash} from "../widgets/BtnWidgets";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement, DashViewOptions} from "../widgets/DashElement";
-import {closeDropdown, openDropdown} from "../widgets/DropdownMenu";
+import {BtnAdd, BtnCopy, BtnCustom, BtnTrash} from "../components/Buttons";
+import {DashRow} from "../components/DashRow";
+import {DashElement, DashViewOptions} from "../components/DashElement";
+import {closeDropdown, openDropdown} from "../components/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
 import questionSvg from "../../imgs/icons/question.svg?raw"

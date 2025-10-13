@@ -1,12 +1,12 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {TitleRow} from "../widgets/TitleRow";
-import {DragContainer} from "../widgets/DragContainer";
+import {TitleRow} from "../components/TitleRow";
+import {DragContainer} from "../components/DragContainer";
 import {DataStructureInputType} from "../data/DataStructure";
 import {ChartData} from "../data/study/ChartData";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
-import {BtnAdd, BtnCopy, BtnTrash} from "../widgets/BtnWidgets";
+import {BtnAdd, BtnCopy, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

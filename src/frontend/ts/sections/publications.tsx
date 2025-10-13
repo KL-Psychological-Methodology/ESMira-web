@@ -1,7 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import {AboutESMiraLoader, ESMiraPublicationsInterface} from "../loader/AboutESMiraLoader";
 import {SectionData} from "../site/SectionData";

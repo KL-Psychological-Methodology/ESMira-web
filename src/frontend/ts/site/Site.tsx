@@ -5,7 +5,7 @@ import m from "mithril";
 import {HashData} from "./HashData";
 import {Lang} from "../singletons/Lang";
 import {Admin} from "../admin/Admin";
-import {DropdownMenu} from "../widgets/DropdownMenu";
+import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionData} from "./SectionData";
 import {Section} from "./Section";
 

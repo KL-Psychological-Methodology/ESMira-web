@@ -2,9 +2,9 @@ import m, {Component, Vnode, VnodeDOM} from 'mithril';
 import {Lang} from "../singletons/Lang";
 import {SiteData} from "./SiteData";
 import publishSvg from "../../imgs/icons/increaseVersion.svg?raw";
-import {DropdownMenu} from "../widgets/DropdownMenu";
+import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionAlternative} from "./SectionContent";
-import {LoadingSpinner} from "../widgets/LoadingSpinner";
+import {LoadingSpinner} from "../components/LoadingSpinner";
 
 import {SectionData} from "./SectionData";
 

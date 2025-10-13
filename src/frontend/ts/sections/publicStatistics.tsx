@@ -3,7 +3,7 @@ import m, {Vnode} from "mithril";
 import {Requests} from "../singletons/Requests";
 import {FILE_STATISTICS} from "../constants/urls";
 import {Study} from "../data/study/Study";
-import {ChartView} from "../widgets/ChartView";
+import {ChartView} from "../components/ChartView";
 import {ObservablePromise} from "../observable/ObservablePromise";
 import {LoadedStatistics} from "../loader/csv/CsvLoaderCollectionFromCharts";
 import {SectionData} from "../site/SectionData";

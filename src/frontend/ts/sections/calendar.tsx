@@ -9,19 +9,19 @@ import listPlugin from '@fullcalendar/list';
 import deLocale from '@fullcalendar/core/locales/de';
 import ukLocale from '@fullcalendar/core/locales/uk';
 import calendarSvg from "../../imgs/icons/calendar.svg?raw"
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
-import {BindObservable, DateTransformer, TimeTransformer} from "../widgets/BindObservable";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
+import {BindObservable, DateTransformer, TimeTransformer} from "../components/BindObservable";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {BaseObservable, ObserverId} from "../observable/BaseObservable";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {getChartColor} from "../helpers/ChartJsBox";
 import {Scheduler} from "../helpers/Scheduler";
-import {LoadingSpinner} from "../widgets/LoadingSpinner";
+import {LoadingSpinner} from "../components/LoadingSpinner";
 import {getMidnightMillis} from "../constants/methods";
 import {ActionTrigger} from "../data/study/ActionTrigger";
-import {BtnReload} from "../widgets/BtnWidgets";
-import {TitleRow} from "../widgets/TitleRow";
+import {BtnReload} from "../components/Buttons";
+import {TitleRow} from "../components/TitleRow";
 import {SectionData} from "../site/SectionData";
 
 interface FullcalendarComponentOptions {

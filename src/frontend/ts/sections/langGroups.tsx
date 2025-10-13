@@ -1,10 +1,10 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BindObservable, ConstrainedNumberTransformer} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
-import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
-import {ChangeLanguageList} from "../widgets/ChangeLanguageList";
+import {BindObservable, ConstrainedNumberTransformer} from "../components/BindObservable";
+import {TitleRow} from "../components/TitleRow";
+import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
+import {ChangeLanguageList} from "../components/ChangeLanguageList";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

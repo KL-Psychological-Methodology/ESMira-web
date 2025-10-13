@@ -8,14 +8,14 @@ import eventsSvg from "../../imgs/icons/events.svg?raw"
 import {ActionTrigger} from "../data/study/ActionTrigger";
 import {EventTrigger} from "../data/study/EventTrigger";
 import {Schedule} from "../data/study/Schedule";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
-import {DropdownMenu} from "../widgets/DropdownMenu";
-import {BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer} from "../widgets/BindObservable";
-import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
-import {BtnCollection} from "../widgets/BtnCollection";
-import {TabBar} from "../widgets/TabBar";
-import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../widgets/BtnWidgets";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
+import {DropdownMenu} from "../components/DropdownMenu";
+import {BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer} from "../components/BindObservable";
+import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
+import {BtnCollection} from "../components/BtnCollection";
+import {TabBar} from "../components/TabBar";
+import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../components/Buttons";
 import {getMidnightMillis, timeStampToTimeString} from "../constants/methods";
 import {SectionData} from "../site/SectionData";
 

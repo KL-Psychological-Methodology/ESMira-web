@@ -1,13 +1,13 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
+import {DashRow} from "../components/DashRow";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../widgets/BindObservable";
-import {RichText} from "../widgets/RichText";
-import {ObservableLangChooser} from "../widgets/ObservableLangChooser";
-import {DashElement} from "../widgets/DashElement";
-import {CodeEditor} from "../widgets/CodeEditor";
-import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
+import {BindObservable} from "../components/BindObservable";
+import {RichText} from "../components/RichText";
+import {ObservableLangChooser} from "../components/ObservableLangChooser";
+import {DashElement} from "../components/DashElement";
+import {CodeEditor} from "../components/CodeEditor";
+import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

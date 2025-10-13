@@ -1,12 +1,12 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import repositorySvg from "../../imgs/dashIcons/github.svg?raw"
 import googlePng from "../../imgs/google-play-badge-en.png"
 import applePng from "../../imgs/apple-store-badge-en.png"
-import {TitleRow} from "../widgets/TitleRow";
+import {TitleRow} from "../components/TitleRow";
 import {AboutESMiraInterface, AboutESMiraLoader} from "../loader/AboutESMiraLoader";
 import {SectionData} from "../site/SectionData";
 

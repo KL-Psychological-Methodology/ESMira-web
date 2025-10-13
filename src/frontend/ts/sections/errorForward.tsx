@@ -5,7 +5,7 @@ import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
 import {SectionContent} from "../site/SectionContent";
-import {BindObservable} from "../widgets/BindObservable";
+import {BindObservable} from "../components/BindObservable";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {

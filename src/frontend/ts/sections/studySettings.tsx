@@ -1,15 +1,15 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
+import {BindObservable} from "../components/BindObservable";
+import {TitleRow} from "../components/TitleRow";
 import {Study} from "../data/study/Study";
 import {safeConfirm} from "../constants/methods";
 import {FILE_ADMIN} from "../constants/urls";
 import {Requests} from "../singletons/Requests";
-import {BtnTrash} from "../widgets/BtnWidgets";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {BtnTrash} from "../components/Buttons";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {StudyMetadata} from "../loader/StudyLoader";
 import {SectionData} from "../site/SectionData";
 

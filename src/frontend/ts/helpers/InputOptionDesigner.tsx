@@ -2,18 +2,18 @@ import m, { Vnode } from "mithril";
 import { Input, InputResponseType } from "../data/study/Input";
 import { Study } from "../data/study/Study";
 import { Lang } from "../singletons/Lang";
-import { BindObservable, ConstrainedNumberTransformer } from "../widgets/BindObservable";
-import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
-import { DragContainer } from "../widgets/DragContainer";
-import { DashRow } from "../widgets/DashRow";
-import { RichText } from "../widgets/RichText";
+import { BindObservable, ConstrainedNumberTransformer } from "../components/BindObservable";
+import { ObservableLangChooser } from "../components/ObservableLangChooser";
+import { DragContainer } from "../components/DragContainer";
+import { DashRow } from "../components/DashRow";
+import { RichText } from "../components/RichText";
 import { PrimitiveType } from "../observable/types/PrimitiveType";
-import { DashElement } from "../widgets/DashElement";
+import { DashElement } from "../components/DashElement";
 import { BaseObservable } from "../observable/BaseObservable";
-import { NotCompatibleIcon, PossibleDevices } from "../widgets/NotCompatibleIcon";
-import { BtnAdd, BtnTrash } from "../widgets/BtnWidgets";
-import { CodeEditor } from "../widgets/CodeEditor";
-import { RegexTextInput } from "../widgets/RegexTextInput";
+import { NotCompatibleIcon, PossibleDevices } from "../components/NotCompatibleIcon";
+import { BtnAdd, BtnTrash } from "../components/Buttons";
+import { CodeEditor } from "../components/CodeEditor";
+import { RegexTextInput } from "../components/RegexTextInput";
 
 
 const InputCategories = {

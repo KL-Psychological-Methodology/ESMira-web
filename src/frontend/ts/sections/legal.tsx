@@ -1,7 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import chartJsIco from "../../imgs/libFavicons/chartJs.ico"
 import jsonEditorIco from "../../imgs/libFavicons/jsonEditor.ico"
@@ -15,8 +15,8 @@ import markwonIco from "../../imgs/libFavicons/markwon.ico"
 import {PromiseCache} from "../singletons/PromiseCache";
 import {FILE_SETTINGS} from "../constants/urls";
 import {Requests} from "../singletons/Requests";
-import {TabBar} from "../widgets/TabBar";
-import {TitleRow} from "../widgets/TitleRow";
+import {TabBar} from "../components/TabBar";
+import {TitleRow} from "../components/TitleRow";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {SectionData} from "../site/SectionData";
 

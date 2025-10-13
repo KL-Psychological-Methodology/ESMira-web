@@ -1,8 +1,8 @@
-import {DropdownMenu, openDropdown} from "../widgets/DropdownMenu";
+import {DropdownMenu, openDropdown} from "../components/DropdownMenu";
 import {DataStructureInputType} from "../data/DataStructure";
 import m, {Vnode} from "mithril";
-import {DashRow} from "../widgets/DashRow";
-import {DashElement} from "../widgets/DashElement";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 import {Lang} from "../singletons/Lang";
 import editSvg from "../../imgs/icons/change.svg?raw"
 import copySvg from "../../imgs/icons/copy.svg?raw"
