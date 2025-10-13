@@ -12,7 +12,7 @@ import {
 	CONDITION_OPERATOR_GREATER,
 	CONDITION_OPERATOR_LESS,
 	CONDITION_TYPE_AND,
-	STATISTICS_CHARTTYPES_BARS, STATISTICS_CHARTTYPES_PIE,
+	STATISTICS_CHARTTYPES_PIE,
 	STATISTICS_DATATYPES_FREQ_DISTR, STATISTICS_DATATYPES_SUM,
 	STATISTICS_VALUETYPES_COUNT
 } from "../constants/statistics";
@@ -117,7 +117,7 @@ export class Content extends SectionContent {
 		return <div>
 			<label class="noTitle noDesc spacingRight">
 				<span>{Lang.getWithColon("days")}</span>
-				<input type="number" min="1" {...BindObservable(this.days), new ConstrainedNumberTransformer(1, undefined)} />
+				<input type="number" min="1" {...BindObservable(this.days, new ConstrainedNumberTransformer(1, undefined))} />
 			</label>
 			{BtnReload(this.section.reload.bind(this.section), Lang.get("reload"))}
 		</div>
