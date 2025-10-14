@@ -102,8 +102,8 @@ export class Study extends ObservableStructure implements TranslationRootInterfa
 
 	public hasMerlinScripts(): boolean {
 		return this.questionnaires.get().some((questionnaire) => {
-			questionnaire.endScriptBlock.get() !== "" || questionnaire.pages.get().some((page) => {
-				page.relevance.get() !== "" || page.inputs.get().some((input) => {
+			return questionnaire.endScriptBlock.get() !== "" || questionnaire.pages.get().some((page) => {
+				return page.relevance.get() !== "" || page.inputs.get().some((input) => {
 					input.relevance.get() !== "" || input.textScript.get() !== ""
 				})
 			})
