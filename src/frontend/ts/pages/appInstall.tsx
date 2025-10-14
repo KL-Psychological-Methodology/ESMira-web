@@ -1,10 +1,10 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Component, Vnode, VnodeDOM} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Section} from "../site/Section";
-import {AddJsToServerHtml} from "../helpers/AddJsToServerHtml";
-import {Requests} from "../singletons/Requests";
-import {FILE_APP_INSTALL_INSTRUCTIONS} from "../constants/urls";
+import { SectionContent } from "../site/SectionContent";
+import m, { Component, Vnode, VnodeDOM } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Section } from "../site/Section";
+import { AddJsToServerHtml } from "../helpers/AddJsToServerHtml";
+import { Requests } from "../singletons/Requests";
+import { FILE_APP_INSTALL_INSTRUCTIONS } from "../constants/urls";
 interface AppInstallComponentOptions {
 	sectionContent: SectionContent
 	html: string
@@ -16,11 +16,11 @@ class AppInstallComponent implements Component<AppInstallComponentOptions, any> 
 		try {
 			AddJsToServerHtml.process(vNode.dom as HTMLElement, sectionContent)
 		}
-		catch(e: any) {
+		catch (e: any) {
 			sectionContent.section.loader.error(e.message || e)
 		}
 	}
-	
+
 	public view(vNode: Vnode<AppInstallComponentOptions, any>): Vnode<any, any> {
 		return <div>{m.trust(vNode.attrs.html)}</div>
 	}
@@ -29,7 +29,7 @@ class AppInstallComponent implements Component<AppInstallComponentOptions, any> 
 export class Content extends SectionContent {
 	private readonly pageHtml: string
 	private readonly pageTitle: string
-	
+
 	public static preLoad(section: Section): Promise<any>[] {
 		const accessKey = section.getDynamic("accessKey", "").get()
 		return [
@@ -39,23 +39,23 @@ export class Content extends SectionContent {
 					.replace("%s1", accessKey)
 					.replace("%s2", Lang.code)
 			),
-			section.getAvailableStudiesPromise(accessKey)
+			section.getAvailableStudiesPromise(accessKey, false)
 		]
 	}
-	
+
 	constructor(section: Section, html: { pageHtml: string, pageTitle: string, forwarded: boolean }) {
 		super(section)
-		if(html.forwarded)
+		if (html.forwarded)
 			this.newSection("studies:appInstall", this.section.depth - 1)
-		
+
 		this.pageHtml = html.pageHtml
 		this.pageTitle = html.pageTitle
 	}
-	
+
 	public title(): string {
 		return this.pageTitle
 	}
-	
+
 	public getView(): Vnode<any, any> {
 		return m(AppInstallComponent, {
 			html: this.pageHtml,
