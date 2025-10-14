@@ -14,7 +14,7 @@ export class Content extends SectionContent {
 
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
-			section.siteData.studyLoader.loadAvailableStudies(section.getDynamic("accessKey", "").get())
+			section.siteData.studyLoader.loadAvailableStudies(section.getDynamic("accessKey", "").get(), false, false)
 		]
 	}
 	constructor(section: Section, studies: StudiesDataType) {
