@@ -1,4 +1,5 @@
-import { Lang } from "../singletons/Lang";
+import {Lang} from "../singletons/Lang";
+import {lt} from "semver";
 
 export function safeConfirm(msg: string): boolean {
 	return confirm(msg) && (prompt(Lang.get("confirm_again")) || "").toLowerCase() === "ok"
@@ -54,4 +55,15 @@ export function getFromUrlFriendly(s: string): string {
 
 export function makeUrlFriendly(s: string): string {
 	return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '')
+}
+
+export function compareSemVersion(smaller: string, bigger: string) {
+	if(smaller.startsWith("pre.")) {
+		smaller = smaller.substring(4);
+	}
+	if(bigger.startsWith("pre.")) {
+		bigger = bigger.substring(4);
+	}
+	
+	return lt(smaller, bigger)
 }

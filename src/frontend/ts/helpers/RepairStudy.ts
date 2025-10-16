@@ -1,4 +1,4 @@
-import {PackageVersionComparator} from "../singletons/PackageVersionComparator";
+import {compareSemVersion} from "./compareSemVersion";
 
 export class RepairStudy {
 	private readonly serverVersion: number
@@ -148,8 +148,7 @@ export class RepairStudy {
 			study.langCodes.push("en")
 			study.defaultLang = "en"
 		}
-		const studyPackage = PackageVersionComparator(study.packageVersion)
-		if(studyPackage.isBelowThen("2.5.0-alpha.1")) {
+		if(compareSemVersion(study.packageVersion, "2.5.0-alpha.1")) {
 			if(!study.hasOwnProperty("defaultLang") && study.hasOwnProperty("langCodes")) {
 				wasRepaired = true
 				const langCodes: string[] = study.langCodes ?? []

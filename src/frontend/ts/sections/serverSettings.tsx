@@ -13,7 +13,6 @@ import {ObserverId} from "../observable/BaseObservable";
 import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import {Requests} from "../singletons/Requests";
-import {PackageVersionComparator} from "../singletons/PackageVersionComparator";
 import {SectionData} from "../site/SectionData";
 
 type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
@@ -97,8 +96,9 @@ export class Content extends SectionContent {
 		for (let i = releases.length - 1; i >= 0; --i) {
 			let { tag_name: tagName, prerelease, body, published_at: publishedAt, assets } = releases[i];
 
-			if (!PackageVersionComparator(this.sectionData.siteData.packageVersion).isBelowThen(tagName))
+			if(compareSemVersion(tagName, this.sectionData.siteData.packageVersion, true)) {
 				continue
+			}
 
 			let data = { version: tagName, date: new Date(publishedAt), changeLog: body, downloadUrl: assets[0]["browser_download_url"] };
 			if (prerelease)
