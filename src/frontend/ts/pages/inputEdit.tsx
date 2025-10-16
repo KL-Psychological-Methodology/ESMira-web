@@ -1,35 +1,36 @@
-import {SectionAlternative, SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Study} from "../data/study/Study";
-import {BindObservable, OnBeforeChangeTransformer} from "../widgets/BindObservable";
-import {TitleRow} from "../widgets/TitleRow";
-import {Input} from "../data/study/Input";
-import {createUniqueName} from "../helpers/UniqueName";
-import {DashRow} from "../widgets/DashRow";
-import {InputOptionDesigner} from "../helpers/InputOptionDesigner";
-import {DashElement} from "../widgets/DashElement";
-import {Section} from "../site/Section";
-import {SearchWidget} from "../widgets/SearchWidget";
-import {NotCompatibleIcon} from "../widgets/NotCompatibleIcon";
-import {BtnCustom} from "../widgets/BtnWidgets";
+import { SectionAlternative, SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Study } from "../data/study/Study";
+import { BindObservable, OnBeforeChangeTransformer } from "../widgets/BindObservable";
+import { TitleRow } from "../widgets/TitleRow";
+import { Input } from "../data/study/Input";
+import { createUniqueName } from "../helpers/UniqueName";
+import { DashRow } from "../widgets/DashRow";
+import { InputOptionDesigner } from "../helpers/InputOptionDesigner";
+import { DashElement } from "../widgets/DashElement";
+import { Section } from "../site/Section";
+import { SearchWidget } from "../widgets/SearchWidget";
+import { NotCompatibleIcon } from "../widgets/NotCompatibleIcon";
+import { BtnCustom } from "../widgets/BtnWidgets";
 import questionSvg from "../../imgs/icons/question.svg?raw"
+import { getFromUrlFriendly } from "../constants/methods";
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 
 export class Content extends SectionContent {
 	private indexContainer: IndexContainer = null
-	
+
 	public static preLoad(section: Section): Promise<any>[] {
 		return [section.getStudyPromise()]
 	}
-	
+
 	public title(): string {
 		const inputName = this.getStaticString("input")
-		return inputName ? atob(inputName) : "Error"
+		return inputName ? getFromUrlFriendly(inputName) : "Error"
 	}
-	
-	
+
+
 	public hasAlternatives(): boolean {
 		return this.getStaticInt("subInput") == null
 	}
@@ -37,8 +38,8 @@ export class Content extends SectionContent {
 		const study = this.getStudyOrThrow()
 		const alternatives: SectionAlternative[] = []
 		const depth = this.section.depth - 1
-		const inputName = atob(this.getStaticString("input") ?? "")
-		
+		const inputName = getFromUrlFriendly(this.getStaticString("input") ?? "")
+
 		study.questionnaires.get().forEach((questionnaire) => {
 			alternatives.push({
 				title: questionnaire.getTitle(),
@@ -46,7 +47,7 @@ export class Content extends SectionContent {
 				target: false
 			})
 			questionnaire.pages.get().forEach((page, index) => {
-				if(index != 0) {
+				if (index != 0) {
 					alternatives.push({
 						title: "",
 						header: true,
@@ -61,10 +62,10 @@ export class Content extends SectionContent {
 				})
 			})
 		})
-		
+
 		return alternatives
 	}
-	
+
 	private getInputIndices(study: Study, inputName: string): IndexContainer {
 		let pIndex = -1
 		let iIndex = -1
@@ -87,28 +88,28 @@ export class Content extends SectionContent {
 
 	private getInput(study: Study, inputName: string): Input | null {
 		const input = this.getInputFromIndices(study)
-		if(input) {
-			if(input.name.get() != inputName)
-				this.newSection(`inputEdit,input:${btoa(input.name.get())}`, this.section.depth-1)
+		if (input) {
+			if (input.name.get() != inputName)
+				this.newSection(`inputEdit,input:${btoa(input.name.get())}`, this.section.depth - 1)
 			return input
 		}
-		
+
 		this.indexContainer = this.getInputIndices(study, inputName)
 		return this.getInputFromIndices(study)
 	}
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
-		let input = this.getInput(study, atob(this.getStaticString("input") ?? ""))
-		if(!input)
-			throw new Error(`Input ${atob(this.getStaticString("input") ?? "")} does not exist`)
+		let input = this.getInput(study, getFromUrlFriendly(this.getStaticString("input") ?? ""))
+		if (!input)
+			throw new Error(`Input ${getFromUrlFriendly(this.getStaticString("input") ?? "")} does not exist`)
 		const subItemI = this.getStaticInt("subInput")
-		if(subItemI != null) {
+		if (subItemI != null) {
 			input = input.subInputs.get()[subItemI]
-			if(!input)
-				throw new Error(`SubItem ${subItemI} in Input ${atob(this.getStaticString("input") ?? "")} does not exist`)
+			if (!input)
+				throw new Error(`SubItem ${subItemI} in Input ${getFromUrlFriendly(this.getStaticString("input") ?? "")} does not exist`)
 		}
-		
+
 		const inputDesigner = new InputOptionDesigner(study, input, this.getUrl.bind(this), this.newSection.bind(this))
 
 		return <div>
@@ -116,22 +117,22 @@ export class Content extends SectionContent {
 				<div class="center">
 					<label class="horizontal">
 						<small>{Lang.get("variable_name")}</small>
-						<input type="text" {... BindObservable(input.name, new OnBeforeChangeTransformer<string>((before, after) => {
+						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>((before, after) => {
 							return createUniqueName(study, after) ?? before
-						}))}/>
+						}))} />
 					</label>
 				</div>
 			}
-			
-			
+
+
 			{TitleRow(Lang.getWithColon("type"))}
 			{SearchWidget((tools) =>
 				<div class="inputSelector">
-					<input placeholder={Lang.get("search")} class="search small vertical" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)}/>
+					<input placeholder={Lang.get("search")} class="search small vertical" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)} />
 					<div class="scrollBox noBorder">
 						{
 							inputDesigner.createTypesView(
-								(title, inputViews)=> {
+								(title, inputViews) => {
 									return <div>
 										<h2 class="center">{title}</h2>
 										{DashRow(...inputViews)}
@@ -146,8 +147,8 @@ export class Content extends SectionContent {
 											content:
 												<div class="smallText">
 													<span class="flexGrow">{entry.title}</span>
-													<span>{entry.notCompatible && NotCompatibleIcon(... entry.notCompatible)}</span>
-													{<a href={entry.helpUrl} target="_blank">{BtnCustom(m.trust(questionSvg), (e) => {e.stopPropagation()})}</a>}
+													<span>{entry.notCompatible && NotCompatibleIcon(...entry.notCompatible)}</span>
+													{<a href={entry.helpUrl} target="_blank">{BtnCustom(m.trust(questionSvg), (e) => { e.stopPropagation() })}</a>}
 												</div>,
 											onclick: onclick
 										})
@@ -157,7 +158,7 @@ export class Content extends SectionContent {
 					</div>
 				</div>
 			)}
-			
+
 			{TitleRow(Lang.getWithColon("settings"))}
 			{inputDesigner.getView()}
 		</div>

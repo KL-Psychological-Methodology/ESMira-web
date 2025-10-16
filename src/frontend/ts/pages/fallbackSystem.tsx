@@ -1,5 +1,5 @@
 import m, { Vnode } from "mithril";
-import { getBaseUrl } from "../constants/methods";
+import { getBaseUrl, makeUrlFriendly } from "../constants/methods";
 import { FILE_ADMIN } from "../constants/urls";
 import { InboundFallbackTokenInfo } from "../data/fallbackTokens/inboundFallbackToken";
 import { OutboundFallbackToken } from "../data/fallbackTokens/outboundFallbackToken";
@@ -152,7 +152,7 @@ export class Content extends SectionContent {
 									{dragTools.getDragStarter(index, this.outboundTokenUrls)}
 									{BtnTrash(this.deleteOutboundToken.bind(this, index))}
 									<a href={token.url.get()}>{token.url.get()}</a>
-									<a class="spacingLeft" href={this.getUrl(`fallbackServerView,fallbackUrl:${btoa(token.url.get())}`)}>{BtnEdit()}</a>
+									<a class="spacingLeft" href={this.getUrl(`fallbackServerView,fallbackUrl:${makeUrlFriendly(token.url.get())}`)}>{BtnEdit()}</a>
 								</div>
 							)
 						)}

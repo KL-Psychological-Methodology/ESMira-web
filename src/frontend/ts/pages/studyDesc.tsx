@@ -5,6 +5,7 @@ import { ObservableLangChooser } from "../widgets/ObservableLangChooser";
 import { BindObservable } from "../widgets/BindObservable";
 import { RichText } from "../widgets/RichText";
 import { Section } from "../site/Section";
+import { RegexTextInput } from "../widgets/RegexTextInput";
 
 export class Content extends SectionContent {
 	public static preLoad(section: Section): Promise<any>[] {
@@ -29,12 +30,13 @@ export class Content extends SectionContent {
 				{ObservableLangChooser(study)}
 			</label>
 
-			<label>
-				<small>{Lang.getWithColon("contactEmail")}</small>
-				<input type="text" {...BindObservable(study.contactEmail)} />
-				{ObservableLangChooser(study)}
-			</label>
-
+			{
+				RegexTextInput(
+					Lang.getWithColon("contactEmail"),
+					study.contactEmail,
+					/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/,
+					Lang.get("validator_warning_email"))
+			}
 
 			<div class="fakeLabel spacingTop line">
 				<small>{Lang.getWithColon("description")}</small>
@@ -43,7 +45,7 @@ export class Content extends SectionContent {
 			</div>
 
 			<label class="spacingTop line">
-				<small>{Lang.getWithColon("informed_consent")} ({Lang.getWithColon("can_be_left_empty")})</small>
+				<small>{Lang.get("informed_consent")} ({Lang.get("can_be_left_empty")}):</small>
 				<textarea {...BindObservable(study.informedConsentForm)}></textarea>
 				{ObservableLangChooser(this.getStudyOrThrow())}
 			</label>
@@ -51,6 +53,12 @@ export class Content extends SectionContent {
 			<div class="fakeLabel spacingTop line">
 				<small>{Lang.getWithColon("postInstallInstructions")}</small>
 				{RichText(study.postInstallInstructions)}
+				{ObservableLangChooser(this.getStudyOrThrow())}
+			</div>
+
+			<div class="fakeLabel spacingTop line">
+				<small>{Lang.get("faqs")} ({Lang.get("can_be_left_empty")}):</small>
+				{RichText(study.faq)}
 				{ObservableLangChooser(this.getStudyOrThrow())}
 			</div>
 

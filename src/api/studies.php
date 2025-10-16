@@ -12,6 +12,7 @@ if (!Configs::getDataStore()->isInit()) {
     return;
 }
 
+$filterOver = isset($_GET['filter_over']) ? $_GET['filter_over'] == "1" : true;
 
 $studiesJson = [];
 $studyStore = Configs::getDataStore()->getStudyStore();
@@ -24,8 +25,9 @@ try {
     $dataStore = Configs::getDataStore();
     foreach ($ids as $studyId) {
         $metadata = $dataStore->getStudyMetadataStore($studyId);
-        if (!$metadata->isOver())
-            $studiesJson[] = $studyStore->getStudyLangConfigAsJson($studyId, $lang);
+		if(!$filterOver || !$metadata->isOver()) {
+			$studiesJson[] = $studyStore->getStudyLangConfigAsJson($studyId, $lang);
+		}
     }
 } catch (CriticalException $e) {
     echo JsonOutput::error($e->getMessage());

@@ -28,8 +28,9 @@ export class Content extends SectionContent {
 		list.push({})
 		this.newSection(url)
 	}
-	private copyChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, chart: ChartData, index: number): void {
+	private copyChart(list: ArrayInterface<ObservableStructureDataType, ChartData>, chart: ChartData, index: number, url: string): void {
 		list.addCopy(chart, index)
+		this.newSection(url)
 	}
 
 	public getView(): Vnode<any, any> {
@@ -50,9 +51,9 @@ export class Content extends SectionContent {
 								<div class="verticalPadding">
 									{dragTools.getDragStarter(index, publicCharts)}
 									{BtnTrash(this.removeChart.bind(this, publicCharts, index))}
-									{BtnCopy(this.copyChart.bind(this, publicCharts, chart, index))}
+									{BtnCopy(this.copyChart.bind(this, publicCharts, chart, index, `chartEdit:public,chartI:${publicCharts.get().length}`))}
 									<a href={this.getUrl(`chartEdit:public,chartI:${index}`)}>
-										<span>{chart.title.get()}</span>
+										<span>{chart.title.get() !== "" ? chart.title.get() : Lang.get("unnamed_chart")}</span>
 									</a>
 								</div>
 							)
@@ -72,7 +73,7 @@ export class Content extends SectionContent {
 								<div class="verticalPadding">
 									{dragTools.getDragStarter(index, personalCharts)}
 									{BtnTrash(this.removeChart.bind(this, personalCharts, index))}
-									{BtnCopy(this.copyChart.bind(this, publicCharts, chart, index))}
+									{BtnCopy(this.copyChart.bind(this, personalCharts, chart, index, `chartEdit:personal,chartI:${publicCharts.get().length}`))}
 									<a href={this.getUrl(`chartEdit:personal,chartI:${index}`)}>
 										<span>{chart.title.get() !== "" ? chart.title.get() : Lang.get("unnamed_chart")}</span>
 									</a>

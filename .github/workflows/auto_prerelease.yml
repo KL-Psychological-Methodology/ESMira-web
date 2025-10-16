@@ -2,8 +2,8 @@ name: Automatic pre-release
 
 on:
   push:
-    branches: [ develop ]
-  
+    branches: [develop]
+
   workflow_dispatch:
 
 env:
@@ -13,7 +13,7 @@ env:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,13 +21,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      
+
       - name: Install Dependencies
         run: npm install
-      
+
       - name: Build for production
         run: npm run prod
-      
+
       - name: Create tag
         uses: butlerlogic/action-autotag@1.1.2
         id: autotag
@@ -36,12 +36,12 @@ jobs:
         with:
           strategy: package
           tag_prefix: "pre."
-      
+
       - name: Zip dist folder
         run: |
           cd dist
           zip -r ../ESMira-web.zip .
-      
+
       - name: Create named release
         if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
         uses: softprops/action-gh-release@v1
@@ -53,21 +53,25 @@ jobs:
           prerelease: true
           generate_release_notes: true
           files: ESMira-web.zip
-      
+
+      - name: Set up Docker Buildx
+        if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
+
       - name: Extract metadata (tags, labels) for Docker
         if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}
-      
+
       - name: Build and push Docker image
         if: ${{ steps.autotag.outputs.tagcreated == 'yes' }}
         id: push
@@ -75,6 +79,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

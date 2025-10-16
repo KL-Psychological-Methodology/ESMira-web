@@ -126,7 +126,7 @@ class CreateDataSet {
 		return (int) $dataSet->dataSetId;
 	}
 	
-	private function conditionIsMet(StudyStatisticsEntry $conditionalStatistics, stdClass $responses): bool {
+	private function conditionIsMet(StudyStatisticsEntry $conditionalStatistics, stdClass $dataSet): bool {
 		if($conditionalStatistics->conditionType == self::CONDITION_TYPE_ALL)
 			return true;
 		
@@ -134,18 +134,21 @@ class CreateDataSet {
 		$conditionTypeIsAnd = $conditionalStatistics->conditionType == self::CONDITION_TYPE_AND;
 		
 		foreach($conditionalStatistics->conditions as $condition) {
-			switch($condition->operator) {
+			$key = $condition->key;
+			// If the key isn't found in the responses, check if it's a metadata key
+			$response = isset($dataSet->responses->{$key}) ? $dataSet->responses->{$key} : $dataSet->{$key};
+			switch($condition->operator ?? 0) {
 				case self::CONDITION_OPERATOR_EQUAL:
-					$isTrue = $responses->{$condition->key} == $condition->value;
+					$isTrue = $response == $condition->value;
 					break;
 				case self::CONDITION_OPERATOR_UNEQUAL:
-					$isTrue = $responses->{$condition->key} != $condition->value;
+					$isTrue = $response != $condition->value;
 					break;
 				case self::CONDITION_OPERATOR_GREATER:
-					$isTrue = $responses->{$condition->key} >= $condition->value;
+					$isTrue = $response >= $condition->value;
 					break;
 				case self::CONDITION_OPERATOR_LESS:
-					$isTrue = $responses->{$condition->key} <= $condition->value;
+					$isTrue = $response <= $condition->value;
 					break;
 				default:
 					$isTrue = true;
@@ -229,7 +232,6 @@ class CreateDataSet {
 	 * @throws DataSetException
 	 */
 	private function handleQuestionnaireDataSet(stdClass $dataSet) {
-		$responses = $dataSet->responses;
 		$studyId = $this->getStudyId($dataSet);
 		$datasetId = $this->getDataSetId($dataSet);
 		
@@ -268,7 +270,7 @@ class CreateDataSet {
 				$currentStatistics = &$statisticsMetadata[$key];
 				
 				foreach($currentStatistics as $i => $conditionalStatistics) {
-					if($this->conditionIsMet($conditionalStatistics, $responses)) {
+					if($this->conditionIsMet($conditionalStatistics, $dataSet)) {
 						$this->cache->addToStatisticsCache(
 							$studyId,
 							$datasetId,

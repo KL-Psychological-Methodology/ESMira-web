@@ -30,6 +30,10 @@ export class Content extends SectionContent {
 	}
 
 	public getView(): Vnode<any, any> {
+		const study = this.getStudyOrThrow()
+		const usesMerlinScripts = study.hasMerlinScripts()
+		const hasPublicCharts = study.publicStatistics.charts.get().length > 0
+		const usesRewardSystem = study.enableRewardSystem.get()
 		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.section.getStaticInt("id") || 0] || false
 		const useSimplified = !this.hasPermission('read', this.section.getStaticInt("id") || 0)
 		if (useSimplified) {
@@ -91,14 +95,14 @@ export class Content extends SectionContent {
 					},
 					href: this.getUrl("statsWeb")
 				}),
-				DashElement(null, {
+				hasPublicCharts && DashElement(null, {
 					template: {
 						title: Lang.get("public_statistics"),
 						icon: m.trust(publicStatisticsSvg)
 					},
 					href: this.getUrl("publicStatistics")
 				}),
-				DashElement(null, {
+				(hasNewMerlinLogs || usesMerlinScripts) && DashElement(null, {
 					highlight: hasNewMerlinLogs,
 					template: {
 						title: Lang.get("merlin_logs"),
@@ -106,7 +110,7 @@ export class Content extends SectionContent {
 					},
 					href: this.getUrl("merlinLogList")
 				}),
-				DashElement(null, {
+				usesRewardSystem && DashElement(null, {
 					template: {
 						title: Lang.get("validate_reward_code"),
 						icon: m.trust(rewardsSvg)

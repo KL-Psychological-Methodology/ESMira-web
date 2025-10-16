@@ -154,7 +154,7 @@ class StudyStoreFS extends BaseStudyStoreFS implements StudyStore
 		// If keys are removed, they will stay in the headers
 		// if keys are changed or new, they will be added to the end
 
-		if (isset($study->randomGroups) && $study->randomGroups >= 0 && $identifier !== PathsFS::FILENAME_WEB_ACCESS)
+		if (isset($study->randomGroups) && $study->randomGroups >= 2 && $identifier !== PathsFS::FILENAME_WEB_ACCESS)
 			array_splice($questionnaireIndex->keys, 0, 0, 'group');
 
 		$studyId = (int) $study->id;
@@ -327,6 +327,29 @@ class StudyStoreFS extends BaseStudyStoreFS implements StudyStore
 		$this->writeIndexAndResponsesFiles($study, PathsFS::FILENAME_EVENTS, new ResponsesIndex(KEYS_EVENT_RESPONSES));
 		$this->writeIndexAndResponsesFiles($study, PathsFS::FILENAME_WEB_ACCESS, new ResponsesIndex(KEYS_WEB_ACCESS));
 	}
+
+
+	public function deleteBackups(int $studyId)
+	{
+		$study = $this->getStudyConfig($studyId);
+
+		$expected_filenames = [
+			realpath(PathsFS::fileResponses($studyId, PathsFS::FILENAME_EVENTS)),
+			realpath(PathsFS::fileResponses($studyId, PathsFS::FILENAME_WEB_ACCESS)),
+		];
+		foreach ($study->questionnaires as $questionnaire) {
+			$expected_filenames[] = realpath(PathsFS::fileResponses($studyId, (string) $questionnaire->internalId));	
+		}
+		
+		$folderResponses = PathsFS::folderResponses($studyId);
+		foreach (array_diff(scandir($folderResponses), [".", ".."]) as $responseFile) {
+			$responseFile = realpath($folderResponses . $responseFile);
+			if(!in_array($responseFile, $expected_filenames)){
+				unlink($responseFile);
+			}
+		}
+	}
+
 
 	public function markStudyAsUpdated(int $studyId)
 	{

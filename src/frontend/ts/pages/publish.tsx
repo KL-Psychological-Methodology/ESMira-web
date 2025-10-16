@@ -8,15 +8,17 @@ import { TabBar, TabContent } from "../widgets/TabBar";
 import { createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl } from "../constants/methods";
 import qrcode from "qrcode-generator"
 import { Section } from "../site/Section";
-import { BtnAdd, BtnCopy, BtnTrash } from "../widgets/BtnWidgets";
+import { BtnAdd, BtnCopy, BtnCustom, BtnTrash } from "../widgets/BtnWidgets";
 import { DashRow } from "../widgets/DashRow";
 import { DashElement, DashViewOptions } from "../widgets/DashElement";
 import { closeDropdown, openDropdown } from "../widgets/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
+import questionSvg from "../../imgs/icons/question.svg?raw"
 import { safeConfirm } from "../constants/methods";
 import { Requests } from "../singletons/Requests";
-import { FILE_ADMIN } from "../constants/urls";
+import { FILE_ADMIN, URL_WIKI_DIFFERENCE_LINKS } from "../constants/urls";
+import warnSvg from "../../imgs/icons/warn.svg?raw";
 
 export class Content extends SectionContent {
 	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
@@ -24,17 +26,24 @@ export class Content extends SectionContent {
 	private currentUrl: number = 0
 	private allUrls: string[] = []
 	private fallbackUrls: string[]
+	private duplicateAccessKeys: string[]
 
 	public static preLoad(section: Section): Promise<any>[] {
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=GetOutboundFallbackUrls&study_id=${section.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
+			Requests.loadJson(`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${section.getStaticInt("id") ?? 0}`).catch(() => { return [] }),
 			section.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, fallbackUrls: string[]) {
+	constructor(section: Section, fallbackUrls: string[], duplicateAccessKeys: string[]) {
 		super(section)
 		this.fallbackUrls = fallbackUrls
+		this.duplicateAccessKeys = duplicateAccessKeys
+		const study = this.getStudyOrNull()
+		if (study != null && study.accessKeys.get().length > 0) {
+			this.currentUrl = 2
+		}
 	}
 
 	public title(): string {
@@ -43,14 +52,16 @@ export class Content extends SectionContent {
 	private checkAccessKeyFormat(s: string): boolean {
 		return !!s.match(/^([a-zA-Z][a-zA-Z0-9]+)$/);
 	}
-	private addAccessKey(study: Study): void {
+	private async addAccessKey(study: Study): Promise<void> {
 		const accessKey = prompt()
 		if (accessKey == null)
 			return
 
 		if (this.checkAccessKeyFormat(accessKey)) {
-			if (study.accessKeys.indexOf(accessKey) == -1)
+			if (study.accessKeys.indexOf(accessKey) == -1) {
 				study.accessKeys.push(accessKey)
+				await this.reloadDuplicatedAccessKeys()
+			}
 		}
 		else
 			Lang.get("error_accessKey_wrong_format")
@@ -61,9 +72,25 @@ export class Content extends SectionContent {
 			return
 		study.accessKeys.remove(index)
 	}
+	private async reloadDuplicatedAccessKeys(): Promise<void> {
+		const study = this.getStudyOrThrow()
+		const accessKeys = study.accessKeys.get()
+		if (accessKeys.length == 0) {
+			return
+		}
+		const accessKeyString = study.accessKeys.get().map((key) => key.get()).join(",")
+		this.duplicateAccessKeys = await this.section.loader.loadJson(
+			`${FILE_ADMIN}?type=GetDuplicateAccessKeys&study_id=${this.section.getStaticInt("id") ?? 0}`,
+			"post",
+			`accessKeys=${accessKeyString}`
+		).catch(() => { return [] })
+	}
 
 	private changeQrSize(e: InputEvent): void {
 		this.qrSize = parseInt((e.target as HTMLInputElement).value)
+		if (this.qrSize < 1) {
+			this.qrSize = 1
+		}
 	}
 	private changeQrUrl(urlIndex: number): void {
 		this.currentUrl = urlIndex
@@ -147,6 +174,9 @@ export class Content extends SectionContent {
 														<small>{Lang.get("accessKey")}</small>
 														<input type="text" {...BindObservable(accessKey)} />
 													</label>
+													{this.duplicateAccessKeys.indexOf(accessKey.get()) !== -1 &&
+														<small title={Lang.get("duplicate_access_key_tooltip")}><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("duplicate_access_key")}</small>
+													}
 												</div>
 											)
 										}
@@ -175,7 +205,7 @@ export class Content extends SectionContent {
 							<h2>{Lang.getWithColon("plead_to_cite_us")}</h2>
 							<div class="spacingLeft">
 								<p class="hanging">
-									Lewetz, D., Stieger, S. (2023). ESMira: A decentralized open-source application for collecting experience sampling data. <i>Behavior Research Methods</i>.
+									Lewetz, D., & Stieger, S. (2024). ESMira: A decentralized open-source application for collecting experience sampling data. <i>Behavior Research Methods</i>, <i>56</i>, 4421-4434.
 									<br />
 									<a class="showArrow" href="https://doi.org/10.3758/s13428-023-02194-2" target="_blank">https://doi.org/10.3758/s13428-023-02194-2</a>
 								</p>
@@ -191,7 +221,7 @@ export class Content extends SectionContent {
 						icon: m.trust(studyDesc),
 						title: Lang.get("hint_to_best_practices")
 					},
-					href: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-problems"
+					href: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Best-practices-and-common-problems"
 				}),
 
 				DashElement("stretched", {
@@ -219,13 +249,14 @@ export class Content extends SectionContent {
 		return {
 			title: accessKey,
 			view: () => DashRow(
+				DashElement("vertical", ...urlList),
 				DashElement(null, {
 					content:
 						<div>
 							<div class="center">
 								<label>
 									<small>{Lang.get("size")}</small>
-									<input type="number" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
+									<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
 								</label>
 							</div>
 							<div class="center">
@@ -235,8 +266,7 @@ export class Content extends SectionContent {
 							</div>
 							<p class="vertical smallText">{Lang.get("desc_qrCode")}</p>
 						</div>
-				}),
-				DashElement("vertical", ...urlList)
+				})
 			)
 		}
 	}
@@ -245,12 +275,15 @@ export class Content extends SectionContent {
 		this.allUrls = []
 		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
 		const appInstrTitle = Lang.get("app_installation_instructions")
-		const fallbackUrl = study.useFallback.get() && this.fallbackUrls.length > 0 ? this.fallbackUrls[0] : ""
+		const usesFallback = study.useFallback.get() && this.fallbackUrls.length > 0
+		const fallbackUrl = usesFallback ? this.fallbackUrls[0] : ""
 		const fallbackAppInstallUrl = createFallbackAppUrl(accessKey, study.id.get(), fallbackUrl)
+		const hasAccessKeys = accessKey.length > 0
 
 		return [
 			{
 				content: <div>
+					<h2>{Lang.getWithColon(hasAccessKeys ? "urls_access_key" : "urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), false, "https"))}
 					</div>
@@ -258,18 +291,27 @@ export class Content extends SectionContent {
 						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), false, "https", fallbackUrl))}
 					</div>
 					{accessKey.length > 0 &&
-						<div class="smallText">{Lang.get("info_urls_without_study_id")}</div>
+						<div class="smallText">
+							{this.duplicateAccessKeys.length > 0 && <div class="inlineIcon">{m.trust(warnSvg)}</div>}
+							{Lang.get("info_urls_without_study_id")}
+						</div>
 					}
 				</div>
 			},
-			accessKey.length > 0 && {
+			hasAccessKeys && {
 				content: <div>
+					<h2>{Lang.getWithColon("urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(infoTitle, createStudyUrl(accessKey, study.id.get(), true, "https"))}
 					</div>
 					<div class="line">
 						{this.getUrlViewAndCacheUrl(appInstrTitle, createAppUrl(accessKey, study.id.get(), true, "https", fallbackUrl))}
 					</div>
+					{accessKey.length > 0 &&
+						<div class="smallText">
+							{Lang.get("info_links_with_study_id")}
+						</div>
+					}
 				</div>
 			},
 			study.questionnaires.get().length > 0 && {
@@ -282,12 +324,12 @@ export class Content extends SectionContent {
 					)}
 				</div>
 			},
-			study.useFallback && {
+			usesFallback && {
 				content: <div
 					onpointerenter={this.onPointerEnterUrl.bind(null, fallbackAppInstallUrl)}
 					onpointerleave={this.onPointerLeaveUrl.bind(null)}
 				>
-					<label class="noTitle noDesc">{Lang.get("fallback_app_installation_instructions")}</label>
+					<h2>{Lang.getWithColon("fallback_app_installation_instructions")}</h2>
 					&nbsp;
 					<span class="middle">
 						{BtnCopy(() => navigator.clipboard.writeText(fallbackAppInstallUrl))}

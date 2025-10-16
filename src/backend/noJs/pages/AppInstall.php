@@ -109,7 +109,7 @@ class AppInstall implements Page {
             }
         }
 
-        if (isset($this->study->webInstallInstructions))
+        if (isset($this->study->webInstallInstructions) && $this->study->publishedWeb ?? true)
             $output .= '<div>' . $this->study->webInstallInstructions . '</div>';
         $output .= '<div class="titleRow">' . Lang::get('about_study') . '</div>';
 
@@ -125,8 +125,8 @@ class AppInstall implements Page {
 
         $output .= '<br/><br/>';
 
-        if (!$this->study->studyOver ?? false) {
-            $output .= '<div class="titleRow">' . Lang::get('how_to_participate') . '</div>
+        if ((!( $this->study->studyOver ?? false )) && (( $this->study->publishedAndroid ?? true ) || ( $this->study->publishedIOS ?? true ))) {
+            $output .= '<div class="titleRow">' . Lang::get('how_to_participate_step_1') . '</div>
 		
 		<div class="center">';
 
@@ -138,18 +138,15 @@ class AppInstall implements Page {
 
             $output .= '</div>
 		<br>
-		<p class="justify">' . Lang::get('studyTut_participate_description') . '</p>
-		
+		<p class="justify">' . Lang::get('studyTut_participate_description_step_1') . '<br/>' . $installInstructions . '</p>
+				
+		<div class="titleRow">' . Lang::get('how_to_participate_step_2') . '</div>	
 		
 		
 		<div class="appInstallAlternative" js-action="clickable" click-show="alternative1">
 			<h1 class="center">' . Lang::get('studyTut_participate_method_onPhone') . '</h1>
 		</div>
 		<ol id="alternative1" js-action="hidden">
-			<li><div>
-				<span>' . Lang::get('studyTut_participate_install_app') . '</span>'
-                . $installInstructions
-                . '</div></li>
 			<li>' . Lang::get('studyTut_participate_open_this_website') . '</li>
 			<li>
 				<a href="' . $this->getDeepLinkUrl($scriptName) . '">' . Lang::get('studyTut_participate_click_link') . '</a>
@@ -169,10 +166,6 @@ class AppInstall implements Page {
 				<h1 class="center">' . Lang::get('studyTut_participate_method_notOnPhone') . '</h1>
 			</div>
 			<ol id="alternative2" js-action="hidden">
-				<li><div>
-					<span>' . Lang::get('studyTut_participate_install_app') . '</span>'
-                . $installInstructions
-                . '</div></li>
 				<li>' . Lang::get('studyTut_participate_startApp') . '</li>
 				
 				<li>
@@ -198,10 +191,6 @@ class AppInstall implements Page {
 			<h1 class="center">' . Lang::get('studyTut_participate_method_manual') . '</h1>
 		</div>
 		<ol id="alternative3" js-action="hidden">
-			<li><div>
-				<span>' . Lang::get('studyTut_participate_install_app') . '</span>'
-                . $installInstructions
-                . '</div></li>
 			
 			<li>' . Lang::get('studyTut_participate_startApp') . '</li>
 			
