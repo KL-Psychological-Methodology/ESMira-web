@@ -136,7 +136,7 @@ export class Content extends ServerStatisticsContent {
 				title: Lang.get("disk_space"),
 				view: () => {
 					const tools = this.sectionData.getTools()
-					return <table style="width: 100%">
+					return <table style="width: 100%"><tbody>
 						<tr class="highlight">
 							<td>{Lang.getWithColon("disk_space")}</td>
 							<td>{this.getReadableByteSize(tools.totalDiskSpace - tools.freeDiskSpace)} / {this.getReadableByteSize(tools.totalDiskSpace)}</td>
@@ -155,7 +155,7 @@ export class Content extends ServerStatisticsContent {
 								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{this.getReadableByteSize(entry.fileSize)}</td>
 							</tr>
 						})}
-					</table>
+					</tbody></table>
 				}
 			},
 		])

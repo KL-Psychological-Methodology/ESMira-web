@@ -52,8 +52,7 @@ export class BookmarkLoader {
 	}
 
 	public async deleteBookmark(url: string): Promise<void> {
-		let response = url
-		response = await Requests.loadJson(`${FILE_ADMIN}?type=DeleteBookmark`, "post", `url=${url}`)
+		const response = await Requests.loadJson(`${FILE_ADMIN}?type=DeleteBookmark`, "post", `url=${url}`)
 		if (response != url)
 			throw new Error(Lang.get("error_unknown"))
 		this.bookmarks!.remove(this.getBookmarkIndex(url))

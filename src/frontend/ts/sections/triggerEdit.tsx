@@ -355,7 +355,7 @@ export class Content extends SectionContent {
 								<div class="fakeLabel">
 									<small>{Lang.get("weekdays_desc")}</small>
 
-									<table>
+									<table><tbody>
 										<tr>
 											<td class="horizontalPadding"><label htmlFor="weekday_all">{Lang.get("all")}</label></td>
 											<td class="horizontalPadding"><label htmlFor="weekday_sun">{Lang.get("weekday_sun")}</label></td>
@@ -378,7 +378,7 @@ export class Content extends SectionContent {
 											<td class="center"><input type="checkbox" id="weekdays_fr" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(5), "checked")} /></td>
 											<td class="center"><input type="checkbox" id="weekdays_sa" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(6), "checked")} /></td>
 										</tr>
-									</table>
+									</tbody></table>
 								</div>
 							</div>
 					})

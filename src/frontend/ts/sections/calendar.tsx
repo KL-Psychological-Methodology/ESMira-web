@@ -253,6 +253,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 									<span style={`color: ${this.colors[questionnaire.internalId.get()]}`}>{questionnaire.getTitle()}</span>
 								</label>
 								<table class="spacingLeft smallText">
+									<tbody>
 									<tr>
 										<td><b>{Lang.getWithColon("from")}</b></td>
 										<td>{new Date(this.calcQuestionnaireStart(questionnaire)).toLocaleString()}</td>
@@ -261,6 +262,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 										<td><b>{Lang.getWithColon("to")}</b></td>
 										<td>{endTimeStamp ? new Date(endTimeStamp).toLocaleString() : "∞"}</td>
 									</tr>
+									</tbody>
 								</table>
 							</div>
 					})

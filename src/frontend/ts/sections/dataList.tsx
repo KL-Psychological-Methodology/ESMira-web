@@ -184,7 +184,7 @@ export class Content extends SectionContent {
 			if (mediaZipSpan != undefined)
 				mediaZipSpan.innerText = "media.zip (%1 ... %2\%)".replace("%1", Lang.get("generating")).replace("%2", e.data)
 		})
-		eventSource.addEventListener('finished', e => {
+		eventSource.addEventListener('finished', _e => {
 			this.is_generating_zip = false
 			eventSource.close()
 

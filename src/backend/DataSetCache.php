@@ -16,7 +16,7 @@ class DataSetCache {
      */
     private $eventCache = [];
     /**
-     * @var DataSetCacheContainer[]
+     * @var DataSetCacheContainer[][]
      */
     private $questionnaireCache = [];
     

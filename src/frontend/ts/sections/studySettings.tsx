@@ -60,7 +60,7 @@ export class Content extends SectionContent {
 				DashElement("stretched", {
 					content:
 						<div class="center">
-							<table class="studyInfoTable">
+							<table class="studyInfoTable"><tbody>
 								<tr>
 									<td>{Lang.getWithColon("study_version")}</td>
 									<td>{`${study.version.get()}.${study.subVersion.get()}`}</td>
@@ -81,7 +81,7 @@ export class Content extends SectionContent {
 									<td>{Lang.getWithColon("last_saved_at")}</td>
 									{<td>{new Date(studyMetadata.lastSavedAt * 1000).toLocaleString()}</td>}
 								</tr>}
-							</table>
+							</tbody></table>
 						</div>
 				}),
 				DashElement(null, {

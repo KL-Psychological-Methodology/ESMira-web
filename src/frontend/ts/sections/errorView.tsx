@@ -3,7 +3,6 @@ import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {Lang} from "../singletons/Lang";
 import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
-import {ErrorReportInfo} from "../data/errorReports/ErrorReportInfo";
 import transferSvg from "../../imgs/icons/transfer.svg?raw"
 import {SectionData} from "../site/SectionData";
 
@@ -70,7 +69,6 @@ class ErrorReportComponent implements Component<ErrorReportComponentOptions, any
 
 			lines[0].scrollIntoView({ behavior: 'smooth' })
 		}
-		console.log(this.warningLines[1].getBoundingClientRect())
 	}
 
 	public oncreate(vNode: VnodeDOM<ErrorReportComponentOptions, any>): void {
@@ -174,12 +172,6 @@ export class Content extends SectionContent {
 
 	public titleExtra(): m.Vnode<any, any> | null {
 		return <a href={this.getUrl("errorForward")}>{m.trust(transferSvg)}</a>
-	}
-
-
-	private getName(report: ErrorReportInfo): string {
-		const date = new Date(report.timestamp).toLocaleString()
-		return report.note ? `${report.note} (${date})` : date
 	}
 
 	public getView(): Vnode<any, any> {

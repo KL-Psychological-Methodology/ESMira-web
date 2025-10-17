@@ -61,7 +61,7 @@ export class Content extends SectionContent {
 				<div>
 					{TitleRow(Lang.getWithColon("additional_server_settings"))}
 					<div class="spacingBottom">{m.trust(Lang.get("info_init_additional_steps"))}</div>
-					<table class="spacingBottom">
+					<table class="spacingBottom"><tbody>
 						<tr>
 							<td>.htaccess:</td>
 							<td style={`color:${this.htaccessEnabled ? 'lightgreen' : 'red'}`}>{this.htaccessEnabled ? Lang.get("enabled") : Lang.get("disabled")}</td>
@@ -70,7 +70,7 @@ export class Content extends SectionContent {
 							<td>mod rewrite:</td>
 							<td style={`color:${this.modRewriteEnabled ? 'lightgreen' : 'red'}`}>{this.modRewriteEnabled ? Lang.get("enabled") : Lang.get("disabled")}</td>
 						</tr>
-					</table>
+					</tbody></table>
 				</div>
 			}
 			

@@ -5,11 +5,13 @@ namespace backend;
 
 class DataSetCacheContainer {
 	/**
+	 * The ids of the cached data.
 	 * @var int[]
 	 */
 	public $ids = [];
 	/**
-	 * @var array
+	 * The cached data, stored in the same order as the ids array.
+	 * @var array[]
 	 */
 	public $data = [];
 	

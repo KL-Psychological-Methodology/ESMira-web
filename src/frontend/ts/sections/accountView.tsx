@@ -15,7 +15,6 @@ import {SectionData} from "../site/SectionData";
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader
 	private readonly isOwnAccount: boolean
-	private showPasswordField = false
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [

@@ -34,7 +34,7 @@ export class Content extends SectionContent {
 				RegexTextInput(
 					Lang.getWithColon("contactEmail"),
 					study.contactEmail,
-					/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/,
+					/^[\w\-.]+@([\w-]+\.)+[\w-]{2,}$/,
 					Lang.get("validator_warning_email"))
 			}
 

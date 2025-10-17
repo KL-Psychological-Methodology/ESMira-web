@@ -88,11 +88,9 @@ export class Content extends SectionContent {
 		const releases = JSON.parse(jsonString)
 		const stableReleases: ReleaseType[] = []
 		const unstableReleases: ReleaseType[] = []
-
-
+		
 		//sort releases:
 
-		let searchingForRelease = true;
 		for (let i = releases.length - 1; i >= 0; --i) {
 			let { tag_name: tagName, prerelease, body, published_at: publishedAt, assets } = releases[i];
 

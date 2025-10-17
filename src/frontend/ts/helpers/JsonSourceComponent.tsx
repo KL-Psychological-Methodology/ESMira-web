@@ -3,7 +3,6 @@ import {DataStructureInputType} from "../data/DataStructure";
 import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {JSONContent, JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {ObserverId} from "../observable/BaseObservable";
-import {JsonTypes} from "../observable/types/JsonTypes";
 import {Lang} from "../singletons/Lang";
 
 interface JsonSourceComponentOptions {
@@ -21,11 +20,6 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 	private studyObserveId?: ObserverId
 	private saveBtnLabel?: string
 	
-	private getJson(): JsonTypes {
-		if(!this.getStudy)
-			return {}
-		return this.getStudy().createJson()
-	}
 	private getJsonContent(): JSONContent | TextContent {
 		if(this.getStudy)
 			return {json: this.getStudy().createJson()}
@@ -82,7 +76,10 @@ export class JsonSourceComponent implements Component<JsonSourceComponentOptions
 		if(this.getStudy)
 			json.id = this.getStudy().id.get()
 		this.setJson(json)
-		this.hasChanged = false
+		window.setTimeout(() => { //changing the JSON triggers an onChange event. So we have to update onChanged after the event
+			this.hasChanged = false
+			m.redraw()
+		})
 	}
 	
 	public view(): Vnode<any, any> {

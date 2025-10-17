@@ -329,18 +329,18 @@ class DataComponent implements Component<DataComponentInterface, any> {
 		return <div class="dataContainer">
 			<div class="heightViewForScrollbar"></div>
 			<table class="dataTable">
-				<thead class="dataHeader">
-				<th style={`min-width: ${this.columnWidths[0] ?? 0}px`}></th>
-				{this.shownHeaderNames.map((columnName, shownColumnIndex) =>
-					//Note: shownHeaderNames does not have all headers. So shownColumnIndex is NOT columnIndex
-					DropdownMenu("dataHeaderMenu",
-						<th style={`min-width: ${this.columnWidths[shownColumnIndex + 1] ?? 0}px`}>
-							<span class={this.showFilterForHeaderArray[shownColumnIndex].get() ? "highlight clickable" : "clickable"} style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
-						</th>,
-						() => this.getHeaderDropDown(csvLoader, columnName, shownColumnIndex)
-					)
-				)}
-				</thead>
+				<thead><tr class="dataHeader">
+					<th style={`min-width: ${this.columnWidths[0] ?? 0}px`}></th>
+					{this.shownHeaderNames.map((columnName, shownColumnIndex) =>
+						//Note: shownHeaderNames does not have all headers. So shownColumnIndex is NOT columnIndex
+						DropdownMenu("dataHeaderMenu",
+							<th style={`min-width: ${this.columnWidths[shownColumnIndex + 1] ?? 0}px`}>
+								<span class={this.showFilterForHeaderArray[shownColumnIndex].get() ? "highlight clickable" : "clickable"} style={`height: ${ROW_HEIGHT}px`}>{columnName}</span>
+							</th>,
+							() => this.getHeaderDropDown(csvLoader, columnName, shownColumnIndex)
+						)
+					)}
+				</tr></thead>
 				<tbody class="dataContent">
 				
 				</tbody>
