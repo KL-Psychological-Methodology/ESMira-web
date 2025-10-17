@@ -159,10 +159,10 @@ export class LoaderState {
 		this.showMessage(s)
 	}
 	
-	public loadRaw(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<string> {
+	public loadRaw(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<string> {
 		return this.showLoader(Requests.loadRaw(url, type, requestData));
 	}
-	public loadJson(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<any> {
+	public loadJson(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<any> {
 		return this.showLoader(Requests.loadJson(url, type, requestData));
 	}
 }

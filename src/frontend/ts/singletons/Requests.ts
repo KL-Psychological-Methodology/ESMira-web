@@ -4,6 +4,7 @@ import {Lang} from "./Lang";
 export interface RequestType {
 	get: string
 	post: string
+	file: string
 }
 
 /**
@@ -19,14 +20,14 @@ export const Requests = {
 	 * @returns A promise that resolves to the raw response text received from the server.
 	 * @throws error_connection_failed If the creation of the request fails.
 	 */
-	async loadRaw(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<string> {
+	async loadRaw(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<string> {
 		const request = await new Promise<XMLHttpRequest>((resolve) => {
 			const r = new XMLHttpRequest()
 			if(!r) {
 				throw new Error(Lang.get("error_create_request_failed"))
 			}
 			
-			r.open(type, url)
+			r.open(type == "file" ? "post" : type, url)
 			if(type == "post") {
 				r.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			}
@@ -55,7 +56,7 @@ export const Requests = {
 	 * @throws error_connection_failed If the creation of the request fails.
 	 * @throws error_from_server if the JSON contains error = true.
 	 */
-	async loadJson(url: string, type: keyof RequestType = "get", requestData: string = ""): Promise<any> {
+	async loadJson(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<any> {
 		const response = await this.loadRaw(url, type, requestData)
 		const obj = JSON.parse(response)
 		if(obj.success) {
