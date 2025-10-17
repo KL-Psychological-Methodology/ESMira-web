@@ -1,4 +1,4 @@
-import {compareSemVersion} from "./compareSemVersion";
+import {compareSemVersion} from "../constants/methods";
 
 export class RepairStudy {
 	private readonly serverVersion: number
