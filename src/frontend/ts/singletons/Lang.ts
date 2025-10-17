@@ -64,5 +64,8 @@ export const Lang = {
 	},
 	getWithColon: function(key: LangKey, ... replacers: Array<string | number>): string {
 		return Lang.get("colon", Lang.get(key, ...replacers))
+	},
+	has(key: string): boolean {
+		return langRecord.hasOwnProperty(key);
 	}
 }

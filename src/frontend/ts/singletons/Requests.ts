@@ -62,7 +62,8 @@ export const Requests = {
 			return obj.dataset
 		}
 		else {
-			throw Lang.get("error_from_server", obj.error || response)
+			const errorMessage = obj.error || response
+			throw Lang.has(errorMessage) ? Lang.getDynamic(errorMessage) : Lang.get("error_from_server", errorMessage)
 		}
 	},
 	
