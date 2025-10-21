@@ -132,9 +132,14 @@ export class Content extends ChartEditSectionContent {
 						DashElement("stretched", {
 							content:
 								<div>
-									<label class="noTitle noDesc">
+									{!chart.hideOnClient.get() && <div><label class="noTitle noDesc">
 										<input type="checkbox" {...BindObservable(chart.hideUntilCompletion)} />
 										<span class="smallText">{Lang.get("hideUntilCompletion")}</span>
+									</label><br /></div>
+									}
+									< label class="noTitle noDesc" >
+										<input type="checkbox" {...BindObservable(chart.hideOnClient)} />
+										<span class="smallText">{Lang.get("hide_on_client")}</span>
 									</label>
 								</div>
 						}),
@@ -147,7 +152,7 @@ export class Content extends ChartEditSectionContent {
 										<input class="big" type="text" {...BindObservable(chart.title)} />
 										{!this.isCalc && ObservableLangChooser(study)}
 									</label>
-								</div>
+								</div >
 						}),
 						DashElement("stretched", {
 							content:
@@ -180,99 +185,102 @@ export class Content extends ChartEditSectionContent {
 								</div>
 						})
 					)}
-				</div>
+				</div >
 			}
 
 
 			{TitleRow(Lang.getWithColon("settings"))}
 
-			{DashRow(
+			{
+				DashRow(
 
-				DashElement(null, {
-					content:
-						<div>
-							<label class="horizontal">
-								<small>{Lang.get("statisticsChartType")}</small>
-								<select {...BindObservable(chart.chartType)}>
-									<option value="0">{Lang.get("statisticsChart_line")}</option>
-									<option value="1">{Lang.get("statisticsChart_line_filled")}</option>
-									<option value="2">{Lang.get("statisticsChart_bars")}</option>
-									<option value="3">{Lang.get("statisticsChart_scatter")}</option>
-									<option value="4">{Lang.get("statisticsChart_pie")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				DashElement(null, {
-					content:
-						<div>
-							<label class="horizontal">
-								<small>{Lang.get("statisticsDataType")}</small>
-								<select {...BindObservable(chart.dataType)}>
-									<option value="0">{Lang.get("statisticsDataType_daily")}</option>
-									<option value="1">{Lang.get("statisticsDataType_frequencyDistr")}</option>
-									<option value="2">{Lang.get("statisticsDataType_sum")}</option>
-									<option value="3">{Lang.get("statisticsDataType_xy")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
-					content:
-						<div>
-							<label class="horizontal">
-								<small>{Lang.get("statisticsValueType")}</small>
-								<select {...BindObservable(chart.valueType)}>
-									<option value="0">{Lang.get("statisticsValueType_mean")}</option>
-									<option value="1">{Lang.get("statisticsValueType_sum")}</option>
-									<option value="2">{Lang.get("statisticsValueType_count")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				chart.dataType.get() == STATISTICS_DATATYPES_FREQ_DISTR && DashElement(null, {
-					content:
-						<div>
-							<label class="vertical noTitle noDesc nowrap">
-								<input type="checkbox" {...BindObservable(chart.inPercent)} />
-								<span class="smallText">{Lang.get("values_in_percent")}</span>
-							</label>
-							<label class="vertical noTitle noDesc nowrap">
-								<input type="checkbox" {...BindObservable(chart.xAxisIsNumberRange)} />
-								<span class="smallText">{Lang.get("xAxisIsNumberRange_label")}</span>
-							</label>
-						</div>
-				}),
-				chart.chartType.get() == STATISTICS_CHARTTYPES_SCATTER && DashElement(null, {
-					content:
-						<div>
-							<label class="noDesc">
-								<span>{Lang.getWithColon("fitToShowLinearProgression_label")}</span>
-								<input type="number" {...BindObservable(chart.fitToShowLinearProgression)} />
-							</label>
-						</div>
-				}),
-				DashElement(null, {
-					content:
-						<div>
-							<label>
-								<small>{Lang.get("chart_max_yValue")}</small>
-								<input type="number" {...BindObservable(chart.maxYValue)} />
-								<small>{Lang.get("chart_max_yValue_explainZero")}</small>
-							</label>
-						</div>
-				}),
-				this.section.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
-					content:
-						<div>
-							<label>
-								<input class="horizontal" type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
-								<span class="horizontal smallText">{Lang.get("display_additional_publicVariable")}</span>
-							</label>
-						</div>
-				}),
-			)}
-			{chart.displayPublicVariable.get() &&
+					DashElement(null, {
+						content:
+							<div>
+								<label class="horizontal">
+									<small>{Lang.get("statisticsChartType")}</small>
+									<select {...BindObservable(chart.chartType)}>
+										<option value="0">{Lang.get("statisticsChart_line")}</option>
+										<option value="1">{Lang.get("statisticsChart_line_filled")}</option>
+										<option value="2">{Lang.get("statisticsChart_bars")}</option>
+										<option value="3">{Lang.get("statisticsChart_scatter")}</option>
+										<option value="4">{Lang.get("statisticsChart_pie")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					DashElement(null, {
+						content:
+							<div>
+								<label class="horizontal">
+									<small>{Lang.get("statisticsDataType")}</small>
+									<select {...BindObservable(chart.dataType)}>
+										<option value="0">{Lang.get("statisticsDataType_daily")}</option>
+										<option value="1">{Lang.get("statisticsDataType_frequencyDistr")}</option>
+										<option value="2">{Lang.get("statisticsDataType_sum")}</option>
+										<option value="3">{Lang.get("statisticsDataType_xy")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
+						content:
+							<div>
+								<label class="horizontal">
+									<small>{Lang.get("statisticsValueType")}</small>
+									<select {...BindObservable(chart.valueType)}>
+										<option value="0">{Lang.get("statisticsValueType_mean")}</option>
+										<option value="1">{Lang.get("statisticsValueType_sum")}</option>
+										<option value="2">{Lang.get("statisticsValueType_count")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					chart.dataType.get() == STATISTICS_DATATYPES_FREQ_DISTR && DashElement(null, {
+						content:
+							<div>
+								<label class="vertical noTitle noDesc nowrap">
+									<input type="checkbox" {...BindObservable(chart.inPercent)} />
+									<span class="smallText">{Lang.get("values_in_percent")}</span>
+								</label>
+								<label class="vertical noTitle noDesc nowrap">
+									<input type="checkbox" {...BindObservable(chart.xAxisIsNumberRange)} />
+									<span class="smallText">{Lang.get("xAxisIsNumberRange_label")}</span>
+								</label>
+							</div>
+					}),
+					chart.chartType.get() == STATISTICS_CHARTTYPES_SCATTER && DashElement(null, {
+						content:
+							<div>
+								<label class="noDesc">
+									<span>{Lang.getWithColon("fitToShowLinearProgression_label")}</span>
+									<input type="number" {...BindObservable(chart.fitToShowLinearProgression)} />
+								</label>
+							</div>
+					}),
+					DashElement(null, {
+						content:
+							<div>
+								<label>
+									<small>{Lang.get("chart_max_yValue")}</small>
+									<input type="number" {...BindObservable(chart.maxYValue)} />
+									<small>{Lang.get("chart_max_yValue_explainZero")}</small>
+								</label>
+							</div>
+					}),
+					this.section.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
+						content:
+							<div>
+								<label>
+									<input class="horizontal" type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
+									<span class="horizontal smallText">{Lang.get("display_additional_publicVariable")}</span>
+								</label>
+							</div>
+					}),
+				)
+			}
+			{
+				chart.displayPublicVariable.get() &&
 				<div>
 					{TitleRow(Lang.getWithColon("public_variables"))}
 					{this.getVariablesView(study, chart, chart.publicVariables)}
@@ -288,7 +296,7 @@ export class Content extends ChartEditSectionContent {
 			<div class="center">
 				{BtnAdd(this.addVariable.bind(this, chart.axisContainer, study), Lang.get('add'))}
 			</div>
-		</div>
+		</div >
 	}
 
 	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<ObservableStructureDataType, AxisContainer>): Vnode<any, any> {
