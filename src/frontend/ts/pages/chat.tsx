@@ -28,24 +28,31 @@ export class Content extends SectionContent {
 	private toAll: boolean = false
 	private appVersion: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appVersion")
 	private appType: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "appType")
+	private targetStudyLang: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "targetStudyLang")
 	private messageContent: ObservablePrimitive<string> = new ObservablePrimitive<string>("", null, "messageContent")
 	private isLoading: boolean = false
+	private langCodeNames: { langName: string, langCode: string }[] = []
 
 	public static preLoad(section: Section): Promise<any>[] {
 		const studyId = section.getStaticInt("id") ?? -1
 		return [
 			Requests.loadJson(`${FILE_ADMIN}?type=ListParticipants&study_id=${studyId}`),
+			import(`../../langCodes/${Lang.code}.json`).then(({ default: data }) => data),
 			section.getStudyPromise()
 		]
 	}
 
-	constructor(section: Section, userIdList: string[]) {
+	constructor(section: Section, userIdList: string[], langCollection: Record<string, string>) {
 		super(section)
 		this.studyId = this.getStaticInt("id") ?? -1
 		userIdList.sort()
 		this.userIdList = userIdList
 		this.userId = getFromUrlFriendly(this.getStaticString("userId") ?? "")
 		this.fixedRecipient = !!this.userId
+
+		const study = this.getStudyOrThrow()
+		study.langCodes.get().map((codeObs) => codeObs.get()).forEach((code) =>
+			this.langCodeNames.push({ langName: langCollection[code], langCode: code }))
 	}
 
 	public preInit(): Promise<any> {
@@ -154,6 +161,7 @@ export class Content extends SectionContent {
 		const toAll = this.toAll
 		const appVersion = this.appVersion.get()
 		const appType = this.appType.get()
+		const targetStudyLang = this.targetStudyLang.get()
 		const studyId = this.getStaticInt("id") ?? -1
 
 		if (content.length < 2) {
@@ -173,6 +181,7 @@ export class Content extends SectionContent {
 			toAll: toAll,
 			appVersion: appVersion,
 			appType: appType,
+			studyLang: targetStudyLang,
 			content: content,
 			timestamps: this.getUnreadTimestamps()
 		}
@@ -249,6 +258,7 @@ export class Content extends SectionContent {
 										<option>iOS</option>
 									</select>
 								</label>
+								{this.getTargetStudyLanguageSelectionView()}
 							</div>
 						}
 					</div>
@@ -351,5 +361,18 @@ export class Content extends SectionContent {
 				</div>
 			</div>
 		</div>
+	}
+
+	private getTargetStudyLanguageSelectionView(): Vnode<any, any> {
+		if (this.langCodeNames.length <= 1) {
+			return <div></div>
+		}
+		return <label>
+			<small>{Lang.get("language")}</small>
+			<select {...BindObservable(this.targetStudyLang)}>
+				<option value="">{Lang.get("all")}</option>
+				{this.langCodeNames.map((entry) => <option value={entry.langCode}>{entry.langName}</option>)}
+			</select>
+		</label>
 	}
 }

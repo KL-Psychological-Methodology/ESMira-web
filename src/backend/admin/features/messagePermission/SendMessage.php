@@ -13,17 +13,17 @@ class SendMessage extends HasMessagePermission {
 	/**
 	 * @throws CriticalException
 	 */
-	private function sendToAll(string $from, string $content, string $appType = null, string $appVersion = null) {
+	private function sendToAll(string $from, string $content, ?string $appType = null, ?string $appVersion = null, ?string $studyLang = null) {
 		$dataStore = Configs::getDataStore();
 		$messageStore = $dataStore->getMessagesStore();
-		$checkUserdata = $appVersion || $appType;
+		$checkUserdata = $appVersion || $appType || $studyLang;
 		
 		$participants = Configs::getDataStore()->getStudyStore()->getStudyParticipants($this->studyId);
 		foreach($participants as $userId) {
 			if($checkUserdata) {
 				$userData = $dataStore->getUserDataStore($userId)->getUserData($this->studyId);
 				
-				if(($appVersion && $userData->appVersion != $appVersion) || ($appType &&$userData->appType != $appType))
+				if(($appVersion && $userData->appVersion != $appVersion) || ($appType &&$userData->appType != $appType) || ($studyLang && $userData->mostRecentLanguage != $studyLang))
 					continue;
 			}
 			$messageStore->sendMessage($this->studyId, $userId, $from, $content);
@@ -48,7 +48,8 @@ class SendMessage extends HasMessagePermission {
 		if($toAll) {
 			$appVersion = $json->appVersion ?? null;
 			$appType = $json->appType ?? null;
-			$this->sendToAll($from, $content, $appType, $appVersion);
+			$studyLang = $json->studyLang ?? null;
+			$this->sendToAll($from, $content, $appType, $appVersion, $studyLang);
 			return [];
 		}
 		else {
