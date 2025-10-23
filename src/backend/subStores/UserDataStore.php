@@ -50,12 +50,16 @@ abstract class UserDataStore {
 	/**
 	 * @throws CriticalException
 	 */
-	public function addDataSetForSaving(int $studyId, stdClass $dataSet, string $appType, string $appVersion): bool {
+	public function addDataSetForSaving(int $studyId, stdClass $dataSet, string $appType, string $appVersion, string $studyLang): bool {
 		$userData = $this->userDataArray[$studyId] ?? $this->getUserDataForWriting($studyId);
 		
 		$userData->group = $dataSet->group ?? 0;
 		$userData->appType = $appType;
 		$userData->appVersion = $appVersion;
+		$userData->mostRecentLanguage = $studyLang;
+		if(!in_array($studyLang, $userData->usedLanguages)) {
+			$userData->usedLanguages[] = $studyLang;
+		}
 		
 		++$userData->dataSetCount;
 		if(($dataSet->eventType ?? '') == 'questionnaire' && ($dataSet->questionnaireInternalId ?? -1) != -1) {
