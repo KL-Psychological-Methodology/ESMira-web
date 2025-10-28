@@ -668,5 +668,6 @@
 	"duplicate_access_key": "Zugangsschlüssel nicht eindeutig auf Server",
 	"duplicate_access_key_tooltip": "Dieser Zugangsschlüssel wird auch von anderen Studien auf diesem Server verwendet. Links basierend auf diesem Zugangsschlüssel werden nicht direkt zu dieser Studie führen.",
 	"info_links_with_study_id": "Diese Links werden immer direkt zur dieser Studie führen.",
-	"hide_on_client": "In App nicht anzeigen"
+	"hide_on_client": "In App nicht anzeigen",
+	"add_all_permissions": "Alle Berechtigungen für eine Studie hinzufügen"
 }
