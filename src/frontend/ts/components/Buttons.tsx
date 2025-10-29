@@ -36,7 +36,7 @@ export function BtnTrash(onclick: () => void, title: string = "",): Vnode<any, a
 	return (
 		<div class="btn btnDelete clickable" onclick={onclick} title={title || Lang.get("delete")}>
 			{m.trust(trashSvg)}
-			<span class="highlight middle">{title}</span>
+			<span class="smallText highlight middle">{title}</span>
 		</div>
 	)
 }
