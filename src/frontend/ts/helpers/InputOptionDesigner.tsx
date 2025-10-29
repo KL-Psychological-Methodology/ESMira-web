@@ -476,12 +476,12 @@ export class InputOptionDesigner {
 		return <div class="stretched center">
 			<label class="horizontal spacingRight">
 				<small>{Lang.get("label_leftChoice")}</small>
-				<input class="big" type="url" {...BindObservable(this.input.leftSideLabel)} />
+				<input class="big" type="text" {...BindObservable(this.input.leftSideLabel)} />
 				{ObservableLangChooser(this.study)}
 			</label>
 			<label class="horizontal">
 				<small>{Lang.get("label_rightChoice")}</small>
-				<input class="big" type="url" {...BindObservable(this.input.rightSideLabel)} />
+				<input class="big" type="text" {...BindObservable(this.input.rightSideLabel)} />
 				{ObservableLangChooser(this.study)}
 			</label>
 		</div>
