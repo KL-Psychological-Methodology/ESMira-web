@@ -104,7 +104,7 @@ export class Content extends SectionContent {
 	}
 
 
-	private async addPermission(account: Account, permissionName: keyof AccountPermissions, studyId: number): Promise<void> {
+	private async addPermission(account: Account, permissionName: keyof AccountPermissions, studyId: number, handleUi: boolean = true): Promise<void> {
 		await this.sectionData.loader.loadJson(
 			`${FILE_ADMIN}?type=AddStudyPermission`,
 			"post",
@@ -124,7 +124,16 @@ export class Content extends SectionContent {
 		list.push(studyId)
 		if (permissionName == "publish" && account.write.indexOf(studyId) == -1)
 			account.write.push(studyId)
-		closeDropdown("addPermission")
+		if (handleUi) {
+			closeDropdown("addPermission")
+			this.sectionData.loader.info(Lang.get("info_successful"))
+		}
+	}
+	
+	private async addAllPermissions(account: Account, studyId: number): Promise<void> {
+		const permissionNames: (keyof AccountPermissions)[] = ["publish", "read", "msg", "write"]
+		permissionNames.forEach(async (permissionName) => { if (account[permissionName].indexOf(studyId) == -1) { this.addPermission(account, permissionName, studyId, false) } })
+		closeDropdown("addAllPermissions")
 		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 
@@ -183,6 +192,35 @@ export class Content extends SectionContent {
 						<input type="checkbox" {...BindObservable(account.issueFallbackToken)} />
 						<span>{Lang.get("permissions_issue_fallback_tokens")}</span>
 					</label>
+					<div>
+						{DropdownMenu(
+							"addAllPermissions",
+							<p class="clickable vertical" >{Lang.get("add_all_permissions")}</p>,
+							() =>
+								<ul>
+									<h2>{Lang.get("select_a_study")}</h2>
+									{this.sectionData.siteData.studyLoader.getSortedStudyList()
+										.filter((study) => {
+											const id = study.id.get()
+											const permissionNames: (keyof AccountPermissions)[] = ["publish", "write", "read", "msg"]
+											permissionNames.forEach((permissionName): boolean => {
+												for (const obs of account[permissionName].get()) {
+													if (obs.get() == id)
+														return false
+												}
+												return true
+											})
+										})
+										.map((study) =>
+											<li
+												class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`}
+												onclick={this.addAllPermissions.bind(this, account, study.id.get())}
+											>{study.title.get()}</li>
+										)}
+
+								</ul>
+						)}
+					</div>
 				</div>
 			}
 

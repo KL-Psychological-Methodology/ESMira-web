@@ -315,6 +315,7 @@ class CreateDataSet {
 		$studyId = $this->getStudyId($dataSet);
 		$datasetId = $this->getDataSetId($dataSet);
 		$eventType = $dataSet->eventType;
+		$studyLang = $dataSet->studyLang;
 		
 		//*****
 		//check accessKey:
@@ -337,7 +338,7 @@ class CreateDataSet {
 		//check token:
 		//*****
 		try {
-			if(!$this->userDataStore->addDataSetForSaving($studyId, $dataSet, $this->appType, $this->appVersion))
+			if(!$this->userDataStore->addDataSetForSaving($studyId, $dataSet, $this->appType, $this->appVersion, $studyLang))
 				throw new DataSetException('Too many requests in succession');
 		}
 		catch(CriticalException $e) {

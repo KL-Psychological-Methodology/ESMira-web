@@ -135,13 +135,13 @@ export class StudyLoader {
 		})
 	}
 	
-	public async loadAvailableStudies(accessKey: string, reload: boolean = false): Promise<StudiesDataType> {
+	public async loadAvailableStudies(accessKey: string, reload: boolean = false, includeFinishedStudies: boolean = false): Promise<StudiesDataType> {
 		if(reload)
 			PromiseCache.remove("availableStudies")
 		
 		return PromiseCache.get(`availableStudies`, async () => {
 			PromiseCache.remove("strippedStudies")
-			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_STUDIES}?access_key=${accessKey}`)
+			const studiesJson: Record<string, any>[] = await Requests.loadJson(`${FILE_STUDIES}?access_key=${accessKey}${includeFinishedStudies ? "&include_finished_studies=1" : ""}`)
 			if(!studiesJson.length) {
 				this.studyCache.empty(true)
 				throw new Error(Lang.get("error_wrong_accessKey"))
@@ -320,7 +320,7 @@ export class StudyLoader {
 				if(match == null)
 					return oldName + "_2"
 				else
-					return `${match[1]}_${parseInt(match[2])+1}`
+					return `${match[1]}_${parseInt(match[2]) + 1}`
 			})
 			if(newName == null)
 				throw new Error(`Could not rename ${input.name.get()}. Reverting copy!`)

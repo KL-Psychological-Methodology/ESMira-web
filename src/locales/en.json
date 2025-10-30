@@ -681,5 +681,7 @@
 	"duplicate_access_key": "Access key not unique on server",
 	"duplicate_access_key_tooltip": "This access key is also used by other studies on this server. Links based on this access key will not lead directly to this study.",
 	"info_links_with_study_id": "These links will always lead directly to this study.",
-	"uninstall": "Uninstall"
+	"uninstall": "Uninstall",
+	"hide_on_client": "Do not show in app",
+	"add_all_permissions": "Add all permissions for a study"
 }

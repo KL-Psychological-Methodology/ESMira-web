@@ -37,11 +37,16 @@ class UserData {
 	public $questionnaireDataSetCount = [];
 	
 	public $generatedRewardCode = false;
+
+	public $usedLanguages = [];
+	public $mostRecentLanguage = '';
 	
-	public function __construct(int $userIdInteger, int $token, int $dataSetCount) {
+	public function __construct(int $userIdInteger, int $token, int $dataSetCount, string $initialLanguage) {
 		$this->userIdInteger = $userIdInteger;
 		$this->token = $token;
 		$this->dataSetCount = $dataSetCount;
 		$this->joinedTime = Main::getMilliseconds();
+		$this->usedLanguages[] = $initialLanguage;
+		$this->mostRecentLanguage = $initialLanguage;
 	}
 }

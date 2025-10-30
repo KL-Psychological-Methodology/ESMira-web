@@ -12,6 +12,7 @@ if (!Configs::getDataStore()->isInit()) {
     return;
 }
 
+$includeFinished = isset($_GET['include_finished_studies']);
 
 $studiesJson = [];
 $studyStore = Configs::getDataStore()->getStudyStore();
@@ -24,8 +25,9 @@ try {
     $dataStore = Configs::getDataStore();
     foreach ($ids as $studyId) {
         $metadata = $dataStore->getStudyMetadataStore($studyId);
-        if (!$metadata->isOver())
-            $studiesJson[] = $studyStore->getStudyLangConfigAsJson($studyId, $lang);
+		if($includeFinished || !$metadata->isOver()) {
+			$studiesJson[] = $studyStore->getStudyLangConfigAsJson($studyId, $lang);
+		}
     }
 } catch (CriticalException $e) {
     echo JsonOutput::error($e->getMessage());

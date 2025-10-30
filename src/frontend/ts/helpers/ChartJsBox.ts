@@ -344,7 +344,7 @@ abstract class DataSetCreator {
 				if (point === null) {
 					return false
 				} else if (typeof point === "object" && "y" in point) {
-					return point.y >= threshold
+					return point.y !== null && point.y >= threshold
 				} else {
 					return point >= threshold
 				}

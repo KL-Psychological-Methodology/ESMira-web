@@ -5,7 +5,6 @@ import {AddJsToServerHtml} from "../helpers/AddJsToServerHtml";
 import {Requests} from "../singletons/Requests";
 import {FILE_APP_INSTALL_INSTRUCTIONS} from "../constants/urls";
 import {SectionData} from "../site/SectionData";
-
 interface AppInstallComponentOptions {
 	sectionContent: SectionContent
 	html: string
@@ -40,7 +39,7 @@ export class Content extends SectionContent {
 					.replace("%s1", accessKey)
 					.replace("%s2", Lang.code)
 			),
-			sectionData.getAvailableStudiesPromise(accessKey)
+			sectionData.getAvailableStudiesPromise(accessKey, false)
 		]
 	}
 	

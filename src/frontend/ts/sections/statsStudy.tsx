@@ -23,7 +23,7 @@ import {ChartView} from "../components/ChartView";
 import {JsonTypes} from "../observable/types/JsonTypes";
 import {SearchBox} from "../components/SearchBox";
 import {ValueListInfo} from "../loader/csv/ValueListInfo";
-import {BindObservable} from "../components/BindObservable";
+import {BindObservable, ConstrainedNumberTransformer} from "../components/BindObservable";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {BtnReload} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
@@ -118,7 +118,7 @@ export class Content extends SectionContent {
 		return <div>
 			<label class="noTitle noDesc spacingRight">
 				<span>{Lang.getWithColon("days")}</span>
-				<input type="number" min="1" {...BindObservable(this.days), new ConstrainedNumberTransformer(1, undefined)} />
+				<input type="number" min="1" {...BindObservable(this.days, new ConstrainedNumberTransformer(1, undefined))} />
 			</label>
 			{BtnReload(this.sectionData.callbacks?.reload.bind(this.sectionData), Lang.get("reload"))}
 		</div>

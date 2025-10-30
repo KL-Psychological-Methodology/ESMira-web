@@ -144,9 +144,14 @@ export class Content extends SectionContent {
 						DashElement("stretched", {
 							content:
 								<div>
-									<label class="noTitle noDesc">
+									{!chart.hideOnClient.get() && <div><label class="noTitle noDesc">
 										<input type="checkbox" {...BindObservable(chart.hideUntilCompletion)} />
 										<span class="smallText">{Lang.get("hideUntilCompletion")}</span>
+									</label><br/></div>
+									}
+									<label class="noTitle noDesc" >
+										<input type="checkbox" {...BindObservable(chart.hideOnClient)} />
+										<span class="smallText">{Lang.get("hide_on_client")}</span>
 									</label>
 								</div>
 						}),
@@ -199,7 +204,6 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.getWithColon("settings"))}
 
 			{DashRow(
-
 				DashElement(null, {
 					content:
 						<div>

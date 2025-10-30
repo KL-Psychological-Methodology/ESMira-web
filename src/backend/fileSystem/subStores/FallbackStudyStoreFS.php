@@ -39,7 +39,7 @@ class FallbackStudyStoreFS extends BaseStudyStoreFS implements FallbackStudyStor
 
 	protected function getLangConfigPath(int $studyId, $lang): string
 	{
-		return PathsFS::fileFallbackStudyConfig($this->encodedUrl, $studyId);
+		return PathsFS::fileFallbackLangConfig($this->encodedUrl, $studyId, $lang);
 	}
 
 	protected function getFolderLangsPath(int $studyId): string

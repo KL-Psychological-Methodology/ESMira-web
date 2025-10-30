@@ -498,7 +498,8 @@ export class InputOptionDesigner {
 		}
 
 		return <div>
-			<h2>{Lang.getWithColon("choices")}</h2>{
+			<h2>{Lang.getWithColon("choices")}</h2>
+			{
 				DragContainer((dragTools) => {
 					return <div class="listParent">
 						<div class="listChild">
@@ -519,7 +520,9 @@ export class InputOptionDesigner {
 						</div>
 					</div>
 				})
-			}</div>
+			}
+			{ObservableLangChooser(this.study)}
+		</div>
 	}
 
 	private otherOption(): Vnode<any, any> {

@@ -193,11 +193,11 @@ export class Content extends StudiesContent {
 		list.sort((a, b) => (a - b))
 		return list.join(",")
 	}
-	private getAccessKeyTabList(published: boolean): TabContent[] {
+	private getAccessKeyTabList(published: boolean, includePublic: boolean = false): TabContent[] {
 		const accessKeyTabs: TabContent[] = [this.getAccessKeyTab(
 			Lang.get("all"),
 			this.studies.filter((study) =>
-				study.published.get() == published && study.accessKeys.get().length
+				study.published.get() == published && (includePublic || study.accessKeys.get().length)
 			),
 			true
 		)]
@@ -267,7 +267,7 @@ export class Content extends StudiesContent {
 	}
 	private createAccessKeyTabLists(): void {
 		this.publicAccessKeysTabs = this.getAccessKeyTabList(true)
-		this.disabledAccessKeysTabs = this.getAccessKeyTabList(false)
+		this.disabledAccessKeysTabs = this.getAccessKeyTabList(false, true)
 	}
 
 	private getStudyListView(studies: Study[]): Vnode<any, any> {
