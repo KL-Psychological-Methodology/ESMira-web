@@ -383,6 +383,7 @@ class QuestionnaireSaver {
         
         $dataSet = new CreateDataSet();
         $dataSet->prepare($json);
+		$dataSet->handlePlugins();
         $dataSet->exec();
         if (empty($dataSet->output))
             throw new CriticalException('No response data');

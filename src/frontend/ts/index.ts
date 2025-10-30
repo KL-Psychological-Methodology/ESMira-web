@@ -18,7 +18,9 @@ export function init(startHash: string, serverName: string, serverVersion: numbe
 		check.toggleUrl()
 		return
 	}
-	Lang.init(langCode, PACKAGE_VERSION)
+	
+	const pluginsLangs: Record<string, Record<string, string>> = JSON.parse(document.getElementById("pluginLangData")?.innerHTML || "{}")
+	Lang.init(langCode, PACKAGE_VERSION, pluginsLangs)
 	
 	site = new Site(serverName, startHash, serverVersion, PACKAGE_VERSION, serverAccessKey)
 	

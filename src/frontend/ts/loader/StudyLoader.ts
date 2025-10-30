@@ -1,4 +1,5 @@
 import {Study} from "../data/study/Study";
+import {PluginFrontendInstructions} from "../plugin/PluginInterfaces";
 import m from "mithril";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
@@ -46,13 +47,15 @@ export class StudyLoader {
 	private readonly serverVersion: number
 	private readonly packageVersion: string
 	private readonly repair: RepairStudy
+	private readonly plugins: Record<string, PluginFrontendInstructions>
 	public readonly ownerRegister: Record<string, number[]> = {}
 	public readonly studyMetadata: Record<number, StudyMetadata> = {}
 	
-	constructor(serverVersion: number, packageVersion: string) {
+	constructor(serverVersion: number, packageVersion: string, plugins: Record<string, PluginFrontendInstructions>) {
 		this.serverVersion = serverVersion
 		this.packageVersion = packageVersion
 		this.repair = new RepairStudy(serverVersion, packageVersion)
+		this.plugins = plugins
 		
 		this.studyCache.addObserver(() => {
 			m.redraw() //redraw is asynchronous, so this should be executed after all other observers
@@ -99,6 +102,17 @@ export class StudyLoader {
 				delete this.ownerRegister[ownerName]
 			
 			delete this.studyMetadata[studyId]
+		}
+	}
+	
+	private addPluginStructureToStudy(study: Study) {
+		for(const pluginName in this.plugins) {
+			const dataStructure = this.plugins[pluginName].studyJsonDataStructure
+			if(!dataStructure) {
+				continue
+			}
+			
+			study.pluginData.addPluginData(pluginName, dataStructure);
 		}
 	}
 	
@@ -165,6 +179,7 @@ export class StudyLoader {
 			} = await Requests.loadJson(`${FILE_ADMIN}?type=GetFullStudy&study_id=${id}`)
 			
 			const study = new Study(studyData.config, this.studyCache, lastChanged, this.repair)
+			this.addPluginStructureToStudy(study)
 			for(const langCode in studyData.languages) {
 				study.addLanguage(langCode, studyData.languages[langCode])
 			}
@@ -255,6 +270,7 @@ export class StudyLoader {
 		const id = study.id.get()
 		data[id] = id
 		const newStudy = new Study(data, this.studyCache, study.lastChanged, this.repair)
+		this.addPluginStructureToStudy(newStudy)
 		this.studyCache.insert(id, newStudy, undefined, true)
 		return newStudy
 	}

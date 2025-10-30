@@ -8,6 +8,7 @@ import {Admin} from "../admin/Admin";
 import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionData} from "./SectionData";
 import {Section} from "./Section";
+import {PluginFrontendInstructions} from "../plugin/PluginInterfaces";
 
 const SECTION_MIN_WIDTH = 650;
 
@@ -32,10 +33,13 @@ export class Site {
 	private overrideSectionWidth: boolean = false
 
 	constructor(serverName: string, startHash: string, serverVersion: number, packageVersion: string, serverAccessKey: string) {
+		const pluginFrontendData: Record<string, PluginFrontendInstructions> = JSON.parse(document.getElementById("pluginFrontendData")?.innerHTML || "{}")
+		
 		this.siteData = new SiteData(
 			new Admin(HashData.needsAdmin(startHash), this),
 			serverVersion,
-			packageVersion
+			packageVersion,
+			pluginFrontendData
 		)
 		this.hashData = new HashData(startHash, this.siteData)
 		this.serverVersion = serverVersion

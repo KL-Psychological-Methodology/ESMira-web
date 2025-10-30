@@ -9,11 +9,13 @@ use backend\FileUploader;
 use backend\JsonOutput;
 use backend\Configs;
 
-if(!Configs::getDataStore()->isInit()) {
+$dataStore = Configs::getDataStore();
+
+if(!$dataStore->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
-if(!Configs::getDataStore()->isReady()) {
+if(!$dataStore->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;
 }
@@ -90,7 +92,9 @@ switch($dataType) {
 }
 
 try {
-	Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $userId, $identifier, new FileUploader($fileData));
+	$uploader = new FileUploader($fileData);
+	$dataStore->getPluginStore()->handleFileUpload($studyId, $userId, $identifier, $uploader);
+	$dataStore->getResponsesStore()->uploadFile($studyId, $userId, $identifier, $uploader);
 } catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;

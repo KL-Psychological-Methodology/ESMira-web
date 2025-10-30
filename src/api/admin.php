@@ -104,6 +104,9 @@ $classIndex = [
     'SynchAllStudiesToFallback' => 'backend\admin\features\adminPermission\SynchAllStudiesToFallback',
     'DownloadUpdate' => 'backend\admin\features\adminPermission\DownloadUpdate',
     'DoUpdate' => 'backend\admin\features\adminPermission\DoUpdate',
+	'DeletePlugin' => 'backend\admin\features\adminPermission\DeletePlugin',
+	'InstallPlugin' => 'backend\admin\features\adminPermission\InstallPlugin',
+	'ListPlugins' => 'backend\admin\features\adminPermission\ListPlugins',
     'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
 ];
 

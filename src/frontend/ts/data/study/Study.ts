@@ -8,6 +8,7 @@ import {TranslatableRootInterface} from "../../observable/interfaces/Translatabl
 import { Input, InputMediaTypes } from "./Input";
 import { RepairStudy } from "../../helpers/RepairStudy";
 import { Lang } from "../../singletons/Lang";
+import {PluginContainer} from "./PluginContainer";
 
 export class Study extends DataStructure implements TranslatableRootInterface {
 	public lastChanged: number
@@ -53,6 +54,7 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public eventUploadSettings = this.object("eventUploadSettings", EventUploadSettings)
 	public publicStatistics = this.object("publicStatistics", Statistics)
 	public personalStatistics = this.object("personalStatistics", Statistics)
+	public pluginData = this.object("pluginData", PluginContainer)
 
 	constructor(data: DataStructureInputType, parent: BaseObservable<ObservableTypes> | null, lastChanged: number, repair: RepairStudy | null) {
 		if (repair != null && !repair.repairStudy(data))

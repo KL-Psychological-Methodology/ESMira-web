@@ -472,6 +472,12 @@ class CreateDataSet {
 		}
 	}
 	
+	function handlePlugins() {
+		$pluginStore = Configs::getDataStore()->getPluginStore();
+		$dataset = $this->cache->getQuestionnaireCache();
+		$pluginStore->handleDataSetCache($dataset, $this);
+	}
+	
 	function exec() {
 		Configs::getDataStore()->getResponsesStore()->saveDataSetCache(
 			$this->userId,

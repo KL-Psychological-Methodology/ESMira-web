@@ -9,9 +9,11 @@ export type LangKey = keyof typeof fallbackLang
 export const Lang = {
 	code: "en",
 	isInit: false,
-	init(langCode: string, packageVersion: string): void {
+	init(langCode: string, packageVersion: string, pluginsLangs: Record<string, Record<string, string>>): void {
 		this.code = langCode
 		if(langCode == "en") {
+			langRecord = fallbackLang
+			this.addPluginLangs(pluginsLangs)
 			promise = Promise.resolve(true)
 			return
 		}
@@ -19,12 +21,18 @@ export const Lang = {
 			.then((jsonString) => {
 				this.isInit = true
 				langRecord = JSON.parse(jsonString)
+				this.addPluginLangs(pluginsLangs)
 				return true
 			})
 			.catch(e => {
 				console.error(e)
 				return false
 			});
+	},
+	addPluginLangs(pluginsLangs: Record<string, Record<string, string>>): void {
+		for(const plugin in pluginsLangs) {
+			langRecord = {...langRecord, ...pluginsLangs[plugin]}
+		}
 	},
 	awaitPromise(): Promise<boolean> {
 		return promise

@@ -14,11 +14,30 @@ import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import {Requests} from "../singletons/Requests";
 import {SectionData} from "../site/SectionData";
+import {BtnAdd, BtnDownload, BtnEdit, BtnTrash} from "../components/Buttons";
+import {compareSemVersion, makeUrlFriendly, safeConfirm} from "../constants/methods";
+import {PluginMetadata} from "../plugin/PluginInterfaces";
+import warnSvg from "../../imgs/icons/warn.svg?raw";
+import {DropdownMenu} from "../components/DropdownMenu";
+import {PromiseCache} from "../singletons/PromiseCache";
+import {LoadingSpinner} from "../components/LoadingSpinner";
 
-type ReleaseType = { version: string, date: Date, changeLog: string, downloadUrl: string }
+type ReleaseType = {
+	version: string,
+	date: Date,
+	changeLog: string,
+	downloadUrl: string
+}
+type PluginListEntry = {
+	current: PluginMetadata,
+	newest: Partial<PluginMetadata>
+}
+type PluginsState = "loading" | "done" | "needsAttention"
 
 export class Content extends SectionContent {
-	private loader: ServerSettingsLoader
+	private settingsLoader: ServerSettingsLoader
+	private pluginsState: PluginsState = "loading"
+	private pluginList: PluginListEntry[] = []
 	private markdownRenderer = new MarkdownIt()
 	private noConnection = false
 	private loadPreReleases = false
@@ -33,17 +52,27 @@ export class Content extends SectionContent {
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			sectionData.getTools().settingsLoader.init(),
+			sectionData.getTools().settingsLoader.init()
 		]
 	}
 
 	constructor(sectionData: SectionData, loader: ServerSettingsLoader) {
 		super(sectionData)
-		this.loader = loader
+		this.settingsLoader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
-			return this.loader.getSettings()
+			return this.settingsLoader.getSettings()
 		})
-
+		
+		PromiseCache.get("plugins", () => this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListPlugins`))
+			.then((pluginListData: PluginListEntry[]) => {
+				const packageVersion = this.sectionData.siteData.packageVersion
+				this.pluginList = pluginListData
+				this.pluginsState = !!pluginListData.find(entry =>
+					(entry.current.version != (entry.newest.version ?? entry.current.version)) || sectionData.siteData.pluginLoader.isNotCompatible(packageVersion, entry.current)
+				) ? "needsAttention" : "done"
+				m.redraw()
+			})
+		
 		this.observerId = loader.getSettings().addObserver(this.updateSaveState.bind(this))
 		this.sectionData.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
 		this.updateSaveState()
@@ -58,7 +87,7 @@ export class Content extends SectionContent {
 		return Lang.get("server_settings")
 	}
 	public titleExtra(): Vnode<any, any> {
-		return ObservableLangChooser(this.loader.getSettings())
+		return ObservableLangChooser(this.settingsLoader.getSettings())
 	}
 
 	private getUpdateUrl(): string {
@@ -167,6 +196,15 @@ export class Content extends SectionContent {
 				view: this.getPrivacyPolicyView.bind(this)
 			},
 			{
+				title: this.pluginsState == "needsAttention"
+					? <><div class="inlineIcon">{m.trust(warnSvg)}</div> {Lang.get("plugins")}</>
+					: this.pluginsState == "loading"
+						? <>{LoadingSpinner()} {Lang.get("plugins")}</>
+						: Lang.get("plugins"),
+				view: this.getPluginsView.bind(this),
+				highlight: this.pluginsState == "needsAttention"
+			},
+			{
 				title: Lang.get("maintenance"),
 				view: this.getMaintenanceView.bind(this)
 			}
@@ -174,7 +212,7 @@ export class Content extends SectionContent {
 	}
 
 	private getGeneralView(): Vnode<any, any> {
-		const settings = this.loader.getSettings()
+		const settings = this.settingsLoader.getSettings()
 
 		return <div>
 
@@ -237,7 +275,7 @@ export class Content extends SectionContent {
 		</div>
 	}
 	private getHomeMessageView(): Vnode<any, any> {
-		const settings = this.loader.getSettings()
+		const settings = this.settingsLoader.getSettings()
 		return <div>
 			<div class="line fakeLabel spacingBottom">
 				{RichText(settings.siteTranslations.homeMessage)}
@@ -246,7 +284,7 @@ export class Content extends SectionContent {
 		</div>
 	}
 	private getImpressumView(): Vnode<any, any> {
-		const settings = this.loader.getSettings()
+		const settings = this.settingsLoader.getSettings()
 		return <div>
 			<div class="line fakeLabel spacingBottom">
 				{RichText(settings.siteTranslations.impressum)}
@@ -255,7 +293,7 @@ export class Content extends SectionContent {
 		</div>
 	}
 	private getPrivacyPolicyView(): Vnode<any, any> {
-		const settings = this.loader.getSettings()
+		const settings = this.settingsLoader.getSettings()
 		return <div>
 			<div class="line fakeLabel spacingBottom">
 				{RichText(settings.siteTranslations.privacyPolicy)}
@@ -263,6 +301,69 @@ export class Content extends SectionContent {
 			</div>
 		</div>
 	}
+	
+	private getPluginsView(): Vnode<any, any> {
+		const deletePlugin = async (plugin: PluginMetadata) => {
+			if(!safeConfirm(Lang.get("confirm_delete_plugin", plugin.name))) {
+				return;
+			}
+			
+			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DeletePlugin`, "post", `pluginName=${plugin.name}`)
+			
+			alert(Lang.get("info_successful"));
+			window.location.reload();
+		}
+		const updatePlugin = async (metadataUrl: string)=> {
+			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=InstallPlugin`, "post", `metadataUrl=${makeUrlFriendly(metadataUrl)}`)
+			
+			alert(Lang.get("info_successful"));
+			window.location.reload();
+		}
+		
+		const packageVersion = this.sectionData.siteData.packageVersion
+		
+		return <div class="spacingTop listParent">
+			<div class="listChild">
+				{this.pluginList.map(
+					entry => <div class="line">
+						<a href={entry.newest.website ?? entry.current.website} target="_blank">{entry.current.name} ({entry.current.version})</a>
+						{this.sectionData.siteData.pluginLoader.isNotCompatible(packageVersion, entry.current)
+							&&
+							<span class="inlineIcon middle" title={Lang.get("error_plugin_not_compatible")}>
+								{m.trust(warnSvg)}
+								&nbsp;
+							</span>
+						}
+						{DropdownMenu("pluginSettings",
+							BtnEdit(),
+							(close) => <div>
+								{this.sectionData.siteData.pluginLoader.sectionHasPluginFrontend("pluginSettings", entry.current.name) &&
+									<>
+										<div>
+											<a href={this.getUrl(`pluginSettings:${entry.current.name}`)} onclick={close}>{BtnEdit(undefined, Lang.get("settings"))}</a>
+										</div>
+										<br/>
+									</>
+								}
+								
+								<div>
+									{BtnTrash(() => deletePlugin(entry.current), Lang.get("uninstall"))}
+								</div>
+							</div>
+						)}
+						
+						{entry.current.version != (entry.newest.version ?? entry.current.version) && entry.current.metadataUrl &&
+							BtnDownload(() => updatePlugin(entry.current.metadataUrl!), Lang.get("update_to_version", entry.newest.version ?? "0.0.0"))
+						}
+						
+					</div>
+				)}
+				<br/>
+				<a href={this.getUrl("installPlugin")}>{BtnAdd(undefined, Lang.get("install_new"))}</a>
+			</div>
+		</div>
+	}
+	
 	private getMaintenanceView(): Vnode<any, any> {
 		return <div>
 			<div class="center">
@@ -272,7 +373,7 @@ export class Content extends SectionContent {
 	}
 
 	private updateSaveState(): void {
-		this.setDynamic("showSaveButton", this.loader.getSettings().isDifferent() ?? false)
+		this.setDynamic("showSaveButton", this.settingsLoader.getSettings().isDifferent() ?? false)
 		m.redraw()
 	}
 

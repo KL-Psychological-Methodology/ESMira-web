@@ -1,7 +1,13 @@
-import {URL_ABOUT_ESMIRA_JSON, URL_ABOUT_ESMIRA_PUBLICATIONS_JSON, URL_ABOUT_ESMIRA_STRUCTURE_JSON} from "../constants/urls";
+import {
+	URL_ABOUT_ESMIRA_JSON,
+	URL_ABOUT_ESMIRA_PLUGINS_JSON,
+	URL_ABOUT_ESMIRA_PUBLICATIONS_JSON,
+	URL_ABOUT_ESMIRA_STRUCTURE_JSON
+} from "../constants/urls";
 import {Lang} from "../singletons/Lang";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {Requests} from "../singletons/Requests";
+import {SimplifiedPluginMetadata} from "../plugin/PluginInterfaces";
 
 export interface AboutESMiraInterface {
 	structure: {
@@ -102,6 +108,18 @@ export class AboutESMiraLoader {
 			return {
 				years: years,
 				entries: publications
+			}
+		})
+	}
+	
+	public static loadPlugins(): Promise<SimplifiedPluginMetadata[]> {
+		return PromiseCache.get("ESMiraPlugins", async () => {
+			try {
+				return JSON.parse(await Requests.loadRaw(URL_ABOUT_ESMIRA_PLUGINS_JSON)) as SimplifiedPluginMetadata[]
+			}
+			catch(e) {
+				console.error(e)
+				return []
 			}
 		})
 	}

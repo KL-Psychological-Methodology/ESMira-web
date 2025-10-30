@@ -1,6 +1,7 @@
 export const URL_ABOUT_ESMIRA_SOURCE = 'https://raw.githubusercontent.com/KL-Psychological-Methodology/ESMira/main/about/'
 export const URL_ABOUT_ESMIRA_STRUCTURE_JSON = URL_ABOUT_ESMIRA_SOURCE + "structure.json"
 export const URL_ABOUT_ESMIRA_PUBLICATIONS_JSON = URL_ABOUT_ESMIRA_SOURCE + "publications.json"
+export const URL_ABOUT_ESMIRA_PLUGINS_JSON = URL_ABOUT_ESMIRA_SOURCE + "plugins.json"
 export const URL_ABOUT_ESMIRA_JSON = URL_ABOUT_ESMIRA_SOURCE + "langs/%s.json"
 export const URL_RELEASES_LIST = "https://api.github.com/repos/KL-Psychological-Methodology/ESMira-web/releases?per_page=50"
 export const URL_DEV_SERVER = "esmira.kl.ac.at"
@@ -21,6 +22,7 @@ export const FILE_GET_QUESTIONNAIRE = 'api/questionnaire.php?id=%d1&qid=%d2&acce
 export const FILE_SERVER_STATISTICS = 'api/server_statistics.php'
 export const FILE_STATISTICS = 'api/statistics.php?id=%d&access_key=%s'
 export const FILE_STUDIES = 'api/studies.php'
+export const FILE_PLUGIN_FRONTEND_CODE = 'api/plugin_frontend_code.php'
 
 // help urls (wiki)
 

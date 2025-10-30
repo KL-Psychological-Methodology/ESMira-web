@@ -7,10 +7,6 @@ class Paths {
     const FILE_CONFIG = DIR_BASE . Paths::SUB_PATH_CONFIG;
     const FILENAME_MEDIA_ZIP = 'media.zip';
     const FOLDER_SERVER_BACKUP = DIR_BASE .'backup/';
-    const FOLDER_EXTENSIONS = DIR_BASE . 'extensions/';
-    const FILE_DATESET_EXTENSION = Paths::FOLDER_EXTENSIONS . 'datasetExtension.php';
-	const FILE_MERLIN_LOG_EXTENSION = Paths::FOLDER_EXTENSIONS . 'merlinLogExtension.php';
-	const FILE_MESSAGE_EXTENSION = Paths::FOLDER_EXTENSIONS . 'messageExtension.php';
     const FILE_SERVER_UPDATE = DIR_BASE .'update.zip';
     const FILE_DEFAULT_CONFIG = DIR_BASE . 'backend/defaults/configs.default.php';
     const FILENAME_VERSION = 'VERSION';
@@ -62,11 +58,36 @@ class Paths {
     }
     
     
-    //Thanks to https://www.php.net/manual/en/function.base64-encode.php#123098
-    public static function getFromUrlFriendly(string $s): string {
+	/**
+	 * Decodes a URL-friendly formatted string by reversing the Base64 encoding process
+	 * and replacing URL-safe characters with their original counterparts.
+	 * @see https://www.php.net/manual/en/function.base64-encode.php#123098
+	 *
+	 * @param string $s The URL-friendly formatted string to be decoded.
+	 * @return string The original decoded string.
+	 */
+	public static function getFromUrlFriendly(string $s): string {
         return base64_decode(str_replace(['-', '_'], ['+', '/'], $s));
     }
-    public static function makeUrlFriendly(string $s): string {
+	
+	/**
+	 * Converts a given string into a URL-friendly format by encoding it using Base64 and replacing
+	 * certain characters with URL-safe alternatives.
+	 *
+	 * @param string $s The input string to be converted into a URL-friendly format.
+	 * @return string The URL-friendly representation of the input string.
+	 */
+	public static function makeUrlFriendly(string $s): string {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($s));
+    }
+	
+	/**
+	 * Removes all non-word characters from the provided string, ensuring the string is safe to use.
+	 *
+	 * @param string $s The input string to be sanitized.
+	 * @return string The sanitized string with non-word characters removed.
+	 */
+    public static function makeSafe(string $s): string {
+        return preg_replace('/\W/', '', $s);
     }
 }

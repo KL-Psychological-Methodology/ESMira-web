@@ -1,4 +1,4 @@
-import m, {Vnode} from "mithril";
+import m, {Vnode, VnodeDOM} from "mithril";
 import {LoaderState} from "./LoaderState";
 import {SiteData} from "./SiteData";
 import {Lang} from "../singletons/Lang";
@@ -10,6 +10,8 @@ import {StaticValues} from "./StaticValues";
 import {DynamicValues} from "./DynamicValues";
 import { BookmarkLoader } from "../loader/BookmarkLoader";
 import {SectionData} from "./SectionData";
+import {FullPluginFrontend} from "../plugin/PluginInterfaces";
+import {PLUGIN_ELEMENT_ATTR_NAME} from "../plugin/createElement";
 
 interface Attributes {
 	sectionData: SectionData
@@ -51,13 +53,21 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 				else
 					actualSectionName = sectionData.sectionName
 				
+				plugins = await siteData.pluginLoader.loadPlugins(actualSectionName, sectionData)
+				
 				let Content
 				try {
 					const importedContent = await import(`../sections/${actualSectionName}.tsx`)
 					Content = importedContent.Content
 				}
 				catch(e: any) {
-					reject(Lang.get("error_pageNotFound", actualSectionName))
+					if(!plugins.length) {
+						reject(Lang.get("error_pageNotFound", actualSectionName))
+					}
+					else {
+						resolve(null)
+						injectPluginViews()
+					}
 					return
 				}
 				
@@ -67,6 +77,8 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 				sectionContent = loadedSectionContent
 				
 				resolve(loadedSectionContent.getSectionCallback())
+				m.redraw()
+				injectPluginViews()
 			}
 			catch(e) {
 				reject(e)
@@ -74,6 +86,41 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 		}))
 		
 		return loadingPromise
+	}
+	
+	function injectPluginViews() {
+		if(!plugins.length) {
+			return
+		}
+		m.redraw.sync()
+		const dom = (vNode as VnodeDOM<Attributes>).dom
+		const content = dom.querySelector(".sectionContent") ?? dom
+		const extras = dom.querySelector(".sectionTitle .extra") ?? dom
+		for(const plugin of plugins) {
+			try {
+				if(!plugin?.enabled) {
+					continue
+				}
+				
+				plugin?.manipulateSectionView?.(content)
+				plugin?.manipulateExtras?.(extras)
+			} catch(e) {
+				sectionData.siteData.pluginLoader.reportPluginError(sectionData, plugin.name, "Cannot inject view content", e)
+			}
+		}
+	}
+	function manipulateTitle(title: string) {
+		for(const plugin of plugins) {
+			try {
+				if(!plugin?.enabled) {
+					continue
+				}
+				title = plugin?.changeSectionTitle?.(title) ?? title
+			} catch(e) {
+				sectionData.siteData.pluginLoader.reportPluginError(sectionData, plugin.name, "Cannot change title", e)
+			}
+		}
+		return title
 	}
 	
 	function setCallbacks() {
@@ -132,7 +179,7 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 	}
 	function getSectionTitle(): string {
 		try {
-			return sectionContent?.title() || Lang.get("state_loading")
+			return manipulateTitle(sectionContent?.title() ?? Lang.get("state_loading"))
 		}
 		catch(e: any) {
 			console.error(e)
@@ -159,6 +206,7 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 	
 	let sectionContent: SectionContent | null = null
 	let isMarkedState = false
+	let plugins: FullPluginFrontend[] = []
 	
 	load().then()
 	
@@ -178,12 +226,28 @@ export const Section: m.ClosureComponent<Attributes> = function(vNode: Vnode<Att
 				{sectionData.loader.getView()}
 			</div>
 		},
-		onremove(): any {
-			sectionContent?.destroy()
+		onremove(vNodeDom): any {
+			sectionContent?.destroy();
+			if(plugins.length) {
+				plugins.forEach(plugin => plugin?.onClose?.())
+				
+				const pluginElements = vNodeDom.dom.querySelectorAll(`*[${PLUGIN_ELEMENT_ATTR_NAME}]`)
+				pluginElements.forEach(pluginElement => {
+					pluginElement.parentElement?.removeChild(pluginElement)
+				})
+			}
 		},
-		onupdate(vNode: m.Vnode<Attributes>): void {
-			if(vNode.attrs.sectionData.dataCode != sectionData.dataCode) {
-				sectionData = vNode.attrs.sectionData
+		onupdate(vNodeDom): void {
+			if(vNodeDom.attrs.sectionData.dataCode != sectionData.dataCode) {
+				if(plugins.length) {
+					plugins.forEach(plugin => plugin?.onClose?.())
+					
+					const pluginElements = vNodeDom.dom.querySelectorAll(`*[${PLUGIN_ELEMENT_ATTR_NAME}]`)
+					pluginElements.forEach(pluginElement => {
+						pluginElement.parentElement?.removeChild(pluginElement)
+					})
+				}
+				sectionData = vNodeDom.attrs.sectionData
 				load().then()
 			}
 		}

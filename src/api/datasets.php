@@ -29,6 +29,7 @@ if (!($json = json_decode(Main::getRawPostInput()))) {
 $dataSet = new CreateDataSet();
 try {
     $dataSet->prepare($json);
+	$dataSet->handlePlugins();
     $dataSet->exec();
     echo JsonOutput::successObj([
         'states' => $dataSet->output,
@@ -47,7 +48,3 @@ try {
 
 ob_flush();
 flush();
-
-if (file_exists(Paths::FILE_DATESET_EXTENSION)) {
-	require(Paths::FILE_DATESET_EXTENSION);
-}

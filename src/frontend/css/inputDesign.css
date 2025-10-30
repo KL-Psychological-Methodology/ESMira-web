@@ -100,7 +100,7 @@ input[type=range]::-ms-thumb {
 
 
 
-input[type="text"], input[type="password"], input[type="number"], input[type="date"], input[type="time"], input[type="color"], input[type="url"], select, textarea {
+input[type="text"], input[type="password"], input[type="number"], input[type="date"], input[type="time"], input[type="color"], input[type="url"], input[type="file"], select, textarea {
 	height: 20px;
 	padding: 5px;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
@@ -109,6 +109,9 @@ input[type="text"], input[type="password"], input[type="number"], input[type="da
 	background-color:transparent;
 	border-width: 0;
 	border-bottom: 1px solid #dc4e9d;
+}
+input[type="file"] {
+	font-size: 0.8em;
 }
 input[type="color"] {
 	height: 31px;

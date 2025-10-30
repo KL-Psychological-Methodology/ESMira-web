@@ -8,11 +8,13 @@ use backend\Paths;
 
 require_once dirname(__FILE__, 2) . '/backend/autoload.php';
 
-if(!Configs::getDataStore()->isInit()) {
+$dataStore = Configs::getDataStore();
+
+if(!$dataStore->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
-if(!Configs::getDataStore()->isReady()) {
+if(!$dataStore->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;
 }
@@ -36,7 +38,7 @@ if($json->serverVersion < Main::ACCEPTED_SERVER_VERSION) {
 $studyId = $json->studyId;
 $content = $json->content;
 
-if(Configs::getDataStore()->getStudyStore()->isLocked($studyId)) {
+if($dataStore->getStudyStore()->isLocked($studyId)) {
 	echo JsonOutput::error('This study is locked.');
 	return;
 }
@@ -47,7 +49,8 @@ if(strlen($content) < 2) {
 }
 
 try {
-	Configs::getDataStore()->getMerlinLogsStore()->receiveMerlinLog($studyId, $content);
+	$dataStore->getPluginStore()->handleMerlinLog($studyId, $content);
+	$dataStore->getMerlinLogsStore()->receiveMerlinLog($studyId, $content);
 } catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
 	return;
@@ -60,7 +63,3 @@ echo JsonOutput::successObj();
 
 ob_flush();
 flush();
-
-if (file_exists(Paths::FILE_MERLIN_LOG_EXTENSION)) {
-	require(Paths::FILE_MERLIN_LOG_EXTENSION);
-}

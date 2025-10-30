@@ -4,15 +4,16 @@ use backend\exceptions\CriticalException;
 use backend\Main;
 use backend\Configs;
 use backend\JsonOutput;
-use backend\Paths;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-if(!Configs::getDataStore()->isInit()) {
+$dataStore = Configs::getDataStore();
+
+if(!$dataStore->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
-if(!Configs::getDataStore()->isReady()) {
+if(!$dataStore->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;
 }
@@ -37,7 +38,7 @@ $userId = $json->userId;
 $studyId = $json->studyId;
 $content = $json->content;
 
-if(Configs::getDataStore()->getStudyStore()->isLocked($studyId)) {
+if($dataStore->getStudyStore()->isLocked($studyId)) {
 	echo JsonOutput::error("This study is locked");
 	return;
 }
@@ -52,7 +53,8 @@ else if(!Main::strictCheckInput($userId)) {
 }
 
 try {
-	Configs::getDataStore()->getMessagesStore()->receiveMessage($studyId, $userId, $userId, $content);
+	$dataStore->getPluginStore()->handleReceivingMessage($studyId, $userId, $content);
+	$dataStore->getMessagesStore()->receiveMessage($studyId, $userId, $userId, $content);
 }
 catch(CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
@@ -67,7 +69,3 @@ echo JsonOutput::successObj();
 
 ob_flush();
 flush();
-
-if (file_exists(Paths::FILE_MESSAGE_EXTENSION)) {
-	require(Paths::FILE_MESSAGE_EXTENSION);
-}

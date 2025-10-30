@@ -5,11 +5,12 @@ use backend\Configs;
 use backend\Main;
 
 $lang = Main::getLang();
+$dataStore = Configs::getDataStore();
 
 //
 //Choose starting page:
 //
-if(Configs::getDataStore()->isInit()) {
+if($dataStore->isInit()) {
 	if(isset($_GET['qid'])) {
 		$questionnaireId = (int)$_GET['qid'];
 		$jsKey = "attend,qId:$questionnaireId";
@@ -65,6 +66,9 @@ else if(isset($_GET['grayscaleDark']))
 	$type = 'grayscaleDark';
 else
 	$type = '';
+
+$pluginStore = $dataStore->getPluginStore();
+$pluginsEnabled = $pluginStore->isEnabled();
 ?>
 
 
@@ -76,6 +80,16 @@ else
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta name="description" content="ESMira is a tool for running longitudinal studies (ESM, AA, EMA, ...) with data collection and communication with participants being completely anonymous." />
 	<meta name="keywords" content="AA; ESM; EMA; Android; iOS; iPhone; Science; Questionnaire; Study; Mobile; Server; Open Source" />
+	<script type="text/json" id="pluginFrontendData"><?php
+		if($pluginsEnabled) {
+			echo $pluginStore->getFrontendPluginJson();
+		}
+	?></script>
+	<script type="text/json" id="pluginLangData"><?php
+		if($pluginsEnabled) {
+			echo $pluginStore->getLang($lang);
+		}
+	?></script>
 </head>
 <body onload="ESMira.init(<?php echo "'$jsKey','$servername',$serverVersion,'$accessKey','$lang','$type'"; ?>)">
 

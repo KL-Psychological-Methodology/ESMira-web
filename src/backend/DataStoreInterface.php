@@ -8,6 +8,7 @@ use backend\exceptions\CriticalException;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
+use backend\subStores\PluginStore;
 use backend\subStores\ResponsesStore;
 use backend\subStores\RewardCodeStore;
 use backend\subStores\ServerStore;
@@ -54,4 +55,5 @@ interface DataStoreInterface
 	public function getFallbackTokenStore(): FallbackTokenStore;
 	public function getFallbackStudyAccessIndexStore(string $encodedUrl): FallbackStudyAccessIndexStore;
 	public function getFallbackStudyStore(string $encodedUrl): FallbackStudyStore;
+	public function getPluginStore(): PluginStore;
 }

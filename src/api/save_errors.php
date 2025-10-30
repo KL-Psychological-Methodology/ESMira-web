@@ -6,16 +6,20 @@ use backend\JsonOutput;
 
 require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
-if(!Configs::getDataStore()->isInit()) {
+$dataStore = Configs::getDataStore();
+
+if(!$dataStore->isInit()) {
 	echo JsonOutput::error('ESMira is not initialized yet.');
 	return;
 }
-if(!Configs::getDataStore()->isReady()) {
+if(!$dataStore->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;
 }
 
 $postInput = Main::getRawPostInput();
+
+$dataStore->getPluginStore()->handleErrorReport($postInput);
 
 if(strlen($postInput) == 0) {
 	echo JsonOutput::error('no data');

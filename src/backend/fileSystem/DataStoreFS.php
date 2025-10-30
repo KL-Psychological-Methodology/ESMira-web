@@ -10,6 +10,7 @@ use backend\ESMiraInitializer;
 use backend\fileSystem\subStores\ErrorReportStoreFS;
 use backend\fileSystem\subStores\LoginTokenStoreFS;
 use backend\fileSystem\subStores\MessagesStoreFS;
+use backend\fileSystem\subStores\PluginStoreFS;
 use backend\fileSystem\subStores\ResponsesStoreFS;
 use backend\fileSystem\subStores\RewardCodeStoreFS;
 use backend\fileSystem\subStores\ServerStoreFS;
@@ -17,6 +18,7 @@ use backend\fileSystem\subStores\ServerStatisticsStoreFS;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
+use backend\subStores\PluginStore;
 use backend\subStores\ResponsesStore;
 use backend\subStores\RewardCodeStore;
 use backend\subStores\ServerStore;
@@ -48,95 +50,76 @@ use backend\subStores\MerlinLogsStore;
 
 class DataStoreFS implements DataStoreInterface
 {
-	public function isInit(): bool
-	{
+	public function isInit(): bool {
 		$path = Configs::get('dataFolder_path');
 		return $path && file_exists($path);
 	}
-	public function isReady(): bool
-	{
+	public function isReady(): bool {
 		return disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
 	}
 
-	public function getESMiraInitializer(): ESMiraInitializer
-	{
+	public function getESMiraInitializer(): ESMiraInitializer {
 		return new ESMiraInitializerFS();
 	}
 
-	public function getAccountStore(): AccountStore
-	{
+	public function getAccountStore(): AccountStore {
 		return new AccountStoreFS();
 	}
-	public function getLoginTokenStore(): LoginTokenStore
-	{
+	public function getLoginTokenStore(): LoginTokenStore {
 		return new LoginTokenStoreFS();
 	}
-	public function getMerlinLogsStore(): MerlinLogsStore
-	{
+	public function getMerlinLogsStore(): MerlinLogsStore {
 		return new MerlinLogsStoreFS();
 	}
-	public function getMessagesStore(): MessagesStore
-	{
+	public function getMessagesStore(): MessagesStore {
 		return new MessagesStoreFS();
 	}
-	public function getStudyAccessIndexStore(): StudyAccessIndexStore
-	{
+	public function getStudyAccessIndexStore(): StudyAccessIndexStore {
 		return new StudyAccessIndexStoreFS();
 	}
-	public function getStudyStore(): StudyStore
-	{
+	public function getStudyStore(): StudyStore {
 		return new StudyStoreFS();
 	}
-	public function getResponsesStore(): ResponsesStore
-	{
+	public function getResponsesStore(): ResponsesStore {
 		return new ResponsesStoreFS();
 	}
-	public function getUserDataStore(string $userId): UserDataStore
-	{
+	public function getUserDataStore(string $userId): UserDataStore {
 		return new UserDataStoreFS($userId);
 	}
-	public function getStudyMetadataStore(int $studyId): StudyMetadataStore
-	{
+	public function getStudyMetadataStore(int $studyId): StudyMetadataStore {
 		return new StudyMetadataStoreFS($studyId);
 	}
-	public function getStudyStatisticsMetadataStore(int $studyId): StudyStatisticsMetadataStore
-	{
+	public function getStudyStatisticsMetadataStore(int $studyId): StudyStatisticsMetadataStore {
 		return new StudyStatisticsMetadataStoreFS($studyId);
 	}
-	public function getStudyStatisticsStore(int $studyId): StudyStatisticsStore
-	{
+	public function getStudyStatisticsStore(int $studyId): StudyStatisticsStore {
 		return new StudyStatisticsStoreFS($studyId);
 	}
-	public function getServerStatisticsStore(): ServerStatisticsStore
-	{
+	public function getServerStatisticsStore(): ServerStatisticsStore {
 		return new ServerStatisticsStoreFS();
 	}
-	public function getErrorReportStore(): ErrorReportStore
-	{
+	public function getErrorReportStore(): ErrorReportStore {
 		return new ErrorReportStoreFS();
 	}
-	public function getServerStore(): ServerStore
-	{
+	public function getServerStore(): ServerStore {
 		return new ServerStoreFS();
 	}
-	public function getRewardCodeStore(): RewardCodeStore
-	{
+	public function getRewardCodeStore(): RewardCodeStore {
 		return new RewardCodeStoreFS();
 	}
-	public function getBookmarkStore(): BookmarkStore
-	{
+	public function getBookmarkStore(): BookmarkStore {
 		return new BookmarkStoreFS();
 	}
-	public function getFallbackTokenStore(): FallbackTokenStore
-	{
+	public function getFallbackTokenStore(): FallbackTokenStore {
 		return new FallbackTokenStoreFS();
 	}
-	public function getFallbackStudyAccessIndexStore(string $encodedUrl): FallbackStudyAccessIndexStore
-	{
+	public function getFallbackStudyAccessIndexStore(string $encodedUrl): FallbackStudyAccessIndexStore {
 		return new FallbackStudyAccessIndexStoreFS($encodedUrl);
 	}
-	public function getFallbackStudyStore(string $encodedUrl): FallbackStudyStore
-	{
+	public function getFallbackStudyStore(string $encodedUrl): FallbackStudyStore {
 		return new FallbackStudyStoreFS($encodedUrl);
+	}
+	public function getPluginStore(): PluginStore {
+		return new PluginStoreFS();
 	}
 }
