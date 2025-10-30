@@ -2,7 +2,7 @@ import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {DashRow} from "../components/DashRow";
 import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../components/BindObservable";
+import {BindObservable, ConstrainedNumberTransformer} from "../components/BindObservable";
 import {RichText} from "../components/RichText";
 import {ObservableLangChooser} from "../components/ObservableLangChooser";
 import {DashElement} from "../components/DashElement";
