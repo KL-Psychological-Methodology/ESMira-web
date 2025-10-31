@@ -308,7 +308,7 @@ export class Content extends SectionContent {
 				return;
 			}
 			
-			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DeletePlugin`, "post", `pluginName=${plugin.name}`)
+			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DeletePlugin`, "post", `pluginId=${plugin.pluginId}`)
 			
 			alert(Lang.get("info_successful"));
 			window.location.reload();
@@ -337,10 +337,10 @@ export class Content extends SectionContent {
 						{DropdownMenu("pluginSettings",
 							BtnEdit(),
 							(close) => <div>
-								{this.sectionData.siteData.pluginLoader.sectionHasPluginFrontend("pluginSettings", entry.current.name) &&
+								{this.sectionData.siteData.pluginLoader.sectionHasPluginFrontend(entry.current.pluginId, "pluginSettings") &&
 									<>
 										<div>
-											<a href={this.getUrl(`pluginSettings:${entry.current.name}`)} onclick={close}>{BtnEdit(undefined, Lang.get("settings"))}</a>
+											<a href={this.getUrl(`pluginSettings:${entry.current.pluginId}`)} onclick={close}>{BtnEdit(undefined, Lang.get("settings"))}</a>
 										</div>
 										<br/>
 									</>

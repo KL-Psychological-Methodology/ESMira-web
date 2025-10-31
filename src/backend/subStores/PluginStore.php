@@ -31,11 +31,11 @@ interface PluginStore {
 	/**
 	 * Retrieve the JavaScript code for a specific plugin and section.
 	 *
-	 * @param string $pluginName The name of the plugin.
+	 * @param string $pluginId The id of the plugin.
 	 * @param string $sectionName The name of the section for which the frontend code is required.
 	 * @return string The frontend code corresponding to the specified plugin and section.
 	 */
-	public function getFrontendCode(string $pluginName, string $sectionName): string;
+	public function getFrontendCode(string $pluginId, string $sectionName): string;
 	
 	/**
 	 * Retrieve the language JSON corresponding to the given language code.
@@ -60,17 +60,18 @@ interface PluginStore {
 	
 	/**
 	 * Delete a plugin from the server.
+	 * @param string $pluginId The id of the plugin.
 	 * @throws CriticalException
 	 */
-	public function deletePlugin(string $pluginName): void;
+	public function deletePlugin(string $pluginId): void;
 	
 	/**
 	 * Run a specific php file that resides in a plugin's `pluginApi`'s folder.
-	 * @param string $pluginName The name of the plugin.
+	 * @param string $pluginId The id of the plugin.
 	 * @param string $apiName The name of the API to run.
 	 * @throws CriticalException
 	 */
-	public function runPluginApi(string $pluginName, string $apiName): void;
+	public function runPluginApi(string $pluginId, string $apiName): void;
 	
 	/**
 	 * Runs the file `datasets.php` from a plugin's `apiOverrides`'s folder.

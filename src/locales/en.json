@@ -197,6 +197,7 @@
 	"error_no_webWorkers": "This browser does not support web Workers",
 	"error_pageNotFound": "Page \"%s\" was not found",
 	"error_plugin_not_compatible": "Plugin in not compatible with the current version of ESMira",
+	"error_plugin_id_contains_invalid_characters": "Plugin id contains invalid characters.",
 	"error_questionnaire_not_active": "This questionnaire is not active.",
 	"error_save_responses_failed": "Could not save data…",
 	"error_short_message": "The message needs to consist of at least 2 characters.",

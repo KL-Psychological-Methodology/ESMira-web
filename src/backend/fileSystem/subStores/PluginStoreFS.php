@@ -57,9 +57,9 @@ class PluginStoreFS implements PluginStore {
 			}
 		};
 		
-		$this->forEachPlugin(function($pluginName) use ($apiName, $createData) {
-			$helper = new PluginHelper($pluginName, $createData);
-			$apiPath = PathsFS::filePluginApiExtension($pluginName, $apiName);
+		$this->forEachPlugin(function($pluginId) use ($apiName, $createData) {
+			$helper = new PluginHelper($pluginId, $createData);
+			$apiPath = PathsFS::filePluginApiExtension($pluginId, $apiName);
 			runPlugin($apiName, $apiPath, $helper);
 		});
 	}
@@ -67,13 +67,13 @@ class PluginStoreFS implements PluginStore {
 	/**
 	 * Retrieves an array of language codes available for a specified plugin.
 	 *
-	 * @param string $pluginName The name of the plugin for which to retrieve the language codes.
+	 * @param string $pluginId The id of the plugin for which to retrieve the language codes.
 	 * @return array An array of language codes extracted from the plugin's language files.
 	 */
-	private function getPluginLangCodes(string $pluginName): array {
+	private function getPluginLangCodes(string $pluginId): array {
 		$codes = [];
 		
-		$langPath = PathsFs::folderPluginLanguages($pluginName);
+		$langPath = PathsFs::folderPluginLanguages($pluginId);
 		$handle = opendir($langPath);
 		while($file = readdir($handle)) {
 			if($file[0] == '.') {
@@ -97,10 +97,10 @@ class PluginStoreFS implements PluginStore {
 		FileSystemBasics::createFolder(PathsFS::folderPluginCache());
 		
 		$enCollection = [];
-		$this->forEachPlugin(function($pluginName) use (&$enCollection) {
-			$langPath = PathsFS::filePluginLanguage($pluginName, 'en');
+		$this->forEachPlugin(function($pluginId) use (&$enCollection) {
+			$langPath = PathsFS::filePluginLanguage($pluginId, 'en');
 			if(file_exists($langPath)) {
-				$enCollection[$pluginName] = json_decode(file_get_contents($langPath), true);
+				$enCollection[$pluginId] = json_decode(file_get_contents($langPath), true);
 			}
 		});
 		
@@ -110,15 +110,15 @@ class PluginStoreFS implements PluginStore {
 			}
 			else {
 				$langCollection = [];
-				$this->forEachPlugin(function($pluginName) use (&$langCollection, $code, $enCollection) {
-					$langPath = PathsFS::filePluginLanguage($pluginName, $code);
+				$this->forEachPlugin(function($pluginId) use (&$langCollection, $code, $enCollection) {
+					$langPath = PathsFS::filePluginLanguage($pluginId, $code);
 					if(file_exists($langPath)) {
 						$json = json_decode(file_get_contents($langPath), true);
-						if(isset($enCollection[$pluginName])) { //make sure untranslated INSIDE the plugin have a fallback
-							$json = array_merge($enCollection[$pluginName], $json);
+						if(isset($enCollection[$pluginId])) { //make sure untranslated INSIDE the plugin have a fallback
+							$json = array_merge($enCollection[$pluginId], $json);
 						}
 						
-						$langCollection[$pluginName] = $json;
+						$langCollection[$pluginId] = $json;
 					}
 				});
 			}
@@ -147,21 +147,21 @@ class PluginStoreFS implements PluginStore {
 		$output = [];
 		$hasData = false;
 		
-		$this->forEachPlugin(function($pluginName) use (&$output, &$hasData) {
-			$obj = ['frontend' => []];
-			$output[$pluginName] = &$obj;
-			$metadataPath = PathsFS::filePluginStudyJsonInstructions($pluginName);
+		$this->forEachPlugin(function($pluginId) use (&$output, &$hasData) {
+			$obj = ['sections' => []];
+			$output[$pluginId] = &$obj;
+			$metadataPath = PathsFS::filePluginStudyJsonInstructions($pluginId);
 			if(file_exists($metadataPath)) {
 				$obj['studyJsonDataStructure'] = json_decode(file_get_contents($metadataPath), true);
 				$hasData = true;
 			}
 			
-			$list = scandir(PathsFS::folderPluginFrontendSectionCodes($pluginName));
+			$list = scandir(PathsFS::folderPluginFrontendSectionCodes($pluginId));
 			foreach($list as $file) {
 				if($file[0] == '.') {
 					continue;
 				}
-				$obj['frontend'][] = explode('.', $file)[0];
+				$obj['sections'][] = explode('.', $file)[0];
 				$hasData = true;
 			}
 		});
@@ -184,8 +184,8 @@ class PluginStoreFS implements PluginStore {
 	
 	public function getPluginList(): array {
 		$plugins = [];
-		$this->forEachPlugin(function($pluginName) use (&$plugins) {
-			$path = PathsFS::filePluginMetadata($pluginName);
+		$this->forEachPlugin(function($pluginId) use (&$plugins) {
+			$path = PathsFS::filePluginMetadata($pluginId);
 			$metadata = json_decode(file_get_contents($path));
 			
 			if(!$metadata) {
@@ -205,8 +205,8 @@ class PluginStoreFS implements PluginStore {
 	}
 	
 	
-	public function getFrontendCode(string $pluginName, string $sectionName): string {
-		$path = PathsFS::filePluginFrontendSectionCode($pluginName, $sectionName);
+	public function getFrontendCode(string $pluginId, string $sectionName): string {
+		$path = PathsFS::filePluginFrontendSectionCode($pluginId, $sectionName);
 		return file_exists($path) ? file_get_contents($path) : '';
 	}
 	
@@ -261,18 +261,21 @@ class PluginStoreFS implements PluginStore {
 			}
 			$tempMetadata = json_decode(file_get_contents($tempMetadataPath));
 			
-			if(!$tempMetadata || !isset($tempMetadata->name)) {
+			if(!$tempMetadata || !isset($tempMetadata->pluginId)) {
 				throw new CriticalException("error_not_a_valid_metadata_json");
 			}
 			
 			
 			// Copy existing data:
 			
-			$pluginName = $tempMetadata->name;
+			$pluginId = $tempMetadata->pluginId;
+			if($pluginId != Paths::makeSafe($pluginId)) {
+				throw new CriticalException("error_plugin_id_contains_invalid_characters");
+			}
 			
-			$targetPluginPath = PathsFS::folderPlugin($pluginName);
+			$targetPluginPath = PathsFS::folderPlugin($pluginId);
 			if(file_exists($targetPluginPath)) {
-				$existingDataPath = PathsFS::folderPluginData($pluginName);
+				$existingDataPath = PathsFS::folderPluginData($pluginId);
 				if(file_exists($existingDataPath)) {
 					rename($existingDataPath, $tempPluginPath . '/' . PathsFS::FOLDER_PLUGIN_DATA);
 				}
@@ -288,7 +291,7 @@ class PluginStoreFS implements PluginStore {
 			
 			// Generate cache:
 			
-			$codes = $this->getPluginLangCodes($pluginName);
+			$codes = $this->getPluginLangCodes($pluginId);
 			$this->prepareLangBundles($codes);
 			
 			$this->prepareFronendJson();
@@ -302,10 +305,10 @@ class PluginStoreFS implements PluginStore {
 		}
 	}
 	
-	public function deletePlugin(string $pluginName): void {
-		$codes = $this->getPluginLangCodes($pluginName);
+	public function deletePlugin(string $pluginId): void {
+		$codes = $this->getPluginLangCodes($pluginId);
 		
-		$path = PathsFS::folderPlugin($pluginName);
+		$path = PathsFS::folderPlugin($pluginId);
 		if(file_exists($path)) {
 			FileSystemBasics::emptyFolder($path);
 			rmdir($path);
@@ -314,15 +317,15 @@ class PluginStoreFS implements PluginStore {
 		$this->prepareLangBundles($codes);
 		$this->prepareFronendJson();
 	}
-	
-	public function runPluginApi(string $pluginName, string $apiName): void {
-		$path = PathsFS::filePluginApi($pluginName, $apiName);
+
+	public function runPluginApi(string $pluginId, string $apiName): void {
+		$path = PathsFS::filePluginApi($pluginId, $apiName);
 		if(file_exists($path)) {
-			$helper = new PluginHelper($pluginName, function() {return null;});
+			$helper = new PluginHelper($pluginId, function() {return null;});
 			require $path;
 		}
 		else {
-			throw new CriticalException("Plugin $pluginName does not have an API endpoint $apiName");
+			throw new CriticalException("Plugin $pluginId does not have an API endpoint $apiName");
 		}
 	}
 	
@@ -366,9 +369,9 @@ class PluginStoreFS implements PluginStore {
 	}
 	
 	public function handleAdminSaveStudy(stdClass &$studyCollection): void {
-		$this->handleApiEndpoint('admin_SaveStudy', function($pluginName) use(&$studyCollection) {return [
+		$this->handleApiEndpoint('admin_SaveStudy', function($pluginId) use(&$studyCollection) {return [
 			'studyCollection' => &$studyCollection,
-			'pluginStudyData' => $studyCollection->_->pluginData->{$pluginName} ?? null
+			'pluginStudyData' => $studyCollection->_->pluginData->{$pluginId} ?? null
 		];});
 	}
 }

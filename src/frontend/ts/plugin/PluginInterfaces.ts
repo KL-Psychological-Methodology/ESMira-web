@@ -9,6 +9,7 @@ import {safeConfirm} from "../constants/methods";
  */
 export interface PluginMetadata {
 	name: string
+	pluginId: string
 	version?: string
 	description?: string
 	website?: string
@@ -105,7 +106,7 @@ export interface PluginMethods {
  * Format loaded from https://github.com/KL-Psychological-Methodology/ESMira/blob/main/about/plugins.json
  * For internal usage.
  */
-export type SimplifiedPluginMetadata = Required<Pick<PluginMetadata, "name" | "description" | "website" | "metadataUrl">>
+export type SimplifiedPluginMetadata = Required<Pick<PluginMetadata, "name" | "pluginId" | "description" | "website" | "metadataUrl">>
 
 /**
  * The frontend instructions sent from the backend.

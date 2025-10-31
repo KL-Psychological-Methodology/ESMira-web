@@ -30,7 +30,7 @@ export class PluginLoader {
 		}
 	}
 	
-	public sectionHasPluginFrontend(sectionName: string, pluginName: string): boolean {
+	public sectionHasPluginFrontend(pluginName: string, sectionName: string): boolean {
 		return this.sectionPluginIndex[sectionName]?.includes(pluginName)
 	}
 	
@@ -87,8 +87,8 @@ export class PluginLoader {
 			return []
 		}
 		if(sectionName == "pluginSettings") {
-			const pluginName = sectionData.sectionValue;
-			const frontend = await this.createPluginFrontend(sectionName, sectionData, pluginName)
+			const pluginId = sectionData.sectionValue;
+			const frontend = await this.createPluginFrontend(sectionName, sectionData, pluginId)
 			return [
 				{
 					changeSectionTitle: () => Lang.get("pluginSettings"),
@@ -97,13 +97,13 @@ export class PluginLoader {
 			];
 		}
 		const plugins: FullPluginFrontend[] = []
-		for(const pluginName of this.sectionPluginIndex[sectionName]) {
+		for(const pluginId of this.sectionPluginIndex[sectionName]) {
 			try {
-				const frontend = await this.createPluginFrontend(sectionName, sectionData, pluginName)
+				const frontend = await this.createPluginFrontend(sectionName, sectionData, pluginId)
 				plugins.push(frontend)
 			}
 			catch(e) {
-				this.reportPluginError(sectionData, pluginName, "Could not load plugin", e)
+				this.reportPluginError(sectionData, pluginId, "Could not load plugin", e)
 			}
 		}
 		return plugins
@@ -113,12 +113,12 @@ export class PluginLoader {
 	 * Reports an error encountered in a specific plugin and logs it appropriately.
 	 *
 	 * @param sectionData - The data of the section where the error occurred. Used to display an error message in the section.
-	 * @param pluginName - The name of the plugin from where the error originated.
+	 * @param pluginId - The id of the plugin from where the error originated.
 	 * @param msg - A descriptive error message providing context for the issue.
 	 * @param error - The error object or data related to the encountered issue.
 	 */
-	public reportPluginError(sectionData: SectionData, pluginName: string, msg: string, error: unknown) {
-		console.error(`${pluginName}: ${msg}\n`, error)
-		sectionData.loader.error(`${pluginName}: ${msg}\n`)
+	public reportPluginError(sectionData: SectionData, pluginId: string, msg: string, error: unknown) {
+		console.error(`${pluginId}: ${msg}\n`, error)
+		sectionData.loader.error(`${pluginId}: ${msg}\n`)
 	}
 }

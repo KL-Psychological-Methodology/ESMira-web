@@ -10,8 +10,8 @@ class DeletePlugin extends HasAdminPermission {
         $dataStore = Configs::getDataStore();
         $pluginsStore = $dataStore->getPluginStore();
 		
-		if(isset($_POST['pluginName'])) {
-			$pluginsStore->deletePlugin($_POST['pluginName']);
+		if(isset($_POST['pluginId'])) {
+			$pluginsStore->deletePlugin($_POST['pluginId']);
 		}
 		
 		return [];

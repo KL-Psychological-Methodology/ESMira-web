@@ -148,18 +148,18 @@ class PathsFS {
 	static function folderPluginCache(): string {
 		return self::folderData() .".pluginCache/";
 	}
-	static function folderPlugin(string $pluginName): string {
-		return self::folderPluginRoot() .Paths::makeUrlFriendly($pluginName) .'/';
+	static function folderPlugin(string $pluginId): string {
+		return self::folderPluginRoot() .Paths::makeUrlFriendly($pluginId) .'/';
 	}
-	static function folderPluginFrontendSectionCodes(string $pluginName): string {
-		return self::folderPlugin($pluginName) . 'sections/';
+	static function folderPluginFrontendSectionCodes(string $pluginId): string {
+		return self::folderPlugin($pluginId) . 'sections/';
 	}
-	static function folderPluginData(string $pluginName): string {
-		return self::folderPlugin($pluginName) .self::FOLDER_PLUGIN_DATA;
+	static function folderPluginData(string $pluginId): string {
+		return self::folderPlugin($pluginId) .self::FOLDER_PLUGIN_DATA;
 	}
 	
-	static function folderPluginLanguages(string $pluginName): string {
-		return self::folderPlugin($pluginName) .'locales/';
+	static function folderPluginLanguages(string $pluginId): string {
+		return self::folderPlugin($pluginId) .'locales/';
 	}
 	
 	static function fileBlockLogin(string $accountName): string {
@@ -328,18 +328,18 @@ class PathsFS {
 		return self::folderFallbackStudyLangs($encodedUrl, $studyId) . "$code.json";
 	}
 	
-	static function filePluginMetadata(string $pluginName, string $pluginPath = null): string {
-		return ($pluginPath ?? self::folderPlugin($pluginName)) . self::FILENAME_PLUGIN_METADATA;
+	static function filePluginMetadata(string $pluginId, string $pluginPath = null): string {
+		return ($pluginPath ?? self::folderPlugin($pluginId)) . self::FILENAME_PLUGIN_METADATA;
 	}
-	static function filePluginStudyJsonInstructions(string $pluginName): string {
-		return self::folderPlugin($pluginName) . 'study.json';
+	static function filePluginStudyJsonInstructions(string $pluginId): string {
+		return self::folderPlugin($pluginId) . 'study.json';
 	}
-	static function filePluginIcon(string $pluginName): string {
-		return self::folderPlugin($pluginName) . 'icon.svg';
+	static function filePluginIcon(string $pluginId): string {
+		return self::folderPlugin($pluginId) . 'icon.svg';
 	}
 	
-	static function filePluginLanguage(string $pluginName, string $code): string {
-		return self::folderPluginLanguages($pluginName) . Paths::makeSafe($code) .'.json';
+	static function filePluginLanguage(string $pluginId, string $code): string {
+		return self::folderPluginLanguages($pluginId) . Paths::makeSafe($code) .'.json';
 	}
 	
 	static function filePluginLanguageBundle(string $code): string {
@@ -350,15 +350,15 @@ class PathsFS {
 		return self::folderPluginCache() . 'frontend.json';
 	}
 	
-	static function filePluginFrontendSectionCode(string $pluginName, string $pageName): string {
-		return self::folderPluginFrontendSectionCodes($pluginName) . Paths::makeSafe($pageName) .'.js';
+	static function filePluginFrontendSectionCode(string $pluginId, string $pageName): string {
+		return self::folderPluginFrontendSectionCodes($pluginId) . Paths::makeSafe($pageName) .'.js';
 	}
 	
-	static function filePluginApi(string $pluginName, string $apiName): string {
-		return self::folderPlugin($pluginName) . 'pluginApi/' . Paths::makeSafe($apiName) .'.php';
+	static function filePluginApi(string $pluginId, string $apiName): string {
+		return self::folderPlugin($pluginId) . 'pluginApi/' . Paths::makeSafe($apiName) .'.php';
 	}
 	
-	static function filePluginApiExtension(string $pluginName, string $apiName): string {
-		return self::folderPlugin($pluginName) .'apiOverrides/' .Paths::makeSafe($apiName) .'.php';
+	static function filePluginApiExtension(string $pluginId, string $apiName): string {
+		return self::folderPlugin($pluginId) .'apiOverrides/' .Paths::makeSafe($apiName) .'.php';
 	}
 }

@@ -14,11 +14,11 @@ if (!$datastore->isInit()) {
 	return;
 }
 
-$pluginName = $_GET['plugin'] ?? '';
+$pluginId = $_GET['plugin'] ?? '';
 $apiName = $_GET['api'] ?? '';
 
 try {
-	$datastore->getPluginStore()->runPluginApi($pluginName, $apiName);
+	$datastore->getPluginStore()->runPluginApi($pluginId, $apiName);
 	return;
 } catch (CriticalException $e) {
 	echo JsonOutput::error($e->getMessage());
