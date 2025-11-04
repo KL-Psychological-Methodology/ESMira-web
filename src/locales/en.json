@@ -684,5 +684,15 @@
 	"info_links_with_study_id": "These links will always lead directly to this study.",
 	"uninstall": "Uninstall",
 	"hide_on_client": "Do not show in app",
-	"add_all_permissions": "Add all permissions for a study"
+	"add_all_permissions": "Add all permissions for a study",
+	"hint_study_unpublished": "The study is not reachable. Use this during the development phase.",
+	"hint_study_published": "The study is live. The info page is available online and participants can join the study.",
+	"hint_study_over": "The study is over. The info page is available online but instructions for joining the study are removed. New participants can no longer join the study.",
+	"warning_all_platforms_disabled": "Enable at least one platform in the study settings for the study to be available.",
+	"publish_info_title": "Which Link Should I use?",
+	"publish_info_text_based": "If you recruit text-based (e.g., Email, social media) include the link to your info page. The respective QR codes are also available on that page. ",
+	"publish_info_fallback_link": "Additionally you can include the link to the info page on your fallback server, and instruct participants to use it if the first link does not work. ",
+	"publish_info_flyer_based": "If you want to recruit via flyers, posters, etc., use the QR code. ",
+	"publish_info_difference_links": "Use the link to the study information page for participants in the web version of the study. Use the link to the app installation instructions for participants using their smartphones. ",
+	"publish_info_explanation_qr": "If someone scans the QR code without having ESMira installed on their smartphone, their smartphone will open the info page in their browser. If they already have ESMira installed, the smartphone will instead open ESMira and directly forward them into the enrollment process for the study."
 }

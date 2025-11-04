@@ -580,7 +580,7 @@
 	"home_message": "Start-Seiten-Nachricht",
 	"edit_study": "Studie bearbeiten",
 	"can_be_left_empty": "Kann leer bleiben",
-	"hint_to_best_practices": "Vor dem Start der Studie, empfehlen wir sich die Best Practices in unserem Wiki durchzulesen",
+	"hint_to_best_practices": "Vor dem Start der Studie empfehlen wir Ihnen, sich die Best Practices in unserem Wiki durchzulesen",
 	"confirm_delete_access_key": "Soll der Zugangsschlüssel '%s' wirklich gelöscht werden?\n\nSofern nicht alle Zugangsschlüssel gelöscht werden (öffentlich zugängliche Studie), verlieren aktive Teilnehmer, die diesen Zugangsschlüssel verwenden, ihren Zugang zur Studie!",
 	"study_tag": "Studienkennzeichnung",
 	"show_data": "Zeige Daten",
@@ -669,5 +669,15 @@
 	"duplicate_access_key_tooltip": "Dieser Zugangsschlüssel wird auch von anderen Studien auf diesem Server verwendet. Links basierend auf diesem Zugangsschlüssel werden nicht direkt zu dieser Studie führen.",
 	"info_links_with_study_id": "Diese Links werden immer direkt zur dieser Studie führen.",
 	"hide_on_client": "In App nicht anzeigen",
-	"add_all_permissions": "Alle Berechtigungen für eine Studie hinzufügen"
+	"add_all_permissions": "Alle Berechtigungen für eine Studie hinzufügen",
+	"hint_study_unpublished": "Die Studie ist nicht erreichbar. Verwenden Sie diese Einstellung während der Entwicklungsphase.",
+	"hint_study_published": "Die Studie ist live. Die Infoseite ist online verfügbar und Teilnehmer können der Studie beitreten.",
+	"hint_study_over": "Die Studie ist vorbei. Die Infoseite ist online verfügbar, enthält jedoch keine Instruktionen zum Studienbeitritt. Neue Teilnehmer können der Studie nicht beitreten.",
+	"warning_all_platforms_disabled": "Aktivieren Sie zumindest eine Platform in den  Studien-Einstellungen um die Studie verfügbar zu machen.",
+	"publish_info_title": "Welchen Link soll ich verwenden?",
+	"publish_info_text_based": "Wenn Sie textbasiert rekrutieren (z.B. via Email oder Social Media) dann inkludieren Sie den Link zu Ihrer Informationsseite. Die dazugehörigen QR-Codes sind ebenfalls auf dieser Seite zu Finden. ",
+	"publish_info_fallback_link": "Sie können zusätzlich den Link zu der Infoseite auf dem Fallback-Server inkludieren, und Ihre Teilnehmer instruieren diesen zu verwenden, wenn der erste Link nicht funktioniert. ",
+	"publish_info_flyer_based": "Wenn Sie via Flyer, Poster, oder ähnliches rekrutieren wollen, verwenden Sie den QR-Code. ",
+	"publish_info_difference_links": "Verwenden Sie den Link zur Studien-Beschreibung für Teilnehmer die die Web-Version der Studie verwenden. Verwenden Sie für Versuchspersonen, die ihre Smartphones verwenden sollen den Link zu den App Installations-Instruktionen. ",
+	"publish_info_explanation_qr": "Wenn jemand den QR-Code scannt ohne ESMira auf dem Smartphone installiert zu haben wird das Smarthphone die Informationsseite in einem Browser öffnen. Sofern ESMira bereits auf dem Smartphone instaliert ist wird stattdessen ESMira geöffnet, und der Teilnahmeprozess für die Studie wird automatisch gestartet. "
 }
