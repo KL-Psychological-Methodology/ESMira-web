@@ -117,19 +117,23 @@ export class Content extends SectionContent {
 	}
 
 	private getConditionVariables(study: Study, axisValue: string): string[] {
+		let mainKeys = DATA_MAIN_KEYS
+		if (study.randomGroups.get() >= 2) {
+			mainKeys = ["group"].concat(mainKeys)
+		}
 		if (axisValue == "") {
 			const questionnaire = study.questionnaires.get()[0]
-			const variables = StudyDataValues.getQuestionnaireVariables(questionnaire)
-			return variables.concat(DATA_MAIN_KEYS)
+			let variables = StudyDataValues.getQuestionnaireVariables(questionnaire)
+			return variables.concat(mainKeys)
 		}
 		else {
 			const questionnaires = study.questionnaires.get()
 			for (let i = questionnaires.length - 1; i >= 0; --i) {
 				const variables = StudyDataValues.getQuestionnaireVariables(questionnaires[i])
 				if (variables.indexOf(axisValue) != -1)
-					return variables.concat(DATA_MAIN_KEYS)
+					return variables.concat(mainKeys)
 			}
-			return DATA_MAIN_KEYS
+			return mainKeys
 		}
 	}
 
