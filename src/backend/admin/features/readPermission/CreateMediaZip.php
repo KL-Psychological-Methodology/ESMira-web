@@ -3,33 +3,44 @@
 namespace backend\admin\features\readPermission;
 
 use backend\admin\HasReadPermission;
-use backend\Main;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\Paths;
 
 class CreateMediaZip extends HasReadPermission {
+	/**
+	 * Passes $content to echo and flushes the output immediately.
+	 * Needs to be protected so it can be stubbed by tests.
+	 * @param string $content the content to be flushed
+	 */
+	protected function flushProgress(string $content): void {
+		echo $content;
+		
+		ob_flush();
+		flush();
+	}
 	
-	function execAndOutput() {
+	/**
+	 * Sends necessary headers.
+	 * Needed for testing.
+	 */
+	protected function sendHeader(): void {
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
-		
-		echo "Start\n\n";
-
-		if (ob_get_contents())
-			ob_end_flush();
-		flush();
+	}
+	
+	function execAndOutput() {
+		$this->sendHeader();
+		$this->flushProgress("Start\n\n");
 
 		$pathZip = Paths::fileMediaZip($this->studyId);
 		if(!file_exists($pathZip)) //zip was not created or deleted, so we create it:
-			Configs::getDataStore()->getResponsesStore()->createMediaZip($this->studyId);
-
-		echo "event: finished\n";
-		echo "data: \n\n";
-
-		if (ob_get_contents())
-			ob_end_flush();
-		flush();
+			Configs::getDataStore()->getResponsesStore()->createMediaZip(
+				$this->studyId,
+				function(string $content) {$this->flushProgress($content);}
+			);
+		
+		$this->flushProgress("event: finished\ndata: \n\n");
 	}
 	
 	function exec(): array {

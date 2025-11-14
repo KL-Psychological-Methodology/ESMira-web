@@ -15,7 +15,7 @@ interface ResponsesStore {
 	public function uploadFile(int $studyId, string $userId, int $identifier, FileUploader $fileUploader);
 	
 	public function getLastResponseTimestampOfStudies(): array;
-	public function createMediaZip(int $studyId);
+	public function createMediaZip(int $studyId, callable $flushProgress);
 	/**
 	 * @throws CriticalException
 	 */

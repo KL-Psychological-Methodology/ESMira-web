@@ -137,25 +137,16 @@ class ResponsesStoreFS implements ResponsesStore {
         return $lastActivities;
     }
     
-    private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename, int $startCount, int $totalCount) {
+    private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename) {
         $handle = opendir($path);
-        $count = $startCount;
         while ($file = readdir($handle)) {
             if ($file[0] != '.') {
                 $zip->addFile("$path/$file", $getMediaFilename($file));
-
-                $count++;
-                $percent = round(($count / $totalCount) * 100);
-                echo "event: progress\n";
-                echo "data: $percent\n\n";
-                if (ob_get_contents())
-                    ob_end_flush();
-                flush();
             }
         }
         closedir($handle);
     }
-    public function createMediaZip(int $studyId) {
+    public function createMediaZip(int $studyId, callable $flushProgress) {
         $pathZip = Paths::fileMediaZip($studyId);
         $zip = new ZipArchive();
         $zip->open($pathZip, ZIPARCHIVE::CREATE);
@@ -164,29 +155,32 @@ class ResponsesStoreFS implements ResponsesStore {
         $countImages = count(scandir($folderImages)) - 2;
         $countAudio = count(scandir($folderAudio)) - 2;
         $countTotal = $countImages + $countAudio;
+		$currentCount = 0;
+		
+		$onProgressCallback = function() use($countTotal, $flushProgress, &$currentCount): void {
+			$percent = round(($currentCount / $countTotal) * 100);
+			$flushProgress("event: progress\ndata: $percent\n\n");
+			++$currentCount;
+		};
 
-        echo "event: progress\n";
-        echo "data: 0\n\n";
-        if (ob_get_contents())
-            ob_end_flush();
-        flush();
-
-        $this->fillMediaFolder(
-            $zip,
-            Paths::folderImages($studyId),
-            function ($fileName) { return Paths::publicFileImageFromMediaFilename($fileName); },
-            0,
-            $countTotal
-        );
-        $this->fillMediaFolder(
-            $zip,
-            Paths::folderAudio($studyId),
-            function ($fileName) { return Paths::publicFileAudioFromMediaFilename($fileName); },
-            $countImages,
-            $countTotal
-        );
-        
-        $zip->close();
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderImages($studyId),
+			function ($fileName) use($onProgressCallback) {
+				$onProgressCallback();
+				return Paths::publicFileImageFromMediaFilename($fileName);
+			},
+		);
+		$this->fillMediaFolder(
+			$zip,
+			Paths::folderAudio($studyId),
+			function ($fileName) use($onProgressCallback) {
+				$onProgressCallback();
+				return Paths::publicFileAudioFromMediaFilename($fileName);
+			},
+		);
+		
+		$zip->close();
     }
     public function outputResponsesFile(int $studyId, string $identifier) {
         $path = PathsFS::fileResponses($studyId, $identifier);
