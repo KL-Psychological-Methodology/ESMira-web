@@ -76,7 +76,7 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 	
 	public function create($accountName, $password) {
 		//folder will not exist
-		FileSystemBasics::createFolder(Paths::FILE_CONFIG);
+		FileSystemBasics::createFolder(dirname(Paths::FILE_CONFIG));
 		$pathDataFolder = Configs::get('dataFolder_path');
 		
 		$this->moveExistingDataFolder($pathDataFolder);
