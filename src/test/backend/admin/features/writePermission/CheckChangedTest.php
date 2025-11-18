@@ -37,29 +37,9 @@ class CheckChangedTest extends BaseWritePermissionTestSetup {
 	}
 	
 	function test() {
-		$this->setGet([
-			'lastChanged' => $this->lastChanged
-		]);
 		$obj = new CheckChanged();
 		
-		self::assertEquals(['lastChanged' => $this->lastChanged], $obj->exec());
+		self::assertEquals([$this->lastChanged], $obj->exec());
 		$this->assertDataMock('getStudyLastChanged', [$this->studyId]);
-	}
-	
-	function test_outdated() {
-		$this->setGet([
-			'lastChanged' => $this->lastChanged - 1
-		]);
-		$obj = new CheckChanged();
-		
-		self::assertEquals(['lastChanged' => $this->lastChanged, 'json' => $this->config], $obj->exec());
-		$this->assertDataMock('getStudyLastChanged', [$this->studyId]);
-		$this->assertDataMock('getStudyConfig', [$this->studyId]);
-	}
-	
-	function test_with_missing_data() {
-		$this->assertMissingDataForFeatureObj(CheckChanged::class, [
-			'lastChanged' => 'lastChanged'
-		], true);
 	}
 }

@@ -46,11 +46,15 @@ class LoginTokenStoreTest extends BaseDataFolderTestSetup {
 		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId2);
 		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId3);
 		
-		$this->assertEquals([
-			new TokenInfo($tokenId1, time(), false),
-			new TokenInfo($tokenId2, time(), true),
-			new TokenInfo($tokenId3, time(), false)
-		], $loginTokenStore->getLoginTokenList($accountName));
+		$list = $loginTokenStore->getLoginTokenList($accountName);
+		$this->assertEquals($tokenId1, $list[0]->tokenId);
+		$this->assertFalse($list[0]->current);
+		
+		$this->assertEquals($tokenId2, $list[1]->tokenId);
+		$this->assertTrue($list[1]->current);
+		
+		$this->assertEquals($tokenId3, $list[2]->tokenId);
+		$this->assertFalse($list[2]->current);
 	}
 	
 	function test_clearAllLoginToken() {

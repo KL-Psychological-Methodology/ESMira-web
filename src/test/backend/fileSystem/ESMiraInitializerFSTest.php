@@ -28,10 +28,13 @@ class ESMiraInitializerFSTest extends BaseTestSetup {
 		
 		$_POST['data_location'] = TEST_DATA_FOLDER;
 		$this->assertEquals(TEST_DATA_FOLDER .PathsFS::FILENAME_DATA .'/',  $initializer->getConfigAdditions()['dataFolder_path']);
-		$this->assertFalse($initializer->getInfoArray()['dataFolder_exists']);
+		$this->assertFalse($initializer->getInfoArray()['dataFolderExists']);
 		
+		//create a fake esmira_data folder:
 		mkdir(TEST_DATA_FOLDER .PathsFS::FILENAME_DATA);
-		$this->assertTrue($initializer->getInfoArray(TEST_DATA_FOLDER)['dataFolder_exists']);
+		file_put_contents(TEST_DATA_FOLDER .PathsFS::FILENAME_DATA .'/test.txt', 'test');
+		
+		$this->assertTrue($initializer->getInfoArray(TEST_DATA_FOLDER)['dataFolderExists']);
 	}
 	
 	function test_getConfigAdditions_with_faulty_path() {
@@ -58,6 +61,7 @@ class ESMiraInitializerFSTest extends BaseTestSetup {
 		$accountName2 = 'user2';
 		$password2 = 'pass2';
 		
+		$_POST['reuseFolder'] = true;
 		BaseDataFolderTestSetup::createEsmiraFolder($accountName1, $password1);
 		BaseDataFolderTestSetup::createEsmiraFolder($accountName2, $password2);
 		

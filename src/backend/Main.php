@@ -15,7 +15,7 @@ class Main {
     /**
      * @throws CriticalException
      */
-    static function sessionStart() {
+    static function sessionStart(): void {
         switch (session_status()) {
             case PHP_SESSION_ACTIVE:
                 break;
@@ -29,7 +29,7 @@ class Main {
         }
     }
 
-    static function setHeader($header) {
+    static function setHeader($header): void {
         if (IS_TEST_INSTANCE)
             return;
         header($header);

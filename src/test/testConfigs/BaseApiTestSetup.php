@@ -14,6 +14,7 @@ abstract class BaseApiTestSetup extends BaseMockedTestSetup {
 	public function setUp(): void {
 		parent::setUp();
 		$this->isInit = true;
+		$this->isReady = true;
 	}
 	
 	protected function setUpDataStoreObserver(): Stub {
@@ -22,6 +23,12 @@ abstract class BaseApiTestSetup extends BaseMockedTestSetup {
 			->method('isInit')
 			->willReturnCallback(function() {
 				return $this->isInit;
+			});
+		
+		$observer
+			->method('isReady')
+			->willReturnCallback(function() {
+				return $this->isReady;
 			});
 		return $observer;
 	}

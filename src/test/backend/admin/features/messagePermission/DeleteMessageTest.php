@@ -25,7 +25,7 @@ class DeleteMessageTest extends BaseMessagePermissionTestSetup {
 	}
 	
 	function test() {
-		$this->setPost(['study_id' => $this->studyId, 'user' => $this->user, 'sent' => $this->sentTimestamp]);
+		$this->setPost(['study_id' => $this->studyId, 'userId' => $this->user, 'sent' => $this->sentTimestamp]);
 		$obj = new DeleteMessage();
 		$obj->exec();
 		$this->assertDataMock('deleteMessage', [$this->studyId, $this->user, $this->sentTimestamp]);
@@ -34,7 +34,7 @@ class DeleteMessageTest extends BaseMessagePermissionTestSetup {
 	function test_with_missing_data() {
 		$this->assertMissingDataForFeatureObj(DeleteMessage::class, [
 			'study_id' => $this->studyId,
-			'user' => 'user',
+			'userId' => 'user',
 			'sent' => 123,
 		]);
 	}

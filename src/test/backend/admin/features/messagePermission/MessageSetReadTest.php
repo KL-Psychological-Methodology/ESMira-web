@@ -30,7 +30,7 @@ class MessageSetReadTest extends BaseMessagePermissionTestSetup {
 	
 	function test() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->accountName,
+			'userId' => $this->accountName,
 			'timestamps' => $this->timestamps
 		]);
 		$obj = new MessageSetRead();
@@ -40,7 +40,7 @@ class MessageSetReadTest extends BaseMessagePermissionTestSetup {
 	
 	function test_with_missing_data() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->accountName
+			'userId' => $this->accountName
 		]);
 		$obj = new MessageSetRead();
 		$this->expectException(PageFlowException::class);

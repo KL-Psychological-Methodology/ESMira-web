@@ -34,6 +34,7 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		$userId = 'test1';
 		$appType = 'Test';
 		$appVersion = '1';
+		$studyLang = 'en';
 		
 		$normalDataSet = $this->createDataSet();
 		$questionnaireDataSet = $this->createDataSet();
@@ -41,17 +42,17 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		$questionnaireDataSet->questionnaireInternalId = 1234;
 		
 		$userDataStore = new UserDataStoreFS($userId);
-		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion);
-		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion);
-		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion);
-		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion);
+		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion, $studyLang);
+		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion, $studyLang);
+		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion, $studyLang);
+		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion, $studyLang);
 		$questionnaireDataSet->questionnaireInternalId = 2345;
-		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion);
+		$userDataStore->addDataSetForSaving($this->studyId, $questionnaireDataSet, $appType, $appVersion, $studyLang);
 		$userDataStore->writeAndClose();
 		
 		//make sure token file is reloaded:
 		$userDataStore = new UserDataStoreFS($userId);
-		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion);
+		$userDataStore->addDataSetForSaving($this->studyId, $normalDataSet, $appType, $appVersion, $studyLang);
 		$userDataStore->writeAndClose();
 		
 		$userData = $userDataStore->getUserData($this->studyId);
@@ -65,12 +66,12 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 	
 	public function test_isOutdated() {
 		$userId = 'test1';
-		
+
 		$userTokenSaver = new UserDataStoreFS($userId);
-		
+
 		//sets the expected token to -1:
-		$userTokenSaver->addDataSetForSaving($this->studyId, $this->createDataSet(), 'UnitTest', '1');
-		
+		$userTokenSaver->addDataSetForSaving($this->studyId, $this->createDataSet(), 'UnitTest', '1', 'en');
+
 		$this->assertFalse($userTokenSaver->isOutdated($this->studyId, 555, false));//is not a reupload
 		$this->assertTrue($userTokenSaver->isOutdated($this->studyId, 555, true));
 		$this->assertFalse($userTokenSaver->isOutdated($this->studyId, -1, true));
@@ -85,9 +86,9 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$this->assertEquals([], $userDataStore->getNewStudyTokens());
 		
-		$userDataStore->addDataSetForSaving(147, $this->createDataSet(), 'UnitTest', '1');
-		$userDataStore->addDataSetForSaving(258, $this->createDataSet(), 'UnitTest', '1');
-		$userDataStore->addDataSetForSaving(369, $this->createDataSet(), 'UnitTest', '1');
+		$userDataStore->addDataSetForSaving(147, $this->createDataSet(), 'UnitTest', '1', 'en');
+		$userDataStore->addDataSetForSaving(258, $this->createDataSet(), 'UnitTest', '1', 'en');
+		$userDataStore->addDataSetForSaving(369, $this->createDataSet(), 'UnitTest', '1', 'en');
 		
 		$tokens = $userDataStore->getNewStudyTokens();
 		$this->assertArrayHasKey(147, $tokens);
@@ -113,8 +114,8 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		$questionnaireDataSet = $this->createDataSet();
 		$questionnaireDataSet->questionnaireInternalId = 1234;
 		$questionnaireDataSet->eventType = 'questionnaire';
-		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1');
-		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1');
+		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1', 'en');
+		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1', 'en');
 		$userDataStoreForDataSets->writeAndClose();
 		
 		
@@ -157,8 +158,8 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		$questionnaireDataSet = $this->createDataSet();
 		$questionnaireDataSet->questionnaireInternalId = 1234;
 		$questionnaireDataSet->eventType = 'questionnaire';
-		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1');
-		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1');
+		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1', 'en');
+		$userDataStoreForDataSets->addDataSetForSaving($studyId, $questionnaireDataSet, 'UnitTest', '1', 'en');
 		$userDataStoreForDataSets->writeAndClose();
 		
 		$userDataStoreForRewardCode = new UserDataStoreFS('test1');

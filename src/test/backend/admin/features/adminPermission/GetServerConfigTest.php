@@ -11,14 +11,16 @@ use test\testConfigs\BaseAdminPermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class GetServerConfigTest extends BaseAdminPermissionTestSetup {
-	private $impressumContent = 'content';
-	private $privacyPolicyContent = 'content';
+	private $impressumContent = 'impressum content';
+	private $privacyPolicyContent = 'privacyPolicy content';
+	private $homeMessageContent = 'homeMessage content';
 	
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
 		
 		$store = $this->createDataMock(ServerStore::class, 'getImpressum', $this->impressumContent);
 		$this->addDataMock($store, 'getPrivacyPolicy', $this->privacyPolicyContent);
+		$this->addDataMock($store, 'getHomeMessage', $this->homeMessageContent);
 		
 		$this->createStoreMock(
 			'getServerStore',
@@ -33,25 +35,26 @@ class GetServerConfigTest extends BaseAdminPermissionTestSetup {
 		$obj = new GetServerConfig();
 		
 		$serverSettings = [
-			'configs' => [
-				'langCodes' => ['en', 'fr', 'de'],
-				'defaultLang' => 'de'
-			],
+			'langCodes' => ['en', 'fr', 'de'],
+			'defaultLang' => 'de',
 			'translationData' => [
 				'en' => [
 					'serverName' => '',
 					'impressum' => $this->impressumContent,
-					'privacyPolicy' => $this->privacyPolicyContent
+					'privacyPolicy' => $this->privacyPolicyContent,
+					'homeMessage' => $this->homeMessageContent
 				],
 				'fr' => [
 					'serverName' => '',
 					'impressum' => $this->impressumContent,
-					'privacyPolicy' => $this->privacyPolicyContent
+					'privacyPolicy' => $this->privacyPolicyContent,
+					'homeMessage' => $this->homeMessageContent
 				],
 				'de' => [
 					'serverName' => '',
 					'impressum' => $this->impressumContent,
-					'privacyPolicy' => $this->privacyPolicyContent
+					'privacyPolicy' => $this->privacyPolicyContent,
+					'homeMessage' => $this->homeMessageContent
 				]
 			]
 		];

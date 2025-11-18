@@ -52,7 +52,7 @@ class GetRewardCodeDataTest extends BaseReadPermissionTestSetup {
 		$r = $obj->exec();
 		$this->assertEquals([
 			'rewardCodes' => ['code1', 'code2'],
-			'userIdsWithRewardCode ' => ['user1', 'user3'],
+			'userIdsWithRewardCode' => ['user1', 'user3'],
 			'userIdsWithoutRewardCode' => ['user2']
 		], $r);
 		

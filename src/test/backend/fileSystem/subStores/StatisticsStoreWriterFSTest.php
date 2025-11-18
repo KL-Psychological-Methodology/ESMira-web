@@ -3,8 +3,10 @@
 namespace test\backend\fileSystem\subStores;
 
 use backend\Configs;
+use backend\fileSystem\PathsFS;
 use backend\fileSystem\subStores\ServerStatisticsStoreFS;
 use backend\fileSystem\subStores\StatisticsStoreWriterFS;
+use backend\FileSystemBasics;
 use test\testConfigs\BaseTestSetup;
 
 require_once __DIR__ . '/../../../../backend/autoload.php';

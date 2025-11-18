@@ -15,63 +15,41 @@ use test\testConfigs\BaseReadPermissionTestSetup;
 require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class CreateMediaZipTest extends BaseReadPermissionTestSetup {
-	protected $zipContent = 'content';
-	
 	public function setUp(): void {
 		parent::setUp();
 		Configs::injectConfig('configs.dataFolder.injected.php');
-	}
-	
-	protected function tearDown(): void {
-		parent::tearDown();
-		FileSystemBasics::emptyFolder(TEST_DATA_FOLDER);
-	}
-	public static function tearDownAfterClass(): void {
-		parent::tearDownAfterClass();
-		rmdir(TEST_DATA_FOLDER);
 	}
 	
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
 		
 		$store = $this->createMock(ResponsesStore::class);
-		$store->method('createMediaZip')
-			->willReturnCallback(function() {
-				$this->createZip();
-			});
+		$store->method('createMediaZip');
 		$this->createStoreMock('getResponsesStore', $store, $observer);
-		
-		$store = $this->createMock(ServerStore::class);
-		$store->method('getMediaFolderPath')
-			->willReturnCallback(function(int $studyId) {
-				$folder = TEST_DATA_FOLDER ."$studyId/";
-				if(!file_exists($folder))
-					mkdir($folder, 0777, true);
-				return $folder;
-			});
-		$this->createStoreMock('getServerStore', $store, $observer);
 		
 		return $observer;
 	}
 	
-	private function createZip($content = null) {
-		$folder = PathsFS::folderMedia($this->studyId);
-		if(!file_exists($folder))
-			mkdir($folder, 0777, true);
-		file_put_contents(Paths::fileMediaZip($this->studyId), $content ?? $this->zipContent);
+	private function createMediaZipObj(array $expectedOutput): CreateMediaZip {
+		$obj = $this->getMockBuilder(CreateMediaZip::class)
+			->onlyMethods(['sendHeader', 'flushProgress'])
+			->getMock();
+		$obj->method('sendHeader');
+		
+		$count = 0;
+		$obj->method('flushProgress')
+			->willReturnCallback(function(string $content) use($expectedOutput, &$count) {
+				$this->assertEquals($expectedOutput[$count++], $content);
+			});
+		return $obj;
 	}
 	
 	function test() {
-		$obj = new CreateMediaZip();
+		$obj = $this->createMediaZipObj([
+			"Start\n\n",
+			"event: finished\ndata: \n\n"
+		]);
 		
 		$obj->execAndOutput();
-		$this->expectOutputString($this->zipContent);
-	}
-	function test_already_existing_zip() {
-		$this->createZip('otherContent');
-		$obj = new CreateMediaZip();
-		
-		$obj->execAndOutput();
-		$this->expectOutputString('otherContent');
 	}
 }

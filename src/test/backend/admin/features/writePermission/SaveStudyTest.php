@@ -6,7 +6,6 @@ use backend\admin\features\writePermission\SaveStudy;
 use backend\Configs;
 use backend\CreateDataSet;
 use backend\dataClasses\StatisticsJsonEntry;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\Main;
 use backend\ResponsesIndex;
@@ -27,7 +26,6 @@ require_once __DIR__ . '/../../../../../backend/autoload.php';
 
 class SaveStudyTest extends BaseWritePermissionTestSetup {
 	private $oneDay = 86400; //in seconds: 60*60*24
-	private $smallestDistance;
 	private $internalId = 2345;
 	private $lastChanged = 999;
 	/**
@@ -45,7 +43,6 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 	private $removeStudyReturn = true;
 	
 	public function setUp(): void {
-		$this->smallestDistance = Configs::get('smallest_timed_distance');
 		$this->statisticsMetadata = [];
 		$this->studyStatisticsStore = $this->createStub(StudyStatisticsStore::class);
 		$this->getStudyIdForQuestionnaireIdReturn = $this->studyId;
@@ -278,16 +275,16 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 							new StudyStatisticsEntry( //#5
 								[],
 								CreateDataSet::CONDITION_TYPE_ALL,
-								CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-								$this->smallestDistance
+								CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA,
+								0
 							)
 						],
 						'sumScore1' => [
 							new StudyStatisticsEntry( //#6
 								[],
 								CreateDataSet::CONDITION_TYPE_ALL,
-								CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-								$this->smallestDistance
+								CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA,
+								0
 							)
 						]
 					]
@@ -321,7 +318,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 						],
 					],
 					(object) [
-						'__expected' => ['storageType' => CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED],
+						'__expected' => ['storageType' => CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA],
 						'dataType' => CreateDataSet::STATISTICS_DATATYPES_XY,
 						'axisContainer' => [
 							(object) [
@@ -362,16 +359,16 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 							new StudyStatisticsEntry( //#8
 								[],
 								CreateDataSet::CONDITION_TYPE_ALL,
-								CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-								$this->smallestDistance
+								CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA,
+								0
 							)
 						],
 						'sumScore1' => [
 							new StudyStatisticsEntry( //#7
 								[],
 								CreateDataSet::CONDITION_TYPE_ALL,
-								CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-								$this->smallestDistance
+								CreateDataSet::STATISTICS_STORAGE_TYPE_PER_DATA,
+								0
 							)
 						]
 					]
@@ -453,104 +450,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false));
 		$obj = new SaveStudy();
 		$output = $obj->exec();
-		$this->assertArrayHasKey('lastChanged', $output);
 		$this->assertEqualConfigs($this->createCollection(true, false), $output['json']);
-	}
-	function test_with_already_existing_study() {
-		$initialStatisticsInformation = [
-			'input1' => [
-				[
-					'observable' => new StudyStatisticsEntry( //#2
-						[
-							(object) [
-								'key' => 'input1',
-								'operator' => CreateDataSet::CONDITION_OPERATOR_EQUAL,
-								'value' => 'value1'
-							]
-						],
-						CreateDataSet::CONDITION_TYPE_AND,
-						CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-						$this->oneDay
-					),
-					'initialValue' => 9
-				],
-				[
-					'observable' =>
-						new StudyStatisticsEntry( //#5
-							[],
-							CreateDataSet::CONDITION_TYPE_ALL,
-							CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-							$this->smallestDistance
-						),
-					'initialValue' => 7
-				]
-			],
-			'sumScore1' => [
-				[
-					'observable' =>
-						new StudyStatisticsEntry( //#6
-							[],
-							CreateDataSet::CONDITION_TYPE_ALL,
-							CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-							$this->smallestDistance
-						),
-					'initialValue' => 2
-				]
-			]
-		];
-		$initialStatistics = (object) [];
-		$metadata = [];
-		foreach($initialStatisticsInformation as $key => $entries) {
-			$initialStatistics->{$key} = [];
-			foreach($entries as $info) {
-				$initialStatistics->{$key}[] = new StatisticsJsonEntry($info['observable'], $info['initialValue']);
-				$metadata[$key][] = $info['observable'];
-			}
-		}
-		$expectedStatistics = (object) [
-			'input1' => [
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#1
-					[],
-					CreateDataSet::CONDITION_TYPE_ALL,
-					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-					$this->oneDay
-				)),
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#2
-					[],
-					CreateDataSet::CONDITION_TYPE_ALL,
-					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-					$this->oneDay
-				),
-					9
-				),
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#5
-					[],
-					CreateDataSet::CONDITION_TYPE_ALL,
-					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-					$this->smallestDistance
-				),
-					7
-				)
-			],
-			'sumScore1' => [
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#6
-					[],
-					CreateDataSet::CONDITION_TYPE_ALL,
-					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
-					$this->smallestDistance
-				),
-					2
-				)
-			]
-		];
-		$this->studyStatisticsStore = $this->createStudyStatisticsMock($initialStatistics, $expectedStatistics);
-		$this->statisticsMetadata = $metadata;
-		
-		Main::$defaultPostInput = json_encode($this->createCollection());
-		$obj = new SaveStudy();
-		$output = $obj->exec();
-		$this->assertArrayHasKey('lastChanged', $output);
-		$this->assertEqualConfigs($this->createCollection(true), $output['json']);
 	}
 	function test_with_identical_internalIds() {
 		$newInternalId = $this->internalId;

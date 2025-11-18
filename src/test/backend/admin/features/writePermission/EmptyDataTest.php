@@ -4,8 +4,8 @@ namespace test\backend\admin\features\writePermission;
 
 use backend\admin\features\writePermission\EmptyData;
 use backend\CreateDataSet;
-use backend\dataClasses\StatisticsJsonEntry;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
+use backend\dataClasses\StatisticsJsonDataEntry;
+use backend\dataClasses\StatisticsJsonTimedEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\ResponsesIndex;
 use backend\subStores\StudyAccessIndexStore;
@@ -170,7 +170,7 @@ class EmptyDataTest extends BaseWritePermissionTestSetup {
 		$this->assertDataMock('addEntry',
 			[
 				'input1',
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#1
+				new StatisticsJsonTimedEntry(new StudyStatisticsEntry( //#1
 					[],
 					CreateDataSet::CONDITION_TYPE_ALL,
 					CreateDataSet::STATISTICS_STORAGE_TYPE_TIMED,
@@ -179,7 +179,7 @@ class EmptyDataTest extends BaseWritePermissionTestSetup {
 			],
 			[
 				'input1',
-				new StatisticsJsonEntry(new StudyStatisticsEntry( //#2
+				new StatisticsJsonDataEntry(new StudyStatisticsEntry( //#2
 					[],
 					CreateDataSet::CONDITION_TYPE_ALL,
 					CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR,

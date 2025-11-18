@@ -3,8 +3,10 @@
 namespace test\backend\noJs;
 
 use backend\DataSetCache;
+use backend\exceptions\PageFlowException;
 use backend\Main;
 use backend\noJs\ForwardingException;
+use backend\noJs\Lang;
 use backend\noJs\NoJsMain;
 use backend\noJs\pages\StudiesList;
 use backend\noJs\StudyData;
@@ -134,22 +136,19 @@ class NoJsMainTest extends BaseMockedTestSetup {
 	//getStudyData() without ids:
 	public function test_getStudyData_with_nothing() {
 		$this->setGet();
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_not_existing_accessKey() {
 		$this->setGet([
 			'key' => 'wrong'
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, Lang::get('error_wrong_accessKey'), PageFlowException::class);
 	}
 	public function test_getStudyData_without_ids_and_too_many_studies_available() {
 		$this->setGet([
 			'key' => 'key3'
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_without_ids() {
 		$this->setGet([
@@ -171,16 +170,14 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		$this->setGet([
 			'id' => 999
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_studyId_and_unneeded_accessKey() {
 		$this->setGet([
 			'key' => 'key2',
 			'id' => 111
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_studyId_and_accessKey() {
 		$this->setGet([
@@ -195,8 +192,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 			'key' => 'key2',
 			'id' => 555
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_studyId_and_not_existing_accessKey() {
 		$this->setGet([
@@ -219,16 +215,14 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		$this->setGet([
 			'qid' => 9999
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_questionnaireId_and_unneeded_accessKey() {
 		$this->setGet([
 			'key' => 'key2',
 			'qid' => 1111
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_questionnaireId_and_accessKey() {
 		$this->setGet([
@@ -243,16 +237,14 @@ class NoJsMainTest extends BaseMockedTestSetup {
 			'key' => 'key2',
 			'qid' => 3333
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_questionnaireId_and_not_existing_accessKey() {
 		$this->setGet([
 			'key' => 'notExisting',
 			'qid' => 3333
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, Lang::get('error_wrong_accessKey'), PageFlowException::class);
 	}
 	
 	//getStudyData() with studyId and questionnaireId:
@@ -286,8 +278,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 			'id' => 111,
 			'qid' => 1111
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_studyId_and_questionnaireId_and_accessKey() {
 		$this->setGet([
@@ -304,8 +295,7 @@ class NoJsMainTest extends BaseMockedTestSetup {
 			'id' => 333,
 			'qid' => 3333
 		]);
-		$this->expectErrorMessage('Wrong access key.');
-		NoJsMain::getStudyData();
+		$this->assertException(function() {NoJsMain::getStudyData();}, StudiesList::class, ForwardingException::class);
 	}
 	public function test_getStudyData_with_studyId_and_questionnaireId_and_not_existing_accessKey() {
 		$this->setGet([

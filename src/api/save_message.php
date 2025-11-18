@@ -66,6 +66,3 @@ catch(Throwable $e) {
 	return;
 }
 echo JsonOutput::successObj();
-
-ob_flush();
-flush();

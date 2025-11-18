@@ -35,7 +35,7 @@ class SendMessage extends HasMessagePermission {
 		
 		if(!$json)
 			throw new PageFlowException('Faulty data');
-		else if(!isset($json->content) || !isset($json->userId))
+		else if(!isset($json->content))
 			throw new PageFlowException('Missing data');
 		
 		$from = Permission::getAccountName();
@@ -53,6 +53,8 @@ class SendMessage extends HasMessagePermission {
 			return [];
 		}
 		else {
+			if(!isset($json->userId))
+				throw new PageFlowException('Missing data');
 			$userId = $json->userId;
 			if(!Main::strictCheckInput($userId))
 				throw new PageFlowException('Recipient is faulty');

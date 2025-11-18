@@ -6,7 +6,6 @@ namespace test\backend\fileSystem\subStores;
 use backend\Configs;
 use backend\CreateDataSet;
 use backend\dataClasses\StatisticsJsonEntry;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\DataSetCacheStatisticsEntry;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;
@@ -43,19 +42,20 @@ class StudyStatisticsStoreFSTest extends BaseDataFolderTestSetup {
 				'operator' => CreateDataSet::CONDITION_OPERATOR_UNEQUAL,
 			]
 		];
-		$observedVariableJsonEntry = new StudyStatisticsEntry($conditions, $conditionType, $storageType, $timeInterval);
+		$statisticsEntry = new StudyStatisticsEntry($conditions, $conditionType, $storageType, $timeInterval);
 		
 		
 		$metadata = new StudyStatisticsMetadataStoreFS($this->studyId);
-		$metadata->addMetadataEntry($this->statisticsKey, $observedVariableJsonEntry);
+		$metadata->addMetadataEntry($this->statisticsKey, $statisticsEntry);
 		$metadata->saveChanges();
 		
 		$store = new StudyStatisticsStoreFS($this->studyId);
-		$store->addEntry($this->statisticsKey, new StatisticsJsonEntry($observedVariableJsonEntry));
+		
+		$store->addEntry($this->statisticsKey, StatisticsJsonEntry::createNew($statisticsEntry));
 		$store->saveChanges();
 	}
 	
-	private function doAsserts(int $storageType, int $timeInterval, int $entryCount, stdClass $data) {
+	private function doAsserts(int $storageType, ?int $timeInterval, int $entryCount, stdClass $data) {
 		$store = new StudyStatisticsStoreFS($this->studyId);
 		$index = $store->getStatistics();
 		$element = $index->{$this->statisticsKey}[0];
@@ -71,7 +71,7 @@ class StudyStatisticsStoreFSTest extends BaseDataFolderTestSetup {
 		$storageType = CreateDataSet::STATISTICS_STORAGE_TYPE_FREQ_DISTR;
 		$this->addStatistics($timeInterval, $storageType);
 		
-		$this->doAsserts($storageType, $timeInterval, 0, (object) []);
+		$this->doAsserts($storageType, null, 0, (object) []);
 	}
 	
 	
@@ -193,7 +193,7 @@ class StudyStatisticsStoreFSTest extends BaseDataFolderTestSetup {
 			.StatisticsNewDataSetEntryLoader::export(new DataSetCacheStatisticsEntry($this->statisticsKey, 0, 123456789, 'answer1')) ."\n";
 		file_put_contents(PathsFS::fileStatisticsNewData($this->studyId), $cacheContent);
 		
-		$this->doAsserts($storageType, $timeInterval, 2, (object) [
+		$this->doAsserts($storageType, null, 2, (object) [
 			'answer1' => 2,
 			'answer2' => 1
 		]);

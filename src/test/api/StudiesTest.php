@@ -52,16 +52,6 @@ class StudiesTest extends BaseApiTestSetup {
 		$observer = parent::setUpDataStoreObserver();
 		
 		$studyStore = $this->createStub(StudyStore::class);
-		$studyStore->method('getStudyIdList')
-			->willReturnCallback(function(): array {
-				return $this->allStudies;
-			});
-		$studyStore->method('getStudyConfigAsJson')
-			->willReturnCallback(function(int $studyId): string {
-				if($this->hasException)
-					throw new CriticalException('Unit test exception');
-				return $this->allJsons[$studyId];
-			});
 		$studyStore->method('getStudyLangConfigAsJson')
 			->willReturnCallback(function(int $studyId): string {
 				if($this->hasException)
@@ -113,30 +103,16 @@ class StudiesTest extends BaseApiTestSetup {
 	}
 	
 	
-	function test_without_login_or_access_key() {
+	function test_without_access_key() {
 		require DIR_BASE .'/api/studies.php';
 		$this->expectOutputString($this->arrayToJson($this->accessKeyIndex[''], true));
 	}
 	
-	function test_without_login_but_with_access_key() {
+	function test_with_access_key() {
 		$this->setGet(['access_key' => 'key1']);
 		
 		require DIR_BASE .'/api/studies.php';
 		$this->expectOutputString($this->arrayToJson($this->accessKeyIndex['key1'], true));
-	}
-	function test_without_admin_but_logged_in() {
-		$this->setGet(['is_loggedIn' => true]);
-		Permission::setLoggedIn('user1');
-		
-		require DIR_BASE .'/api/studies.php';
-		$this->expectOutputString($this->arrayToJson([234, 567, 456, 123]));
-	}
-	function test_asAdmin() {
-		$this->setGet(['is_loggedIn' => true]);
-		Permission::setLoggedIn('user1');
-		$this->isAdmin = true;
-		require DIR_BASE .'/api/studies.php';
-		$this->expectOutputString($this->arrayToJson($this->allStudies));
 	}
 	
 	function test_with_exception() {

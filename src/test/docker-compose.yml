@@ -1,0 +1,10 @@
+services:
+  esmira-test:
+    build:
+      context: ./
+    volumes:
+        - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+        - ./error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+        - ../../:/opt/project
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -496,6 +496,8 @@ class CreateDataSet {
 	}
 	
 	function close() {
-		$this->userDataStore->close();
+		if(isset($this->userDataStore)) {
+			$this->userDataStore->close();
+		}
 	}
 }

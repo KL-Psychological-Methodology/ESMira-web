@@ -34,7 +34,7 @@ class GetPermissionsTest extends BaseAdminPermissionTestSetup {
 		$this->isInit = false;
 		
 		$obj = new GetPermissions();
-		$this->assertEquals(['init_esmira' => true], $obj->exec());
+		$this->assertEquals(['isLoggedIn' => false], $obj->exec());
 	}
 	function test_without_login() {
 		Permission::setLoggedOut();

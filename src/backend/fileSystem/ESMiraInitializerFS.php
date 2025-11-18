@@ -81,7 +81,9 @@ class ESMiraInitializerFS implements ESMiraInitializer {
 		
 		$this->moveExistingDataFolder($pathDataFolder);
 		$this->createDataFolder($pathDataFolder);
-		copy(Paths::FILE_SERVER_VERSION, $pathDataFolder . Paths::FILENAME_VERSION);
+		if(file_exists(Paths::FILE_SERVER_VERSION)) { //file does not exist during testing
+			copy(Paths::FILE_SERVER_VERSION, $pathDataFolder . Paths::FILENAME_VERSION);
+		}
 		
 		//create login:
 		Configs::getDataStore()->getAccountStore()->setAccount($accountName, $password);

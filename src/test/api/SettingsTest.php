@@ -10,7 +10,7 @@ use test\testConfigs\BaseApiTestSetup;
 
 require_once __DIR__ .'/../../backend/autoload.php';
 
-class LegalTest extends BaseApiTestSetup {
+class SettingsTest extends BaseApiTestSetup {
 	private $privacyPolicy = 'privacyPolicy';
 	
 	protected function setUpDataStoreObserver(): Stub {
@@ -25,8 +25,11 @@ class LegalTest extends BaseApiTestSetup {
 	
 	function test() {
 		Configs::injectConfig('configs.langCodes.injected.php');
-		$this->setGet(['lang' => 'en']);
-		require DIR_BASE .'/api/legal.php';
+		$this->setGet([
+			'lang' => 'en',
+			'type' => 'legal'
+		]);
+		require DIR_BASE .'/api/settings.php';
 		$this->assertDataMock('getImpressum', ['en'], ['de']);
 		$this->assertDataMock('getPrivacyPolicy', ['en']);
 		$this->expectOutputString(JsonOutput::successObj([
@@ -36,6 +39,6 @@ class LegalTest extends BaseApiTestSetup {
 	}
 	
 	function test_without_init() {
-		$this->assertIsInit('legal');
+		$this->assertIsInit('settings');
 	}
 }

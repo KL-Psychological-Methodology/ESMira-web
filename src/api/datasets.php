@@ -45,6 +45,3 @@ try {
     echo JsonOutput::error($e->getMessage());
     return;
 }
-
-ob_flush();
-flush();

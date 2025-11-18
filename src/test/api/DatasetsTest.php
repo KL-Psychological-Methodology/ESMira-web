@@ -51,6 +51,7 @@ class DatasetsTest extends BaseApiTestSetup {
 					'dataSetId' => '123456',
 					'studyId' => 123,
 					'eventType' => CreateDataSet::DATASET_TYPE_JOINED,
+					'studyLang' => 'en',
 					'responses' => (object) []
 				]
 			],

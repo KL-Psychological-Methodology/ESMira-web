@@ -31,18 +31,15 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 
 	abstract protected function createFolders($studyId);
 
-	public function studyExists(int $studyId): bool
-	{
+	public function studyExists(int $studyId): bool {
 		return file_exists($this->getStudyPath($studyId));
 	}
 
-	public function isLocked(int $studyId): bool
-	{
+	public function isLocked(int $studyId): bool {
 		return file_exists($this->getLockfilePath($studyId));
 	}
 
-	public function lockStudy(int $studyId, bool $lock = true)
-	{
+	public function lockStudy(int $studyId, bool $lock = true) {
 		$file = $this->getLockfilePath($studyId);
 
 		if (file_exists($file)) {
@@ -54,10 +51,13 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		}
 	}
 
-	public function getStudyIdList(): array
-	{
+	public function getStudyIdList(): array {
+		$path = $this->getStudiesFolderPath();
+		if(!file_exists($path)) {
+			return [];
+		}
 		$studies = [];
-		$handle = opendir($this->getStudiesFolderPath());
+		$handle = opendir($path);
 		if ($handle === false)
 			return [];
 		while ($folderName = readdir($handle)) {
@@ -70,8 +70,7 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		return $studies;
 	}
 
-	private function getDirectorySize($path)
-	{
+	private function getDirectorySize($path) {
 		//thanks to https://stackoverflow.com/questions/478121/how-to-get-directory-size-in-php
 		$bytestotal = 0;
 		$path = realpath($path);
@@ -83,8 +82,7 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		return $bytestotal;
 	}
 
-	public function getDirectorySizeOfStudies(): array
-	{
+	public function getDirectorySizeOfStudies(): array {
 		$directorySize = [];
 		$folderStudies = $this->getStudiesFolderPath();
 		if ($folderStudies === false)
@@ -101,32 +99,27 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		return $directorySize;
 	}
 
-	public function getStudyConfigAsJson(int $studyId): string
-	{
+	public function getStudyConfigAsJson(int $studyId): string {
 		$path = $this->getStudyConfigPath($studyId);
 		if (!file_exists($path))
 			throw new CriticalException("Study id $studyId does not exist");
 		return file_get_contents($path);
 	}
 
-	public function getStudyLangConfigAsJson(int $studyId, string $lang)
-	{
+	public function getStudyLangConfigAsJson(int $studyId, string $lang) {
 		$path = $this->getLangConfigPath($studyId, $lang);
 		return file_exists($path) ? file_get_contents($path) : $this->getStudyConfigAsJson($studyId);
 	}
 
-	public function getStudyConfig(int $studyId): stdClass
-	{
+	public function getStudyConfig(int $studyId): stdClass {
 		return json_decode($this->getStudyConfigAsJson($studyId));
 	}
 
-	public function getStudyLangConfig(int $studyId, string $lang): stdClass
-	{
+	public function getStudyLangConfig(int $studyId, string $lang): stdClass {
 		return json_decode($this->getStudyLangConfigAsJson($studyId, $lang));
 	}
 
-	public function getAllLangConfigsAsJson(int $studyId): string
-	{
+	public function getAllLangConfigsAsJson(int $studyId): string {
 		$path = $this->getFolderLangsPath($studyId);
 		$langBox = [];
 		if (file_exists($path)) {
@@ -143,8 +136,7 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		return '{' . implode(',', $langBox) . '}';
 	}
 
-	public function saveStudy(stdClass $studyCollection, array $questionnaireKeys)
-	{
+	public function saveStudy(stdClass $studyCollection, array $questionnaireKeys) {
 		$study = $studyCollection->_;
 		$studyId = $study->id;
 
@@ -166,8 +158,7 @@ abstract class BaseStudyStoreFS implements BaseStudyStore
 		}
 	}
 
-	public function delete(int $studyId)
-	{
+	public function delete(int $studyId) {
 		if (!$this->studyExists($studyId))
 			return;
 		$folderStudy = $this->getStudyPath($studyId);

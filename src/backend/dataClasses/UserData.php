@@ -41,12 +41,14 @@ class UserData {
 	public $usedLanguages = [];
 	public $mostRecentLanguage = '';
 	
-	public function __construct(int $userIdInteger, int $token, int $dataSetCount, string $initialLanguage) {
+	public function __construct(int $userIdInteger, int $token, int $dataSetCount, string $initialLanguage = null) {
 		$this->userIdInteger = $userIdInteger;
 		$this->token = $token;
 		$this->dataSetCount = $dataSetCount;
 		$this->joinedTime = Main::getMilliseconds();
-		$this->usedLanguages[] = $initialLanguage;
-		$this->mostRecentLanguage = $initialLanguage;
+		if($initialLanguage !== null) {
+			$this->usedLanguages[] = $initialLanguage;
+			$this->mostRecentLanguage = $initialLanguage;
+		}
 	}
 }

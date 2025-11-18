@@ -5,8 +5,6 @@ namespace test\backend;
 
 use backend\Configs;
 use backend\CreateDataSet;
-use backend\exceptions\CriticalException;
-use backend\dataClasses\StudyStatisticsMetadataEntry;
 use backend\dataClasses\StudyStatisticsEntry;
 use backend\DataSetCache;
 use backend\DataSetCacheContainer;
@@ -234,6 +232,7 @@ class CreateDataSetTest extends BaseTestSetup {
 			'dataset' => [
 				(object) array_merge([
 					'dataSetId' => (string) $this->dataSetId,
+					'studyLang' => 'en',
 					'studyId' => (string) $this->studyId,
 					'questionnaireInternalId' => (string) $this->questionnaireId,
 					'accessKey' => $this->accessKeys[0],

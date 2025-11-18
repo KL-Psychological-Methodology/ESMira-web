@@ -38,7 +38,7 @@ class UpdateTest extends BaseApiTestSetup {
 			->willReturnCallback(function(int $studyId): bool {
 				return $studyId == $this->lockedStudyId;
 			});
-		$studyStore->method('getStudyConfig')
+		$studyStore->method('getStudyLangConfig')
 			->willReturnCallback(function(int $studyId): stdClass {
 				if($studyId == $this->exceptionStudyId)
 					throw new CriticalException('Unit test exception');
@@ -156,12 +156,16 @@ class UpdateTest extends BaseApiTestSetup {
 			]
 		]);
 		require DIR_BASE .'/api/update.php';
-		$this->expectOutputString(JsonOutput::error('Wrong accessKey: '));
+		$this->expectOutputString(JsonOutput::successObj([
+			$this->defaultStudyId => ['errorCode' => 'wrongAccessKey']
+		]));
 	}
 	
 	function test_with_wrong_accessKey() {
 		$this->doTest($this->defaultStudyId, ['accessKey' => 'wrongKey']);
-		$this->expectOutputString(JsonOutput::error('Wrong accessKey: wrongKey'));
+		$this->expectOutputString(JsonOutput::successObj([
+			$this->defaultStudyId => ['errorCode' => 'wrongAccessKey']
+		]));
 	}
 	
 	function test_with_missing_line_data() {

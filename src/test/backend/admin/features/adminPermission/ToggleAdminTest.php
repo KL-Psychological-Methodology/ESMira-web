@@ -29,7 +29,8 @@ class ToggleAdminTest extends BaseAdminPermissionTestSetup {
 		
 		
 		$this->setPost([
-			'accountName' => $this->accountName
+			'accountName' => $this->accountName,
+			'admin' => false
 		]);
 		$obj->exec();
 		$this->assertDataMock('setAdminPermission', [$this->accountName, false]);

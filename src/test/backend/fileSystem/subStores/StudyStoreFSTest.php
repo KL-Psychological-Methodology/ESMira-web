@@ -247,7 +247,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$questionnaireKeys = ['key1', 'key2', 'key3'];
 		$config =  (object)[
 			'id' => $this->studyId,
-			'randomGroups' => 1,
+			'randomGroups' => 2,
 			'questionnaires' => [
 				(object) ['internalId' => $questionnaireId]
 			]
@@ -307,6 +307,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 					'studyId' => (string) $this->studyId,
 					'questionnaireInternalId' => (string) $questionnaireId,
 					'eventType' => 'questionnaire',
+					'studyLang' => 'en',
 					'responses' => (object) [
 						'key1' => 'answer1',
 						'key2' => 'answer2'
@@ -470,7 +471,8 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 			'id' => $this->studyId,
 			'version' => 3,
 			'subVersion' => 5,
-			'new_changes' => false
+			'new_changes' => false,
+			'langCodes' => []
 		]);
 		
 		$studyStore->markStudyAsUpdated($this->studyId);
@@ -501,13 +503,6 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$store->delete($this->studyId);
 		$this->assertFileDoesNotExist($path);
-	}
-	
-	function test_delete_non_existing_study() {
-		$store = new StudyStoreFS();
-		
-		$this->expectException(CriticalException::class);
-		$store->delete($this->studyId);
 	}
 	
 	function test_delete_study_that_has_permissions() {

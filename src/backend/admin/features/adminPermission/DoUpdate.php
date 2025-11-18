@@ -83,8 +83,9 @@ class DoUpdate extends HasAdminPermission {
 			error_log($stringMsg);
 			throw new PageFlowException($stringMsg);
 		}
-		else
+		else if(file_exists($this->folderPathBackup)) {
 			rmdir($this->folderPathBackup);
+		}
 		
 		return new PageFlowException($msg);
 	}

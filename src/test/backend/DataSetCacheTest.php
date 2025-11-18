@@ -21,23 +21,28 @@ class DataSetCacheTest extends BaseTestSetup {
 	function testFileCache() {
 		$cache = new DataSetCache();
 		$cache->addToFileCache(11, 'path/to/file1', 1231, 1);
+		$cache->addToFileCache(11, 'path/to/file1_a', 12311, 1);
 		$cache->addToFileCache(12, 'path/to/file2', 1232, 2);
 		$cache->addToFileCache(13, 'path/to/file3', 1233, 3);
 		
 		$fileCache = $cache->getFileCache();
 		$this->assertCount(3, $fileCache);
 		
-		$this->assertEquals(11, $fileCache[1]->studyId);
-		$this->assertEquals('path/to/file1', $fileCache[1]->internalPath);
-		$this->assertEquals(1231, $fileCache[1]->identifier);
+		$this->assertEquals(11, $fileCache[1][0]->studyId);
+		$this->assertEquals('path/to/file1', $fileCache[1][0]->internalPath);
+		$this->assertEquals(1231, $fileCache[1][0]->identifier);
 		
-		$this->assertEquals(12, $fileCache[2]->studyId);
-		$this->assertEquals('path/to/file2', $fileCache[2]->internalPath);
-		$this->assertEquals(1232, $fileCache[2]->identifier);
+		$this->assertEquals(11, $fileCache[1][1]->studyId);
+		$this->assertEquals('path/to/file1_a', $fileCache[1][1]->internalPath);
+		$this->assertEquals(12311, $fileCache[1][1]->identifier);
 		
-		$this->assertEquals(13, $fileCache[3]->studyId);
-		$this->assertEquals('path/to/file3', $fileCache[3]->internalPath);
-		$this->assertEquals(1233, $fileCache[3]->identifier);
+		$this->assertEquals(12, $fileCache[2][0]->studyId);
+		$this->assertEquals('path/to/file2', $fileCache[2][0]->internalPath);
+		$this->assertEquals(1232, $fileCache[2][0]->identifier);
+		
+		$this->assertEquals(13, $fileCache[3][0]->studyId);
+		$this->assertEquals('path/to/file3', $fileCache[3][0]->internalPath);
+		$this->assertEquals(1233, $fileCache[3][0]->identifier);
 	}
 	
 	private function fillDataSetCache(array $sourceData, callable $add): DataSetCache {

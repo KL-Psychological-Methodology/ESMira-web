@@ -109,7 +109,7 @@ class AppInstall implements Page {
             }
         }
 
-        if (isset($this->study->webInstallInstructions) && $this->study->publishedWeb ?? true)
+        if (isset($this->study->webInstallInstructions) && ($this->study->publishedWeb ?? true))
             $output .= '<div>' . $this->study->webInstallInstructions . '</div>';
         $output .= '<div class="titleRow">' . Lang::get('about_study') . '</div>';
 

@@ -4,16 +4,13 @@ namespace test\testConfigs;
 
 use backend\Configs;
 use backend\DataStoreInterface;
-use test\testConfigs\SkipArgument;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Stub;
-use PHPUnit\Framework\TestCase;
-use test\testConfigs\BaseTestSetup;
 
 require_once __DIR__ . '/../../backend/autoload.php';
 
 class BaseMockedTestSetup extends BaseTestSetup {
-	private $argumentData = [];
+	private $callArgumentCache = [];
 	
 	/**
 	 * @var DataStoreInterface
@@ -49,18 +46,35 @@ class BaseMockedTestSetup extends BaseTestSetup {
 			});
 	}
 	
+	/**
+	 * Mocks a subStore and then adds a mock on a specific method.
+	 *
+	 * @param string $class The subStore className for which the mock is to be created.
+	 * @param string $method The method name to be mocked.
+	 * @param mixed $return The value to be returned when the mocked method is called. Defaults to null.
+	 * @return Stub The stub representing the mocked subStore.
+	 */
 	protected function createDataMock(string $class, string $method, /*mixed*/ $return = null): Stub {
 		$store = $this->createMock($class);
 		return $this->addDataMock($store, $method, $return);
 	}
+	
+	/**
+	 * Adds a mock behavior for a specific method in the provided subStore stub.
+	 * The methods arguments from calls will be recorded and cached for assertion in the $callArgumentCache property.
+	 *
+	 * @param Stub $store The stub instance for which the method mock is to be added.
+	 * @param string $method The method name for which the mock behavior is defined.
+	 * @param mixed $return The value or callable to be used as the return value for the mocked method. Defaults to null.
+	 * @return Stub The stub representing the mocked subStore.
+	 */
 	protected function addDataMock(Stub $store, string $method, /*mixed*/ $return = null): Stub {
 		$store->method($method)
 			->willReturnCallback(function(... $arguments) use($method, $return) {
-				if(!isset($this->argumentData[$method]))
-					$this->argumentData[$method] = [];
-				$this->argumentData[$method][] = $arguments;
+				if(!isset($this->callArgumentCache[$method]))
+					$this->callArgumentCache[$method] = [];
+				$this->callArgumentCache[$method][] = $arguments;
 				return is_callable($return) ? call_user_func_array($return, $arguments) : $return;
-//				return is_callable($return) ? $return() : $return;
 			});
 		return $store;
 	}
@@ -91,10 +105,10 @@ class BaseMockedTestSetup extends BaseTestSetup {
 	}
 	
 	protected function assertDataMock(string $method, ...$expectedCalls) {
-		if(!isset($this->argumentData[$method]))
+		if(!isset($this->callArgumentCache[$method]))
 			throw new ExpectationFailedException("No calls were saved for \"$method\"");
 		
-		$savedCalls = $this->argumentData[$method];
+		$savedCalls = $this->callArgumentCache[$method];
 		$expectedCallCount = count($expectedCalls);
 		$actualCallCount = count($savedCalls);
 		$this->assertEquals($expectedCallCount, $actualCallCount, "$method() was expected to be called $expectedCallCount times. but was called $actualCallCount times");
@@ -111,6 +125,6 @@ class BaseMockedTestSetup extends BaseTestSetup {
 				$this->assertEquals($expectedArgument, $actualArgument, "$i. $method(): Argument $i2 is unexpected");
 			}
 		}
-		$this->argumentData[$method] = [];
+		$this->callArgumentCache[$method] = [];
 	}
 }

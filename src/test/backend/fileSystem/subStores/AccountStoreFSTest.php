@@ -33,7 +33,7 @@ class AccountStoreFSTest extends BaseDataFolderTestSetup {
 		$accountStore = Configs::getDataStore()->getAccountStore();
 		
 		$delimiter = Configs::get('csv_delimiter');
-		$header = Main::arrayToCSV(['login', 'ip', 'userAgent'], $delimiter);
+		$header = Main::arrayToCSV(['uploaded', 'login', 'ip', 'userAgent'], $delimiter);
 		
 		$data = $header;
 		$this->assertEquals($data, $accountStore->getLoginHistoryCsv($accountName));

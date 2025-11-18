@@ -7,10 +7,12 @@ use backend\DataSetCache;
 use backend\DataSetCacheStatisticsEntry;
 use backend\fileSystem\loader\StatisticsNewDataSetEntryLoader;
 use backend\fileSystem\PathsFS;
+use backend\fileSystem\subStores\ResponsesStoreFS;
 use backend\FileUploader;
 use backend\Main;
 use backend\Paths;
 use backend\ResponsesIndex;
+use backend\subStores\ResponsesStore;
 use PHPUnit\Framework\ExpectationFailedException;
 use test\testConfigs\BaseDataFolderTestSetup;
 use ZipArchive;
@@ -321,15 +323,41 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		$pathImages = Paths::fileImageFromData($studyId, 'user', 111, 'key');
 		file_put_contents($pathImages, 'image');
 		
-		$responsesStore->createMediaZip($studyId);
+		$responsesStore->createMediaZip($studyId, function() {});
 		
 		$this->assertTrue(file_exists($pathZip));
 		
 		$zip = new ZipArchive();
 		$zip->open($pathZip);
 		$this->assertEquals(1, $zip->numFiles);
-		
+
 		$zip->close();
+	}
+	
+	function test_progress_updates() {
+		$studyId = 123;
+		$responsesStore = Configs::getDataStore()->getResponsesStore();
+		$this->createEmptyStudy($studyId);
+		
+		$pathZip = Paths::fileMediaZip($studyId);
+		$this->assertFalse(file_exists($pathZip));
+		
+		file_put_contents(Paths::fileImageFromData($studyId, 'user', 111, 'key1'), 'image');
+		file_put_contents(Paths::fileImageFromData($studyId, 'user', 222, 'key2'), 'image');
+		file_put_contents(Paths::fileImageFromData($studyId, 'user', 333, 'key3'), 'image');
+		file_put_contents(Paths::fileImageFromData($studyId, 'user', 444, 'key4'), 'image');
+		
+		$expectedOutput = [
+			"event: progress\ndata: 0\n\n",
+			"event: progress\ndata: 25\n\n",
+			"event: progress\ndata: 50\n\n",
+			"event: progress\ndata: 75\n\n",
+			"event: progress\ndata: 100\n\n",
+		];
+		$count = 0;
+		$responsesStore->createMediaZip($studyId, function(string $content) use($expectedOutput, &$count) {
+			$this->assertEquals($expectedOutput[$count++], $content);
+		});
 	}
 	
 	function test_outputResponsesFile() {

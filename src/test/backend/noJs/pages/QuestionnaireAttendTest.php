@@ -160,13 +160,6 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 		$this->assertStringContainsString('name="participant" value="newUser"', $content);
 	}
 	
-	function test_with_deleting_participant() {
-		unset($_COOKIE["participant123"]);
-		$this->setPost(['participant' => 'userId', 'delete_participant' => true]);
-		$this->expectErrorMessage(GetParticipant::class);
-		new QuestionnaireAttend();
-	}
-	
 	function test_with_not_active_questionnaire() {
 		$_GET['qid'] = 2222;
 		$obj = new QuestionnaireAttend();

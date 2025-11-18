@@ -116,7 +116,7 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 	
 	function test_single() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->userId,
+			'userId' => $this->userId,
 			'timestamps' => [123],
 			'content' => $this->msgContent,
 			'toAll' => false
@@ -128,7 +128,7 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 	
 	function test_with_short_content() {
 		Main::$defaultPostInput = json_encode([
-			'user' => $this->userId,
+			'userId' => $this->userId,
 			'content' => '1',
 			'toAll' => false
 		]);
@@ -138,7 +138,7 @@ class SendMessageTest extends BaseMessagePermissionTestSetup {
 	}
 	function test_with_faulty_recipient() {
 		Main::$defaultPostInput = json_encode([
-			'user' => '$qweqwe',
+			'userId' => '$qweqwe',
 			'content' => $this->msgContent,
 			'toAll' => false
 		]);
