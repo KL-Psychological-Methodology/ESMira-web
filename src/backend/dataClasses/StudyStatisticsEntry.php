@@ -2,9 +2,10 @@
 
 namespace backend\dataClasses;
 
-use stdClass;
 
 /**
+ * The format saved by StudyStatisticsMetadataStoreFS to PathFS::fileStudyStatisticsMetadata.
+ * In the metadata each variable has an array of StudyStatisticsEntry (each array entry is one statistic variable)
  * Will be used in json_decode()
  */
 class StudyStatisticsEntry {

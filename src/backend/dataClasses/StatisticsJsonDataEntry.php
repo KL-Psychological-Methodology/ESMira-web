@@ -4,6 +4,9 @@ namespace backend\dataClasses;
 
 use stdClass;
 
+/**
+ * Represents the format in the public statistics JSON
+ */
 class StatisticsJsonDataEntry extends StatisticsJsonEntry {
 	/**
 	 * @var stdClass

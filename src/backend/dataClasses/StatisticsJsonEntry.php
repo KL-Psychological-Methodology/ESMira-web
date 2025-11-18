@@ -4,6 +4,9 @@ namespace backend\dataClasses;
 
 use backend\CreateDataSet;
 
+/**
+ * Represents the format in the public statistics JSON
+ */
 class StatisticsJsonEntry {
 	/**
 	 * @var int
