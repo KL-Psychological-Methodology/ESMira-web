@@ -678,5 +678,21 @@
     "install_from_url": "Instalace z webové adresy url",
     "install_from_file": "Instalace ze souboru",
     "error_not_a_valid_metadata_json": "Nepodařilo se najít platný soubor metadata.json.",
-    "error_plugin_not_compatible": "Plugin není kompatibilní s aktuální verzí ESMira"
+    "error_plugin_not_compatible": "Plugin není kompatibilní s aktuální verzí ESMira",
+    "error_plugin_id_contains_invalid_characters": "Id pluginu obsahuje neplatné znaky.",
+    "how_to_participate_step_1": "Jak se mohu zúčastnit? Krok 1/2",
+    "install_new": "Nainstalovat nové",
+    "info_install_plugin_from_url": "Zadejte url adresu souboru metadata.json pluginu.",
+    "plugins": "Pluginy",
+    "pluginSettings": "Nastavení pluginu",
+    "validator_warning_package_id": "Pravděpodobně se nejedná o platné ID baláčku",
+    "validator_warning_input_binary": "Povoleno pouze '0' (pro levou možnost) nebo '1' (pro pravou možnost).",
+    "urls_id": "Odkazy s id studie",
+    "uninstall": "Odinstalovat",
+    "app": "Aplikace na chytrý telefon",
+    "concluded_studies": "Ukončené studie",
+    "install_plugin": "Instalace pluginu",
+    "confirm_delete_plugin": "Opravdu chcete odstranit plugin '%s' z ESMira?",
+    "empty_backups": "Odstranit zálohy",
+    "error_could_not_extract": "Nepodařilo se extrahovat plugin."
 }
