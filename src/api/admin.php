@@ -107,7 +107,8 @@ $classIndex = [
 	'DeletePlugin' => 'backend\admin\features\adminPermission\DeletePlugin',
 	'InstallPlugin' => 'backend\admin\features\adminPermission\InstallPlugin',
 	'ListPlugins' => 'backend\admin\features\adminPermission\ListPlugins',
-    'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion', //not used in production
+    'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion',
+	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //to allow updates from versions before 3.0.0
 ];
 
 $type = $_GET['type'];
