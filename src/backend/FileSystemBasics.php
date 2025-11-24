@@ -18,10 +18,10 @@ class FileSystemBasics {
 	/**
 	 * @throws CriticalException
 	 */
-	public static function createFolder(string $folder) {
+	public static function createFolder(string $folder, bool $recursive = false) {
 		if(file_exists($folder))
 			return;
-		if(!mkdir($folder, 0744))
+		if(!mkdir($folder, 0744, $recursive))
 			throw new CriticalException("Creating the folder '$folder' failed");
 	}
 	

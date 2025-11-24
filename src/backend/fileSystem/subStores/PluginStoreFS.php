@@ -237,7 +237,7 @@ class PluginStoreFS implements PluginStore {
 				FileSystemBasics::emptyFolder($tempPluginPath);
 			}
 			else {
-				FileSystemBasics::createFolder($tempPluginPath);
+				FileSystemBasics::createFolder($tempPluginPath, true);
 			}
 			$createZipFile($zipPath);
 			
