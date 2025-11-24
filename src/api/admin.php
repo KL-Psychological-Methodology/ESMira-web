@@ -102,12 +102,13 @@ $classIndex = [
     'SetupFallbackSystem' => 'backend\admin\features\adminPermission\SetupFallbackSystem',
     'PingFallbackServer' => 'backend\admin\features\adminPermission\PingFallbackServer',
     'SynchAllStudiesToFallback' => 'backend\admin\features\adminPermission\SynchAllStudiesToFallback',
-    'DownloadUpdate' => 'backend\admin\features\adminPermission\DownloadUpdate',
-    'DoUpdate' => 'backend\admin\features\adminPermission\DoUpdate',
 	'DeletePlugin' => 'backend\admin\features\adminPermission\DeletePlugin',
 	'InstallPlugin' => 'backend\admin\features\adminPermission\InstallPlugin',
 	'ListPlugins' => 'backend\admin\features\adminPermission\ListPlugins',
-    'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion',
+	'UpdateStepDownload' => 'backend\admin\features\adminPermission\UpdateStepDownload',
+	'UpdateStepPrepare' => 'backend\admin\features\adminPermission\UpdateStepPrepare',
+	'UpdateStepReplace' => 'backend\admin\features\adminPermission\UpdateStepReplace',
+	'UpdateVersion' => 'backend\admin\features\adminPermission\UpdateVersion',
 	'update_version' => 'backend\admin\features\adminPermission\UpdateVersion', //to allow updates from versions before 3.0.0
 ];
 

@@ -128,10 +128,12 @@ export class Content extends SectionContent {
 			}
 
 			let data = { version: tagName, date: new Date(publishedAt), changeLog: body, downloadUrl: assets[0]["browser_download_url"] };
-			if (prerelease)
+			if (prerelease) {
 				unstableReleases.push(data);
-			else
+			}
+			else {
 				stableReleases.push(data);
+			}
 		}
 
 		//set release information:
@@ -144,24 +146,27 @@ export class Content extends SectionContent {
 			this.newestVersionName = lastRelease.version
 			this.newestVersionDownloadUrl = lastRelease.downloadUrl
 		}
-		else
+		else {
 			this.hasUpdates = false
+		}
 	}
 	private async updateNow(): Promise<void> {
 		if (this.loadPreReleases) {
-			if (!confirm(Lang.get("confirm_prerelease_update")))
-				return;
+			if (!confirm(Lang.get("confirm_prerelease_update"))) {
+				return
+			}
 		}
 		const loader = this.sectionData.loader
 		await loader.showLoader(new Promise(async (resolve, reject) => {
 			try {
-				await Requests.loadJson(`${FILE_ADMIN}?type=DownloadUpdate`, "post", `url=${this.newestVersionDownloadUrl}`)
-
-				loader.update(Lang.get("state_installing"))
-				await Requests.loadJson(`${FILE_ADMIN}?type=DoUpdate`)
-
-				loader.update(Lang.get("state_finish_installing"))
+				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateStepDownload`, "post", `url=${this.newestVersionDownloadUrl}`)
+				loader.update(Lang.get("state_preparing"))
+				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateStepPrepare`)
+				loader.update(Lang.get("state_updating"))
+				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateStepReplace`)
+				loader.update(Lang.get("state_migrating"))
 				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.sectionData.siteData.packageVersion}`)
+				
 				resolve(null)
 			}
 			catch (e) {

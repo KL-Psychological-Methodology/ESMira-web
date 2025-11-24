@@ -1,14 +1,12 @@
 <?php
 
-namespace test\backend\admin\features\adminPermission;
+namespace backend;
 
-use backend\MigrationManager;
-use PHPUnit\Framework\MockObject\Stub;
-use test\testConfigs\BaseAdminPermissionTestSetup;
+use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../../../backend/autoload.php';
+require_once __DIR__ . '/../../backend/autoload.php';
 
-class UpdateVersionTest extends BaseAdminPermissionTestSetup {
+class MigrationManagerTest extends TestCase {
 	
 	function test() {
 		$this->assertTrue(MigrationManager::testVersionCheck('1.2.3', '1.2.4'));

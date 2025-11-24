@@ -2,36 +2,44 @@
 
 namespace backend\admin\features\adminPermission;
 
+use backend\admin\HasAdminPermission;
 use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
-use backend\exceptions\PageFlowException;
 use backend\MigrationManager;
+use backend\Paths;
 use Throwable;
 
-class UpdateVersion extends DoUpdate {
+/**
+ * Call order:
+ * UpdateStepPrepare -> UpdateStepReplace -> UpdateVersion
+ */
+class UpdateVersion extends HasAdminPermission {
 	/**
 	 * @throws CriticalException
-	 * @throws PageFlowException
 	 */
 	function exec(): array {
-		$dataVersionPath = PathsFS::fileDataVersion();
-		$fromVersion = file_exists($dataVersionPath) ? file_get_contents($dataVersionPath) : $_GET['fromVersion'];
-		
-		if(!$fromVersion)
-			throw new PageFlowException('Missing data');
-		
 		try {
+			$dataVersionPath = PathsFS::fileDataVersion();
+			$fromVersion = file_exists($dataVersionPath) ? file_get_contents($dataVersionPath) : $_GET['fromVersion'];
+			
+			if(!$fromVersion) {
+				throw new CriticalException('Could not determine from which version to migrate from (backup folder might be missing).');
+			}
+			FileSystemBasics::writeServerConfigs([]); //copies values over from the new default configs
+			
 			$migrationManager = new MigrationManager($fromVersion);
 			$migrationManager->run();
 		}
 		catch(Throwable $e) {
-			throw $this->revertUpdate("Error while running update script. Reverting... \n$e");
+			throw new CriticalException("The update finished successfully but failed when migrating the data to the current version. Please copy this error message and your server logs and ask for assistance at https://github.com/KL-Psychological-Methodology/ESMira/issues\n$e");
 		}
-			
+		
 		//cleaning up
-		if(file_exists($this->folderPathBackup) && (!FileSystemBasics::emptyFolder($this->folderPathBackup) || !@rmdir($this->folderPathBackup)))
-			throw new PageFlowException("Failed to clean up backup. The update was successful. But please delete this folder and check its contents manually: $this->folderPathBackup");
+		$pathBackup = Paths::FOLDER_SERVER_BACKUP;
+		if(file_exists($pathBackup) && (!FileSystemBasics::emptyFolder($pathBackup) || !rmdir($pathBackup))) {
+			throw new CriticalException("Failed to clean up backup. The update finished successfully. But please delete this folder and its contents manually: $pathBackup");
+		}
 		return [];
 	}
 }
