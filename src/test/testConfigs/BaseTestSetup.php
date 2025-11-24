@@ -30,15 +30,15 @@ abstract class BaseTestSetup extends TestCase {
 	/**
 	 * @throws ExpectationFailedException
 	 */
-	protected function assertException(callable $callback, string $message, ?string $type) {
+	protected function assertException(callable $callback, string $type, ?callable $assertMessage = null): void {
 		try {
 			$callback();
 		}
 		catch (Throwable $e) {
-			if($type) {
-				self::assertInstanceOf($type, $e);
+			self::assertInstanceOf($type, $e);
+			if($assertMessage) {
+				$assertMessage($e->getMessage());
 			}
-			self::assertEquals($e->getMessage(), $message);
 			return;
 		}
 		throw new ExpectationFailedException('Nothing was thrown!');
