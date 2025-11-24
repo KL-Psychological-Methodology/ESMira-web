@@ -123,7 +123,7 @@ export class Content extends SectionContent {
 		for (let i = releases.length - 1; i >= 0; --i) {
 			let { tag_name: tagName, prerelease, body, published_at: publishedAt, assets } = releases[i];
 
-			if(compareSemVersion(tagName, this.sectionData.siteData.packageVersion)) {
+			if(!compareSemVersion(this.sectionData.siteData.packageVersion, tagName)) {
 				continue
 			}
 
