@@ -22,13 +22,22 @@ export function isTranslatable(value: BaseObservable<any>): value is Translatabl
 	return (value as Translatable<any>).currentLangCode !== undefined;
 }
 
-export function defineCurrentLangCode(parent: BaseObservable<ObservableTypes> | null, newLang?: string) {
+/**
+ * Either returns the currentLangCode of the parent TranslatableRootInterface
+ * or, if newLang is provided, creates a new ObservablePrimitive with the provided language code.
+ * or, if parentTranslatable does not exist or is not a translatable, creates a new ObservablePrimitive with the default value "en".
+ * @param parent the parent observable that should be checked for a TranslatableRootInterface.
+ * @param newLang the language code that should be used to create a new currentLangCode (is usually only provided by a TranslatableRootInterface).
+ */
+export function defineCurrentLangCode(parent: BaseObservable<ObservableTypes> | null, newLang?: string): ObservablePrimitive<string> {
 	const parentTranslatable = parent && isTranslatable(parent) ? parent : null
 	
-	if(newLang)
+	if(newLang) {
 		return new ObservablePrimitive<string>(newLang, null, "currentLang")
-	else
+	}
+	else {
 		return parentTranslatable?.currentLangCode ?? new ObservablePrimitive<string>("en", null, "currentLang")
+	}
 }
 
 export type TranslatableJsonCreatorOptions = { dontIncludeAllLanguages?: boolean } & JsonCreatorOptions
