@@ -98,17 +98,15 @@ export class DataStructure extends TranslatableObject {
 	 * @param typeConstructor - A {@link DataStructure} constructor function that holds the definitions for each object.
 	 * @return The created array of  {@link DataStructure} objects.
 	 */
-	protected objectArray<T extends ObservableObject>(
+	protected objectArray<T extends DataStructure>(
 		key: ObserverKeyType,
 		typeConstructor: { new(data: ObservableObjectDataType, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType, newLang?: string): T ;}
-	): ObservableArray<ObservableObjectDataType, T> {
-		const obs = new ObservableArray<ObservableObjectDataType, T>(
+	): TranslatableArray<ObservableObjectDataType, T> {
+		const obs = new TranslatableArray<ObservableObjectDataType, T>(
 			this.getInitJson().hasOwnProperty(key) ? this.getInitJson()[key] as ObservableObjectDataType[] : [],
 			this,
 			key,
-			(data, parent, childKey) => {
-				return new typeConstructor(data, parent, childKey)
-			}
+			(data, parent, childKey) => new typeConstructor(data, parent, childKey)
 		)
 		this.setValueIndex(key, obs)
 		return obs
