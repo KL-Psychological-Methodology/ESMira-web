@@ -22,18 +22,28 @@ export class ObservableArray<
 		constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) => ObsT
 	) {
 		super(parent, key)
+		this.constructObservable = constructObservable
+		this.fillArray(defaultFields)
+	}
+	
+	/**
+	 * We cannot fill the array in the constructor because a derived class might need to set properties that can be accessed by its children
+	 * This is mainly needed for {@link TranslatableArray} where children will access {@link TranslatableArray.currentLangCode} of the parent.
+	 * @param defaultFields
+	 * @protected
+	 */
+	protected fillArray(defaultFields: InputT[]) {
 		const values: ObsT[] = []
 		const defaultObsValues: string[] = []
 		this.set(values, true)
 		this.setDefault(defaultObsValues)
-		this.constructObservable = constructObservable
 		
 		for(let i = 0; i < defaultFields.length; ++i) {
 			const value = defaultFields[i];
 			if(value == null) { //happens when value has the wrong type (the source was faulty)
 				continue;
 			}
-			const obs = constructObservable(value, this, i.toString())
+			const obs = this.constructObservable(value, this, i.toString())
 			values.push(obs)
 			defaultObsValues.push(obs.keyName.toString())
 		}
