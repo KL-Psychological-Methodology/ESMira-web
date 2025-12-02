@@ -53,7 +53,7 @@
 	"create": "Create",
 	"colon": "%s:",
 	"action": "Action",
-	"app_installation_instructions": "App installation instructions",
+	"app_installation_instructions": "Study information with app installation instructions",
 	"active_studies": "Active studies",
 	"backups": "Backups",
 	"permissions_admin": "Admin privileges",
@@ -694,5 +694,8 @@
 	"publish_info_fallback_link": "Additionally you can include the link to the info page on your fallback server, and instruct participants to use it if the first link does not work. ",
 	"publish_info_flyer_based": "If you want to recruit via flyers, posters, etc., use the QR code. ",
 	"publish_info_difference_links": "Use the link to the study information page for participants in the web version of the study. Use the link to the app installation instructions for participants using their smartphones. ",
-	"publish_info_explanation_qr": "If someone scans the QR code without having ESMira installed on their smartphone, their smartphone will open the info page in their browser. If they already have ESMira installed, the smartphone will instead open ESMira and directly forward them into the enrollment process for the study."
+	"publish_info_explanation_qr": "If someone scans the QR code without having ESMira installed on their smartphone, their smartphone will open the info page in their browser. If they already have ESMira installed, the smartphone will instead open ESMira and directly forward them into the enrollment process for the study.",
+	"urls_instruction_id": "I do not use an access key or have only a single study using this access key",
+	"urls_instruction_access_key": "I have multiple studies using the same access key",
+	"urls_instruction_questionnaires": "I want to use the Web-versions of the questionaires (not recommended)"
 }
