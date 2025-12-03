@@ -52,7 +52,7 @@ class Configs {
 	}
 	
 	static function injectConfig($path) { //TODO: for testing. Can be replaced by resetConfig()
-		self::$configs = require DIR_BASE ."test/testConfigs/$path";
+		self::$configs = require DIR_BASE ."../test/testConfigs/$path";
 	}
 	static function injectDataStore(DataStoreInterface $dataStore) { //for testing
 		self::$dataStore = $dataStore;

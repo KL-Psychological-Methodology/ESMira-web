@@ -1,0 +1,130 @@
+<?php
+
+namespace testConfigs;
+
+use backend\Configs;
+use backend\DataStoreInterface;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\MockObject\Stub;
+
+require_once __DIR__ . '/../autoload.php';
+
+class BaseMockedTestSetup extends BaseTestSetup {
+	private $callArgumentCache = [];
+	
+	/**
+	 * @var DataStoreInterface
+	 */
+	protected $dataStoreObserver;
+	
+	function setUp(): void {
+		$this->dataStoreObserver = $this->setUpDataStoreObserver();
+		Configs::injectDataStore($this->dataStoreObserver);
+	}
+	protected function tearDown(): void {
+		parent::tearDown();
+		$this->setPost();
+		$this->setGet();
+		$this->setSession();
+	}
+	public static function tearDownAfterClass(): void {
+		parent::tearDownAfterClass();
+		Configs::resetAll();
+	}
+	
+	
+	protected function setUpDataStoreObserver(): Stub {
+		return $this->createMock(DataStoreInterface::class);
+	}
+	
+	
+	protected function createStoreMock(string $method, Stub $observer, Stub $parentObserver) {
+		$parentObserver
+			->method($method)
+			->willReturnCallback(function() use($observer) {
+				return $observer;
+			});
+	}
+	
+	/**
+	 * Mocks a subStore and then adds a mock on a specific method.
+	 *
+	 * @param string $class The subStore className for which the mock is to be created.
+	 * @param string $method The method name to be mocked.
+	 * @param mixed $return The value to be returned when the mocked method is called. Defaults to null.
+	 * @return Stub The stub representing the mocked subStore.
+	 */
+	protected function createDataMock(string $class, string $method, /*mixed*/ $return = null): Stub {
+		$store = $this->createMock($class);
+		return $this->addDataMock($store, $method, $return);
+	}
+	
+	/**
+	 * Adds a mock behavior for a specific method in the provided subStore stub.
+	 * The methods arguments from calls will be recorded and cached for assertion in the $callArgumentCache property.
+	 *
+	 * @param Stub $store The stub instance for which the method mock is to be added.
+	 * @param string $method The method name for which the mock behavior is defined.
+	 * @param mixed $return The value or callable to be used as the return value for the mocked method. Defaults to null.
+	 * @return Stub The stub representing the mocked subStore.
+	 */
+	protected function addDataMock(Stub $store, string $method, /*mixed*/ $return = null): Stub {
+		$store->method($method)
+			->willReturnCallback(function(... $arguments) use($method, $return) {
+				if(!isset($this->callArgumentCache[$method]))
+					$this->callArgumentCache[$method] = [];
+				$this->callArgumentCache[$method][] = $arguments;
+				return is_callable($return) ? call_user_func_array($return, $arguments) : $return;
+			});
+		return $store;
+	}
+	
+	
+	protected function setPost(array $data = []) {
+		$_POST = $data;
+	}
+	protected function setGet(array $data = []) {
+		$_GET = $data;
+	}
+	protected function setSession(array $data = []) {
+		$_SESSION = $data;
+	}
+	
+	
+	protected function assertMissingData(array $array, callable $exec) {
+		$caughtNum = 0;
+		$expectedNum = count($array);
+		for($i=$expectedNum-1; $i >=0; --$i) {
+			$a = $array;
+			array_splice($a, $i, 1);
+			
+			if($exec($a))
+				++$caughtNum;
+		}
+		$this->assertEquals($expectedNum, $caughtNum, "Expected $expectedNum exceptions but got $caughtNum");
+	}
+	
+	protected function assertDataMock(string $method, ...$expectedCalls) {
+		if(!isset($this->callArgumentCache[$method]))
+			throw new ExpectationFailedException("No calls were saved for \"$method\"");
+		
+		$savedCalls = $this->callArgumentCache[$method];
+		$expectedCallCount = count($expectedCalls);
+		$actualCallCount = count($savedCalls);
+		$this->assertEquals($expectedCallCount, $actualCallCount, "$method() was expected to be called $expectedCallCount times. but was called $actualCallCount times");
+		foreach($savedCalls as $i => $actualArguments) {
+			$expectedArguments = $expectedCalls[$i];
+			
+			$expectedArgumentsCount = count($expectedArguments);
+			$actualArgumentsCount = count($actualArguments);
+			$this->assertEquals($expectedArgumentsCount, $actualArgumentsCount, "Call $i of $method() was expected to have $expectedArgumentsCount arguments. but had $actualArgumentsCount arguments");
+			foreach($actualArguments as $i2 => $actualArgument) {
+				$expectedArgument = $expectedArguments[$i2];
+				if($expectedArgument instanceof SkipArgument)
+					continue;
+				$this->assertEquals($expectedArgument, $actualArgument, "$i. $method(): Argument $i2 is unexpected");
+			}
+		}
+		$this->callArgumentCache[$method] = [];
+	}
+}

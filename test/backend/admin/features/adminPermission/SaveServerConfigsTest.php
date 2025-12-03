@@ -1,0 +1,174 @@
+<?php
+
+namespace backend\admin\features\adminPermission;
+
+use backend\admin\features\adminPermission\SaveServerConfigs;
+use backend\Configs;
+use backend\exceptions\PageFlowException;
+use backend\Main;
+use backend\Paths;
+use backend\subStores\ServerStore;
+use PHPUnit\Framework\MockObject\Stub;
+use testConfigs\BaseAdminPermissionTestSetup;
+
+require_once __DIR__ . '/../../../../autoload.php';
+
+class SaveServerConfigsTest extends BaseAdminPermissionTestSetup {
+	private $serverNameContent1 = 'serverNameContent1';
+	private $serverNameContent2 = 'serverNameContent2';
+	private $serverNameContent3 = 'serverNameContent3';
+	
+	private $impressumContent1 = 'impressumContent1';
+	private $impressumContent2 = 'impressumContent2';
+	private $impressumContent3 = 'impressumContent3';
+	
+	private $privacyPolicyContent1 = 'privacyPolicyContent1';
+	private $privacyPolicyContent2 = 'privacyPolicyContent2';
+	private $privacyPolicyContent3 = 'privacyPolicyContent3';
+	
+	protected function tearDown(): void {
+		parent::tearDown();
+		if(file_exists(Paths::FILE_CONFIG))
+			unlink(Paths::FILE_CONFIG);
+	}
+	
+	protected function setUpDataStoreObserver(): Stub {
+		$observer = parent::setUpDataStoreObserver();
+		
+		$store = $this->createDataMock(ServerStore::class, 'saveImpressum');
+		$this->addDataMock($store, 'deleteImpressum');
+		$this->addDataMock($store, 'savePrivacyPolicy');
+		$this->addDataMock($store, 'deletePrivacyPolicy');
+		
+		$this->createStoreMock(
+			'getServerStore',
+			$store,
+			$observer
+		);
+		return $observer;
+	}
+	
+	function test_saveServerName() {
+		Configs::injectConfig('configs.langCodes.injected.php');
+		$defaultPostInput = [
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent2,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent3,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
+			]
+		];
+		Main::$defaultPostInput = json_encode($defaultPostInput);
+		
+		$obj = new SaveServerConfigs();
+		$obj->exec();
+		
+		$this->assertEquals(['en' => $this->serverNameContent1, 'fr' => $this->serverNameContent2, 'de' => $this->serverNameContent3], Configs::get('serverName'));
+		$this->assertEquals(['en', 'fr', 'de'], Configs::get('langCodes'));
+	}
+	
+	function test_saveServerName_with_forbidden_characters() {
+		$defaultPostInput = [
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => 'name$',
+					'impressum' => '',
+					'privacyPolicy' => ''
+				]
+			]
+		];
+		Main::$defaultPostInput = json_encode($defaultPostInput);
+		
+		$this->expectException(PageFlowException::class);
+		$obj = new SaveServerConfigs();
+		$obj->exec();
+	}
+	
+	function test_save_and_delete_impressum() {
+		Configs::injectConfig('configs.langCodes.injected.php');
+		$defaultPostInput = [
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => $this->impressumContent1,
+					'privacyPolicy' => ''
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => $this->impressumContent2,
+					'privacyPolicy' => ''
+				]
+			]
+		];
+		Main::$defaultPostInput = json_encode($defaultPostInput);
+		
+		$obj = new SaveServerConfigs();
+		$obj->exec();
+		
+		$this->assertDataMock('saveImpressum', [$this->impressumContent1, 'en'], [$this->impressumContent2, 'de']);
+		$this->assertDataMock('deleteImpressum', ['fr']);
+	}
+	
+	function test_save_and_delete_privacyPolicy() {
+		Configs::injectConfig('configs.langCodes.injected.php');
+		$defaultPostInput = [
+			'configs' => [],
+			'translationData' => [
+				'en' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => $this->privacyPolicyContent1
+				],
+				'fr' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => ''
+				],
+				'de' => [
+					'serverName' => $this->serverNameContent1,
+					'impressum' => '',
+					'privacyPolicy' => $this->privacyPolicyContent2
+				]
+			]
+		];
+		Main::$defaultPostInput = json_encode($defaultPostInput);
+		
+		$obj = new SaveServerConfigs();
+		$obj->exec();
+		
+		$this->assertDataMock('savePrivacyPolicy', [$this->privacyPolicyContent1, 'en'], [$this->privacyPolicyContent2, 'de']);
+		$this->assertDataMock('deletePrivacyPolicy', ['fr']);
+	}
+	
+	function test_with_missing_data() {
+		Main::$defaultPostInput = '';
+		$obj = new SaveServerConfigs();
+		$this->expectException(PageFlowException::class);
+		$obj->exec();
+	}
+	function test_without_default_lang() {
+		Main::$defaultPostInput = '{}';
+		$obj = new SaveServerConfigs();
+		$this->expectException(PageFlowException::class);
+		$obj->exec();
+	}
+}
