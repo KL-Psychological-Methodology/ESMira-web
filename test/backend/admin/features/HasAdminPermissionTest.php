@@ -24,13 +24,13 @@ class HasAdminPermissionTest extends BaseAdminPermissionTestSetup {
 	}
 	public function test_without_admin_permission() {
 		$this->isAdmin = false;
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
 	public function test_when_logged_out() {
 		$this->setPost();
 		Permission::setLoggedOut();
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
 }

@@ -39,7 +39,7 @@ class InitESMiraPrepTest extends BaseNoPermissionTestSetup {
 		$this->isInit = true;
 		$obj = new InitESMiraPrep();
 		$this->expectException(PageFlowException::class);
-		$this->expectErrorMessage('Disabled');
+		$this->expectExceptionMessage('Disabled');
 		$obj->exec();
 	}
 }

@@ -64,20 +64,20 @@ class StatisticsStoreWriterFSTest extends BaseTestSetup {
 		
 		
 		$this->writer->addDataToDay(0, $startOfDay1, $appType, $appVersion1, $questionnaireAdd, $joinedAdd); //will be removed from days
-		$this->assertObjectHasAttribute($startOfDay1, $this->writer->getStatisticsObj()->days);
-		$this->assertObjectHasAttribute($versionString1, $this->writer->getStatisticsObj()->days->{$startOfDay1}->appVersion);
+		$this->assertObjectHasProperty($startOfDay1, $this->writer->getStatisticsObj()->days);
+		$this->assertObjectHasProperty($versionString1, $this->writer->getStatisticsObj()->days->{$startOfDay1}->appVersion);
 		
 		$this->writer->addDataToDay($afterFirstEntry, $startOfDay2, $appType, $appVersion1, $questionnaireAdd, $joinedAdd);
-		$this->assertObjectNotHasAttribute($startOfDay1, $this->writer->getStatisticsObj()->days);
-		$this->assertObjectHasAttribute($versionString1, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
+		$this->assertObjectNotHasProperty($startOfDay1, $this->writer->getStatisticsObj()->days);
+		$this->assertObjectHasProperty($versionString1, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
 		
 		
 		$this->writer->addDataToDay($afterFirstEntry, $startOfDay2, $appType, $appVersion2, $questionnaireAdd, $joinedAdd);
-		$this->assertObjectHasAttribute($versionString2, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
+		$this->assertObjectHasProperty($versionString2, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
 		
 		
 		$this->writer->addDataToDay($afterFirstEntry, $startOfDay2, $appType, $appVersion2, $questionnaireAdd, $joinedAdd);
-		$this->assertObjectHasAttribute($versionString2, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
+		$this->assertObjectHasProperty($versionString2, $this->writer->getStatisticsObj()->days->{$startOfDay2}->appVersion);
 		
 		
 		$this->assertEquals($questionnaireAdd * $addCount, $this->writer->getStatisticsObj()->total->questionnaire);

@@ -47,7 +47,7 @@ class HasMessagePermissionTest extends BaseLoggedInPermissionTestSetup {
 	public function test_without_permissions() {
 		$this->isAdmin = false;
 		$this->msgPermissions = [];
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$obj = $this->createObj();
 		$this->assertEquals([], $obj->exec());
 	}
@@ -55,13 +55,13 @@ class HasMessagePermissionTest extends BaseLoggedInPermissionTestSetup {
 		$this->setPost();
 		$this->isAdmin = false;
 		$this->msgPermissions = [];
-		$this->expectErrorMessage('Missing study id');
+		$this->expectExceptionMessage('Missing study id');
 		$this->createObj();
 	}
 	public function test_when_logged_out() {
 		$this->setPost();
 		Permission::setLoggedOut();
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
 }

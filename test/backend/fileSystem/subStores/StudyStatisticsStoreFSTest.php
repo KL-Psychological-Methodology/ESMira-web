@@ -61,7 +61,7 @@ class StudyStatisticsStoreFSTest extends BaseDataFolderTestSetup {
 		$element = $index->{$this->statisticsKey}[0];
 		
 		$this->assertEquals($storageType, $element->storageType);
-		$this->assertEquals($timeInterval, $element->timeInterval);
+		$this->assertEquals($timeInterval, $element->timeInterval ?? null);
 		$this->assertEquals($data, $element->data);
 		$this->assertEquals($entryCount, $element->entryCount);
 	}

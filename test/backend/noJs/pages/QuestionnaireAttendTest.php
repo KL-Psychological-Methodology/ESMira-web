@@ -3,6 +3,7 @@
 namespace backend\noJs\pages;
 
 use backend\DataSetCache;
+use backend\noJs\ForwardingException;
 use backend\noJs\Lang;
 use backend\noJs\pages\AppInstall;
 use backend\noJs\pages\GetParticipant;
@@ -139,19 +140,20 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 	
 	function test_with_non_web_study() {
 		$_GET['id'] = 234;
-		$this->expectErrorMessage(AppInstall::class);
+		$_SERVER['HTTP_HOST'] = 'localhost';
+		$this->expectExceptionMessage(AppInstall::class);
 		new QuestionnaireAttend();
 	}
 	
 	function test_with_faulty_questionnaireId() {
 		$_GET['qid'] = 9999;
-		$this->expectErrorMessage(StudyOverview::class);
+		$this->expectExceptionMessage(StudyOverview::class);
 		new QuestionnaireAttend();
 	}
 	
 	function test_without_participant() {
 		unset($_COOKIE["participant123"]);
-		$this->expectErrorMessage(GetParticipant::class);
+		$this->expectExceptionMessage(GetParticipant::class);
 		new QuestionnaireAttend();
 	}
 	
@@ -174,7 +176,7 @@ class QuestionnaireAttendTest extends BaseNoJsTestSetup {
 	function test_without_needed_informed_consent() {
 		$_GET['id'] = 345;
 		$_GET['qid'] = 4444;
-		$this->expectErrorMessage(InformedConsent::class);
+		$this->expectExceptionMessage(InformedConsent::class);
 		new QuestionnaireAttend();
 	}
 	

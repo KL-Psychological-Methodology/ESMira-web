@@ -660,7 +660,7 @@ class CreateDataSetTest extends BaseTestSetup {
 	}
 	
 	function test_with_outdated_server_version() {
-		$this->expectErrorMessage('This app is outdated. Aborting');
+		$this->expectExceptionMessage('This app is outdated. Aborting');
 		$this->createDataSetObj([], [
 			'serverVersion' => (string) (Main::ACCEPTED_SERVER_VERSION-1)
 		]);

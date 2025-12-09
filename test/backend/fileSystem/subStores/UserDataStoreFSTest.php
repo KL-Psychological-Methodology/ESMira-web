@@ -124,7 +124,7 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$this->assertGreaterThanOrEqual(5, strlen($code));
 		
-		$this->expectErrorMessage('Reward code was already generated');
+		$this->expectExceptionMessage('Reward code was already generated');
 		
 		$userDataStoreForRewardCode = new UserDataStoreFS('test1');
 		$userDataStoreForRewardCode->generateRewardCode($studyId);
@@ -137,7 +137,7 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		]);
 		
 		$userDataStoreForRewardCode = new UserDataStoreFS('test1');
-		$this->expectErrorMessage('Reward codes are disabled');
+		$this->expectExceptionMessage('Reward codes are disabled');
 		$userDataStoreForRewardCode->generateRewardCode($studyId);
 	}
 	public function test_generateRewardCode_with_too_few_datasets() {
@@ -163,7 +163,7 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		$userDataStoreForDataSets->writeAndClose();
 		
 		$userDataStoreForRewardCode = new UserDataStoreFS('test1');
-		$this->expectErrorMessage('Not all conditions are fulfilled');
+		$this->expectExceptionMessage('Not all conditions are fulfilled');
 		$userDataStoreForRewardCode->generateRewardCode($studyId);
 	}
 	public function test_generateRewardCode_with_rewards_not_visible_yet() {
@@ -175,7 +175,7 @@ class UserDataStoreFSTest extends BaseDataFolderTestSetup {
 		]);
 		
 		$userDataStoreForRewardCode = new UserDataStoreFS('test1');
-		$this->expectErrorMessage('Rewards are not accessible yet');
+		$this->expectExceptionMessage('Rewards are not accessible yet');
 		$userDataStoreForRewardCode->generateRewardCode($studyId);
 	}
 }

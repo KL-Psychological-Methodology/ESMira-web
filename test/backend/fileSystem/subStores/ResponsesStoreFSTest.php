@@ -232,7 +232,7 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$fileUploader = $this->createMock(FileUploader::class);
 		
-		$this->expectErrorMessage('Not allowed');
+		$this->expectExceptionMessage('Not allowed');
 		Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $this->userId, $identifier, $fileUploader);
 	}
 	function test_uploadFile_with_already_existing_upload() {
@@ -249,7 +249,7 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$fileUploader = $this->createMock(FileUploader::class);
 		
-		$this->expectErrorMessage('File already exists');
+		$this->expectExceptionMessage('File already exists');
 		Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $this->userId, $identifier, $fileUploader);
 	}
 	function test_uploadFile_when_upload_fails() {
@@ -268,7 +268,7 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 			->with($targetPath)
 			->willReturn(false);
 		
-		$this->expectErrorMessage('Uploading failed');
+		$this->expectExceptionMessage('Uploading failed');
 		Configs::getDataStore()->getResponsesStore()->uploadFile($studyId, $this->userId, $identifier, $fileUploader);
 		
 	}

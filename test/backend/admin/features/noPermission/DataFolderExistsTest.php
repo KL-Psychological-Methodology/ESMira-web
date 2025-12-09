@@ -44,7 +44,7 @@ class DataFolderExistsTest extends BaseNoPermissionTestSetup {
 		]);
 		$obj = new DataFolderExists();
 		$this->expectException(PageFlowException::class);
-		$this->expectErrorMessage('Disabled');
+		$this->expectExceptionMessage('Disabled');
 		$obj->exec();
 	}
 	

@@ -12,11 +12,6 @@ use ZipArchive;
 require_once __DIR__ . '/../../../../autoload.php';
 require_once __DIR__ .'/../../../../testConfigs/variables.php';
 
-/*
- * Testing this class is a bit weird and potentially dangerous because DoUpdate() moves itself and everything with it (to be then replaced by an update)
- * I dont want to mess with the source files, so make sure only mock-folders are copied. but that means some stuff can not be tested
- * like overwriting the default settings file - because nothing is actually overwritten and we would have to change const values in order to point to the mock data
- */
 class UpdateStepPrepareTest extends BaseAdminPermissionTestSetup {
 	private string $pathConfigFile = TEST_DATA_FOLDER .'config.php';
 	private string $pathUpdate = TEST_DATA_FOLDER .'update/';
@@ -68,21 +63,15 @@ class UpdateStepPrepareTest extends BaseAdminPermissionTestSetup {
 	function test_when_zip_does_not_exist() {
 		unlink($this->pathUpdateZip);
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function(string $message) {$this->assertEquals("Missing $this->pathUpdateZip", $message);}
-		);
+		$this->expectExceptionMessage("Missing $this->pathUpdateZip");
+		$this->runClass();
 	}
 	
 	function test_when_update_already_exists() {
 		mkdir($this->pathUpdate);
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function(string $message) {$this->assertEquals("$this->pathUpdate already exists. Please remove it manually and try again.", $message);}
-		);
+		$this->expectExceptionMessage("$this->pathUpdate already exists. Please manually remove it and try again.");
+		$this->runClass();
 	}
 	
 	function test_revert() {
@@ -90,15 +79,16 @@ class UpdateStepPrepareTest extends BaseAdminPermissionTestSetup {
 		file_put_contents($this->pathUpdate .'new_File', 'content');
 		
 		
-		$this->assertException(
-			function() {
-				$obj = new UpdateStepPrepare($this->pathConfigFile, $this->pathUpdateZip, $this->pathUpdate);
-				$obj->revert(new Exception('Mock test'));
-			},
-			CriticalException::class,
-			function(string $message) {$this->assertEquals('Could not prepare the update because: Mock test', $message);}
-		);
+		$obj = new UpdateStepPrepare($this->pathConfigFile, $this->pathUpdateZip, $this->pathUpdate);
+		try {
+			$obj->revert(new Exception('Mock test'));
+		}
+		catch(Exception $e) {
+			$this->assertEquals('Could not prepare the update because: Mock test', $e->getMessage());
+			$this->assertFileDoesNotExist($this->pathUpdate);
+			return;
+		}
 		
-		$this->assertFileDoesNotExist($this->pathUpdate);
+		throw new Error('Nothing was thrown!');
 	}
 }

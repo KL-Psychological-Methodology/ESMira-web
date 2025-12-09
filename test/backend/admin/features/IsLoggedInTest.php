@@ -60,12 +60,12 @@ class IsLoggedInTest extends BaseLoggedInPermissionTestSetup {
 	public function test_when_logged_out() {
 		$this->setPost();
 		Permission::setLoggedOut();
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
 	public function test_is_not_init() {
 		$this->isInit = false;
-		$this->expectErrorMessage('No permission');
+		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
 }

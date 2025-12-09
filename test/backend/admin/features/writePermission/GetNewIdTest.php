@@ -60,14 +60,14 @@ class GetNewIdTest extends BaseWritePermissionTestSetup {
 		$this->studyExistsReturn = true;
 		$obj = new GetNewId();
 		
-		$this->expectErrorMessage('Could not find an unused id');
+		$this->expectExceptionMessage('Could not find an unused id');
 		$obj->execAndOutput();
 	}
 	function test_when_questionnaireId_exists() {
 		$this->getStudyIdForQuestionnaireIdReturn = $this->studyId;
 		$obj = new GetNewId();
 		
-		$this->expectErrorMessage('Could not find an unused id');
+		$this->expectExceptionMessage('Could not find an unused id');
 		$obj->execAndOutput();
 	}
 }

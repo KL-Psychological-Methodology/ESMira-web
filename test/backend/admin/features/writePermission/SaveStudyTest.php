@@ -519,7 +519,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, $adjustConfig));
 		
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('empty');
+		$this->expectExceptionMessage('empty');
 		$obj->exec();
 	}
 	function test_with_accessKey_with_special_characters() {
@@ -531,7 +531,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, $adjustConfig));
 		
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('special characters');
+		$this->expectExceptionMessage('special characters');
 		$obj->exec();
 	}
 	function test_with_accessKey_with_faulty_format() {
@@ -543,7 +543,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, $adjustConfig));
 		
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('start with a character');
+		$this->expectExceptionMessage('start with a character');
 		$obj->exec();
 	}
 	function test_with_changed_accessKeys_without_permission() {
@@ -614,7 +614,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, function(stdClass $study) {
 			$study->questionnaires[0]->title = '';
 		}));
-		$this->expectErrorMessage('Questionnaire title is empty');
+		$this->expectExceptionMessage('Questionnaire title is empty');
 		$obj = new SaveStudy();
 		$obj->exec();
 	}
@@ -622,7 +622,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, function(stdClass $study) {
 			$study->questionnaires[0]->pages[0]->inputs[0]->name = '';
 		}));
-		$this->expectErrorMessage('Input name is empty');
+		$this->expectExceptionMessage('Input name is empty');
 		$obj = new SaveStudy();
 		$obj->exec();
 	}
@@ -630,7 +630,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, function(stdClass $study) {
 			$study->questionnaires[0]->pages[0]->inputs[0]->name = 'nameWith%';
 		}));
-		$this->expectErrorMessage('special characters');
+		$this->expectExceptionMessage('special characters');
 		$obj = new SaveStudy();
 		$obj->exec();
 	}
@@ -638,7 +638,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, function(stdClass $study) {
 			$study->questionnaires[0]->pages[0]->inputs[1]->name = $study->questionnaires[0]->pages[0]->inputs[0]->name;
 		}));
-		$this->expectErrorMessage('exists more than once');
+		$this->expectExceptionMessage('exists more than once');
 		$obj = new SaveStudy();
 		$obj->exec();
 	}
@@ -646,7 +646,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($this->createCollection(false, false, function(stdClass $study) {
 			$study->questionnaires[0]->pages[0]->inputs[1]->name = 'studyId';
 		}));
-		$this->expectErrorMessage('Protected variable name');
+		$this->expectExceptionMessage('Protected variable name');
 		$obj = new SaveStudy();
 		$obj->exec();
 	}
@@ -660,14 +660,14 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 	function test_with_broken_data() {
 		Main::$defaultPostInput = '-';
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('Unexpected data');
+		$this->expectExceptionMessage('Unexpected data');
 		$obj->exec();
 	}
 	
 	function test_without_default_study() {
 		Main::$defaultPostInput = '{"de": {}}';
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('No default study language');
+		$this->expectExceptionMessage('No default study language');
 		$obj->exec();
 	}
 	
@@ -677,7 +677,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 		Main::$defaultPostInput = json_encode($collection);
 		
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('Problem with study id');
+		$this->expectExceptionMessage('Problem with study id');
 		$obj->exec();
 	}
 	
@@ -687,7 +687,7 @@ class SaveStudyTest extends BaseWritePermissionTestSetup {
 			'lastChanged' => $this->lastChanged-1
 		]);
 		$obj = new SaveStudy();
-		$this->expectErrorMessage('The study configuration was changed');
+		$this->expectExceptionMessage('The study configuration was changed');
 		$obj->exec();
 	}
 }
