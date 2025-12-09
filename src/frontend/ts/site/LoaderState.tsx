@@ -8,13 +8,14 @@ export class LoaderState {
 	private isEnabled = false
 	private isVisible = false
 	private isError = false
-	private hasAnimation = false
+	private hasLoader = false
 	private hasTryAgainBtn = false
 	private stateMsg: string = ""
 	
 	private animationId: number = 0
 	private tryAgainCallback: (() => void) | null = null
 	private enableCount: number = 0
+	private clickEventRemoveFu: (() => void) | null = null
 	
 	public getView(): Vnode<any, any> {
 		if(!this.isEnabled)
@@ -28,7 +29,7 @@ export class LoaderState {
 		
 		return (
 			<div class={ className }>
-				{LoadingSpinner(!this.hasAnimation)}
+				{LoadingSpinner(!this.hasLoader)}
 				<div class="loaderState line">{ this.stateMsg }</div>
 				<a class={ `loaderRetry line clickable ${this.hasTryAgainBtn ? "" : "hidden"}` } onclick={ () => { if(this.tryAgainCallback) {this.tryAgainCallback() } } }></a>
 				<a class={ `loaderClose clickable ${this.isError ? "" : "hidden"}` } onclick={ this.closeLoader.bind(this) }>{m.trust(closeX)}</a>
@@ -46,7 +47,7 @@ export class LoaderState {
 	public showMessage(s: string | null): void {
 		window.clearTimeout(this.animationId)
 		this.isEnabled = true
-		this.hasAnimation = false
+		this.hasLoader = false
 		
 		if(s)
 			this.stateMsg = s
@@ -59,8 +60,9 @@ export class LoaderState {
 	}
 	
 	private disable(ignoreError: boolean = false): void {
-		if(!this.isEnabled || (this.isError && !ignoreError))
+		if(!this.isEnabled || (this.isError && !ignoreError)) {
 			return
+		}
 
 		window.clearTimeout(this.animationId)
 
@@ -73,7 +75,7 @@ export class LoaderState {
 				this.isError = false
 				this.stateMsg = ""
 				this.updateView()
-			}, 200)
+			}, 10)
 		}, 10)
 	}
 	
@@ -85,8 +87,18 @@ export class LoaderState {
 		this.updateView()
 	}
 	
-	public showLoader(promise: Promise<any>, msg: string = Lang.get("state_loading")) : Promise<any> {
+	public async showLoader(promise: Promise<any>, msg: string = Lang.get("state_loading")) : Promise<any> {
+		this.hasLoader = true
+		this.hasTryAgainBtn = false
+		
 		if(this.isEnabled) {
+			if(this.clickEventRemoveFu) {
+				this.clickEventRemoveFu()
+				window.clearTimeout(this.animationId)
+				this.animationId = window.setTimeout(() => {
+					this.showLoader(promise, msg)
+				}, 30)
+			}
 			this.update(msg)
 			return promise
 		}
@@ -99,33 +111,32 @@ export class LoaderState {
 		this.isVisible = false
 		this.stateMsg = msg
 		
-		this.hasAnimation = true
-		this.hasTryAgainBtn = false
-		
 		this.updateView()
 		this.animationId = window.setTimeout(() => {
 			this.isVisible = true
 			this.updateView()
-		}, 500)
+		}, 10)
 		
 		
 		++this.enableCount
 		
-		return promise
-			.then(response => {
-				if(--this.enableCount <= 0)
-					this.disable()
-					
-				return response;
-			})
-			.catch(e => {
-				if(--this.enableCount <= 0)
-					this.disable()
-				
-				console.error(e)
-				this.error(e.message || e)
-				throw e
-			});
+		try {
+			const response = await promise
+			if(--this.enableCount <= 0) {
+				this.disable()
+			}
+			
+			return response;
+		}
+		catch(e) {
+			if(--this.enableCount <= 0) {
+				this.disable()
+			}
+			
+			console.error(e)
+			this.error((e as Error).message || e as string)
+			throw e
+		}
 	}
 	
 	public info(s: string): void {
@@ -137,11 +148,13 @@ export class LoaderState {
 		let removeFu = () => {
 			this.closeLoader()
 			document.removeEventListener("click", removeFu)
-		};
+			this.clickEventRemoveFu = null
+		}
+		this.clickEventRemoveFu = removeFu
 		
 		window.setTimeout(() => { //to make sure an unfinished click does not call this instantly
 			document.addEventListener( "click", removeFu)
-		}, 200)
+		}, 10)
 	}
 	
 	public error(s: string, tryAgain?: () => void): void {
