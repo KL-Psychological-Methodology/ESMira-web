@@ -45,7 +45,7 @@ class StudyOverview implements Page {
         $studyId = $this->study->id;
         $output = '';
 
-        if ($this->studyOver ?? false) {
+        if ($this->study->studyOver ?? false) {
             $output .= '<div class="dashRow"><div class="dashEl small highlight stretched">' . Lang::get('study_over_message') . '</div></div>';
             if (isset($this->study->postStudyNote)) {
                 $output .= '<p>' . $this->study->postStudyNote . '<p>';
@@ -55,7 +55,7 @@ class StudyOverview implements Page {
         if (isset($this->study->studyDescription) && strlen($this->study->studyDescription))
             $output .= '<div class="scrollBox">' .$this->study->studyDescription .'</div>';
         
-        if (!$this->study->studyOver ?? false) {
+        if (!($this->study->studyOver ?? false)) {
             $output .= '<br/><div class="titleRow">' .Lang::get('questionnaires') .'</div>';
             foreach ($this->study->questionnaires as $questionnaire) {
                 if (!NoJsMain::questionnaireIsActive($questionnaire))
