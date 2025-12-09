@@ -14,16 +14,13 @@ use backend\FileUploader;
 use backend\subStores\ResponsesStore;
 use ZipArchive;
 
-class ResponsesStoreFS implements ResponsesStore
-{
-	private function fillDatasetErrors(DataSetCacheContainer $entry, $msg, callable $errorCallback)
-	{
+class ResponsesStoreFS implements ResponsesStore {
+	private function fillDatasetErrors(DataSetCacheContainer $entry, $msg, callable $errorCallback) {
 		foreach ($entry->ids as $datasetId) {
 			$errorCallback($datasetId, $msg);
 		}
 	}
-	private function writeDataSetFile(string $path, string $text, DataSetCacheContainer $entry, callable $successCallback, callable $errorCallback)
-	{
+	private function writeDataSetFile(string $path, string $text, DataSetCacheContainer $entry, callable $successCallback, callable $errorCallback) {
 		if (file_put_contents($path, $text, FILE_APPEND | LOCK_EX)) {
 			foreach ($entry->ids as $datasetId) {
 				$successCallback($datasetId);
@@ -54,16 +51,14 @@ class ResponsesStoreFS implements ResponsesStore
 		$this->writeDataSetFile($path, $writeString, $entry, $successCallback, $errorCallback);
 	}
 
-	public function saveWebAccessDataSet(int $studyId, int $timestamp, string $pageName, string $referer, string $userAgent): bool
-	{
+	public function saveWebAccessDataSet(int $studyId, int $timestamp, string $pageName, string $referer, string $userAgent): bool {
 		return file_put_contents(
 			PathsFS::fileResponses($studyId, PathsFS::FILENAME_WEB_ACCESS),
 			"\n\"" . $timestamp . "\";\"$pageName\";\"$referer\";\"$userAgent\"",
 			FILE_APPEND | LOCK_EX
 		) !== false;
 	}
-	public function saveDataSetCache(string $userId, DataSetCache $cache, callable $successProgressCallback, callable $errorProgressCallback)
-	{
+	public function saveDataSetCache(string $userId, DataSetCache $cache, callable $successProgressCallback, callable $errorProgressCallback) {
 		foreach ($cache->getStatisticsCache() as $studyId => $entry) {
 			$pathStatisticsNewData = PathsFS::fileStatisticsNewData($studyId);
 
@@ -108,8 +103,7 @@ class ResponsesStoreFS implements ResponsesStore
 			}
 		}
 	}
-	public function uploadFile(int $studyId, string $userId, int $identifier, FileUploader $fileUploader)
-	{
+	public function uploadFile(int $studyId, string $userId, int $identifier, FileUploader $fileUploader) {
 		$waitingPath = PathsFS::filePendingUploads($studyId, $userId, $identifier);
 		if (!file_exists($waitingPath))
 			throw new CriticalException('Not allowed');
@@ -129,8 +123,7 @@ class ResponsesStoreFS implements ResponsesStore
 			unlink($mediaZipPath);
 	}
 
-	public function getLastResponseTimestampOfStudies(): array
-	{
+	public function getLastResponseTimestampOfStudies(): array {
 		$lastActivities = [];
 		$handle = opendir(PathsFS::folderStudies());
 		while ($studyId = readdir($handle)) {
@@ -144,8 +137,7 @@ class ResponsesStoreFS implements ResponsesStore
 		return $lastActivities;
 	}
 
-	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename)
-	{
+	private function fillMediaFolder(ZipArchive $zip, $path, callable $getMediaFilename) {
 		$handle = opendir($path);
 		while ($file = readdir($handle)) {
 			if ($file[0] != '.') {
@@ -154,8 +146,7 @@ class ResponsesStoreFS implements ResponsesStore
 		}
 		closedir($handle);
 	}
-	public function createMediaZip(int $studyId, callable $flushProgress)
-	{
+	public function createMediaZip(int $studyId, callable $flushProgress) {
 		$pathZip = Paths::fileMediaZip($studyId);
 		$zip = new ZipArchive();
 		$zip->open($pathZip, ZIPARCHIVE::CREATE);
@@ -167,8 +158,7 @@ class ResponsesStoreFS implements ResponsesStore
 		$currentCount = 0;
 
 		$onProgressCallback = function () use ($countTotal, $flushProgress, &$currentCount): void {
-			$percent = round(($currentCount / $countTotal) * 100);
-			$flushProgress("event: progress\ndata: $percent\n\n");
+			$flushProgress($currentCount, $countTotal);
 			++$currentCount;
 		};
 
@@ -191,8 +181,7 @@ class ResponsesStoreFS implements ResponsesStore
 
 		$zip->close();
 	}
-	public function outputResponsesFile(int $studyId, string $identifier)
-	{
+	public function outputResponsesFile(int $studyId, string $identifier) {
 		$path = PathsFS::fileResponses($studyId, $identifier);
 		if (!file_exists($path))
 			throw new CriticalException("$path does not exist");
@@ -204,8 +193,7 @@ class ResponsesStoreFS implements ResponsesStore
 	/**
 	 * @throws CriticalException
 	 */
-	private function outputMediaFromResponses(string $path, string $contentType)
-	{
+	private function outputMediaFromResponses(string $path, string $contentType) {
 		if (!file_exists($path))
 			throw new CriticalException("$path does not exist");
 
@@ -213,16 +201,13 @@ class ResponsesStoreFS implements ResponsesStore
 		Main::setHeader('Content-Length: ' . filesize($path));
 		readfile($path);
 	}
-	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key)
-	{
+	public function outputImageFromResponses(int $studyId, string $userId, int $entryId, string $key) {
 		$this->outputMediaFromResponses(Paths::fileImageFromData($studyId, $userId, $entryId, $key), 'image/png');
 	}
-	public function outputAudioFromResponses(int $studyId, string $userId, int $entryId, string $key)
-	{
+	public function outputAudioFromResponses(int $studyId, string $userId, int $entryId, string $key) {
 		$this->outputMediaFromResponses(Paths::fileAudioFromData($studyId, $userId, $entryId, $key), 'video/3gpp');
 	}
-	public function getResponseFilesList(int $studyId): array
-	{
+	public function getResponseFilesList(int $studyId): array {
 		$list = [];
 		$events_file = PathsFS::FILENAME_EVENTS . '.csv';
 		$webAccess_file = PathsFS::FILENAME_WEB_ACCESS . '.csv';

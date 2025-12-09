@@ -172,30 +172,23 @@ export class Content extends SectionContent {
 		)
 	}
 
-	private waitForDownload(study: Study) {
+	private async waitForDownload(study: Study) {
 		if (this.is_generating_zip) {
 			return
 		}
 		this.is_generating_zip = true
-		const eventSource = new EventSource(`${FILE_CREATE_MEDIA.replace("%1", study.id.get().toString())}`)
-		const mediaZipSpan = document.getElementById("mediaZipSpan")
-
-		eventSource.addEventListener('progress', e => {
-			if (mediaZipSpan != undefined)
-				mediaZipSpan.innerText = "media.zip (%1 ... %2\%)".replace("%1", Lang.get("generating")).replace("%2", e.data)
-		})
-		eventSource.addEventListener('finished', _e => {
-			this.is_generating_zip = false
-			eventSource.close()
-
-			if (mediaZipSpan != undefined)
-				mediaZipSpan.innerText = "media.zip"
-			let element = document.createElement('a')
-			element.setAttribute('href', `${FILE_MEDIA.replace("%1", study.id.get().toString())}`)
-			element.setAttribute('download', 'media.zip')
-			document.body.appendChild(element);
-			element.click();
-			document.body.removeChild(element);
-		})
+		
+		await this.sectionData.loader.loadWithSSE(
+			`${FILE_CREATE_MEDIA.replace("%1", study.id.get().toString())}`,
+			percent => "media.zip (%1 ... %2\%)".replace("%1", Lang.get("generating")).replace("%2", percent.toString())
+		)
+		
+		this.is_generating_zip = false
+		let element = document.createElement('a')
+		element.setAttribute('href', `${FILE_MEDIA.replace("%1", study.id.get().toString())}`)
+		element.setAttribute('download', 'media.zip')
+		document.body.appendChild(element)
+		element.click();
+		document.body.removeChild(element)
 	}
 }

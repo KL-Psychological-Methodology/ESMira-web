@@ -178,4 +178,8 @@ export class LoaderState {
 	public loadJson(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<any> {
 		return this.showLoader(Requests.loadJson(url, type, requestData));
 	}
+	
+	public loadWithSSE(url: string, progressState: (percent: number) => string): Promise<any> {
+		return this.showLoader(Requests.loadWithSSE(url, percent => this.update(progressState(percent))));
+	}
 }

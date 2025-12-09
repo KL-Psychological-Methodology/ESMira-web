@@ -2,8 +2,8 @@
 
 namespace backend\admin\features\readPermission;
 
-use backend\admin\features\readPermission\CreateMediaZip;
 use backend\Configs;
+use backend\SSE;
 use backend\subStores\ResponsesStore;
 use PHPUnit\Framework\MockObject\Stub;
 use testConfigs\BaseReadPermissionTestSetup;
@@ -26,25 +26,14 @@ class CreateMediaZipTest extends BaseReadPermissionTestSetup {
 		return $observer;
 	}
 	
-	private function createMediaZipObj(array $expectedOutput): CreateMediaZip {
-		$obj = $this->getMockBuilder(CreateMediaZip::class)
-			->onlyMethods(['sendHeader', 'flushProgress'])
-			->getMock();
-		$obj->method('sendHeader');
-		
-		$count = 0;
-		$obj->method('flushProgress')
-			->willReturnCallback(function(string $content) use($expectedOutput, &$count) {
-				$this->assertEquals($expectedOutput[$count++], $content);
-			});
-		return $obj;
-	}
-	
 	function test() {
-		$obj = $this->createMediaZipObj([
-			"Start\n\n",
-			"event: finished\ndata: \n\n"
-		]);
+		$sse = $this->createMock(SSE::class);
+		$sse->expects($this->once())
+			->method('sendHeader');
+		$sse->expects($this->once())
+			->method('flushFinished');
+		
+		$obj = new CreateMediaZip($sse);
 		
 		$obj->execAndOutput();
 	}

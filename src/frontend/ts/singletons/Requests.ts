@@ -82,5 +82,38 @@ export const Requests = {
 		const source = await this.loadRaw(url, type, requestData)
 		const objectURL = URL.createObjectURL(new Blob([source], {type: "application/javascript"}))
 		return await import(/*webpackIgnore: true*/ `${objectURL}`)
-	}
+	},
+	
+	/**
+	 * Starts a Server Side Event Session to the given url.
+	 * The backend is expected to use backend/SSE.php for communication.
+	 * @param url - The url of the SSE endpoint.
+	 * @param progressState - a callback function that takes the current progress as a number between 0 and 100.
+	 */
+	loadWithSSE(url: string, progressState: (percent: number) => void): Promise<any> {
+		return new Promise<string>((resolve, reject) => {
+			try {
+				const eventSource = new EventSource(url)
+				
+				eventSource.addEventListener('progress', e => {
+					const data = JSON.parse(e.data)
+					const percent: number = data['progress'] || 0
+					progressState(percent)
+				})
+				eventSource.addEventListener('finished', async e => {
+					eventSource.close()
+					resolve(JSON.parse(e.data))
+				})
+				eventSource.addEventListener('failed', e => {
+					console.error(e.data)
+					eventSource.close()
+					reject(e.data)
+				})
+			}
+			catch(e) {
+				reject(e)
+			}
+		})
+	
+}
 }

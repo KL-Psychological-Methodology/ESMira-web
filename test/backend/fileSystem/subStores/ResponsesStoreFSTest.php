@@ -345,16 +345,10 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		file_put_contents(Paths::fileImageFromData($studyId, 'user', 333, 'key3'), 'image');
 		file_put_contents(Paths::fileImageFromData($studyId, 'user', 444, 'key4'), 'image');
 		
-		$expectedOutput = [
-			"event: progress\ndata: 0\n\n",
-			"event: progress\ndata: 25\n\n",
-			"event: progress\ndata: 50\n\n",
-			"event: progress\ndata: 75\n\n",
-			"event: progress\ndata: 100\n\n",
-		];
 		$count = 0;
-		$responsesStore->createMediaZip($studyId, function(string $content) use($expectedOutput, &$count) {
-			$this->assertEquals($expectedOutput[$count++], $content);
+		$responsesStore->createMediaZip($studyId, function(int $currentCount, int $total) use(&$count) {
+			$this->assertEquals($count++, $currentCount);
+			$this->assertEquals(4, $total);
 		});
 	}
 	
