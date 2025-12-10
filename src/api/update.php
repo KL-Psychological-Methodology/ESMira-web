@@ -50,6 +50,7 @@ foreach($data as $studyId => $entry) {
 		$version = $entry->version;
 		$forceStudyUpdate = isset($entry->forceStudyUpdate) && $entry->forceStudyUpdate;
 		$lastMessageTimestamp = $entry->msgTimestamp;
+		$studyLang = isset($entry->lang) ? $entry->lang : $lang;
 		$line = [];
 		
 		
@@ -80,7 +81,7 @@ foreach($data as $studyId => $entry) {
 		else if($forceStudyUpdate || $metadata->getVersion() > $version) {
 			//TODO: $study_json is a String, so we need to turn it into an object first or JSON will format it as a string.
 			// This is a waste of performance. So a better solution would be to just concat the JSON string manually which is ugly
-			$line['study'] = $studyStore->getStudyLangConfig($studyId, $lang);
+			$line['study'] = $studyStore->getStudyLangConfig($studyId, $studyLang);
 		}
 		
 		
