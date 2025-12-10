@@ -15,10 +15,11 @@ class DeleteStudy extends HasWritePermission
 		if ($this->studyId == 0)
 			throw new PageFlowException('Missing data');
 
+		$this->handleFallback("DeleteStudy");
+
 		$saver = Configs::getDataStore()->getStudyStore();
 		$saver->delete($this->studyId);
 
-		$this->handleFallback("DeleteStudy");
 
 		return [$this->studyId];
 	}
