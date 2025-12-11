@@ -131,3 +131,7 @@ export interface PluginFrontendMetadata {
  * For internal usage.
  */
 export type FullPluginFrontend = PluginFrontend & PluginFrontendMetadata
+export type PluginListEntry = {
+	current: PluginMetadata,
+	newest: Partial<PluginMetadata>
+}

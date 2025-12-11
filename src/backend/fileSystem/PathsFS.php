@@ -37,6 +37,12 @@ class PathsFS {
 	static function folderTokenRoot(): string {
 		return self::folderData() . '.loginToken/';
 	}
+	static function folderSnapshots(): string {
+		return self::folderData() . 'snapshots/';
+	}
+	static function fileSnapshotZip(string $name): string {
+		return self::folderSnapshots() . Paths::makeUrlFriendly($name) . '.zip';
+	}
 	
 	static function fileDataVersion(): string {
 		return self::folderData() . Paths::FILENAME_VERSION;

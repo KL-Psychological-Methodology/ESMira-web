@@ -67,3 +67,12 @@ export function compareSemVersion(smaller: string, bigger: string) {
 	
 	return lt(smaller, bigger)
 }
+
+export function getReadableByteSize(bytes: number): string {
+	if(bytes > 1000000000)
+		return `${Math.round(bytes / 10000000) / 100} Gb`
+	else if(bytes > 1000000)
+		return `${Math.round(bytes / 10000) / 100} Mb`
+	else
+		return `${Math.round(bytes / 1000)} Kb`
+}

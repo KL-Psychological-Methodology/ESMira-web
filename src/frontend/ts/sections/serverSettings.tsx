@@ -14,13 +14,11 @@ import {ServerSettingsLoader} from "../loader/ServerSettingsLoader";
 import MarkdownIt from "markdown-it";
 import {Requests} from "../singletons/Requests";
 import {SectionData} from "../site/SectionData";
-import {BtnAdd, BtnDownload, BtnEdit, BtnTrash} from "../components/Buttons";
-import {compareSemVersion, makeUrlFriendly, safeConfirm} from "../constants/methods";
-import {PluginMetadata} from "../plugin/PluginInterfaces";
-import warnSvg from "../../imgs/icons/warn.svg?raw";
-import {DropdownMenu} from "../components/DropdownMenu";
+import {compareSemVersion} from "../constants/methods";
+import {PluginListEntry} from "../plugin/PluginInterfaces";
 import {PromiseCache} from "../singletons/PromiseCache";
-import {LoadingSpinner} from "../components/LoadingSpinner";
+import {DashRow} from "../components/DashRow";
+import {DashElement} from "../components/DashElement";
 
 type ReleaseType = {
 	version: string,
@@ -28,16 +26,10 @@ type ReleaseType = {
 	changeLog: string,
 	downloadUrl: string
 }
-type PluginListEntry = {
-	current: PluginMetadata,
-	newest: Partial<PluginMetadata>
-}
-type PluginsState = "loading" | "done" | "needsAttention"
 
 export class Content extends SectionContent {
 	private settingsLoader: ServerSettingsLoader
-	private pluginsState: PluginsState = "loading"
-	private pluginList: PluginListEntry[] = []
+	private readonly pluginsNeedsAttention: boolean
 	private markdownRenderer = new MarkdownIt()
 	private noConnection = false
 	private loadPreReleases = false
@@ -52,26 +44,22 @@ export class Content extends SectionContent {
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
-			sectionData.getTools().settingsLoader.init()
+			sectionData.getTools().settingsLoader.init(),
+			PromiseCache.get("plugins", () => sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListPlugins`))
 		]
 	}
 
-	constructor(sectionData: SectionData, loader: ServerSettingsLoader) {
+	constructor(sectionData: SectionData, loader: ServerSettingsLoader, pluginListData: PluginListEntry[]) {
 		super(sectionData)
 		this.settingsLoader = loader
 		this.changeLanguageList = new ChangeLanguageList(() => {
 			return this.settingsLoader.getSettings()
 		})
 		
-		PromiseCache.get("plugins", () => this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListPlugins`))
-			.then((pluginListData: PluginListEntry[]) => {
-				const packageVersion = this.sectionData.siteData.packageVersion
-				this.pluginList = pluginListData
-				this.pluginsState = !!pluginListData.find(entry =>
-					(entry.current.version != (entry.newest.version ?? entry.current.version)) || sectionData.siteData.pluginLoader.isNotCompatible(packageVersion, entry.current)
-				) ? "needsAttention" : "done"
-				m.redraw()
-			})
+		const packageVersion = this.sectionData.siteData.packageVersion
+		this.pluginsNeedsAttention = !!pluginListData.find(entry =>
+			(entry.current.version != (entry.newest.version ?? entry.current.version)) || this.sectionData.siteData.pluginLoader.isNotCompatible(packageVersion, entry.current)
+		)
 		
 		this.observerId = loader.getSettings().addObserver(this.updateSaveState.bind(this))
 		this.sectionData.siteData.dynamicCallbacks.save = this.saveServerSettings.bind(this)
@@ -200,15 +188,6 @@ export class Content extends SectionContent {
 				view: this.getPrivacyPolicyView.bind(this)
 			},
 			{
-				title: this.pluginsState == "needsAttention"
-					? <><div class="inlineIcon">{m.trust(warnSvg)}</div> {Lang.get("plugins")}</>
-					: this.pluginsState == "loading"
-						? <>{LoadingSpinner()} {Lang.get("plugins")}</>
-						: Lang.get("plugins"),
-				view: this.getPluginsView.bind(this),
-				highlight: this.pluginsState == "needsAttention"
-			},
-			{
 				title: Lang.get("maintenance"),
 				view: this.getMaintenanceView.bind(this)
 			}
@@ -229,7 +208,23 @@ export class Content extends SectionContent {
 			</div>
 
 			{TitleRow(Lang.getWithColon("server_update", this.sectionData.siteData.packageVersion))}
-
+			
+			{DashRow(
+				DashElement(null, {
+					template: {
+						title: Lang.get("snapshots"),
+					},
+					href: this.getUrl("snapshots")
+				}),
+				DashElement(null, {
+					template: {
+						title: Lang.get("plugins"),
+					},
+					highlight: this.pluginsNeedsAttention,
+					href: this.getUrl("plugins")
+				})
+			)}
+			
 			<label class="right">
 				<small>{Lang.get("update_version")}</small>
 				<select class="small" onchange={this.changeRelease.bind(this)}>
@@ -302,68 +297,6 @@ export class Content extends SectionContent {
 			<div class="line fakeLabel spacingBottom">
 				{RichText(settings.siteTranslations.privacyPolicy)}
 				{ObservableLangChooser(settings)}
-			</div>
-		</div>
-	}
-	
-	private getPluginsView(): Vnode<any, any> {
-		const deletePlugin = async (plugin: PluginMetadata) => {
-			if(!safeConfirm(Lang.get("confirm_delete_plugin", plugin.name))) {
-				return;
-			}
-			
-			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=DeletePlugin`, "post", `pluginId=${plugin.pluginId}`)
-			
-			alert(Lang.get("info_successful"));
-			window.location.reload();
-		}
-		const updatePlugin = async (metadataUrl: string)=> {
-			await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=InstallPlugin`, "post", `metadataUrl=${makeUrlFriendly(metadataUrl)}`)
-			
-			alert(Lang.get("info_successful"));
-			window.location.reload();
-		}
-		
-		const packageVersion = this.sectionData.siteData.packageVersion
-		
-		return <div class="spacingTop listParent">
-			<div class="listChild">
-				{this.pluginList.map(
-					entry => <div class="line">
-						<a href={entry.newest.website ?? entry.current.website} target="_blank">{entry.current.name} ({entry.current.version})</a>
-						{this.sectionData.siteData.pluginLoader.isNotCompatible(packageVersion, entry.current)
-							&&
-							<span class="inlineIcon middle" title={Lang.get("error_plugin_not_compatible")}>
-								{m.trust(warnSvg)}
-								&nbsp;
-							</span>
-						}
-						{DropdownMenu("pluginSettings",
-							BtnEdit(),
-							(close) => <div>
-								{this.sectionData.siteData.pluginLoader.sectionHasPluginFrontend(entry.current.pluginId, "pluginSettings") &&
-									<>
-										<div>
-											<a href={this.getUrl(`pluginSettings:${entry.current.pluginId}`)} onclick={close}>{BtnEdit(undefined, Lang.get("settings"))}</a>
-										</div>
-										<br/>
-									</>
-								}
-								
-								<div>
-									{BtnTrash(() => deletePlugin(entry.current), Lang.get("uninstall"))}
-								</div>
-							</div>
-						)}
-						
-						{entry.current.version != (entry.newest.version ?? entry.current.version) && entry.current.metadataUrl &&
-							BtnDownload(() => updatePlugin(entry.current.metadataUrl!), Lang.get("update_to_version", entry.newest.version ?? "0.0.0"))
-						}
-						
-					</div>
-				)}
-				<br/>
-				<a href={this.getUrl("installPlugin")}>{BtnAdd(undefined, Lang.get("install_new"))}</a>
 			</div>
 		</div>
 	}

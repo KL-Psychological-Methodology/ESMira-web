@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace backend;
@@ -25,14 +24,14 @@ use backend\subStores\FallbackStudyAccessIndexStore;
 use backend\subStores\FallbackStudyStore;
 use backend\subStores\FallbackTokenStore;
 use backend\subStores\MerlinLogsStore;
+use backend\subStores\SnapshotStore;
 
-interface DataStoreInterface
-{
+interface DataStoreInterface {
 	public function isInit(): bool;
 	public function isReady(): bool;
-
+	
 	public function getESMiraInitializer(): ESMiraInitializer;
-
+	
 	public function getAccountStore(): AccountStore;
 	public function getLoginTokenStore(): LoginTokenStore;
 	public function getMessagesStore(): MessagesStore;
@@ -56,4 +55,5 @@ interface DataStoreInterface
 	public function getFallbackStudyAccessIndexStore(string $encodedUrl): FallbackStudyAccessIndexStore;
 	public function getFallbackStudyStore(string $encodedUrl): FallbackStudyStore;
 	public function getPluginStore(): PluginStore;
+	public function getSnapshotStore(): SnapshotStore;
 }

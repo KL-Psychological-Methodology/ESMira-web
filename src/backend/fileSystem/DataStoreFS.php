@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace backend\fileSystem;
@@ -47,9 +46,10 @@ use backend\subStores\FallbackStudyAccessIndexStore;
 use backend\subStores\FallbackStudyStore;
 use backend\subStores\FallbackTokenStore;
 use backend\subStores\MerlinLogsStore;
+use backend\subStores\SnapshotStore;
+use backend\fileSystem\subStores\SnapshotStoreFS;
 
-class DataStoreFS implements DataStoreInterface
-{
+class DataStoreFS implements DataStoreInterface {
 	public function isInit(): bool {
 		$path = Configs::get('dataFolder_path');
 		return $path && file_exists($path);
@@ -57,11 +57,11 @@ class DataStoreFS implements DataStoreInterface
 	public function isReady(): bool {
 		return disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
 	}
-
+	
 	public function getESMiraInitializer(): ESMiraInitializer {
 		return new ESMiraInitializerFS();
 	}
-
+	
 	public function getAccountStore(): AccountStore {
 		return new AccountStoreFS();
 	}
@@ -106,6 +106,9 @@ class DataStoreFS implements DataStoreInterface
 	}
 	public function getRewardCodeStore(): RewardCodeStore {
 		return new RewardCodeStoreFS();
+	}
+	public function getSnapshotStore(): SnapshotStore {
+		return new SnapshotStoreFS();
 	}
 	public function getBookmarkStore(): BookmarkStore {
 		return new BookmarkStoreFS();

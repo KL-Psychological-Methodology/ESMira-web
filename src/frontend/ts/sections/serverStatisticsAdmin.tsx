@@ -10,6 +10,7 @@ import {Content as ServerStatisticsContent} from ".././sections/serverStatistics
 import {TabBar} from "../components/TabBar";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {SectionData} from "../site/SectionData";
+import {getReadableByteSize} from "../constants/methods";
 
 const SECONDS_14_DAYS = 60*60*24*14
 
@@ -101,15 +102,6 @@ export class Content extends ServerStatisticsContent {
 		this.dailyAppVersionPromise = this.createChartPromise("appVersion", appVersionStatistics)
 	}
 	
-	private getReadableByteSize(bytes: number): string {
-		if(bytes > 1000000000)
-			return `${Math.round(bytes / 10000000) / 100} Gb`
-		else if(bytes > 1000000)
-			return `${Math.round(bytes / 10000) / 100} Mb`
-		else
-			return `${Math.round(bytes / 1000)} Kb`
-	}
-	
 	public getView(): Vnode<any, any> {
 		const studies = this.sectionData.siteData.studyLoader.getStudies()
 		return TabBar(this.tabIndex, [
@@ -139,11 +131,11 @@ export class Content extends ServerStatisticsContent {
 					return <table style="width: 100%"><tbody>
 						<tr class="highlight">
 							<td>{Lang.getWithColon("disk_space")}</td>
-							<td>{this.getReadableByteSize(tools.totalDiskSpace - tools.freeDiskSpace)} / {this.getReadableByteSize(tools.totalDiskSpace)}</td>
+							<td>{getReadableByteSize(tools.totalDiskSpace - tools.freeDiskSpace)} / {getReadableByteSize(tools.totalDiskSpace)}</td>
 						</tr>
 						<tr class="highlight">
 							<td>{Lang.getWithColon("studies")}</td>
-							<td>{this.getReadableByteSize(this.totalUsedSpace)}</td>
+							<td>{getReadableByteSize(this.totalUsedSpace)}</td>
 						</tr>
 						<tr><td colspan="2"><hr/></td></tr>
 						{this.usedSpaceList.map((entry) => {
@@ -152,7 +144,7 @@ export class Content extends ServerStatisticsContent {
 								<td class={study?.published.get() ? "" : "unPublishedStudy"}>
 									<a href={this.getUrl(`dataStatistics,id:${entry.id}`)}>{Lang.get("colon", study?.title.get() ?? "Error")}</a>
 								</td>
-								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{this.getReadableByteSize(entry.fileSize)}</td>
+								<td class={entry.fileSize > 100000000 ? "highlight" : ""}>{getReadableByteSize(entry.fileSize)}</td>
 							</tr>
 						})}
 					</tbody></table>
