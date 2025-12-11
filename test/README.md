@@ -16,11 +16,12 @@ cd PATH_TO/ESMira-web/test
 docker-compose up -d --build esmira-test
 ```
 
-### Jetbrains PHPStorm / Ultimate: Configure PHPUnit and XDebug
+### JetBrains PHPStorm / Ultimate: Configure PHPUnit and XDebug
 - Download [PHPUnit 9](https://phar.phpunit.de/phpunit-9.phar) (for PHP version 7.4) to `PATH_TO/ESMira-web/esmira/phpunit-9.phar`.
 - Make sure your IDE has the following plugins installed: PHP, PHP Docker, PHP Remote Interpreter, Docker.
   - You will most likely have to install PHP Docker and PHP Remote Interpreter. They are needed to add external PHP Cli interpreters using Docker.
 - Open `File -> Settings` and navigate to `Languages & Frameworks -> PHP`.
+- In the tab `Include Path` press the `+` button and add `PATH_TO/ESMira-web/esmira` (this ensures that the IDE can autocomplete PHPUnit methods).
 - Click the `...` button at `CLI Interpreter`.
 - Click `+` at the top left to add a new Interpreter and select `From Docker, Vagrant, VM, WSL, Remote...`.
 - In the new dialogue, select `Docker Compose` and the following values and then confirm the dialogue:
