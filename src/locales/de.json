@@ -53,7 +53,7 @@
 	"create": "Erstellen",
 	"colon": "%s:",
 	"action": "Aktion",
-	"app_installation_instructions": "App Installations-Instruktionen",
+	"app_installation_instructions": "Studien-Beschreibung mut App Installations-Instruktionen",
 	"active_studies": "Aktive Studien",
 	"backups": "Backups",
 	"permissions_admin": "Adminrechte",
@@ -682,5 +682,8 @@
 	"publish_info_fallback_link": "Sie können zusätzlich den Link zu der Infoseite auf dem Fallback-Server inkludieren, und Ihre Teilnehmer instruieren diesen zu verwenden, wenn der erste Link nicht funktioniert. ",
 	"publish_info_flyer_based": "Wenn Sie via Flyer, Poster, oder ähnliches rekrutieren wollen, verwenden Sie den QR-Code. ",
 	"publish_info_difference_links": "Verwenden Sie den Link zur Studien-Beschreibung für Teilnehmer die die Web-Version der Studie verwenden. Verwenden Sie für Versuchspersonen, die ihre Smartphones verwenden sollen den Link zu den App Installations-Instruktionen. ",
-	"publish_info_explanation_qr": "Wenn jemand den QR-Code scannt ohne ESMira auf dem Smartphone installiert zu haben wird das Smarthphone die Informationsseite in einem Browser öffnen. Sofern ESMira bereits auf dem Smartphone instaliert ist wird stattdessen ESMira geöffnet, und der Teilnahmeprozess für die Studie wird automatisch gestartet. "
+	"publish_info_explanation_qr": "Wenn jemand den QR-Code scannt ohne ESMira auf dem Smartphone installiert zu haben wird das Smarthphone die Informationsseite in einem Browser öffnen. Sofern ESMira bereits auf dem Smartphone instaliert ist wird stattdessen ESMira geöffnet, und der Teilnahmeprozess für die Studie wird automatisch gestartet. ",
+	"urls_instruction_id": "Ich verwende keinen Zugangsschlüssel oder habe nur eine einzige Studie, die diesen Zugangsschlüssel verwendet",
+	"urls_instruction_access_key": "Ich habe mehrere Studien, die dieselben Zugangsschlüssel verwenden.",
+	"urls_instruction_questionnaires": "Ich möchte die Webversionen von Fragebögen verwenden (nicht empfohlen)"
 }

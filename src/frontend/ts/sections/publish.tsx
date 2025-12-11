@@ -310,7 +310,7 @@ export class Content extends SectionContent {
 		return [
 			hasAccessKeys && {
 				content: <div>
-					<h2>{Lang.getWithColon("urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
+					<h2>{Lang.getWithColon("urls_instruction_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					{
 						publishedWeb &&
 						<div class="line">
@@ -332,7 +332,7 @@ export class Content extends SectionContent {
 			},
 			{
 				content: <div>
-					<h2>{Lang.getWithColon(hasAccessKeys ? "urls_access_key" : "urls_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
+					<h2>{Lang.getWithColon(hasAccessKeys ? "urls_instruction_access_key" : "urls_instruction_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
 					{
 						publishedWeb &&
 						<div class="line">
@@ -351,6 +351,10 @@ export class Content extends SectionContent {
 							{Lang.get("info_urls_without_study_id")}
 						</div>
 					}
+				</div>
+			},
+			{
+				content: <div>
 					{usesFallback &&
 						<div
 							onpointerenter={this.onPointerEnterUrl.bind(null, fallbackAppInstallUrl)}
@@ -365,7 +369,7 @@ export class Content extends SectionContent {
 			},
 			publishedWeb && study.questionnaires.get().length > 0 && {
 				content: <div>
-					<h2>{Lang.getWithColon("questionnaires")}</h2>
+					<h2>{Lang.getWithColon("urls_instruction_questionnaires")}</h2>
 					{study.questionnaires.get().map((questionnaire) =>
 						<div class="line">
 							{this.getUrlViewAndCacheUrl(questionnaire.getTitle(), createQuestionnaireUrl(accessKey, questionnaire.internalId.get()))}
@@ -381,19 +385,21 @@ export class Content extends SectionContent {
 		const smartphoneAndWeb = (study.publishedAndroid.get() || study.publishedIOS.get()) && study.publishedWeb.get()
 
 		return <div>
-			{DashRow(
-				DashElement("stretched", {
-					content:
-						<div>
-							<h2>{Lang.get("publish_info_title")}</h2>
-							<p>{Lang.get("publish_info_text_based")}
-								{usesFallback && Lang.get("publish_info_fallback_link")}
-								{Lang.get("publish_info_flyer_based")}</p>
-							{smartphoneAndWeb && <p>{Lang.get("publish_info_difference_links")}</p>}
-							<p>{Lang.get("publish_info_explanation_qr")}</p>
-						</div>
-				})
-			)}
+			{
+				DashRow(
+					DashElement("stretched", {
+						content:
+							<div>
+								<h2>{Lang.get("publish_info_title")}</h2>
+								<p>{Lang.get("publish_info_text_based")}
+									{usesFallback && Lang.get("publish_info_fallback_link")}
+									{Lang.get("publish_info_flyer_based")}</p>
+								{smartphoneAndWeb && <p>{Lang.get("publish_info_difference_links")}</p>}
+								<p>{Lang.get("publish_info_explanation_qr")}</p>
+							</div>
+					})
+				)
+			}
 		</div>
 	}
 }

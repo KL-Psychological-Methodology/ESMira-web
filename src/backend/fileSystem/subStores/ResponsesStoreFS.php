@@ -178,7 +178,7 @@ class ResponsesStoreFS implements ResponsesStore {
 				return Paths::publicFileAudioFromMediaFilename($fileName);
 			}
 		);
-
+		
 		$zip->close();
 	}
 	public function outputResponsesFile(int $studyId, string $identifier) {

@@ -193,11 +193,11 @@ export class Content extends StudiesContent {
 		list.sort((a, b) => (a - b))
 		return list.join(",")
 	}
-	private getAccessKeyTabList(published: boolean, includePublic: boolean = false): TabContent[] {
+	private getAccessKeyTabList(published: boolean, includePublic: boolean = false, includeConcluded: boolean = false): TabContent[] {
 		const accessKeyTabs: TabContent[] = [this.getAccessKeyTab(
 			Lang.get("all"),
 			this.studies.filter((study) =>
-				study.published.get() == published && (includePublic || study.accessKeys.get().length)
+				study.published.get() == published && (includePublic || study.accessKeys.get().length) && (includeConcluded || !study.studyOver.get())
 			),
 			true
 		)]

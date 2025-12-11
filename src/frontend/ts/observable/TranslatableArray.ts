@@ -33,7 +33,12 @@ export class TranslatableArray<
 			(data: InputT, _parent: BaseObservable<ObservableTypes> | null, childKey: ObserverKeyType) => constructObservable(data, this, childKey),
 		)
 		this.currentLangCode = defineCurrentLangCode(parent, newLang)
+		super.fillArray(defaultFields)
 	}
+	protected fillArray() {
+		//disable for ObservableArray. Instead, we call super.fillArray() in the constructor of TranslatableArray after currentLangCode has been defined.
+	}
+	
 	public createJson(options?: TranslatableJsonCreatorOptions): JsonTypes {
 		return super.createJson(options)
 	}
