@@ -8,6 +8,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const generateFile = require('generate-file-webpack-plugin');
+const exec = require('child_process').exec;
 
 const packageVersion = require(path.resolve(__dirname, '..', 'package.json')).version
 
@@ -154,5 +155,20 @@ module.exports = {
 			file: path.resolve(DIST, 'VERSION'),
 			content: packageVersion
 		}),
+		{
+			apply: (compiler) => {
+				//Thanks to https://stackoverflow.com/a/49786887/10423612
+				compiler.hooks.afterEmit.tap('CreateStructureFile', () => {
+					exec('npm run create_structure_index', (err, stdout, stderr) => {
+						if(stdout) {
+							process.stdout.write(stdout);
+						}
+						if(stderr) {
+							process.stderr.write(stderr);
+						}
+					});
+				});
+			}
+		}
 	]
 }

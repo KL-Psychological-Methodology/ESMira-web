@@ -76,8 +76,8 @@
         "webpack-cli": "^5.0.1"
     },
     "scripts": {
-        "dev": "npm run create_structure_index SRC && webpack --config build_configs/config.development.js",
-        "prod": "webpack --config build_configs/config.production.js && npm run create_structure_index DIST",
+        "dev": "webpack --config build_configs/config.development.js",
+        "prod": "webpack --config build_configs/config.production.js",
 		"create_structure_index": "node build_configs/create_structure_index.mjs"
     }
 }
