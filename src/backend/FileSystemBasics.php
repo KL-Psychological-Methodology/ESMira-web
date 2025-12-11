@@ -5,6 +5,11 @@ namespace backend;
 
 
 use backend\exceptions\CriticalException;
+use Iterator;
+use RecursiveCallbackFilterIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class FileSystemBasics {
 	/**
@@ -38,13 +43,13 @@ class FileSystemBasics {
 			
 			$filename = "$path/$file";
 			if(is_dir($filename)) {
-				if(!self::emptyFolder($filename . '/') || !@rmdir($filename)) {
+				if(!self::emptyFolder($filename . '/') || !rmdir($filename)) {
 					closedir($handle);
 					return false;
 				}
 			}
 			else {
-				if(!@unlink($filename)) {
+				if(!unlink($filename)) {
 					closedir($handle);
 					return false;
 				}
@@ -52,6 +57,82 @@ class FileSystemBasics {
 		}
 		closedir($handle);
 		return true;
+	}
+	
+	/**
+	 * Move all files from $oldParent to $newParent. $oldParent will not be removed and $newParent is expected to already exist.
+	 * Note when using a custom $iterator: The iterator MUST filter "." and ".." or moveOneByOne() will most like throw an exception.
+	 *
+	 * @param string $oldParent Path to a directory. Its content will be moved to $newParent
+	 * @param string $newParent Path to a directory. The target where the contents from $oldParent should be moved to.
+	 * @param bool $replaceExisting If false, throws an exception if a file that is about to be moved already exists in $newParent. Deletes it otherwise.
+	 * @param callable|null $reportProgress A callback function to report the progress to. Its arguments are: int $fileNum, int $totalfiles
+	 * @param Iterator|null $iterator A custom iterator for files. Beware that the iterator MUST filter "." and ".."
+	 * @throws CriticalException
+	 */
+	public static function moveOneByOne(string $oldParent, string $newParent, bool $replaceExisting = false, ?callable $reportProgress = null, ?Iterator $iterator = null) {
+		$removeOuterDirectory = function (string $relativePath) use($oldParent) {
+			while($relativePath != '' && $relativePath != '.' && $relativePath != '/') {
+				if(FileSystemBasics::isDirEmpty($oldParent . $relativePath)) {
+					rmdir($oldParent . $relativePath);
+				}
+				else {
+					break;
+				}
+				$relativePath = dirname($relativePath);
+			}
+		};
+		
+		$oldParent = rtrim($oldParent, '/'); // substr() would fail if $oldParent ends with a slash
+		$newParent = rtrim($newParent, '/');
+		
+		if(!$iterator) {
+			$directory = new RecursiveDirectoryIterator($oldParent);
+			$filter = new RecursiveCallbackFilterIterator($directory, function(SplFileInfo $current) {
+				return $current->getFilename() != '.' && $current->getFilename() != '..';
+			});
+			$iterator = new RecursiveIteratorIterator($filter);
+		}
+		
+		$totalFiles = $reportProgress ? iterator_count($iterator) : 0;
+		$fileNum = 0;
+		
+		foreach($iterator as $file) {
+			$oldChild = $file->getRealPath();
+			
+			$relativePath = substr($oldChild, strlen($oldParent)); // if substr() is false, than you might have forgotten ti filter "." in the iterator
+			$newChild = $newParent . $relativePath;
+			if($file->isDir()) {
+				FileSystemBasics::createFolder($newChild, true);
+			}
+			else {
+				if(file_exists($newChild)) {
+					if($replaceExisting) {
+						if(!unlink($newChild)) {
+							throw new CriticalException("Could not delete file $newChild");
+						}
+					}
+					else {
+						throw new CriticalException("$newChild already exists! Cannot move $oldChild");
+					}
+				}
+				
+				$relativePath = dirname($relativePath);
+				$newFolder = $newParent . $relativePath;
+				if(!file_exists($newFolder)) {
+					FileSystemBasics::createFolder($newFolder, true);
+				}
+				if(!rename($oldChild, $newChild)) {
+					throw new CriticalException("Renaming $oldChild to $newChild failed");
+				}
+			}
+			
+			$removeOuterDirectory($relativePath);
+			
+			if($reportProgress) {
+				$reportProgress(++$fileNum, $totalFiles);
+			}
+		}
 	}
 	
 	public static function isDirEmpty($path): bool {

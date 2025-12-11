@@ -10,19 +10,23 @@ use backend\exceptions\PageFlowException;
 use Throwable;
 use ZipArchive;
 
+/**
+ * Call order:
+ * UpdateStepPrepare -> UpdateStepReplace -> UpdateVersion
+ */
 class UpdateStepPrepare extends HasAdminPermission {
 	/**
-	 * Only exist for testing.
+	 * Only needed for testing.
 	 */
 	protected string $pathConfigFile;
 	
 	/**
-	 * Only exist for testing.
+	 * Only needed for testing.
 	 */
 	protected string $pathUpdateZip;
 	
 	/**
-	 * Only exist for testing.
+	 * Only needed for testing.
 	 */
 	protected string $pathUpdate;
 	
@@ -66,17 +70,17 @@ class UpdateStepPrepare extends HasAdminPermission {
 			throw new CriticalException("Missing $this->pathUpdateZip");
 		}
 		else if(file_exists($this->pathUpdate)) {
-			throw new CriticalException("$this->pathUpdate already exists. Please remove it manually and try again.");
+			throw new CriticalException("$this->pathUpdate already exists. Please manually remove it and try again.");
 		}
 		
 		try {
 			//unpacking update:
-			FileSystemBasics::createFolder($this->pathUpdate);
+			FileSystemBasics::createFolder($this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES, true);
 			$zip = new ZipArchive;
 			if(!$zip->open($this->pathUpdateZip)) {
 				throw new CriticalException("Could not open the the zipped update at $this->pathUpdateZip.");
 			}
-			if(!$zip->extractTo($this->pathUpdate)) {
+			if(!$zip->extractTo($this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES)) {
 				throw new CriticalException("Could not unzip update to $this->pathUpdate.");
 			}
 			$zip->close();
@@ -84,7 +88,7 @@ class UpdateStepPrepare extends HasAdminPermission {
 			
 			
 			//copy config file:
-			if(!copy($this->pathConfigFile, $this->pathUpdate . Paths::SUB_PATH_CONFIG)) {
+			if(!copy($this->pathConfigFile, $this->pathUpdate .Paths::SUB_PATH_SERVER_UPDATE_FILES . Paths::SUB_PATH_CONFIG)) {
 				throw new CriticalException('Could not copy settings to update.');
 			}
 		}

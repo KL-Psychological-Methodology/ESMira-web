@@ -2,9 +2,9 @@
 
 namespace backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\UpdateStepReplace;
-use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
+use backend\Paths;
+use backend\SSE;
 use testConfigs\BaseAdminPermissionTestSetup;
 
 require_once __DIR__ . '/../../../../autoload.php';
@@ -32,7 +32,7 @@ class UpdateStepReplaceTest extends BaseAdminPermissionTestSetup {
 		
 		//prepare home folder:
 		mkdir($this->pathHome);
-		file_put_contents($this->pathStructureFile, '["STRUCTURE", "replace.txt", "original.txt", "folder1/"]');
+		file_put_contents($this->pathStructureFile, '["STRUCTURE", "replace.txt", "original.txt", "folder1"]');
 		file_put_contents($this->pathHome .'shouldStay.txt', 'contentOriginal');
 		file_put_contents($this->pathHome .'replace.txt', 'contentOriginal');
 		file_put_contents($this->pathHome .'original.txt', 'contentOriginal');
@@ -40,11 +40,13 @@ class UpdateStepReplaceTest extends BaseAdminPermissionTestSetup {
 		file_put_contents($this->pathHome .'folder1/sub1.txt', 'contentOriginal');
 		
 		//prepare update folder:
-		mkdir($this->pathUpdate);
-		file_put_contents($this->pathUpdate .'replace.txt', 'contentNew');
-		file_put_contents($this->pathUpdate .'update.txt', 'contentNew');
-		mkdir($this->pathHome .'folder2/');
-		file_put_contents($this->pathHome .'folder2/sub2.txt', 'contentNew');
+		$pathServerUpdate = $this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES;
+		mkdir($pathServerUpdate, 0777, true);
+		file_put_contents($pathServerUpdate .'replace.txt', 'contentNew');
+		file_put_contents($pathServerUpdate .'update.txt', 'contentNew');
+		mkdir($pathServerUpdate .'folder2/');
+		file_put_contents($pathServerUpdate .'folder2/sub2.txt', 'contentNew');
+		file_put_contents($pathServerUpdate .'STRUCTURE', '["STRUCTURE", "replace.txt", "update.txt", "folder2"]');
 	}
 	
 	public function tearDown(): void {
@@ -68,11 +70,17 @@ class UpdateStepReplaceTest extends BaseAdminPermissionTestSetup {
 		$this->assertFileExists($this->pathHome .'folder1/sub1.txt');
 		$this->assertFileExists($this->pathHome .'original.txt');
 		$this->assertEquals('contentOriginal', file_get_contents($this->pathHome .'replace.txt'));
+		$this->assertFileDoesNotExist($this->pathUpdate);
+		$this->assertFileDoesNotExist($this->pathBackup);
 	}
 	
-	function runClass() {
-		$obj = new UpdateStepReplace($this->pathStructureFile, $this->pathHome, $this->pathUpdate, $this->pathBackup);
-		$obj->exec();
+	function runClass(?string $error = null) {
+		$sse = $this->createMock(SSE::class);
+		$sse->expects($error ? $this->once() : $this->never())
+			->method('flushFailed')
+			->with($error ?? $this->anything());
+		$obj = new UpdateStepReplace($this->pathStructureFile, $this->pathHome, $this->pathUpdate, $this->pathBackup, $sse);
+		$obj->execAndOutput();
 	}
 	
 	function test() {
@@ -85,71 +93,43 @@ class UpdateStepReplaceTest extends BaseAdminPermissionTestSetup {
 		$this->assertFileDoesNotExist($this->pathHome .'folder1/sub1.txt');
 		$this->assertEquals('contentNew', file_get_contents($this->pathHome .'replace.txt'));
 		
-		$this->assertFileDoesNotExist($this->pathBackup .'shouldStay.txt');
-		$this->assertFileExists($this->pathBackup .'folder1/sub1.txt');
-		$this->assertFileExists($this->pathBackup .'original.txt');
-		$this->assertEquals('contentOriginal', file_get_contents($this->pathBackup .'replace.txt'));
+		$this->assertFileDoesNotExist($this->pathUpdate);
+		$this->assertFileDoesNotExist($this->pathBackup);
 	}
 	
 	function test_when_update_does_not_exist() {
 		FileSystemBasics::emptyFolder($this->pathUpdate);
 		rmdir($this->pathUpdate);
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function($message) {$this->assertEquals("Could not find update at $this->pathUpdate", $message);}
-		);
+		$this->runClass("Could not find update at $this->pathUpdate" .Paths::SUB_PATH_SERVER_UPDATE_FILES);
 	}
 	
 	function test_when_backup_already_exists() {
-		FileSystemBasics::createFolder($this->pathBackup);
+		FileSystemBasics::createFolder($this->pathBackup . Paths::SUB_PATH_SERVER_UPDATE_FILES, true);
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function($message) {$this->assertEquals("$this->pathBackup already exists!", $message);}
-		);
+		$this->runClass($this->pathBackup . Paths::SUB_PATH_SERVER_UPDATE_FILES . ' already exists!');
 	}
 	
 	function test_when_structure_file_does_not_exist() {
 		unlink($this->pathStructureFile);
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function($message) {$this->assertStringEndsWith('No such file or directory', $message);}
-		);
-		
+		$this->runClass("$this->pathStructureFile does not exist!");
 		$this->assertInitialState();
-		$this->assertFileDoesNotExist($this->pathUpdate);
-		$this->assertFileDoesNotExist($this->pathBackup);
 	}
 	
 	function test_when_structure_file_is_faulty() {
 		file_put_contents($this->pathStructureFile, '["doesNotExist.txt", "original.txt", "folder/"]');
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function($message) {$this->assertStringEndsWith('doesNotExist.txt does not exist, but it should!', $message);}
-		);
+		$this->runClass('Could not move files to backup location. The original files have been restored. Error: ' .$this->pathHome . 'doesNotExist.txt does not exist, but it should!');
 		
 		$this->assertInitialState();
-		$this->assertFileDoesNotExist($this->pathUpdate);
-		$this->assertFileDoesNotExist($this->pathBackup);
 	}
 	
 	function test_when_update_is_faulty() {
-		file_put_contents($this->pathUpdate .'shouldStay.txt', 'content'); //This file will stay in Home, so it cannot be copied in from updates
+		$pathServerUpdate = $this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES;
+		file_put_contents($pathServerUpdate .'shouldStay.txt', 'content'); //This file will stay in Home, so it cannot be copied in from updates
 		
-		$this->assertException(
-			function() {$this->runClass();},
-			CriticalException::class,
-			function($message) {
-				$this->assertStringContainsString('shouldStay.txt already exists!', $message);
-			}
-		);
+		$this->runClass('Could not move update. The original files have been restored. Error: ' .$this->pathHome . 'shouldStay.txt already exists! Cannot move ' . $pathServerUpdate . 'shouldStay.txt');
 		
 		$this->assertInitialState();
 	}

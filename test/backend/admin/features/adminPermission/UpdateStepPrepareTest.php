@@ -2,9 +2,10 @@
 
 namespace backend\admin\features\adminPermission;
 
-use backend\admin\features\adminPermission\UpdateStepPrepare;
 use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
+use backend\Paths;
+use Error;
 use Exception;
 use testConfigs\BaseAdminPermissionTestSetup;
 use ZipArchive;
@@ -56,7 +57,7 @@ class UpdateStepPrepareTest extends BaseAdminPermissionTestSetup {
 	
 	function test() {
 		$this->runClass();
-		$this->assertFileExists($this->pathUpdate .'new File');
+		$this->assertFileExists($this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES .'new File');
 		$this->assertFileDoesNotExist($this->pathUpdate .'backend/defaults/configs.default.php');
 	}
 	
