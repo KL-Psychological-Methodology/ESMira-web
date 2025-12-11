@@ -3,6 +3,7 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
+use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
@@ -33,7 +34,14 @@ class UpdateVersion extends HasAdminPermission {
 		catch(Throwable $e) {
 			throw new CriticalException("The update finished successfully but failed when migrating the data to the current version. Please copy this error message and your server logs and ask for assistance at https://github.com/KL-Psychological-Methodology/ESMira/issues\n$e");
 		}
+		finally {
+			Configs::getDataStore()->setMaintenanceMode(false);
+		}
 		
 		return [];
+	}
+	
+	protected function isReady(): bool {
+		return true;
 	}
 }

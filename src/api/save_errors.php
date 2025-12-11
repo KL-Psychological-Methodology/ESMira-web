@@ -8,10 +8,6 @@ require_once dirname(__FILE__, 2) .'/backend/autoload.php';
 
 $dataStore = Configs::getDataStore();
 
-if(!$dataStore->isInit()) {
-	echo JsonOutput::error('ESMira is not initialized yet.');
-	return;
-}
 if(!$dataStore->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;

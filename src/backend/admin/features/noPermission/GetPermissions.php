@@ -7,12 +7,10 @@ use backend\Configs;
 use backend\fileSystem\PathsFS;
 use backend\Permission;
 
-class GetPermissions extends NoPermission
-{
+class GetPermissions extends NoPermission {
 
-	function exec(): array
-	{
-		if (!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
+	function exec(): array {
+		if (!Permission::isLoggedIn() || !Configs::getDataStore()->isReady())
 			return ['isLoggedIn' => false];
 		else {
 			if (Permission::isAdmin()) {

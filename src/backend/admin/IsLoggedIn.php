@@ -6,8 +6,8 @@ use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 abstract class IsLoggedIn extends NoPermission {
-	protected $studyId;
-	protected $isAdmin;
+	protected int $studyId;
+	protected bool $isAdmin;
 	
 	function __construct() {
 		parent::__construct();
@@ -16,12 +16,19 @@ abstract class IsLoggedIn extends NoPermission {
 			$pass = $_POST['pass'];
 			Permission::login($accountName, $pass);
 		}
-		if(!Permission::isLoggedIn() || !Configs::getDataStore()->isInit())
+		if(!$this->isReady() || !Permission::isLoggedIn()) {
 			throw new PageFlowException('No permission');
+		}
 		
 		$this->isAdmin = Permission::isAdmin();
 		$this->studyId = (int) ($_POST['study_id'] ?? $_GET['study_id'] ?? 0);
 	}
+	
+	/**
+	 * Exists to be overridden by subclasses.
+	 * Update and snapshot endpoints need to stay accessible even when being in maintenance mode
+	 */
+	protected function isReady(): bool {
+		return Configs::getDataStore()->isReady();
+	}
 }
-
-?>

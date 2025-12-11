@@ -6,12 +6,10 @@ use backend\admin\HasAdminPermission;
 use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\exceptions\PageFlowException;
-use backend\fileSystem\PathsFS;
 use backend\FileSystemBasics;
 use backend\Paths;
 use backend\SSE;
 use Throwable;
-use ZipArchive;
 
 /**
  * Call order:
@@ -50,6 +48,7 @@ class RestoreSnapshotData extends HasAdminPermission {
 			$this->sse->flushFailed('Could only restore the server files but not the data from the snapshot! ' .$e->getMessage());
 		}
 		finally {
+			Configs::getDataStore()->setMaintenanceMode(false);
 			if(file_exists($this->pathUpdate) && FileSystemBasics::isDirEmpty($this->pathUpdate)) {
 				rmdir($this->pathUpdate);
 			}
@@ -61,5 +60,9 @@ class RestoreSnapshotData extends HasAdminPermission {
 	
 	function exec(): array {
 		throw new CriticalException('Internal error. RestoreSnapshotData can only be used with execAndOutput()');
+	}
+	
+	protected function isReady(): bool {
+		return true;
 	}
 }

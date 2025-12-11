@@ -14,6 +14,7 @@ use backend\fileSystem\subStores\ResponsesStoreFS;
 use backend\fileSystem\subStores\RewardCodeStoreFS;
 use backend\fileSystem\subStores\ServerStoreFS;
 use backend\fileSystem\subStores\ServerStatisticsStoreFS;
+use backend\Paths;
 use backend\subStores\ErrorReportStore;
 use backend\subStores\LoginTokenStore;
 use backend\subStores\MessagesStore;
@@ -55,7 +56,31 @@ class DataStoreFS implements DataStoreInterface {
 		return $path && file_exists($path);
 	}
 	public function isReady(): bool {
-		return disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
+		return $this->isInit() && !$this->isInMaintenanceMode() && disk_free_space(PathsFS::folderData()) > 5000000; //5 mb
+	}
+	
+	/**
+	 * Checks if the server is in maintenance mode.
+	 * @param string $path the path to the maintenance mode file (only needed for testing).
+	 */
+	public function isInMaintenanceMode(string $path = Paths::FILE_MAINTENANCE_MODE): bool {
+		return file_exists(Paths::FILE_MAINTENANCE_MODE);
+	}
+	
+	/**
+	 * sets the server in maintenance mode which disables most API endpoints.
+	 * @param bool $enabled
+	 * @param string $path the path where the maintenance mode file should be created (only needed for testing).
+	 */
+	public function setMaintenanceMode(bool $enabled, string $path = Paths::FILE_MAINTENANCE_MODE): void {
+		if($enabled) {
+			file_put_contents(Paths::FILE_MAINTENANCE_MODE, '1');
+		}
+		else {
+			if(file_exists(Paths::FILE_MAINTENANCE_MODE)) {
+				unlink(Paths::FILE_MAINTENANCE_MODE);
+			}
+		}
 	}
 	
 	public function getESMiraInitializer(): ESMiraInitializer {

@@ -8,10 +8,6 @@ use backend\Configs;
 use backend\CreateDataSet;
 use backend\JsonOutput;
 
-if(!Configs::getDataStore()->isInit()) {
-	echo JsonOutput::error('ESMira is not initialized yet.');
-	return;
-}
 if(!Configs::getDataStore()->isReady()) {
 	echo JsonOutput::error('Server is not ready.');
 	return;

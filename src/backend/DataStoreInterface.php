@@ -29,6 +29,8 @@ use backend\subStores\SnapshotStore;
 interface DataStoreInterface {
 	public function isInit(): bool;
 	public function isReady(): bool;
+	public function isInMaintenanceMode(): bool;
+	public function setMaintenanceMode(bool $enabled): void;
 	
 	public function getESMiraInitializer(): ESMiraInitializer;
 	

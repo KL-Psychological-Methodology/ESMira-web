@@ -15,6 +15,7 @@ class Paths {
     const FILENAME_STRUCTURE = 'STRUCTURE';
     const FILE_SERVER_VERSION = DIR_BASE . Paths::FILENAME_VERSION;
     const FILE_STRUCTURE = DIR_BASE . Paths::FILENAME_STRUCTURE;
+    const FILE_MAINTENANCE_MODE = DIR_BASE . '.maintenance';
     
     
     public static function folderImages(int $studyId): string {

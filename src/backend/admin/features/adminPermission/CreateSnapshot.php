@@ -46,8 +46,9 @@ class CreateSnapshot extends HasAdminPermission {
 	function execAndOutput() {
 		$this->sse->sendHeader();
 		
+		$datastore = Configs::getDataStore();
 		$snapshotName = $_GET['name'] ?? "snapshot";
-		$snapshotStore = Configs::getDataStore()->getSnapshotStore();
+		$snapshotStore = $datastore->getSnapshotStore();
 		$pathZip = $snapshotStore->getSnapshotZipPath($snapshotName);
 		
 		
@@ -106,9 +107,11 @@ class CreateSnapshot extends HasAdminPermission {
 			
 			// Save ESMira data
 			
+			$datastore->setMaintenanceMode(true);
 			$snapshotStore->addDataToZip($zip, function(int $step, int $total) {
 				$this->flushProgress(2, $step, $total);
 			});
+			$datastore->setMaintenanceMode(false);
 			$this->flushProgress(3, 0, 1);
 		}
 		catch(Throwable $e) {

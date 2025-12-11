@@ -3,6 +3,7 @@
 namespace backend\admin\features\adminPermission;
 
 use backend\admin\HasAdminPermission;
+use backend\Configs;
 use backend\exceptions\CriticalException;
 use backend\FileSystemBasics;
 use backend\Paths;
@@ -49,7 +50,6 @@ class UpdateStepReplace extends HasAdminPermission {
 		$this->sse = $sse ?? new SSE();
 	}
 	
-	
 	private function getStructureFileList(): array {
 		return json_decode(file_get_contents($this->pathStructureFile));
 	}
@@ -77,7 +77,9 @@ class UpdateStepReplace extends HasAdminPermission {
 	}
 	
 	function execAndOutput() {
+		$dataStore = Configs::getDataStore();
 		try {
+			$dataStore->setMaintenanceMode(true);
 			$pathServerUpdate = $this->pathUpdate . Paths::SUB_PATH_SERVER_UPDATE_FILES;
 			$pathServerBackup = $this->pathBackup . Paths::SUB_PATH_SERVER_UPDATE_FILES;
 			
@@ -196,6 +198,7 @@ class UpdateStepReplace extends HasAdminPermission {
 			$this->sse->flushFinished();
 		}
 		catch(Throwable $e) {
+			$dataStore->setMaintenanceMode(false);
 			$this->sse->flushFailed($e->getMessage());
 		}
 		finally {
@@ -210,5 +213,9 @@ class UpdateStepReplace extends HasAdminPermission {
 	
 	function exec(): array {
 		throw new CriticalException('Internal error. UpdateStepReplace can only be used with execAndOutput()');
+	}
+	
+	protected function isReady(): bool {
+		return true;
 	}
 }
