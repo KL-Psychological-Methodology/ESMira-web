@@ -81,7 +81,7 @@ class StatisticsTest extends BaseApiTestSetup {
 		$this->assertMissingDataForApi(['id' => 123], 'statistics', true);
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('statistics');
+	function test_without_ready() {
+		$this->assertIsReady('statistics');
 	}
 }

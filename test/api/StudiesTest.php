@@ -119,7 +119,7 @@ class StudiesTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/studies.php';
 		$this->expectOutputString(JsonOutput::error('Unit test exception'));
 	}
-	function test_without_init() {
-		$this->assertIsInit('studies');
+	function test_without_ready() {
+		$this->assertIsReady('studies');
 	}
 }

@@ -211,7 +211,7 @@ class UpdateTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/update.php';
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('update');
+	function test_without_ready() {
+		$this->assertIsReady('update');
 	}
 }

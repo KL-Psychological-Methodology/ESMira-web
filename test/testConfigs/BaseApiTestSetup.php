@@ -7,35 +7,18 @@ use PHPUnit\Framework\MockObject\Stub;
 
 require_once __DIR__ . '/../autoload.php';
 
-abstract class BaseApiTestSetup extends BaseMockedTestSetup {
-	protected $isInit = true;
-	
-	public function setUp(): void {
-		parent::setUp();
-		$this->isInit = true;
-		$this->isReady = true;
-	}
-	
-	protected function setUpDataStoreObserver(): Stub {
-		$observer = parent::setUpDataStoreObserver();
-		$observer
-			->method('isInit')
-			->willReturnCallback(function() {
-				return $this->isInit;
-			});
-		
-		$observer
-			->method('isReady')
-			->willReturnCallback(function() {
-				return $this->isReady;
-			});
-		return $observer;
-	}
-	
+abstract class BaseApiTestSetup extends BaseTestWithDataStoreSetup {
 	protected function assertIsInit($filename) {
 		$this->isInit = false;
 		
 		$this->expectOutputString(JsonOutput::error('ESMira is not initialized yet.'));
+		require DIR_BASE ."/api/$filename.php";
+	}
+	
+	protected function assertIsReady($filename) {
+		$this->isReady = false;
+		
+		$this->expectOutputString(JsonOutput::error('Server is not ready.'));
 		require DIR_BASE ."/api/$filename.php";
 	}
 	

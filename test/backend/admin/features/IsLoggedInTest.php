@@ -63,9 +63,9 @@ class IsLoggedInTest extends BaseLoggedInPermissionTestSetup {
 		$this->expectExceptionMessage('No permission');
 		$this->createObj();
 	}
-	public function test_is_not_init() {
-		$this->isInit = false;
-		$this->expectExceptionMessage('No permission');
+	public function test_is_not_ready() {
+		$this->isReady = false;
+		$this->expectExceptionMessage('Server is not ready');
 		$this->createObj();
 	}
 }

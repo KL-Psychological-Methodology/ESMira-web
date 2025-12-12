@@ -60,8 +60,8 @@ class AccessTest extends BaseApiTestSetup {
 		$this->expectOutputString(JsonOutput::error('This study is locked'));
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('access');
+	function test_without_ready() {
+		$this->assertIsReady('access');
 	}
 	
 	function test_with_missing_data() {

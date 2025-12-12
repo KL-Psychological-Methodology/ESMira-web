@@ -48,7 +48,7 @@ class SaveErrorsTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/save_errors.php';
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('save_errors');
+	function test_without_ready() {
+		$this->assertIsReady('save_errors');
 	}
 }

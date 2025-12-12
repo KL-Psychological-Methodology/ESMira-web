@@ -112,7 +112,7 @@ class SaveMessageTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/save_message.php';
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('save_message');
+	function test_without_ready() {
+		$this->assertIsReady('save_message');
 	}
 }

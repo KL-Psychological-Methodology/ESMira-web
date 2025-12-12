@@ -38,7 +38,7 @@ class SettingsTest extends BaseApiTestSetup {
 		]));
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('settings');
+	function test_without_ready() {
+		$this->assertIsReady('settings');
 	}
 }

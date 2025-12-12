@@ -9,26 +9,7 @@ use PHPUnit\Framework\MockObject\Stub;
 
 require_once __DIR__ . '/../autoload.php';
 
-abstract class BaseNoPermissionTestSetup extends BaseMockedTestSetup {
-	protected $isInit = true;
-	
-	public function setUp(): void {
-		parent::setUp();
-		$this->isInit = true;
-	}
-	
-	protected function setUpDataStoreObserver(): Stub {
-		$observer = parent::setUpDataStoreObserver();
-		$observer
-			->method('isInit')
-			->willReturnCallback(function() {
-				return $this->isInit;
-			});
-		
-		return $observer;
-	}
-	
-	
+abstract class BaseNoPermissionTestSetup extends BaseTestWithDataStoreSetup {
 	protected function assertDataMockFromPost(NoPermission $obj, string $method, array $postArray, array $expectedCalls = null): array {
 		$this->setPost($postArray);
 		$r = $obj->exec();

@@ -147,7 +147,7 @@ class FileUploadTest extends BaseApiTestSetup {
 		);
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('file_uploads');
+	function test_without_ready() {
+		$this->assertIsReady('file_uploads');
 	}
 }

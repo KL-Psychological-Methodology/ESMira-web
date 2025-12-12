@@ -28,7 +28,7 @@ class ServerStatisticsTest extends BaseApiTestSetup {
 		$this->expectOutputString(JsonOutput::successString($this->content));
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('server_statistics');
+	function test_without_ready() {
+		$this->assertIsReady('server_statistics');
 	}
 }

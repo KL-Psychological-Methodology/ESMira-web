@@ -30,11 +30,12 @@ class GetPermissionsTest extends BaseAdminPermissionTestSetup {
 		return $observer;
 	}
 	
-	function test_without_init() {
-		$this->isInit = false;
+	function test_without_ready() {
+		$this->isReady = false;
 		
+		$this->expectExceptionMessage('Server is not ready');
 		$obj = new GetPermissions();
-		$this->assertEquals(['isLoggedIn' => false], $obj->exec());
+		$obj->exec();
 	}
 	function test_without_login() {
 		Permission::setLoggedOut();

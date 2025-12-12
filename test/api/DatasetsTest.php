@@ -69,8 +69,8 @@ class DatasetsTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/datasets.php';
 	}
 	
-	function test_without_init() {
-		$this->assertIsInit('datasets');
+	function test_without_ready() {
+		$this->assertIsReady('datasets');
 	}
 	
 	function test_with_faulty_data() {
