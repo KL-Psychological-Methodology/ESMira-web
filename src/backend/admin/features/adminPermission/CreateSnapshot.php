@@ -113,19 +113,20 @@ class CreateSnapshot extends HasAdminPermission {
 			});
 			$datastore->setMaintenanceMode(false);
 			$this->flushProgress(3, 0, 1);
+			
 		}
 		catch(Throwable $e) {
+			$zip->close();
 			if(file_exists($pathZip)) {
 				unlink($pathZip);
 			}
 			$this->sse->flushFailed($e->getMessage());
 			return;
 		}
-		finally {
-			if(!$zip->close()) {
-				$this->sse->flushFailed('Unable to close zip file');
-				return;
-			}
+		
+		if(!$zip->close()) {
+			$this->sse->flushFailed('Unable to close zip file');
+			return;
 		}
 		
 		$this->sse->flushFinished();
