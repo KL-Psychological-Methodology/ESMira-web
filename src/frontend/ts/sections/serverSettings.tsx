@@ -150,7 +150,7 @@ export class Content extends SectionContent {
 				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateStepDownload`, "post", `url=${this.newestVersionDownloadUrl}`)
 				loader.update(Lang.get("state_preparing"))
 				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateStepPrepare`)
-				await Requests.loadWithSSE(`${FILE_ADMIN}?type=UpdateStepReplace`, percent => Lang.get("state_updating", percent))
+				await Requests.loadWithSSE(`${FILE_ADMIN}?type=UpdateStepReplace`, percent => loader.update(Lang.get("state_updating", percent)))
 				loader.update(Lang.get("state_migrating"))
 				await Requests.loadJson(`${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.sectionData.siteData.packageVersion}`)
 				
