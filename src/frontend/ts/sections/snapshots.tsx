@@ -1,7 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
-import {BtnAdd, BtnOk, BtnTrash} from "../components/Buttons";
+import {BtnAdd, BtnTransfer, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
 import {FILE_ADMIN} from "../constants/urls";
 import {getReadableByteSize, safeConfirm} from "../constants/methods";
@@ -25,7 +25,7 @@ export class Content extends SectionContent {
 		await this.loadSnapshots()
 	}
 	
-	private async loadSnapshots() {
+	private async loadSnapshots(): Promise<void> {
 		const snapshots = await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=ListSnapshots`) as SnapshotEntry[]
 		snapshots.sort((a, b) => b.created - a.created)
 		this.snapshots = snapshots
@@ -36,7 +36,7 @@ export class Content extends SectionContent {
 		return Lang.get("snapshots")
 	}
 	
-	private async createSnapshot() {
+	private async createSnapshot(): Promise<void> {
 		const name = prompt(Lang.get("title"))
 		
 		if(!name) {
@@ -56,7 +56,7 @@ export class Content extends SectionContent {
 		}
 	}
 	
-	private async restoreSnapshot(snapshot: SnapshotEntry) {
+	private async restoreSnapshot(snapshot: SnapshotEntry): Promise<void> {
 		if(!safeConfirm(Lang.get("restore_snapshot_confirm"))) {
 			return
 		}
@@ -84,7 +84,7 @@ export class Content extends SectionContent {
 		window.location.reload()
 	}
 	
-	private async removeSnapshot(snapshot: SnapshotEntry) {
+	private async removeSnapshot(snapshot: SnapshotEntry): Promise<void> {
 		if(!confirm()) {
 			return
 		}
@@ -93,36 +93,42 @@ export class Content extends SectionContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		return <div class="listParent">
-			<div class="spacingTop spacingBottom">
-				{BtnAdd(this.createSnapshot.bind(this), Lang.get("create_snapshot"))}
+		return <div>
+			<div class="smallText spacingLeft spacingRight">
+				{Lang.get("snapshot_description")}
 			</div>
-			
-			{!!this.snapshots.length &&
-				<table style="width: 100%">
-					<thead>
-					<tr>
-						<th>{Lang.get("title")}</th>
-						<th>{Lang.get("date")}</th>
-						<th>{Lang.get("size")}</th>
-						<td></td>
-					</tr>
-					</thead>
-					<tbody>
-					{this.snapshots.map(entry =>
+			<div class="listParent">
+				<div class="spacingTop spacingBottom">
+					{BtnAdd(this.createSnapshot.bind(this), Lang.get("create_snapshot"))}
+				</div>
+				
+				{!!this.snapshots.length &&
+					<table style="width: 100%">
+						<thead>
 						<tr>
-							<td>{entry.name}</td>
-							<td title={new Date(entry.created * 1000).toLocaleTimeString()}>{new Date(entry.created * 1000).toLocaleDateString()}</td>
-							<td>{getReadableByteSize(entry.size)}</td>
-							<td>
-								{BtnOk(this.restoreSnapshot.bind(this, entry))}
-								{BtnTrash(this.removeSnapshot.bind(this, entry))}
-							</td>
+							<th>{Lang.get("title")}</th>
+							<th>{Lang.get("date")}</th>
+							<th>{Lang.get("size")}</th>
+							<td></td>
 						</tr>
-					)}
-					</tbody>
-				</table>
-			}
+						</thead>
+						<tbody>
+						{this.snapshots.map(entry =>
+							<tr>
+								<td>{entry.name}</td>
+								<td title={new Date(entry.created * 1000).toLocaleTimeString()}>{new Date(entry.created * 1000).toLocaleDateString()}</td>
+								<td>{getReadableByteSize(entry.size)}</td>
+								<td>
+									{BtnTransfer(this.restoreSnapshot.bind(this, entry), "", Lang.get("restore_snapshot"))}
+									{/*{BtnCustom(m.trust(transferSvg), this.restoreSnapshot.bind(this, entry), "", Lang.get("restore_snapshot"))}*/}
+									{BtnTrash(this.removeSnapshot.bind(this, entry))}
+								</td>
+							</tr>
+						)}
+						</tbody>
+					</table>
+				}
+			</div>
 		</div>
 	}
 }
