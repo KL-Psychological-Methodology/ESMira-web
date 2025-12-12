@@ -39,7 +39,6 @@ export class Content extends SectionContent {
 	private newestVersionName: string = ""
 	private newestVersionDownloadUrl: string = ""
 	private releaseData: ReleaseType[] = []
-	private debuggingOn = process.env.NODE_ENV !== "production"
 	private changeLanguageList: ChangeLanguageList
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
@@ -80,10 +79,6 @@ export class Content extends SectionContent {
 
 	private getUpdateUrl(): string {
 		return `${FILE_ADMIN}?type=UpdateVersion&fromVersion=${this.sectionData.siteData.packageVersion}`
-	}
-
-	private async rebuildStudyIndex(): Promise<void> {
-		await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=RebuildStudyIndex`).then(() => { this.sectionData.loader.showMessage(Lang.get("info_successful")) })
 	}
 
 	private async saveServerSettings(): Promise<void> {
@@ -263,14 +258,6 @@ export class Content extends SectionContent {
 			{TitleRow(Lang.getWithColon("additional_languages"))}
 			{this.changeLanguageList.getView()}
 
-			{this.debuggingOn &&
-				<div>
-					<br /><br />
-					{TitleRow("Debugging:")}
-					<a href={this.getUpdateUrl()}>Run update script</a>
-				</div>
-			}
-
 		</div>
 	}
 	private getHomeMessageView(): Vnode<any, any> {
@@ -303,10 +290,20 @@ export class Content extends SectionContent {
 	
 	private getMaintenanceView(): Vnode<any, any> {
 		return <div>
-			<div class="center">
-				<input type="button" onclick={this.rebuildStudyIndex.bind(this)} value={Lang.get("rebuild_study_index")} />
+			<div class="center spacingTop spacingBottom">
+				<input type="button" onclick={async () => {
+					await this.sectionData.loader.loadJson(`${FILE_ADMIN}?type=RebuildStudyIndex`)
+					this.sectionData.loader.info(Lang.get("info_successful"))
+				}} value={Lang.get("rebuild_study_index")} />
 			</div>
-		</div >
+			
+			<div class="center spacingTop spacingBottom">
+				<input type="button" onclick={async () => {
+					await this.sectionData.loader.loadJson(this.getUpdateUrl())
+					this.sectionData.loader.info(Lang.get("info_successful"))
+				}} value={Lang.get("run_version_migration_script")} />
+			</div>
+		</div>
 	}
 
 	private updateSaveState(): void {

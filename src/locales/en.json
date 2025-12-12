@@ -674,6 +674,7 @@
 	"fallback_app_installation_instructions": "Fallback app installation instructions",
 	"maintenance": "Maintenance",
 	"rebuild_study_index": "Rebuild study index",
+	"run_version_migration_script": "Run version migration script",
 	"study_over": "Study is over",
 	"study_over_message": "This study is no longer active.",
 	"concluded_studies": "Concluded studies",
