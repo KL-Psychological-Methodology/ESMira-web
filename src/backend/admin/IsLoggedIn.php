@@ -16,7 +16,10 @@ abstract class IsLoggedIn extends NoPermission {
 			$pass = $_POST['pass'];
 			Permission::login($accountName, $pass);
 		}
-		if(!$this->isReady() || !Permission::isLoggedIn()) {
+		if(!$this->isReady()) {
+			throw new PageFlowException('Server is not ready');
+		}
+		if(!Permission::isLoggedIn()) {
 			throw new PageFlowException('No permission');
 		}
 		

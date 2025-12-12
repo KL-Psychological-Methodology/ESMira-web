@@ -4,13 +4,17 @@ namespace backend\admin\features\noPermission;
 
 use backend\admin\NoPermission;
 use backend\Configs;
+use backend\exceptions\CriticalException;
 use backend\fileSystem\PathsFS;
 use backend\Permission;
 
 class GetPermissions extends NoPermission {
 
 	function exec(): array {
-		if (!Permission::isLoggedIn() || !Configs::getDataStore()->isReady())
+		if(!Configs::getDataStore()->isReady()) {
+			throw new CriticalException('Server is not ready.');
+		}
+		if (!Permission::isLoggedIn())
 			return ['isLoggedIn' => false];
 		else {
 			if (Permission::isAdmin()) {
