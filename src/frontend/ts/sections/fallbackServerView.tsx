@@ -46,6 +46,6 @@ export class Content extends SectionContent {
 			"post",
 			`url=${url}`
 		)
-		this.sectionData.loader.showMessage(Lang.get("info_successful"))
+		this.sectionData.loader.info(Lang.get("info_successful"))
 	}
 }

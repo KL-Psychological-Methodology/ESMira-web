@@ -18,14 +18,17 @@ export class LoaderState {
 	private clickEventRemoveFu: (() => void) | null = null
 	
 	public getView(): Vnode<any, any> {
-		if(!this.isEnabled)
+		if(!this.isEnabled) {
 			return <div class="loader hidden"></div>
+		}
 		
 		let className = "loader"
-		if(this.isVisible)
+		if(this.isVisible) {
 			className += " visible"
-		if(this.isError)
+		}
+		if(this.isError) {
 			className += " isError"
+		}
 		
 		return (
 			<div class={ className }>
@@ -44,13 +47,12 @@ export class LoaderState {
 		this.disable(true)
 	}
 	
-	public showMessage(s: string | null): void {
+	private displayMessage(msg: string): void {
 		window.clearTimeout(this.animationId)
 		this.isEnabled = true
 		this.hasLoader = false
 		
-		if(s)
-			this.stateMsg = s
+		this.stateMsg = msg
 		
 		this.updateView()
 		this.animationId = window.setTimeout(() => {
@@ -79,15 +81,30 @@ export class LoaderState {
 		}, 10)
 	}
 	
-	public update(s: string): void {
-		if(!this.isEnabled || this.isError || this.stateMsg == s)
+	/**
+	 * Updates the displayed message if the loader is currently visible and no error is active.
+	 *
+	 * @param msg - The new message.
+	 */
+	public update(msg: string): void {
+		if(!this.isEnabled || this.isError || this.stateMsg == msg) {
 			return
+		}
 		
-		this.stateMsg = s
+		this.stateMsg = msg
 		this.updateView()
 	}
 	
+	/**
+	 * Shows a loader animation.
+	 * Also keeps track of successive {@link showLoader()} calls and only hides the view when all loaders are finished
+	 * @param promise - the promise the loader should wait for
+	 * @param msg - The message to show while the loader is active. Defaults to Lang.get("state_loading")
+	 */
 	public async showLoader(promise: Promise<any>, msg: string = Lang.get("state_loading")) : Promise<any> {
+		if(this.isError) {
+			return promise
+		}
 		this.hasLoader = true
 		this.hasTryAgainBtn = false
 		
@@ -102,21 +119,8 @@ export class LoaderState {
 			this.update(msg)
 			return promise
 		}
-		else if(this.isError)
-			return promise
 		
-		window.clearTimeout(this.animationId)
-		
-		this.isEnabled = true
-		this.isVisible = false
-		this.stateMsg = msg
-		
-		this.updateView()
-		this.animationId = window.setTimeout(() => {
-			this.isVisible = true
-			this.updateView()
-		}, 10)
-		
+		this.displayMessage(msg)
 		
 		++this.enableCount
 		
@@ -139,11 +143,17 @@ export class LoaderState {
 		}
 	}
 	
-	public info(s: string): void {
-		if(this.isError)
+	/**
+	 * Shows a simple message and adds a click event to the page to automatically remove the message.
+	 * @param msg
+	 */
+	public info(msg: string): void {
+		if(this.isError) {
 			return
+		}
 		
-		this.showMessage(s)
+		this.hasLoader = false
+		this.displayMessage(msg)
 		
 		let removeFu = () => {
 			this.closeLoader()
@@ -157,11 +167,19 @@ export class LoaderState {
 		}, 10)
 	}
 	
-	public error(s: string, tryAgain?: () => void): void {
+	/**
+	 * Shows an error message.
+	 * As long as the error is not clicked via close button, it will persist (and cancel any other calls to {@link info()} {@link showLoader()} or {@link update()})
+	 * If the error is caused by a view, the error() call will be ignored because it would cause a death loop.
+	 * @param msg - the error message to be shown.
+	 * @param tryAgain - if defined, displays a try again button is shown which calls the callback function when clicked.
+	 */
+	public error(msg: string, tryAgain?: () => void): void {
 		if(this.isError) {
 			//if error() was called by a view, it could cause a death loop because showMessage() calls m.redraw()
-			if(s != this.stateMsg)
-				this.stateMsg = s //we will not call redraw because that would cause a death loop when two different errors are caused by views
+			if(msg != this.stateMsg) {
+				this.stateMsg = msg //we will not call redraw because that would cause a death loop when two different errors are caused by views
+			}
 			return
 		}
 		this.isError = true
@@ -169,16 +187,35 @@ export class LoaderState {
 			this.tryAgainCallback = tryAgain;
 			this.hasTryAgainBtn = true
 		}
-		this.showMessage(s)
+		this.hasLoader = false
+		this.displayMessage(msg)
 	}
 	
+	/**
+	 * Calls {@link showLoader()} with the promise from {@link Requests.loadRaw()} to load the given url.
+	 * @param url - the url to load
+	 * @param type - the request type. Defaults to "get"
+	 * @param requestData - the request data to send. Only needed when {@link type} is "post" or "file".
+	 */
 	public loadRaw(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<string> {
 		return this.showLoader(Requests.loadRaw(url, type, requestData));
 	}
+	
+	/**
+	 * Calls {@link showLoader()} with the promise from {@link Requests.loadJson()} to load and validate the JSON from the given url.
+	 * @param url - the url to load the JSON from.
+	 * @param type - the request type. Defaults to "get"
+	 * @param requestData - the request data to send. Only needed when {@link type} is "post" or "file".
+	 */
 	public loadJson(url: string, type: keyof RequestType = "get", requestData: string | FormData = ""): Promise<any> {
 		return this.showLoader(Requests.loadJson(url, type, requestData));
 	}
 	
+	/**
+	 * Calls {@link showLoader()} with the promise from {@link Requests.loadWithSSE()}.
+	 * @param url - the url to load
+	 * @param progressState - a callback function that returns a string to be displayed in the loader.
+	 */
 	public loadWithSSE(url: string, progressState: (percent: number) => string): Promise<any> {
 		return this.showLoader(Requests.loadWithSSE(url, percent => this.update(progressState(percent))));
 	}
