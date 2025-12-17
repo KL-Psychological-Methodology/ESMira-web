@@ -1,8 +1,8 @@
-import {SectionAlternative, SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {Lang} from "../singletons/Lang";
+import { SectionAlternative, SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { Lang } from "../singletons/Lang";
 import dataTableSvg from "../../imgs/icons/table.svg?raw"
 import calculateSvg from "../../imgs/dashIcons/calculate.svg?raw"
 import summarySvg from "../../imgs/dashIcons/summary.svg?raw"
@@ -11,8 +11,8 @@ import webAccessSvg from "../../imgs/devices/web.svg?raw"
 import publicStatisticsSvg from "../../imgs/dashIcons/publicStatistics.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import merlinLogsSvg from "../../imgs/dashIcons/merlinLogs.svg?raw"
-import {SharedUrlAlternatives} from "../helpers/SharedUrlAlternatives";
-import {SectionData} from "../site/SectionData";
+import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
@@ -35,28 +35,6 @@ export class Content extends SectionContent {
 		const hasPublicCharts = study.publicStatistics.charts.get().length > 0
 		const usesRewardSystem = study.enableRewardSystem.get()
 		const hasNewMerlinLogs = this.getTools().merlinLogsLoader.studiesWithNewMerlinLogsList[this.sectionData.getStaticInt("id") || 0] || false
-		const useSimplified = !this.hasPermission('read', this.sectionData.getStaticInt("id") || 0)
-		if (useSimplified) {
-			return <div>
-				<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
-				{DashRow(
-					DashElement(null, {
-						template: {
-							title: Lang.get("participants"),
-							icon: m.trust(participantsSvg)
-						},
-						href: this.getUrl("statsParticipants")
-					}),
-					DashElement(null, {
-						template: {
-							title: Lang.get("public_statistics"),
-							icon: m.trust(publicStatisticsSvg)
-						},
-						href: this.getUrl("publicStatistics")
-					})
-				)}
-			</div>
-		}
 		return <div>
 			<span class="stretched smallText">{Lang.get("info_charts_loadingTime")}</span>
 			{DashRow(

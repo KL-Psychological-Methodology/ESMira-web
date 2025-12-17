@@ -1,16 +1,16 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {FILE_ADMIN} from "../constants/urls";
-import {Account} from "../data/accounts/Account";
-import {ChangeAccount} from "../components/ChangeAccount";
-import {TitleRow} from "../components/TitleRow";
-import {BindObservable} from "../components/BindObservable";
-import {AccountPermissions} from "../admin/AccountPermissions";
-import {closeDropdown, DropdownMenu} from "../components/DropdownMenu";
-import {AccountsLoader} from "../loader/AccountsLoader";
-import {BtnAdd, BtnTrash} from "../components/Buttons";
-import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { FILE_ADMIN } from "../constants/urls";
+import { Account } from "../data/accounts/Account";
+import { ChangeAccount } from "../components/ChangeAccount";
+import { TitleRow } from "../components/TitleRow";
+import { BindObservable } from "../components/BindObservable";
+import { AccountPermissions } from "../admin/AccountPermissions";
+import { closeDropdown, DropdownMenu } from "../components/DropdownMenu";
+import { AccountsLoader } from "../loader/AccountsLoader";
+import { BtnAdd, BtnTrash } from "../components/Buttons";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader
@@ -129,7 +129,7 @@ export class Content extends SectionContent {
 			this.sectionData.loader.info(Lang.get("info_successful"))
 		}
 	}
-	
+
 	private async addAllPermissions(account: Account, studyId: number): Promise<void> {
 		const permissionNames: (keyof AccountPermissions)[] = ["publish", "read", "msg", "write"]
 		permissionNames.forEach(async (permissionName) => { if (account[permissionName].indexOf(studyId) == -1) { this.addPermission(account, permissionName, studyId, false) } })
@@ -228,7 +228,6 @@ export class Content extends SectionContent {
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_write"), "write")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_msg"), "msg")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_read"), "read")}
-			{this.getListPermissionView(account, Lang.getWithColon("permissions_read_simplified"), "readSimplified")}
 		</div>
 	}
 

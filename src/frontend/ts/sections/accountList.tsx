@@ -1,12 +1,12 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Account} from "../data/accounts/Account";
-import {ChangeAccount} from "../components/ChangeAccount";
-import {TitleRow} from "../components/TitleRow";
-import {AccountsLoader} from "../loader/AccountsLoader";
-import {BtnEdit, BtnTrash} from "../components/Buttons";
-import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Account } from "../data/accounts/Account";
+import { ChangeAccount } from "../components/ChangeAccount";
+import { TitleRow } from "../components/TitleRow";
+import { AccountsLoader } from "../loader/AccountsLoader";
+import { BtnEdit, BtnTrash } from "../components/Buttons";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader
@@ -48,7 +48,6 @@ export class Content extends SectionContent {
 						<th>{Lang.get("permission_write")}</th>
 						<th>{Lang.get("permission_msg")}</th>
 						<th>{Lang.get("permission_read")}</th>
-						<th>{Lang.get("permissions_read_simplified")}</th>
 						<th>{Lang.get("permission_fallback_tokens")}</th>
 						<th></th>
 					</tr>
@@ -78,9 +77,6 @@ export class Content extends SectionContent {
 							</td>
 							<td>
 								<span>{account.admin.get() ? m.trust("&#10004;") : account.read.get().length}</span>
-							</td>
-							<td>
-								<span>{account.admin.get() ? "" : account.readSimplified.get().length}</span>
 							</td>
 							<td>
 								{(account.admin.get() || account.issueFallbackToken.get()) &&

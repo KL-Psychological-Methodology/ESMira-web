@@ -1,15 +1,15 @@
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {TabBar, TabContent} from "../components/TabBar";
-import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {Study} from "../data/study/Study";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { TabBar, TabContent } from "../components/TabBar";
+import { ObservablePrimitive } from "../observable/ObservablePrimitive";
+import { Study } from "../data/study/Study";
 import messageSvg from "../../imgs/icons/message.svg?raw";
 import merlinLogsSvg from "../../imgs/icons/merlinLogs.svg?raw";
-import {StudiesDataType} from "../loader/StudyLoader";
-import {Content as StudiesContent} from ".././sections/studies";
-import {SectionAlternative} from "../site/SectionContent";
-import {BindObservable} from "../components/BindObservable";
-import {SectionData} from "../site/SectionData";
+import { StudiesDataType } from "../loader/StudyLoader";
+import { Content as StudiesContent } from ".././sections/studies";
+import { SectionAlternative } from "../site/SectionContent";
+import { BindObservable } from "../components/BindObservable";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends StudiesContent {
 	protected targetPage: string
@@ -124,7 +124,7 @@ export class Content extends StudiesContent {
 		const studies = this.sectionData.siteData.studyLoader.getSortedStudyList(unsortedStudies)
 		switch (this.sectionData.sectionValue) {
 			case "data":
-				this.studies = studies.filter((study) => (this.hasPermission("read", study.id.get())) || this.hasPermission("readSimplified", study.id.get()))
+				this.studies = studies.filter((study) => (this.hasPermission("read", study.id.get())))
 				break
 			case "edit":
 				this.studies = studies.filter((study) => this.hasPermission("write", study.id.get()))

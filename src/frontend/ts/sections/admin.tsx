@@ -1,8 +1,8 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {Lang} from "../singletons/Lang";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { Lang } from "../singletons/Lang";
 import addSvg from "../../imgs/icons/add.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
 import editSvg from "../../imgs/icons/change.svg?raw"
@@ -14,11 +14,11 @@ import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
-import {TitleRow} from "../components/TitleRow";
-import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
-import {RssFetcher, RssItem} from "../singletons/RssFetcher";
-import {NewsItem} from "../components/NewsItem";
-import {SectionData} from "../site/SectionData";
+import { TitleRow } from "../components/TitleRow";
+import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
+import { RssFetcher, RssItem } from "../singletons/RssFetcher";
+import { NewsItem } from "../components/NewsItem";
+import { SectionData } from "../site/SectionData";
 
 const MINIMAL_DISK_SPACE = 1000 * 1000 * 100 //100 Mb
 /**
@@ -112,7 +112,7 @@ export class Content extends SectionContent {
 						href: this.getUrl("allStudies:msgs")
 					}),
 
-					(tools.permissions.read || tools.permissions.readSimplified) &&
+					tools.permissions.read &&
 					DashElement(null, {
 						highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
 						template: { title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },
