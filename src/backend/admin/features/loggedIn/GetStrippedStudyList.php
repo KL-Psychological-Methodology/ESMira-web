@@ -42,12 +42,6 @@ class GetStrippedStudyList extends IsLoggedIn {
                 $studiesJson[] = $this->getStrippedStudy($studyId);
             }
         }
-        if (isset($permissions['readSimplified'])) {
-            foreach ($permissions['readSimplified'] as $studyId) {
-                $indexedStudies[$studyId] = true;
-                $studiesJson[] = $this->getStrippedStudy($studyId);
-            }
-        }
         if (isset($permissions['msg'])) {
             foreach ($permissions['msg'] as $studyId) {
                 if (!isset($indexedStudies[$studyId])) {

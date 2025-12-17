@@ -10,8 +10,7 @@ abstract class HasReadPermission extends IsLoggedIn {
         parent::__construct();
         if ($this->studyId == 0)
             throw new PageFlowException('Missing study id');
-        if (!$this->isAdmin && !(Permission::hasPermission($this->studyId, 'read') || (Permission::hasPermission($this->studyId, 'readSimplified'))))
+        if (!$this->isAdmin && !(Permission::hasPermission($this->studyId, 'read')))
             throw new PageFlowException('No permission');
     }
 }
-
