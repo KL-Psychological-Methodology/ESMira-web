@@ -2,14 +2,10 @@
 
 namespace backend\admin\features\readPermission;
 
-use backend\admin\HasReadPermission;
+use backend\admin\HasRewardPermission;
 use backend\Configs;
-use backend\exceptions\CriticalException;
-use backend\exceptions\NoRewardCodeException;
-use backend\exceptions\PageFlowException;
-use backend\JsonOutput;
 
-class GetRewardCodeData extends HasReadPermission {
+class GetRewardCodeData extends HasRewardPermission {
 	function exec(): array {
 		$dataStore = Configs::getDataStore();
 		

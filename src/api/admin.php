@@ -46,8 +46,6 @@ $classIndex = [
 	'DeleteMessage' => 'backend\admin\features\messagePermission\DeleteMessage',
 	
 	//read:
-	'ValidateRewardCode' => 'backend\admin\features\readPermission\ValidateRewardCode',
-	'GetRewardCodeData' => 'backend\admin\features\readPermission\GetRewardCodeData',
 	'ListData' => 'backend\admin\features\readPermission\ListData',
 	'GetData' => 'backend\admin\features\readPermission\GetData',
 	'CreateMediaZip' => 'backend\admin\features\readPermission\CreateMediaZip',
@@ -57,6 +55,10 @@ $classIndex = [
 	'DeleteMerlinLog' => 'backend\admin\features\readPermission\DeleteMerlinLog',
 	'ChangeMerlinLog' => 'backend\admin\features\readPermission\ChangeMerlinLog',
 	'GetMerlinLog' => 'backend\admin\features\readPermission\GetMerlinLog',
+
+	//reward:
+	'ValidateRewardCode' => 'backend\admin\features\rewardPermission\ValidateRewardCode',
+	'GetRewardCodeData' => 'backend\admin\features\rewardPermission\GetRewardCodeData',
 	
 	//write
 	'IsFrozen' => 'backend\admin\features\writePermission\IsFrozen',

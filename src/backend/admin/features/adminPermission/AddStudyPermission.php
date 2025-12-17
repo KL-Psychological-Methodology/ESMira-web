@@ -19,6 +19,7 @@ class AddStudyPermission extends HasAdminPermission {
             case 'read':
             case 'write':
             case 'msg':
+			case 'reward':
                 $accountStore->addStudyPermission($accountName, $this->studyId, $permCode);
                 break;
             case 'publish':
