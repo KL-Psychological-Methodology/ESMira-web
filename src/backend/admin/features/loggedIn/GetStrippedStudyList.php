@@ -25,7 +25,8 @@ class GetStrippedStudyList extends IsLoggedIn {
             'lastSavedAt' => $studyMetadataStore->getLastSavedAt(),
             'createdTimestamp' => $studyMetadataStore->getCreatedTimestamp(),
             'studyTag' => $studyMetadataStore->getStudyTag(),
-            'studyOver' => $studyMetadataStore->isOver(),
+			'studyOver' => $studyMetadataStore->isOver(),
+			'enableRewardSystem' => $studyMetadataStore->isRewardSystemEnabled()
         ];
     }
     
@@ -56,6 +57,12 @@ class GetStrippedStudyList extends IsLoggedIn {
                     $studiesJson[] = $this->getStrippedStudy($studyId);
             }
         }
+		if (isset($permissions['reward'])) {
+			foreach ($permissions['reward'] as $studyId) {
+				if (!isset($indexedStudies[$studyId]))
+					$studiesJson[] = $this->getStrippedStudy($studyId);
+			}
+		}
         
         return $studiesJson;
     }

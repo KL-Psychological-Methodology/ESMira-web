@@ -66,7 +66,8 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
             'lastSavedBy' => Permission::getAccountName(),
             'lastSavedAt' => time(),
             'studyTag' => $study->studyTag ?? '',
-            'useFallback' => $study->useFallback ?? true
+            'useFallback' => $study->useFallback ?? true,
+            'enableRewardSystem' => $study->enableRewardSystem ?? false,
         ];
         FileSystemBasics::writeFile(PathsFS::fileStudyMetadata($this->studyId), serialize($this->metadata));
 
@@ -99,6 +100,12 @@ class StudyMetadataStoreFS implements StudyMetadataStore {
         $this->loadMetadata();
         return $this->metadata['hasQuestionnaires'] ?? false;
     }
+
+	public function isRewardSystemEnabled(): bool
+	{
+		$this->loadMetadata();
+		return $this->metadata['enableRewardSystem'] ?? false;
+	}
 
     public function getAccessKeys(): array {
         $this->loadMetadata();

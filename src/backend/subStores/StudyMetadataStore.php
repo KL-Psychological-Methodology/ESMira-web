@@ -23,6 +23,7 @@ interface StudyMetadataStore {
      */
     public function isOver(): bool;
     public function hasQuestionnaires(): bool;
+	public function isRewardSystemEnabled(): bool;
     /**
      * @throws CriticalException
      */

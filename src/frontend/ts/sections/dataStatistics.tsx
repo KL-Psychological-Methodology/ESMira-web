@@ -87,13 +87,6 @@ export class Content extends SectionContent {
 						icon: m.trust(merlinLogsSvg)
 					},
 					href: this.getUrl("merlinLogList")
-				}),
-				usesRewardSystem && DashElement(null, {
-					template: {
-						title: Lang.get("validate_reward_code"),
-						icon: m.trust(rewardsSvg)
-					},
-					href: this.getUrl("rewardCodes")
 				})
 			)
 			}</div>

@@ -53,6 +53,10 @@ export class Content extends StudiesContent {
 					this.selectedTab.set(1)
 				this.titleString = Lang.get("messages")
 				break
+			case "reward":
+				this.targetPage = "rewardCodes"
+				this.titleString = Lang.get("validate_reward_code")
+				break
 			case "edit":
 			default:
 				this.targetPage = "studyEdit"
@@ -131,6 +135,9 @@ export class Content extends StudiesContent {
 				break
 			case "msgs":
 				this.studies = studies.filter((study) => this.hasPermission("msg", study.id.get()))
+				break
+			case "reward":
+				this.studies = studies.filter((study) => (study.enableRewardSystem.get() && this.hasPermission("reward", study.id.get())))
 				break
 			default:
 				this.studies = studies

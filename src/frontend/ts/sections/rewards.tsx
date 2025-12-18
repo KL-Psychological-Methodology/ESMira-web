@@ -1,15 +1,15 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {Lang} from "../singletons/Lang";
-import {BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer} from "../components/BindObservable";
-import {ObservableLangChooser} from "../components/ObservableLangChooser";
-import {RichText} from "../components/RichText";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { Lang } from "../singletons/Lang";
+import { BindObservable, ConstrainedNumberTransformer, OnBeforeChangeTransformer } from "../components/BindObservable";
+import { ObservableLangChooser } from "../components/ObservableLangChooser";
+import { RichText } from "../components/RichText";
 import warnSvg from "../../imgs/icons/warn.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
-import {BtnCustom} from "../components/Buttons";
-import {SectionData} from "../site/SectionData";
+import { BtnCustom } from "../components/Buttons";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private faultyEmailContent = false
@@ -22,7 +22,8 @@ export class Content extends SectionContent {
 		return Lang.get("reward_system")
 	}
 	public titleExtra(): Vnode<any, any> | null {
-		return this.getStudyOrThrow().enableRewardSystem.get()
+		let study = this.getStudyOrThrow()
+		return study.enableRewardSystem.get() && this.getAdmin().getTools().hasPermission("reward", study.id.get())
 			? <a href={this.getUrl("rewardCodes")}>
 				{BtnCustom(m.trust(rewardsSvg), undefined, Lang.get("validate_reward_code"))}
 			</a>

@@ -11,6 +11,7 @@ export class Account extends DataStructure {
 
 	public read = this.primitiveArray<number>("read", [])
 	public write = this.primitiveArray<number>("write", [])
+	public reward = this.primitiveArray<number>("reward", [])
 	public msg = this.primitiveArray<number>("msg", [])
 	public publish = this.primitiveArray<number>("publish", [])
 

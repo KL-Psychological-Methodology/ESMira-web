@@ -131,7 +131,7 @@ export class Content extends SectionContent {
 	}
 
 	private async addAllPermissions(account: Account, studyId: number): Promise<void> {
-		const permissionNames: (keyof AccountPermissions)[] = ["publish", "read", "msg", "write"]
+		const permissionNames: (keyof AccountPermissions)[] = ["publish", "read", "msg", "write", "reward"]
 		permissionNames.forEach(async (permissionName) => { if (account[permissionName].indexOf(studyId) == -1) { this.addPermission(account, permissionName, studyId, false) } })
 		closeDropdown("addAllPermissions")
 		this.sectionData.loader.info(Lang.get("info_successful"))
@@ -228,6 +228,7 @@ export class Content extends SectionContent {
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_write"), "write")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_msg"), "msg")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_read"), "read")}
+			{this.getListPermissionView(account, Lang.getWithColon("permissions_reward"), "reward")}
 		</div>
 	}
 

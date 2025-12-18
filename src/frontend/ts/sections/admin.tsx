@@ -14,6 +14,7 @@ import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
 import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
+import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import { TitleRow } from "../components/TitleRow";
 import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
 import { RssFetcher, RssItem } from "../singletons/RssFetcher";
@@ -117,6 +118,12 @@ export class Content extends SectionContent {
 						highlight: !!(tools.merlinLogsLoader.studiesWithNewMerlinLogsCount.get()),
 						template: { title: Lang.get("show_data_statistics"), icon: m.trust(dataSvg) },
 						href: this.getUrl("allStudies:data")
+					}),
+
+					tools.permissions.reward &&
+					DashElement(null, {
+						template: { title: Lang.get("validate_reward_code"), icon: m.trust(rewardsSvg) },
+						href: this.getUrl("allStudies:reward")
 					}),
 
 					tools?.isAdmin &&

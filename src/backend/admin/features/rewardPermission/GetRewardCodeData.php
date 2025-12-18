@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\admin\features\readPermission;
+namespace backend\admin\features\rewardPermission;
 
 use backend\admin\HasRewardPermission;
 use backend\Configs;
