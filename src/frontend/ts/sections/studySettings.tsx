@@ -1,17 +1,17 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {BindObservable} from "../components/BindObservable";
-import {TitleRow} from "../components/TitleRow";
-import {Study} from "../data/study/Study";
-import {safeConfirm} from "../constants/methods";
-import {FILE_ADMIN} from "../constants/urls";
-import {Requests} from "../singletons/Requests";
-import {BtnTrash} from "../components/Buttons";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {StudyMetadata} from "../loader/StudyLoader";
-import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { BindObservable } from "../components/BindObservable";
+import { TitleRow } from "../components/TitleRow";
+import { Study } from "../data/study/Study";
+import { safeConfirm } from "../constants/methods";
+import { FILE_ADMIN } from "../constants/urls";
+import { Requests } from "../singletons/Requests";
+import { BtnTrash } from "../components/Buttons";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { StudyMetadata } from "../loader/StudyLoader";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private isFrozen: boolean = false
@@ -32,7 +32,7 @@ export class Content extends SectionContent {
 	}
 
 	public title(): string {
-		return Lang.get("study_description")
+		return Lang.get("study_settings")
 	}
 
 	private async toggleFreezeStudy(study: Study, e: InputEvent): Promise<void> {
