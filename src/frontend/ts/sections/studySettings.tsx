@@ -182,6 +182,11 @@ export class Content extends SectionContent {
 								<small>{Lang.get("desc_invitation_missed")}</small>
 							</label>
 							<label class="noTitle vertical">
+								<input type="checkbox" {...BindObservable(uploadSettings.language_changed)} />
+								<span>language_changed</span>
+								<small>{Lang.get("desc_language_changed")}</small>
+							</label>
+							<label class="noTitle vertical">
 								<input type="checkbox" {...BindObservable(uploadSettings.message)} />
 								<span>message</span>
 								<small>{Lang.get("desc_message")}</small>
@@ -200,6 +205,11 @@ export class Content extends SectionContent {
 								<input type="checkbox" {...BindObservable(uploadSettings.reminder)} />
 								<span>reminder</span>
 								<small>{Lang.get("desc_reminder")}</small>
+							</label>
+							<label class="noTitle vertical">
+								<input type="checkbox" {...BindObservable(uploadSettings.requested_reward_code)} />
+								<span>requested_reward_code</span>
+								<small>{Lang.get("desc_requested_reward_code")}</small>
 							</label>
 							<label class="noTitle vertical">
 								<input type="checkbox" checked="checked" {...BindObservable(uploadSettings.schedule_planned)} />
