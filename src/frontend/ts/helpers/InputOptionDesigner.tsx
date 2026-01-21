@@ -229,6 +229,7 @@ export class InputOptionDesigner {
 						<small>{Lang.get("likert_number_of_points")}</small>
 						<input type="number" min="2" {...BindObservable(this.input.likertSteps, new ConstrainedNumberTransformer(2, undefined))} />
 					</label>
+					{this.customStartOption()}
 
 					{this.defaultValueOption()}
 				</div>,
@@ -264,6 +265,7 @@ export class InputOptionDesigner {
 					{this.requiredOption()}
 					{this.checkedOptionElement(this.input.asDropDown, Lang.get("show_as_dropdown"))}
 					{this.checkedOptionElement(this.input.forceInt, Lang.get("save_as_number"))}
+					{this.input.forceInt.get() && this.customStartOption()}
 					{this.otherOption()}
 				</div>,
 				this.defaultValueOption(),
@@ -373,6 +375,7 @@ export class InputOptionDesigner {
 						<input type="number" min="0" {...BindObservable(this.input.maxValue, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("max_value_vas_desc")}</small>
 					</label>
+					{this.customStartOption()}
 				</div>,
 				this.leftRightLabelOption()
 			]
@@ -405,6 +408,13 @@ export class InputOptionDesigner {
 				return titleA > titleB ? 1 : -1
 		})
 		this.sortedInputTypeKeys = inputTypeKeys
+	}
+
+	private customStartOption() {
+		return <div>
+			{this.checkedOptionElement(this.input.useCustomStart, Lang.get("use_custom_start"))}
+			{this.input.useCustomStart.get() && this.inputOptionElement(this.input.customStart, Lang.get("custom_start_value"), "", "number")}
+		</div>
 	}
 
 	private onlyRequiredAndDefaultOptions(regex: RegExp | undefined = undefined, warningMessage: string = ""): Vnode<any, any>[] {

@@ -719,5 +719,7 @@
 	"publish_info_explanation_qr": "If someone scans the QR code without having ESMira installed on their smartphone, their smartphone will open the info page in their browser. If they already have ESMira installed, the smartphone will instead open ESMira and directly forward them into the enrollment process for the study.",
 	"urls_instruction_id": "I do not use an access key or have only a single study using this access key",
 	"urls_instruction_access_key": "I have multiple studies using the same access key",
-	"urls_instruction_questionnaires": "I want to use the Web-versions of the questionaires (not recommended)"
+	"urls_instruction_questionnaires": "I want to use the Web-versions of the questionaires (not recommended)",
+	"use_custom_start": "Use custom start",
+	"custom_start_value": "Custom start value"
 }

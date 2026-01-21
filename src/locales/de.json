@@ -688,5 +688,7 @@
 	"publish_info_explanation_qr": "Wenn jemand den QR-Code scannt ohne ESMira auf dem Smartphone installiert zu haben wird das Smarthphone die Informationsseite in einem Browser öffnen. Sofern ESMira bereits auf dem Smartphone instaliert ist wird stattdessen ESMira geöffnet, und der Teilnahmeprozess für die Studie wird automatisch gestartet. ",
 	"urls_instruction_id": "Ich verwende keinen Zugangsschlüssel oder habe nur eine einzige Studie, die diesen Zugangsschlüssel verwendet",
 	"urls_instruction_access_key": "Ich habe mehrere Studien, die dieselben Zugangsschlüssel verwenden.",
-	"urls_instruction_questionnaires": "Ich möchte die Webversionen von Fragebögen verwenden (nicht empfohlen)"
+	"urls_instruction_questionnaires": "Ich möchte die Webversionen von Fragebögen verwenden (nicht empfohlen)",
+	"use_custom_start": "Benutzerdefinierten Startwert verwenden",
+	"custom_start_value": "Benutzerdefinierter Startwert"
 }

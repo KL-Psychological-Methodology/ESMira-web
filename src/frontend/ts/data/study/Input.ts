@@ -1,4 +1,4 @@
-import {DataStructure} from "../DataStructure";
+import { DataStructure } from "../DataStructure";
 
 export type InputResponseType =
 	"ambient_light" |
@@ -50,6 +50,8 @@ export class Input extends DataStructure {
 	public vertical = this.primitive<boolean>("vertical", false)
 	public textScript = this.primitive<string>("textScript", "")
 	public other = this.primitive<boolean>("other", false)
+	public useCustomStart = this.primitive<boolean>("useCustomStart", false)
+	public customStart = this.primitive<number>("customStart", 0)
 
 	public defaultValue = this.translatable("defaultValue", "")
 	public text = this.translatable("text", "")
