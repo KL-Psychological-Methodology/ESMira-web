@@ -149,8 +149,8 @@ export class SectionData {
 			return this.getStudyPromiseFromAccessKey(id)
 	}
 	
-	public getAvailableStudiesPromise(accessKey: string, filterOver: boolean = true): Promise<StudiesDataType> {
-		return this.siteData.studyLoader.loadAvailableStudies(accessKey, filterOver)
+	public getAvailableStudiesPromise(accessKey: string, includeFinishedStudies: boolean = false): Promise<StudiesDataType> {
+		return this.siteData.studyLoader.loadAvailableStudies(accessKey, false, includeFinishedStudies)
 	}
 	public getStrippedStudyListPromise(): Promise<StudiesDataType> {
 		return this.siteData.studyLoader.loadStrippedStudyList()

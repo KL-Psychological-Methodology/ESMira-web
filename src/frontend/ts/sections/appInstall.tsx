@@ -39,7 +39,7 @@ export class Content extends SectionContent {
 					.replace("%s1", accessKey)
 					.replace("%s2", Lang.code)
 			),
-			sectionData.getAvailableStudiesPromise(accessKey, false)
+			sectionData.getAvailableStudiesPromise(accessKey, true)
 		]
 	}
 	
