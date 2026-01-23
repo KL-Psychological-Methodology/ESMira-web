@@ -215,7 +215,7 @@ export class Content extends SectionContent {
 								)
 								: this.getPublishView(study, study.accessKeys.get()[0]?.get() ?? "").view()
 						}</div>
-					) || <div>
+						|| <div>
 							{DashRow(
 								DashElement("stretched", {
 									highlight: true,
@@ -226,6 +226,7 @@ export class Content extends SectionContent {
 								})
 							)}
 						</div>
+					)
 					}
 				</div>
 			}
