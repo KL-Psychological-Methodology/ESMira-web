@@ -3,7 +3,10 @@
 namespace backend;
 
 class SSE {
-	private int $lastProgress = -1;
+	/**
+	 * @var int
+	 */
+	private $lastProgress = -1;
 	
 	function sendHeader() {
 		set_time_limit(10 * 60);

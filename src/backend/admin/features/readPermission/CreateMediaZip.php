@@ -10,7 +10,10 @@ use backend\Paths;
 use backend\SSE;
 
 class CreateMediaZip extends HasReadPermission {
-	private SSE $sse;
+	/**
+	 * @var SSE
+	 */
+	private $sse;
 	
 	/**
 	 * Constructor is only needed for testing.

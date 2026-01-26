@@ -19,8 +19,9 @@ class RestoreSnapshotPrepare extends HasAdminPermission {
 	
 	/**
 	 * Only needed for testing.
+	 * @var string
 	 */
-	protected string $pathUpdate;
+	protected $pathUpdate;
 	
 	/**
 	 * Constructor is only needed for testing.

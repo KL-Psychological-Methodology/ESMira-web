@@ -18,11 +18,30 @@ use Throwable;
 class UpdateStepReplace extends HasAdminPermission {
 	private const MAX_STAGES = 2;
 	
-	protected string $pathStructureFile;
-	protected string $pathOriginal;
-	protected string $pathUpdate;
-	protected string $pathBackup;
-	private SSE $sse;
+	/**
+	 * @var string
+	 */
+	protected $pathStructureFile;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathOriginal;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathUpdate;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathBackup;
+	
+	/**
+	 * @var SSE
+	 */
+	private $sse;
 	
 	
 	/**

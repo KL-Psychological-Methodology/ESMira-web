@@ -16,9 +16,20 @@ use Throwable;
  * RestoreSnapshotPrepare -> UpdateStepReplace -> RestoreSnapshotData
  */
 class RestoreSnapshotData extends HasAdminPermission {
-	private SSE $sse;
-	protected string $pathUpdate;
-	protected string $pathBackup;
+	/**
+	 * @var SSE
+	 */
+	private $sse;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathUpdate;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathBackup;
 	
 	/**
 	 * Constructor is only needed for testing.

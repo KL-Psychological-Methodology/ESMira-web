@@ -17,18 +17,21 @@ use ZipArchive;
 class UpdateStepPrepare extends HasAdminPermission {
 	/**
 	 * Only needed for testing.
+	 * @var string
 	 */
-	protected string $pathConfigFile;
+	protected $pathConfigFile;
 	
 	/**
 	 * Only needed for testing.
+	 * @var string
 	 */
-	protected string $pathUpdateZip;
+	protected $pathUpdateZip;
 	
 	/**
 	 * Only needed for testing.
+	 * @var string
 	 */
-	protected string $pathUpdate;
+	protected $pathUpdate;
 	
 	/**
 	 * Constructor is only needed for testing.

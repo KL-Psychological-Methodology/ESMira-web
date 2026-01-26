@@ -17,9 +17,20 @@ use ZipArchive;
 class CreateSnapshot extends HasAdminPermission {
 	private const MAX_STAGES = 3;
 	
-	protected string $pathStructureFile;
-	protected string $pathHome;
-	private SSE $sse;
+	/**
+	 * @var string
+	 */
+	protected $pathStructureFile;
+	
+	/**
+	 * @var string
+	 */
+	protected $pathHome;
+	
+	/**
+	 * @var SSE
+	 */
+	private $sse;
 	
 	/**
 	 * Constructor is only needed for testing.

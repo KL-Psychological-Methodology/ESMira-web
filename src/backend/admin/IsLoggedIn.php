@@ -6,8 +6,15 @@ use backend\exceptions\PageFlowException;
 use backend\Permission;
 
 abstract class IsLoggedIn extends NoPermission {
-	protected int $studyId;
-	protected bool $isAdmin;
+	/**
+	 * @var int
+	 */
+	protected $studyId;
+	
+	/**
+	 * @var bool
+	 */
+	protected $isAdmin;
 	
 	function __construct() {
 		parent::__construct();
