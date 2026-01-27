@@ -29,7 +29,7 @@ $accountList = $accountStore->getAccountList();
 
 foreach($accountList as $account) {
 	$permissions = $accountStore->getPermissions($account);
-	$readPermissions = isset($permissions['reward']) ? $permissions['reward'] : [];
+	$readPermissions = isset($permissions['read']) ? $permissions['read'] : [];
 	foreach($readPermissions as $studyId) {
 		$accountStore->addStudyPermission($account, $studyId, 'reward');
 	}
