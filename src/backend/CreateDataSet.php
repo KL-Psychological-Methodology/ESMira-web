@@ -383,6 +383,7 @@ class CreateDataSet {
 		
 		$responses->userId = $this->userId;
 		$responses->uploaded = $uploaded;
+		$responses->uploaded_formatted = self::formatDate((int) $uploaded);
 		$responses->appType = $this->appType;
 		$responses->appVersion = $this->appVersion;
 		
