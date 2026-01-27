@@ -1,8 +1,8 @@
-import {SectionAlternative, SectionContent} from "../site/SectionContent";
-import {Lang} from "../singletons/Lang";
+import { SectionAlternative, SectionContent } from "../site/SectionContent";
+import { Lang } from "../singletons/Lang";
 
 export class SharedUrlAlternatives {
-	public static studyAlternatives(sectionContent: SectionContent, indexName: "edit" | "msgs" | "data"): SectionAlternative[] {
+	public static studyAlternatives(sectionContent: SectionContent, indexName: "edit" | "msgs" | "data" | "reward"): SectionAlternative[] {
 		const study = sectionContent.getStudyOrThrow()
 		const studyId = study.id.get()
 		const depth = sectionContent.sectionData.depth - 1
@@ -27,6 +27,13 @@ export class SharedUrlAlternatives {
 					sectionContent
 						.getUrl(`dataStatistics,id:${studyId}`, depth)
 						.replace(`allStudies:${indexName}`, "allStudies:data")
+			},
+			{
+				title: Lang.get("reward_system"),
+				target: indexName != "reward" &&
+					sectionContent
+						.getUrl(`rewardCodes,id:${studyId}`, depth)
+						.replace(`allStudies:${indexName}`, "allStudies:reward")
 			}
 		]
 	}
