@@ -94,8 +94,8 @@ export class Content extends SectionContent {
 	}
 	
 	private getMerlinLogList(merlinLogs: MerlinLogInfo[]): Vnode<any, any> {
-		return <div class="listParent">
-			<div class="listChild error_list">
+		return <div class="center">
+			<div class="vertical hAlignStart error_list">
 				{merlinLogs.map((merlinLog) =>
 					<div>
 						{BtnTrash(this.deleteMerlinLog.bind(this, merlinLog))}

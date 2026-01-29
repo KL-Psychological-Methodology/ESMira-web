@@ -66,10 +66,10 @@ export class Content extends SectionContent {
 					),
 					DashElement(null, {
 						content:
-							<div class="listParent">
+							<div class="center">
 								<h2 class="center">{Lang.getWithColon("minimal_number_of_entries_required")}</h2>
 
-								<table class="listChild">
+								<table style="width: 100%;">
 									{study.questionnaires.get().map((questionnaire) =>
 										<tr>
 											<td>

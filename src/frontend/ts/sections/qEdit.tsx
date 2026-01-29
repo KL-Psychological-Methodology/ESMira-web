@@ -181,7 +181,7 @@ export class Content extends SectionContent {
 					{ floatingRight: true, highlight: true, template: { title: Lang.get("delete"), icon: m.trust(deleteSvg) }, onclick: this.deleteQuestionnaire.bind(this, study, questionnaire, qIndex) },
 					{
 						content:
-							<div class="listParent verticalPadding floatingSpaceLeft floatingSpaceRight">
+							<div class="vertical verticalPadding floatingSpaceLeft floatingSpaceRight">
 								<div>
 									<label class="line">
 										<small>{Lang.get("questionnaire_name")}</small>
@@ -189,7 +189,7 @@ export class Content extends SectionContent {
 										{ObservableLangChooser(study)}
 									</label>
 								</div>
-								<div class="listChild">
+								<div class="vertical hAlignStart">
 									<label>
 										<input type="checkbox" {...BindObservable(questionnaire.isBackEnabled)} />
 										<span>{Lang.get("allow_back_button")}</span>
@@ -246,10 +246,10 @@ export class Content extends SectionContent {
 		return <div class="spacingTop" >
 			{
 				TitleRow(
-					<div class="spacingTop" >
-						<div class="title flexGrow flexCenter">{Lang.get("questionnaire_edit_title", (pageIndex + 1), page.inputs.get().length)}</div>
+					<div class="spacingTop horizontal" >
+						<div class="title fillFlexSpace selfAlignCenter">{Lang.get("questionnaire_edit_title", (pageIndex + 1), page.inputs.get().length)}</div>
 
-						<div class="nowrap flexCenter">
+						<div class="horizontal selfAlignCenter">
 							{BtnTrash(this.deletePage.bind(this, questionnaire, pageIndex))}
 							{BtnCopy(this.copyPage.bind(this, page, pageIndex + 1))}
 							{
@@ -265,12 +265,12 @@ export class Content extends SectionContent {
 							}
 
 							{pageIndex < questionnaire.pages.get().length - 1 ?
-								<div class="btn horizontal clickable" onclick={this.movePageDown.bind(this, questionnaire, pageIndex)}>
+								<div class="btn clickable" onclick={this.movePageDown.bind(this, questionnaire, pageIndex)}>
 									{m.trust(downSvg)}
 								</div> : BtnLikeSpacer()
 							}
 							{pageIndex > 0 ?
-								<div class="btn horizontal clickable" onclick={this.movePageUp.bind(this, questionnaire, pageIndex)}>
+								<div class="btn clickable" onclick={this.movePageUp.bind(this, questionnaire, pageIndex)}>
 									{m.trust(upSvg)}
 								</div> : BtnLikeSpacer()
 							}
@@ -288,18 +288,18 @@ export class Content extends SectionContent {
 			<div class="coloredLines spacingTop">
 				{page.inputs.get().map((input, inputIndex) => {
 					return dragTools.getDragTarget(inputIndex, page.inputs,
-						<div class="line horizontalPadding verticalPadding flexHorizontal">
-							<div className="flexCenter spacingRight">
+						<div class="line horizontalPadding verticalPadding horizontal">
+							<div className="selfAlignCenter spacingRight">
 								{dragTools.getDragStarter(inputIndex, page.inputs)}
 							</div>
 
-							<div class="flexGrow">
+							<div class="fillFlexSpace">
 								<div class="verticalPadding highlight smallText">{`${Lang.getDynamic("input_" + input.responseType.get())} ${input.required.get() ? '*' : ''} (${input.name.get()})`}</div>
 
 								<div class="verticalPadding">{m.trust(input.text.get())}</div>
 							</div>
 
-							<div class="nowrap flexCenter">
+							<div class="nowrap selfAlignCenter">
 								{BtnTrash(this.deleteInput.bind(this, page, inputIndex))}
 								{BtnCopy(this.copyInput.bind(this, input, inputIndex + 1))}
 								<a class="spacingLeft" href={this.getUrl(`inputEdit,input:${makeUrlFriendly(input.name.get())}`)}>

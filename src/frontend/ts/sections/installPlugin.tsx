@@ -83,9 +83,9 @@ export class Content extends SectionContent {
 			... this.knownPlugins.map(entry => DashElement("stretched", {
 				content: <div>
 					<div>
-						<div>
-							<a href={entry.website} target="_blank">{entry.name}</a>
-							<div class="right">
+						<div class="horizontal">
+							<a class="fillFlexSpace" href={entry.website} target="_blank">{entry.name}</a>
+							<div>
 								{BtnDownload(() => this.installFromUrl(entry.metadataUrl), Lang.get("install"))}
 							</div>
 						</div>

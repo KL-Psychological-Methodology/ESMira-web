@@ -192,20 +192,20 @@ export class Content extends SectionContent {
 				DashElement(null,
 					{
 						content:
-							<div class="center">
-								<span>{Lang.get("delay")}</span>
-								<label class="horizontal spacingLeft spacingRight center">
+							<div class="center horizontal hAlignCenter vAlignCenter">
+								<span>{Lang.getWithColon("delay")}</span>
+								<label class="spacingLeft spacingRight center">
 									<small>{Lang.get("random")}</small>
 									<input type="checkbox" {...BindObservable(event.randomDelay)} />
 								</label>
 								{event.randomDelay.get() &&
-									<label class="horizontal">
+									<label>
 										<small>{Lang.get("from")}</small>
 										<input min="0" type="number" {...BindObservable(event.delayMinimumSec, new ConstrainedNumberTransformer(0, undefined))} />
 										<small>{Lang.get("seconds")}</small>
 									</label>
 								}
-								<label class="horizontal">
+								<label>
 									{event.randomDelay.get() &&
 										<small>{Lang.get("to")}</small>
 									}
@@ -216,17 +216,17 @@ export class Content extends SectionContent {
 					}),
 				DashElement("stretched", {
 					content:
-						<div>
-							<label class="vertical noTitle noDesc">
+						<div class="vertical">
+							<label class="noTitle noDesc">
 								<input type="checkbox" disabled={event.specificQuestionnaireEnabled.get()} {...BindObservable(event.skipThisQuestionnaire)} />
 								<span style={`color:${event.specificQuestionnaireEnabled.get() ? 'lightgray' : 'inherit'}`}>{Lang.get("desc_skip_this_questionnaire")}</span>
 							</label>
-							<label class="vertical noDesc">
+							<label class="noDesc">
 								<input type="checkbox" {...BindObservable(event.specificQuestionnaireEnabled, new SpecificQuestionnaireTransformer(event))} />
 								<span>{Lang.get("desc_specific_questionnaire")}</span>
 							</label>
 							{event.specificQuestionnaireEnabled.get() &&
-								<label class="vertical noDesc">
+								<label class="noDesc">
 									<small>{Lang.get("questionnaire")}</small>
 									<select {...BindObservable(event.specificQuestionnaireInternalId)}>
 										{study.questionnaires.get().map((questionnaire) =>
@@ -245,15 +245,15 @@ export class Content extends SectionContent {
 	}
 
 	private getSignalTimeView(schedule: Schedule, signalTime: SignalTime, index: number): Vnode<any, any> {
-		return <div class="spacingBottom">
-			<div class="nowrap center">
-				<label class="horizontal middle center">
+		return <div class="line spacingBottom">
+			<div class="horizontal hAlignStart">
+				<label class="center">
 					<small class="smallText">{Lang.get("random")}</small>
 					<input type="checkbox" {...BindObservable(signalTime.random)} />
 				</label>
 
 				{signalTime.random.get() &&
-					<label class="horizontal middle spacingLeft">
+					<label class="spacingLeft">
 						<small>{Lang.get("random_fixed")}</small>
 						<select {...BindObservable(signalTime.randomFixed, BooleanTransformer, "value")}>
 							<option value="1">{Lang.get("random_fixed_true")}</option>
@@ -263,27 +263,27 @@ export class Content extends SectionContent {
 				}
 
 
-				<label class="horizontal middle spacingLeft">
+				<label class="spacingLeft">
 					<small>{signalTime.random.get() ? Lang.get("startTime") : Lang.get("time")}</small>
 					<input type="time" {...BindObservable(signalTime.startTimeOfDay, TimeTransformer)} />
 				</label>
 
 				{signalTime.random.get() &&
-					<label class="horizontal middle spacingLeft">
+					<label class="spacingLeft">
 						<small>{Lang.get("endTime")}</small>
 						<input type="time" {...BindObservable(signalTime.endTimeOfDay, TimeTransformer)} />
 					</label>
 				}
 
 				{signalTime.random.get() &&
-					<label class="horizontal middle spacingLeft">
+					<label class="spacingLeft">
 						<small>{Lang.get("frequency")}</small>
 						<input type="number" min="1" {...BindObservable(signalTime.frequency)} />
 					</label>
 				}
 
 				{signalTime.random.get() && signalTime.frequency.get() > 1 &&
-					<label class="horizontal middle spacingLeft">
+					<label class="spacingLeft">
 						<small>{Lang.get("minutes_between")}</small>
 						<input type="number" min="0" {...BindObservable(signalTime.minutesBetween)} />
 						<span>{Lang.get("minutes")}</span>
@@ -384,8 +384,8 @@ export class Content extends SectionContent {
 					})
 			)}
 			{TitleRow(
-				<div>
-					<span class="flexGrow flexCenter">{Lang.getWithColon("times_of_day")}</span>
+				<div class="horizontal">
+					<span class="fillFlexSpace selfAlignCenter">{Lang.getWithColon("times_of_day")}</span>
 					<label class="noTitle noDesc">
 						<input type="checkbox" {...BindObservable(schedule.userEditable)} />
 						<span>{Lang.get("userEditable_desc")}</span>
@@ -394,8 +394,8 @@ export class Content extends SectionContent {
 			)}
 
 			<div>
-				<div class="listParent">
-					<div class="listChild coloredLines" id="signalTimes">
+				<div class="center">
+					<div class="vertical hAlignStart" id="signalTimes">
 						{schedule.signalTimes.get().map((signalTime, index) =>
 							this.getSignalTimeView(schedule, signalTime, index)
 						)}

@@ -67,8 +67,8 @@ export class Content extends SectionContent {
 	private bookmarkList(): Vnode<any, any> {
 		const bookmarksLoader = this.getAdmin().getTools().bookmarksLoader
 
-		return <div class="listParent">
-			<div class="listChild">
+		return <div class="center">
+			<div class="vertical hAlignStart">
 				{bookmarksLoader.getBookmarkList().sort((bookmarkA, bookmarkB) => {
 					return bookmarkA.alias.get().localeCompare(bookmarkB.alias.get())
 				}).map((bookmark) => {

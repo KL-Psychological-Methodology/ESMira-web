@@ -216,18 +216,6 @@ a.highlight:hover svg, .clickable.highlight:hover svg {
 	text-overflow: ellipsis;
 }
 
-.vertical, label:not([for]).vertical {
-	display: table; /* we dont want it to fill the whole line - so "display: block" is not desirable*/
-	text-align: left;
-}
-.horizontal, label:not([for]).horizontal:not(.top) {
-	display: inline-block;
-	vertical-align: middle; /*make sure it wont be overwritten by label:not([for])*/
-}
-.horizontal.top {
-	vertical-align: top;
-}
-
 .line, label:not([for]).line, .fakeLabel.line { /*label:not([for]).line is needed because we need to override label:not([for])*/
 	display: block;
 }
@@ -240,14 +228,6 @@ a.highlight:hover svg, .clickable.highlight:hover svg {
 
 .center {
 	text-align: center;
-}
-.centerChildrenVertically {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-.centerChildrenVertically.listParent {
-	align-items: center;
 }
 .end {
 	text-align: end;
@@ -266,14 +246,6 @@ a.highlight:hover svg, .clickable.highlight:hover svg {
 	line-height: 1.5;
 }
 
-.left {
-	float: left;
-	margin-right: 20px;
-}
-.right {
-	float: right;
-	margin-left: 20px;
-}
 .relative {
 	position: relative;
 }
@@ -292,29 +264,102 @@ a.highlight:hover svg, .clickable.highlight:hover svg {
 flex designs
 **********/
 
-.flexHorizontal {
-	display: flex;
-	flex-direction: row;
+.horizontal, .vertical {
+	display: inline-flex;
+	gap: 5px;
 }
-.flexGrow {
+.horizontal.noGap, .vertical.noGap {
+	gap: 0;
+}
+.horizontal.line, .vertical.line, .horizontal.flexBlock, .vertical.flexBlock {
+	display: flex;
+}
+.horizontal.maxWidth, .vertical.maxWidth {
+	max-width: 100%;
+}
+.horizontal .fillFlexSpace, .vertical .fillFlexSpace {
 	flex: 1 1 auto;
 }
-.flexCenter {
+.horizontal .selfAlignStretch, .vertical .selfAlignStretch {
+	align-self: stretch;
+}
+.horizontal .selfAlignStart, .vertical .selfAlignStart {
+	align-self: flex-start;
+}
+.horizontal .selfAlignCenter, .vertical .selfAlignCenter {
 	align-self: center;
+}
+.horizontal .selfAlignEnd, .vertical .selfAlignEnd {
+	align-self: flex-end;
+}
+
+.horizontal {
+	flex-direction: row;
+}
+.horizontal.vAlignStart {
+	align-items: flex-start;
+	align-content: flex-start;
+}
+.horizontal.vAlignCenter {
+	align-items: center;
+	align-content: center;
+}
+.horizontal.vAlignStretched {
+	align-items: stretch;
+}
+.horizontal.vAlignEnd {
+	align-items: flex-end;
+}
+.horizontal.hAlignSpaced {
+	justify-content: space-between;
+}
+.horizontal.hAlignCenter {
+	justify-content: center;
+}
+.horizontal.hAlignEnd {
+	justify-content: flex-end;
+}
+.horizontal.wrapFlex {
+	flex-wrap: wrap;
+}
+
+.vertical {
+	flex-direction: column;
+}
+.vertical.reversed {
+	flex-direction: column-reverse;
+}
+.vertical.hAlignStart {
+	align-items: flex-start;
+	align-content: flex-start;
+}
+.vertical.hAlignCenter {
+	align-items: center;
+	align-content: center;
+}
+.vertical.hAlignEnd {
+	align-items: flex-end;
+}
+.vertical.hAlignStretched {
+	align-items: stretch;
+}
+.vertical.vAlignStart {
+	justify-content: flex-start;
+}
+.vertical.vAlignCenter {
+	justify-content: center;
+}
+.vertical.vAlignEnd {
+	justify-content: flex-end;
+}
+.vertical.wrapFlex {
+	flex-wrap: wrap;
 }
 
 
 /**********
 design elements
 **********/
-
-.listParent {
-	text-align: center;
-}
-.listChild {
-	display: inline-block;
-	text-align: left;
-}
 
 .extraNote {
 	font-size: 10pt;

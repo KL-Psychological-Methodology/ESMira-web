@@ -160,70 +160,73 @@ export class Content extends SectionContent {
 	public getView(): Vnode<any, any> {
 		const account = this.getAccount()
 		return <div>
-			<p class="clickable vertical" onclick={this.changeUsername.bind(this, account)}>{Lang.get("change_username")}</p>
-
-			{DropdownMenu("changePassword",
-				<p class="clickable vertical">{Lang.get("change_password")}</p>,
-				(close) =>
-					ChangeAccount(
-						async (_accountName, password) => {
-							await this.changePassword(account, password)
-							close()
-							return true
-						},
-						(msg) => { this.sectionData.loader.error(msg) },
-						account.accountName.get(),
-						Lang.get("change_password")
-					)
-			)}
-
-
-			<label class="vertical noTitle noDesc">
-				<input type="checkbox" {...BindObservable(account.admin)} />
-				<span>{Lang.get("permissions_admin")}</span>
-			</label>
-			{!account.admin.get() &&
-				<div>
-					<label class="vertical noTitle noDesc">
-						<input type="checkbox" {...BindObservable(account.create)} />
-						<span>{Lang.get("permissions_create")}</span>
-					</label>
-					<label class="vertical noTitle noDesc">
-						<input type="checkbox" {...BindObservable(account.issueFallbackToken)} />
-						<span>{Lang.get("permissions_issue_fallback_tokens")}</span>
-					</label>
+			<div class="vertical">
+				<div class="clickable" onclick={this.changeUsername.bind(this, account)}>{Lang.get("change_username")}</div>
+	
+				{DropdownMenu("changePassword",
+					<div class="clickable">{Lang.get("change_password")}</div>,
+					(close) =>
+						ChangeAccount(
+							async (_accountName, password) => {
+								await this.changePassword(account, password)
+								close()
+								return true
+							},
+							(msg) => { this.sectionData.loader.error(msg) },
+							account.accountName.get(),
+							Lang.get("change_password")
+						)
+				)}
+	
+	
+				<label class="noTitle noDesc">
+					<input type="checkbox" {...BindObservable(account.admin)} />
+					<span>{Lang.get("permissions_admin")}</span>
+				</label>
+			
+				{!account.admin.get() &&
 					<div>
-						{DropdownMenu(
-							"addAllPermissions",
-							<p class="clickable vertical" >{Lang.get("add_all_permissions")}</p>,
-							() =>
-								<ul>
-									<h2>{Lang.get("select_a_study")}</h2>
-									{this.sectionData.siteData.studyLoader.getSortedStudyList()
-										.filter((study) => {
-											const id = study.id.get()
-											const permissionNames: (keyof AccountPermissions)[] = ["publish", "write", "read", "msg"]
-											permissionNames.forEach((permissionName): boolean => {
-												for (const obs of account[permissionName].get()) {
-													if (obs.get() == id)
-														return false
-												}
-												return true
+						<label class="noTitle noDesc">
+							<input type="checkbox" {...BindObservable(account.create)} />
+							<span>{Lang.get("permissions_create")}</span>
+						</label>
+						<label class="noTitle noDesc">
+							<input type="checkbox" {...BindObservable(account.issueFallbackToken)} />
+							<span>{Lang.get("permissions_issue_fallback_tokens")}</span>
+						</label>
+						<div>
+							{DropdownMenu(
+								"addAllPermissions",
+								<p class="clickable" >{Lang.get("add_all_permissions")}</p>,
+								() =>
+									<ul>
+										<h2>{Lang.get("select_a_study")}</h2>
+										{this.sectionData.siteData.studyLoader.getSortedStudyList()
+											.filter((study) => {
+												const id = study.id.get()
+												const permissionNames: (keyof AccountPermissions)[] = ["publish", "write", "read", "msg"]
+												permissionNames.forEach((permissionName): boolean => {
+													for (const obs of account[permissionName].get()) {
+														if (obs.get() == id)
+															return false
+													}
+													return true
+												})
 											})
-										})
-										.map((study) =>
-											<li
-												class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`}
-												onclick={this.addAllPermissions.bind(this, account, study.id.get())}
-											>{study.title.get()}</li>
-										)}
-
-								</ul>
-						)}
+											.map((study) =>
+												<li
+													class={`clickable ${study.published.get() ? "" : "unPublishedStudy"}`}
+													onclick={this.addAllPermissions.bind(this, account, study.id.get())}
+												>{study.title.get()}</li>
+											)}
+	
+									</ul>
+							)}
+						</div>
 					</div>
-				</div>
-			}
-
+				}
+			</div>
+			
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_publish"), "publish")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_write"), "write")}
 			{this.getListPermissionView(account, Lang.getWithColon("permissions_msg"), "msg")}
@@ -237,11 +240,11 @@ export class Content extends SectionContent {
 
 		return <div>
 			{TitleRow(title)}
-			<div class="listParent">
+			<div class="center">
 				{account.admin.get()
 					? m.trust("&#10004;")
 					: <div>
-						<div class="listChild">
+						<div class="vertical hAlignStart">
 							{permission.get().map((obs) => {
 								const studyId = obs.get()
 								return <div>

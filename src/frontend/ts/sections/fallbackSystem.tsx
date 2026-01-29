@@ -143,9 +143,9 @@ export class Content extends SectionContent {
 		return <div>
 
 			<span>{Lang.get("outbound_fallback_token_info")}</span>
-			<div class="listParent spacingTop">
+			<div class="center spacingTop">
 				{DragContainer((dragTools) =>
-					<div class="listChild">
+					<div class="vertical hAlignStart">
 						{this.outboundTokenUrls.get().map((token: OutboundFallbackToken, index) =>
 							dragTools.getDragTarget(index, this.outboundTokenUrls,
 								<div class="verticalPadding">
@@ -171,8 +171,8 @@ export class Content extends SectionContent {
 		if (userList == null) {
 			return <div></div>
 		}
-		return <div class="listParent">
-			<div class="listChild">
+		return <div class="center">
+			<div class="vertical hAlignStart">
 				{userList.map((token) =>
 					<div>
 						{BtnTrash(this.deleteInboundToken.bind(this, token))}
@@ -184,8 +184,8 @@ export class Content extends SectionContent {
 	}
 
 	private getInboundTokenListAdmin(): Vnode<any, any> {
-		return <div class="listParent">
-			<div class="listChild">
+		return <div class="center">
+			<div class="vertical hAlignStart">
 				{Array.from(this.inboundTokens.keys()).map((user: string) =>
 					<div>
 						<div class="spacingTop spacingBottom"><h2>{user}</h2></div>

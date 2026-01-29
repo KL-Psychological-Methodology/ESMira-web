@@ -97,7 +97,7 @@ export class Content extends SectionContent {
 			<div class="smallText spacingLeft spacingRight">
 				{Lang.get("snapshot_description")}
 			</div>
-			<div class="listParent">
+			<div class="center">
 				<div class="spacingTop spacingBottom">
 					{BtnAdd(this.createSnapshot.bind(this), Lang.get("create_snapshot"))}
 				</div>

@@ -107,19 +107,17 @@ export class Content extends SectionContent {
 	private getUrlViewAndCacheUrl(title: string, url: string): Vnode<any, any> {
 		const index = this.allUrls.length
 		this.allUrls.push(url)
-		return <div
+		return <label
 			onpointerenter={this.onPointerEnterUrl.bind(null, url)}
 			onpointerleave={this.onPointerLeaveUrl.bind(null)}
+			class="noTitle noDesc horizontal"
 		>
-			<label class="noTitle noDesc ">
-				<input type="radio" name="selected_url" checked={this.currentUrl == index} onchange={this.changeQrUrl.bind(this, index)} />
-				{title}
-			</label>
-			&nbsp;
+			<input type="radio" name="selected_url" checked={this.currentUrl == index} onchange={this.changeQrUrl.bind(this, index)} />
+			{title}
 			<span class="middle">
 				{BtnCopy(() => navigator.clipboard.writeText(url))}
 			</span>
-		</div>
+		</label>
 	}
 
 	private getPublishedView(): Vnode<any, any> {
@@ -183,8 +181,8 @@ export class Content extends SectionContent {
 					{DashRow(
 						DashElement("stretched", {
 							content:
-								<div class="listParent scrollBox">
-									<div class="listChild">
+								<div class="center scrollBox">
+									<div class="vertical hAlignStart">
 										{study.accessKeys.get().length == 0
 											? <div class="spacingTop spacingBottom highlight center">{Lang.get("info_study_is_public")}</div>
 											: study.accessKeys.get().map((accessKey, index) =>
@@ -290,7 +288,7 @@ export class Content extends SectionContent {
 									<img alt="QrCode" src={imgUrl} />
 								</a>
 							</div>
-							<p class="vertical smallText">{Lang.get("desc_qrCode")}</p>
+							<p class="smallText">{Lang.get("desc_qrCode")}</p>
 						</div>
 				})
 			)
@@ -311,7 +309,10 @@ export class Content extends SectionContent {
 		return [
 			hasAccessKeys && {
 				content: <div>
-					<h2>{Lang.getWithColon("urls_instruction_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
+					<h2 class="horizontal">
+						{Lang.getWithColon("urls_instruction_id")}
+						<a href={URL_WIKI_DIFFERENCE_LINKS} target="_blank">{BtnCustom(m.trust(questionSvg))}</a>
+					</h2>
 					{
 						publishedWeb &&
 						<div class="line">
@@ -333,7 +334,10 @@ export class Content extends SectionContent {
 			},
 			{
 				content: <div>
-					<h2>{Lang.getWithColon(hasAccessKeys ? "urls_instruction_access_key" : "urls_instruction_id")} <a href={URL_WIKI_DIFFERENCE_LINKS} class="right" target="_blank">{BtnCustom(m.trust(questionSvg))}</a></h2>
+					<h2 class="horizontal">
+						{Lang.getWithColon(hasAccessKeys ? "urls_instruction_access_key" : "urls_instruction_id")}
+						<a href={URL_WIKI_DIFFERENCE_LINKS} target="_blank">{BtnCustom(m.trust(questionSvg))}</a>
+					</h2>
 					{
 						publishedWeb &&
 						<div class="line">
@@ -354,9 +358,9 @@ export class Content extends SectionContent {
 					}
 				</div>
 			},
-			{
+			usesFallback && {
 				content: <div>
-					{usesFallback &&
+					{
 						<div
 							onpointerenter={this.onPointerEnterUrl.bind(null, fallbackAppInstallUrl)}
 							onpointerleave={this.onPointerLeaveUrl.bind(null)}

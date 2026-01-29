@@ -116,14 +116,15 @@ class AppInstall implements Page {
         if (isset($this->study->studyDescription))
             $output .= '<p>' . $this->study->studyDescription . '</p>';
 
-        $output .= '<br/>';
+        $output .= '<br/><div class="horizontal">';
 
         if (isset($this->study->contactEmail))
-            $output .= '<a class="left" href="mailto:' . $this->study->contactEmail . '">' . Lang::get('contactEmail') . '</a>';
+            $output .= '<a href="mailto:' . $this->study->contactEmail . '">' . Lang::get('contactEmail') . '</a>';
+		$output .= '<div class="fillFlexSpace"></div>';
         if (isset($this->study->informedConsentForm))
-            $output .= '<a class="right" js-action="internalUrl" href="#informedConsent">' . Lang::get('informed_consent') . '</a>';
+            $output .= '<a js-action="internalUrl" href="#informedConsent">' . Lang::get('informed_consent') . '</a>';
 
-        $output .= '<br/><br/>';
+        $output .= '</div><br/><br/>';
 
         if ((!( $this->study->studyOver ?? false )) && (( $this->study->publishedAndroid ?? true ) || ( $this->study->publishedIOS ?? true ))) {
             $output .= '<div class="titleRow">' . Lang::get('how_to_participate_step_1') . '</div>

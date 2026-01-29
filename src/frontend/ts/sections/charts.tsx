@@ -43,9 +43,9 @@ export class Content extends SectionContent {
 
 		return <div>
 			{TitleRow(Lang.getWithColon("charts_public"))}
-			<div class="listParent">
+			<div class="center">
 				{DragContainer((dragTools) =>
-					<div class="listChild">
+					<div class="vertical hAlignStart">
 						{publicCharts.get().map((chart, index) =>
 							dragTools.getDragTarget(index, publicCharts,
 								<div class="verticalPadding">
@@ -65,9 +65,9 @@ export class Content extends SectionContent {
 			</div>
 
 			{TitleRow(Lang.getWithColon("charts_personal"))}
-			<div class="listParent">
+			<div class="center">
 				{DragContainer((dragTools) =>
-					<div class="listChild">
+					<div class="vertical hAlignStart">
 						{personalCharts.get().map((chart, index) =>
 							dragTools.getDragTarget(index, personalCharts,
 								<div class="verticalPadding">

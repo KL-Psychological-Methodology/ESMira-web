@@ -26,25 +26,28 @@ export class Content extends SectionContent {
 		const password = this.getStaticString("password") ?? ""
 		
 		return (
-			<div class="login centerChildrenVertically listParent spacingLeft spacingRight">
-				<form method="post" action="" onsubmit={this.formLogin.bind(this)}>
-					<label class="horizontal noDesc">
-						<small>{Lang.get("username")}</small>
-						<input type="text" name="accountName" autocomplete="username" value={username}/>
-					</label>
-					<label class="horizontal noDesc">
-						<small>{Lang.get("password")}</small>
-						<input type="password" name="password" autocomplete="current-password" value={password}/>
-					</label>
+			<div class="login line vertical hAlignCenter vAlignCenter">
+				<form method="post" action="" onsubmit={this.formLogin.bind(this)} class="vertical hAlignStretched">
+					<div class="horizontal hAlignStretched">
+						<label class="noDesc">
+							<small>{Lang.get("username")}</small>
+							<input type="text" name="accountName" autocomplete="username" value={username}/>
+						</label>
+						<label class="noDesc">
+							<small>{Lang.get("password")}</small>
+							<input type="password" name="password" autocomplete="current-password" value={password}/>
+						</label>
+					</div>
 					
-					<br/>
-					<br/>
-					<label class="left horizontal noTitle noDesc">
-						<input type="checkbox" name="rememberMe"/>
-						<span>{Lang.get("remember_me")}</span>
-					</label>
-					
-					<input class="right horizontal" type="submit" value={Lang.get("login")}/>
+					<div class="horizontal">
+						<label class="noTitle noDesc">
+							<input type="checkbox" name="rememberMe"/>
+							<span>{Lang.get("remember_me")}</span>
+						</label>
+						<div class="fillFlexSpace"></div>
+						
+						<input type="submit" value={Lang.get("login")}/>
+					</div>
 				</form>
 			</div>
 		)

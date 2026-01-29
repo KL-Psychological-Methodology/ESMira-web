@@ -27,16 +27,16 @@ export class Content extends SectionContent {
 	}
 
 	public getView(): Vnode<any, any> {
-		return <div>
-			<label class="line">
+		return <div class="vertical flexBlock">
+			<label>
 				<small>{Lang.get("send_to")}</small>
 				<input type="text" {...BindObservable(this.recipient)} />
 			</label>
-			<label class="line">
+			<label class="selfAlignStretch">
 				<small>{Lang.get("additional_information")}</small>
 				<textarea {...BindObservable(this.errorInfo)}></textarea>
 			</label>
-			<input class="right" type="button" value={Lang.get("send")} onclick={this.sendMessage.bind(this)} />
+			<input class="selfAlignEnd" type="button" value={Lang.get("send")} onclick={this.sendMessage.bind(this)} />
 		</div>
 	}
 

@@ -49,8 +49,8 @@ export class Content extends SectionContent {
 			</div>
 			
 			{TitleRow(Lang.getWithColon("sum"))}
-			<div class="listParent">
-				<div class="listChild">
+			<div class="center">
+				<div class="vertical hAlignStart">
 					{sumScore.addList.get().map((entry, index) =>
 						<div class="verticalPadding">
 							<span>&#x271A;</span>

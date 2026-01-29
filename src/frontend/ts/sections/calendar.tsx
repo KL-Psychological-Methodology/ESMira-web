@@ -222,23 +222,21 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 			{DashRow(
 				DashElement("stretched", {
 					content: <div>
-						<div class="center">
-							<label class="noDesc middle">
+						<div class="line horizontal hAlignCenter vAlignCenter">
+							<label class="noDesc">
 								<small>{Lang.get("join_date")}</small>
 								<input type="date" {...BindObservable(this.joinDate, DateTransformer)} />
 							</label>
-							<label class="noDesc middle">
+							<label class="noDesc">
 								<small>{Lang.get("join_time")}</small>
 								<input type="time" {...BindObservable(this.joinTime, TimeTransformer)} />
 							</label>
-							<div class="horizontal middle">
-								{BtnReload(() => {
+							<div>
+								{ BtnReload(() => {
 									this.initCalendar()
 								})}
 							</div>
 						</div>
-						<br />
-						<br />
 						<div class="smallText spacingLeft spacingRight">{Lang.get("calendar_description")}</div>
 					</div>
 				}),

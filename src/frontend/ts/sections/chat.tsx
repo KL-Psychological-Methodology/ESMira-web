@@ -217,7 +217,7 @@ export class Content extends SectionContent {
 	}
 
 	public getView(): Vnode<any, any> {
-		return <div>
+		return <div class="vertical flexBlock hAlignStretched">
 			<div>
 				{this.messages &&
 					<div class="scrollBox reversedScroll big">
@@ -234,18 +234,18 @@ export class Content extends SectionContent {
 
 			{TitleRow(Lang.getWithColon("send_message_to_user"))}
 			{!this.fixedRecipient &&
-				<div class="recipientBox">
-					<div class="vertical">
-						<label class="horizontal">
+				<div class="recipientBox vertical">
+					<div class="horizontal">
+						<label class="nowrap">
 							<input name="recipient" type="radio" checked={this.toAll} onchange={() => {
 								this.userId = ""
 								this.toAll = true
 							}} />
-							<span>{Lang.get("to_all")}</span>
+							<span class="nowrap">{Lang.get("to_all")}</span>
 						</label>
 
 						{this.toAll &&
-							<div class="horizontal spacingLeft">
+							<div class="spacingLeft horizontal wrapFlex">
 								<label>
 									<small>{Lang.get("app_version")}</small>
 									<input type="text" {...BindObservable(this.appVersion)} />
@@ -264,8 +264,8 @@ export class Content extends SectionContent {
 					</div>
 
 
-					<div class="vertical">
-						<label class="horizontal">
+					<div class="horizontal">
+						<label>
 							<input name="recipient" type="radio" checked={!this.toAll} onchange={() => {
 								this.toAll = false
 							}} />
@@ -277,7 +277,6 @@ export class Content extends SectionContent {
 									SearchWidget((tools) => {
 										return DropdownMenu("recipient",
 											<input
-												class="vertical"
 												type="text"
 												value={this.userId}
 												onkeyup={(e: InputEvent) => {
@@ -288,7 +287,7 @@ export class Content extends SectionContent {
 												onfocusin={() => { this.toAll = false }}
 												onchange={this.loadParticipantMessages.bind(this)}
 											/>,
-											(close) => <div class="listParent"><div class="listChild">
+											(close) => <div class="center"><div class="vertical hAlignStart">
 												{this.userIdList.map((userId) =>
 													tools.searchView(userId,
 														<div class="clickable smallText line"
@@ -315,7 +314,7 @@ export class Content extends SectionContent {
 				<textarea {...BindObservable(this.messageContent)}></textarea>
 			</label>
 
-			<input class="right" type="button" value={Lang.get("send")} onclick={this.sendMessage.bind(this)} />
+			<input class="selfAlignEnd" type="button" value={Lang.get("send")} onclick={this.sendMessage.bind(this)} />
 		</div>
 	}
 
@@ -339,25 +338,25 @@ export class Content extends SectionContent {
 				<span>{message.from}</span>
 			</div>
 
-			{message.pending &&
-				<div class="horizontal">
-					{BtnTrash(this.removeMessage.bind(this, message))}
-				</div>
-			}
-			<div class="msg">
-				<div class="header">{new Date(message.sent).toLocaleString()}</div>
-				<div class="content">{message.content}</div>
-				<div class="footer">
-					{message.pending &&
-						<span>{Lang.get("delivered_x_times", message.delivered)}</span>
-					}
-					{(!message.pending && message.read != 0) &&
-						<div>
-							<span>{Lang.getWithColon("confirmed")}</span>
-							&nbsp;
-							<span>{new Date(message.read).toLocaleString()}</span>
-						</div>
-					}
+			<div class="horizontal">
+				{message.pending &&
+					BtnTrash(this.removeMessage.bind(this, message))
+				}
+				<div class="msg">
+					<div class="header">{new Date(message.sent).toLocaleString()}</div>
+					<div class="content">{message.content}</div>
+					<div class="footer">
+						{message.pending &&
+							<span>{Lang.get("delivered_x_times", message.delivered)}</span>
+						}
+						{(!message.pending && message.read != 0) &&
+							<div>
+								<span>{Lang.getWithColon("confirmed")}</span>
+								&nbsp;
+								<span>{new Date(message.read).toLocaleString()}</span>
+							</div>
+						}
+					</div>
 				</div>
 			</div>
 		</div>

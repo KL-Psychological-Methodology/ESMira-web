@@ -81,24 +81,26 @@ export class Content extends SectionContent {
 	
 	public getView(): Vnode<any, any> {
 		return <div>
-			<p class="clickable vertical" onclick={this.changeAccountName.bind(this)}>{Lang.get("change_username")}</p>
-			
-			{DropdownMenu("changePassword",
-				<p class="clickable vertical">{Lang.get("change_password")}</p>,
-				(close) =>
-					ChangeAccount(
-						async (_accountName, password) => {
-							await this.changePassword(password)
-							close()
-							return true
-						},
-						(msg) => { this.sectionData.loader.error(msg) },
-						this.getTools().accountName,
-						Lang.get("change_password")
-					)
-			)}
-			
-			<a href={this.getUrl("dataView:logins")}>{Lang.get("login_history")}</a>
+			<div class="vertical">
+				<div class="clickable" onclick={this.changeAccountName.bind(this)}>{Lang.get("change_username")}</div>
+				
+				{DropdownMenu("changePassword",
+					<div class="clickable">{Lang.get("change_password")}</div>,
+					(close) =>
+						ChangeAccount(
+							async (_accountName, password) => {
+								await this.changePassword(password)
+								close()
+								return true
+							},
+							(msg) => { this.sectionData.loader.error(msg) },
+							this.getTools().accountName,
+							Lang.get("change_password")
+						)
+				)}
+				
+				<a href={this.getUrl("dataView:logins")}>{Lang.get("login_history")}</a>
+			</div>
 			<br/>
 			<br/>
 			{TitleRow(Lang.getWithColon("remember_me_token"))}
@@ -106,8 +108,8 @@ export class Content extends SectionContent {
 			{this.loginToken.map((loginToken) =>
 				<div class="spacingBottom">
 					{BtnTrash(this.removeLoginToken.bind(this, loginToken))}
-					<div class="horizontal">
-						<div>
+					<div class="vertical">
+						<div class="horizontal">
 							<span>{Lang.getWithColon("last_used")}</span>
 							<span class="highlight">{(new Date(loginToken.lastUsed*1000)).toLocaleString()}</span>
 						</div>

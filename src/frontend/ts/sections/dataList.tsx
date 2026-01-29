@@ -122,7 +122,7 @@ export class Content extends SectionContent {
 
 				{TitleRow(Lang.getWithColon("backups"))}
 				<div class="verticalPadding">
-					<a class="horizontal spacingRight" onclick={this.backupStudy.bind(this, study)}>
+					<a class="horizontal" onclick={this.backupStudy.bind(this, study)}>
 						{m.trust(backupSvg)}
 						<span>{Lang.get("create_backup")}</span>
 					</a>

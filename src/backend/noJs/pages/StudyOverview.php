@@ -57,6 +57,7 @@ class StudyOverview implements Page {
         
         if (!($this->study->studyOver ?? false)) {
             $output .= '<br/><div class="titleRow">' .Lang::get('questionnaires') .'</div>';
+			$output .= '<div class="vertical">';
             foreach ($this->study->questionnaires as $questionnaire) {
                 if (!NoJsMain::questionnaireIsActive($questionnaire))
                 continue;
@@ -64,9 +65,10 @@ class StudyOverview implements Page {
                 $name = $questionnaire->title ?? Lang::get('questionnaire');
                 $qId = $questionnaire->internalId;
                 if ($this->accessKey)
-                    $output .= "<a class=\"vertical verticalPadding\" href=\"?key=$this->accessKey&id=$studyId&qid=$qId\">$name</a>";
-                else $output .= "<a class=\"vertical verticalPadding\" href=\"?id=$studyId&qid=$qId\">$name</a>";
+                    $output .= "<a class=\"verticalPadding\" href=\"?key=$this->accessKey&id=$studyId&qid=$qId\">$name</a>";
+                else $output .= "<a class=\"verticalPadding\" href=\"?id=$studyId&qid=$qId\">$name</a>";
             }
+			$output .= '</div>';
         }
         
         return $output;

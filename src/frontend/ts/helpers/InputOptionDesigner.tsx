@@ -131,13 +131,13 @@ export class InputOptionDesigner {
 					{this.requiredOption()}
 					{this.showValueOption()}
 				</div>,
-				<div>
-					<label class="vertical noDesc">
+				<div class="vertical hAlignStart">
+					<label class="noDesc">
 						<small>{Lang.get("timeout")}</small>
 						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("seconds")}</small>
 					</label>
-					<label class="vertical noDesc">
+					<label class="noDesc">
 						<input type="checkbox" {...BindObservable(this.input.playSound)} />
 						<span>{Lang.get("play_sound_when_finished")}</span>
 					</label>
@@ -170,19 +170,19 @@ export class InputOptionDesigner {
 				}
 
 				return [
-					<label class="vertical noTitle noDesc">
+					<label class="noTitle noDesc">
 						<input type="checkbox" {...BindObservable(this.input.random)} />
 						<span>{Lang.get("random")}</span>
 					</label>,
 					<div class="stretched">
 						<h2>{Lang.getWithColon("choices")}</h2>{
 							DragContainer((dragTools) => {
-								return <div class="listParent">
-									<div class="listChild">
+								return <div class="center">
+									<div class="vertical hAlignStart">
 										{
 											this.input.subInputs.get().map((subInput, index) => {
 												return dragTools.getDragTarget(index, this.input.subInputs,
-													<div class="vertical">
+													<div>
 														{dragTools.getDragStarter(index, this.input.subInputs)}
 														{BtnTrash(removeSubInput.bind(this, index))}
 														<a href={this.getUrl(`inputEdit,subInput:${index}`)}>
@@ -483,13 +483,13 @@ export class InputOptionDesigner {
 		</div>
 	}
 	private leftRightLabelOption(): Vnode<any, any> {
-		return <div class="stretched center">
-			<label class="horizontal spacingRight">
+		return <div class="horizontal hAlignCenter">
+			<label>
 				<small>{Lang.get("label_leftChoice")}</small>
 				<input class="big" type="text" {...BindObservable(this.input.leftSideLabel)} />
 				{ObservableLangChooser(this.study)}
 			</label>
-			<label class="horizontal">
+			<label>
 				<small>{Lang.get("label_rightChoice")}</small>
 				<input class="big" type="text" {...BindObservable(this.input.rightSideLabel)} />
 				{ObservableLangChooser(this.study)}
@@ -511,12 +511,12 @@ export class InputOptionDesigner {
 			<h2>{Lang.getWithColon("choices")}</h2>
 			{
 				DragContainer((dragTools) => {
-					return <div class="listParent">
-						<div class="listChild">
+					return <div class="center">
+						<div class="vertical hAlignStart">
 							{
 								this.input.listChoices.get().map((choiceObs, index) => {
 									return dragTools.getDragTarget(index, this.input.listChoices,
-										<div class="vertical">
+										<div>
 											{dragTools.getDragStarter(index, this.input.listChoices)}
 											<input type="text" {...BindObservable(choiceObs)} />
 											{BtnTrash(removeChoice.bind(this, index))}

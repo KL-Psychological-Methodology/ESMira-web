@@ -42,8 +42,8 @@ export class ChangeLanguageList {
 	public getView(): Vnode<any, any> {
 		const translationRoot = this.getTranslationRoot()
 		const langCodes = translationRoot.langCodes.get()
-		return <div class="listParent">
-			<div class="listChild">
+		return <div class="center">
+			<div class="vertical hAlignStart">
 				{langCodes.map((langCode) =>
 					<div>
 						{ langCodes.length > 1 &&

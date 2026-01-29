@@ -71,13 +71,15 @@ export class Content extends SectionContent {
 
 
 			{!study.studyOver.get() &&
-				<div>
+				<>
 					{TitleRow(Lang.getWithColon("questionnaires"))}
-					{study.questionnaires.get().map((questionnaire) =>
-						questionnaire.isActive(Date.now(), Date.now()) &&
-						<a class="vertical verticalPadding" href={this.getUrl(`attend,qId:${questionnaire.internalId.get()}`)}>{questionnaire.getTitle()}</a>
-					)}
-				</div>
+					<div class="vertical">
+						{study.questionnaires.get().map((questionnaire) =>
+							questionnaire.isActive(Date.now(), Date.now()) &&
+							<a class="verticalPadding" href={this.getUrl(`attend,qId:${questionnaire.internalId.get()}`)}>{questionnaire.getTitle()}</a>
+						)}
+					</div>
+				</>
 			}
 		</div>
 	}

@@ -329,13 +329,13 @@ export class Content extends SectionContent {
 			DropdownMenu("filterSubMenu",
 				clickElement(true),
 				(close) =>
-					<div>
-						<div class="middle horizontal">{entry.dropdownView}</div>
-						<div class="middle horizontal spacingLeft">{BtnOk(() => {
+					<div class="horizontal hAlignCenter">
+						<div>{entry.dropdownView}</div>
+						{BtnOk(() => {
 							if (entry.enable)
 								entry.enable()
 							window.setTimeout(() => close(), 10)
-						})}</div>
+						})}
 					</div>,
 				{ dontCenter: true }
 			)

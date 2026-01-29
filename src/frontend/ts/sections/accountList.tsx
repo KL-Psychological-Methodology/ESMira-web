@@ -38,8 +38,8 @@ export class Content extends SectionContent {
 	}
 
 	public getView(): Vnode<any, any> {
-		return <div class="listParent">
-			<table id="accountList" class="listChild">
+		return <div class="center">
+			<table id="accountList">
 				<thead>
 					<tr>
 						<th class="accountName"></th>

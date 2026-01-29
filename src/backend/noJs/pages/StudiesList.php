@@ -13,7 +13,7 @@ class StudiesList implements Page {
 	static function studyToOutput(stdClass $study, string $accessKey): string {
 		$study_id = $study->id;
 		
-		return "<div class=\"vertical verticalPadding\">
+		return "<div class=\"verticalPadding\">
 					<a href=\"?"
 			.(isset($study->publishedWeb) && !$study->publishedWeb ? 'app_install&' : '')
 			.($accessKey ? "key=$accessKey&" : '')
@@ -25,7 +25,7 @@ class StudiesList implements Page {
 	 * @throws CriticalException
 	 */
 	static function listFromIndex(string $accessKey): string {
-		$output = '';
+		$output = '<div class="vertical">';
 		$lang = Main::getLang(false);
 		
 		$studyStore = Configs::getDataStore()->getStudyStore();
@@ -34,6 +34,7 @@ class StudiesList implements Page {
 			$studyJsonString = $studyStore->getStudyLangConfig($studyId, $lang);
 			$output .= self::studyToOutput($studyJsonString, $accessKey);
 		}
+		$output .= '</div>';
 		return $output;
 	}
 	

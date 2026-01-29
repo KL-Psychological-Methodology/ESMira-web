@@ -220,38 +220,40 @@ export class Content extends SectionContent {
 				})
 			)}
 			
-			<label class="right">
-				<small>{Lang.get("update_version")}</small>
-				<select class="small" onchange={this.changeRelease.bind(this)}>
-					<option>{Lang.get("stable")}</option>
-					<option>{Lang.get("unstable")}</option>
-				</select>
-			</label>
-
-			{this.hasUpdates
-				? <div class="spacingTop">
-					<div class="center">
-						<span>{Lang.get("info_newVersionAvailable")}</span>
-						&nbsp;
-						<span class="highlight">{this.newestVersionName}</span>
-					</div>
-					<div class="center spacingTop">
-						<input type="button" onclick={this.updateNow.bind(this)} value={Lang.get("update_now")} />
-					</div>
-					{this.releaseData.map((data) =>
-						<div class="spacingTop">
-							<br />
-							<h1>
-								<span>{data.version}</span>
-								<span class="spacingLeft smallText middle">({data.date.toLocaleString()})</span>
-							</h1>
-							<div>{m.trust(this.markdownRenderer.render(data.changeLog))}</div>
+			<div class="horizontal flexBlock">
+				{this.hasUpdates
+					? <div class="spacingTop fillFlexSpace">
+						<div class="center">
+							<span>{Lang.get("info_newVersionAvailable")}</span>
+							&nbsp;
+							<span class="highlight">{this.newestVersionName}</span>
 						</div>
-					)}
-
-				</div>
-				: <div class="center highlight">{this.noConnection ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')}</div>
-			}
+						<div class="center spacingTop">
+							<input type="button" onclick={this.updateNow.bind(this)} value={Lang.get("update_now")} />
+						</div>
+						{this.releaseData.map((data) =>
+							<div class="spacingTop">
+								<br />
+								<h1>
+									<span>{data.version}</span>
+									<span class="spacingLeft smallText middle">({data.date.toLocaleString()})</span>
+								</h1>
+								<div>{m.trust(this.markdownRenderer.render(data.changeLog))}</div>
+							</div>
+						)}
+	
+					</div>
+					: <div class="center highlight fillFlexSpace">{this.noConnection ? Lang.get('info_no_connection_to_update_server') : Lang.get('info_ESMira_is_up_to_date')}</div>
+				}
+				
+				<label>
+					<small>{Lang.get("update_version")}</small>
+					<select class="small" onchange={this.changeRelease.bind(this)}>
+						<option>{Lang.get("stable")}</option>
+						<option>{Lang.get("unstable")}</option>
+					</select>
+				</label>
+			</div>
 			<br /><br />
 
 

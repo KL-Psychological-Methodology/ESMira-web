@@ -105,8 +105,8 @@ class DropDownComponent implements Component<DropDownOptions, any> {
 		
 		return <div>
 			{SearchWidget((tools) =>
-				<div>
-					<input class="search small vertical" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)}/>
+				<div class="vertical">
+					<input class="search small" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)}/>
 					<label>
 						<input type="checkbox" onchange={this.toggleAll.bind(this)} checked={this.isAllUnchecked}/>
 						<span class="smallText">{Lang.get("toggle_all", valueList.length)}</span>

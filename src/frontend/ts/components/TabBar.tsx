@@ -28,11 +28,11 @@ export function TabBar(selectedIndex: ObservablePrimitive<number>, tabs: (TabCon
 								if(!tab)
 									return
 								const className = `tab ${(selectedIndex.get() == index) ? "selected" : ""} ${tab.highlight ? "highlight" : ""}`
-								const content = <div class={className} onclick={() => {selectedIndex.set(index)}}>
-									<div class="left">
+								const content = <div class={`${className} horizontal vAlignCenter`} onclick={() => {selectedIndex.set(index)}}>
+									<div>
 										{tab.draggableList && dragTools.getDragStarter(index, tab.draggableList)}
 									</div>
-									<span class="middle">{tab.title}</span>
+									<div class="fillFlexSpace">{tab.title}</div>
 								</div>
 								return tab.draggableList
 									? dragTools.getDragTarget(index, tab.draggableList, content)

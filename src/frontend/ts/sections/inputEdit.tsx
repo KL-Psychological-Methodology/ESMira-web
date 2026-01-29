@@ -115,7 +115,7 @@ export class Content extends SectionContent {
 		return <div>
 			{subItemI == null &&
 				<div class="center">
-					<label class="horizontal">
+					<label>
 						<small>{Lang.get("variable_name")}</small>
 						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>((before, after) => {
 							return createUniqueName(study, after) ?? before
@@ -127,8 +127,8 @@ export class Content extends SectionContent {
 
 			{TitleRow(Lang.getWithColon("type"))}
 			{SearchWidget((tools) =>
-				<div class="inputSelector">
-					<input placeholder={Lang.get("search")} class="search small vertical" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)} />
+				<div class="inputSelector vertical">
+					<input placeholder={Lang.get("search")} class="search small" type="text" onkeyup={tools.updateSearchFromEvent.bind(tools)} />
 					<div class="scrollBox noBorder">
 						{
 							inputDesigner.createTypesView(

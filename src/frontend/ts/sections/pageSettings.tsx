@@ -26,7 +26,7 @@ export class Content extends SectionContent {
 		return DashRow(
 			DashElement(null, {
 				content:
-					<div class="center centerChildrenVertically">
+					<div class="horizontal hAlignCenter vAlignCenter">
 						<label class="noTitle noDesc">
 							<input type="checkbox" {...BindObservable(page.randomized)} />
 							<span>{Lang.get("randomize_page")}</span>

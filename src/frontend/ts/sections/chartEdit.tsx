@@ -211,7 +211,7 @@ export class Content extends SectionContent {
 				DashElement(null, {
 					content:
 						<div>
-							<label class="horizontal">
+							<label>
 								<small>{Lang.get("statisticsChartType")}</small>
 								<select {...BindObservable(chart.chartType)}>
 									<option value="0">{Lang.get("statisticsChart_line")}</option>
@@ -226,7 +226,7 @@ export class Content extends SectionContent {
 				DashElement(null, {
 					content:
 						<div>
-							<label class="horizontal">
+							<label>
 								<small>{Lang.get("statisticsDataType")}</small>
 								<select {...BindObservable(chart.dataType)}>
 									<option value="0">{Lang.get("statisticsDataType_daily")}</option>
@@ -240,7 +240,7 @@ export class Content extends SectionContent {
 				(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
 					content:
 						<div>
-							<label class="horizontal">
+							<label>
 								<small>{Lang.get("statisticsValueType")}</small>
 								<select {...BindObservable(chart.valueType)}>
 									<option value="0">{Lang.get("statisticsValueType_mean")}</option>
@@ -286,8 +286,8 @@ export class Content extends SectionContent {
 					content:
 						<div>
 							<label>
-								<input class="horizontal" type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
-								<span class="horizontal smallText">{Lang.get("display_additional_publicVariable")}</span>
+								<input type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
+								<span class="smallText">{Lang.get("display_additional_publicVariable")}</span>
 							</label>
 						</div>
 				}),
@@ -321,22 +321,22 @@ export class Content extends SectionContent {
 						DashElement("stretched", {
 							content:
 								<div>
-									<div class="line flexHorizontal">
-										<div class="flexCenter">
+									<div class="line horizontal">
+										<div class="selfAlignCenter">
 											{dragTools.getDragStarter(index, list)}
 										</div>
-										<div class="flexGrow">
-											<div class="flexHorizontal">
-												<label class="horizontal">
+										<div class="fillFlexSpace vertical">
+											<div class="horizontal">
+												<label>
 													<small>{Lang.get("label")}</small>
 													<input type="text" {...BindObservable(container.label)} />
 												</label>
-												<label class="horizontal">
+												<label>
 													<small>{Lang.get("color")}</small>
 													<input type="color" {...BindObservable(container.color)} />
 												</label>
 
-												<div class="flexGrow"></div>
+												<div class="fillFlexSpace"></div>
 
 												<div>
 													{BtnCopy(this.copyAxisContainer.bind(this, list, container, index))}
@@ -352,29 +352,30 @@ export class Content extends SectionContent {
 											{this.getAxisView(study, Lang.get("axis_y"), container.yAxis, studyVariables)}
 
 											{chart.chartType.get() != STATISTICS_CHARTTYPES_SCATTER && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE &&
-												<div>											<label class="horizontal">
-													<input type="checkbox" {...BindObservable(container.useThreshold)} />
-													<span class="horizontal smallText">{Lang.get("axis_use_y_threshold")}</span>
-												</label>
+												<div class="vertical">
+													<label>
+														<input type="checkbox" {...BindObservable(container.useThreshold)} />
+														<span class="smallText">{Lang.get("axis_use_y_threshold")}</span>
+													</label>
 
-													{container.useThreshold.get() && <div>
-
-														<label class="horizontal">
-															<small>{Lang.get("axis_y_thershold_value")}</small>
-															<input type="number" {...BindObservable(container.threshold)} />
-														</label>
-
-														<label class="horizontal">
-															<small>{Lang.get("axis_y_threshold_color")}</small>
-															<input type="color" {...BindObservable(container.thresholdColor)} />
-														</label>
-
-														<label class="horizontal">
-															<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
-															<span class="horizontal smallText">{Lang.get("axis_use_threshold_on_client")}</span>
-														</label>
-
-													</div>}
+													{container.useThreshold.get() &&
+														<div class="horizontal hAlignSpaced">
+															<label>
+																<small>{Lang.get("axis_y_thershold_value")}</small>
+																<input type="number" {...BindObservable(container.threshold)} />
+															</label>
+	
+															<label>
+																<small>{Lang.get("axis_y_threshold_color")}</small>
+																<input type="color" {...BindObservable(container.thresholdColor)} />
+															</label>
+	
+															<label>
+																<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
+																<span class="smallText">{Lang.get("axis_use_threshold_on_client")}</span>
+															</label>
+	
+														</div>}
 
 												</div>}
 
@@ -393,15 +394,15 @@ export class Content extends SectionContent {
 	private getAxisView(study: Study, title: string, axis: AxisData, studyVariables: string[]): Vnode<any, any> {
 		const conditionOptions = this.getConditionVariables(study, axis.variableName.get())
 
-		return <div>
-			< div class="vertical" >
-				<label class="horizontal spacingRight">
+		return <div class="vertical">
+			<div class="horizontal">
+				<label class="spacingRight">
 					<small>{title}</small>
 					<select {...BindObservable(axis.variableName)}>
 						{studyVariables.map((variable) => <option>{variable}</option>)}
 					</select>
 				</label>
-				<label class="horizontal spacingLeft">
+				<label class="spacingLeft">
 					<small>{Lang.get("condition")}</small>
 					<select class="smallText" onchange={this.addCondition.bind(this, axis)}>
 						<option>{Lang.get("select_to_add")}</option>
@@ -432,7 +433,7 @@ export class Content extends SectionContent {
 							}
 						</td>
 						<td>
-							<label class="horizontal middle">
+							<label class="middle">
 								<small>{Lang.get("variable")}</small>
 								<select {...BindObservable(condition.key)}>
 									{conditionOptions.map((option) => <option>{option}</option>)}
@@ -440,7 +441,7 @@ export class Content extends SectionContent {
 							</label>
 						</td>
 						<td>
-							<label class="horizontal middle">
+							<label class="middle">
 								<small>{Lang.get("operator")}</small>
 								<select class="small" {...BindObservable(condition.operator)}>
 									<option value="0">=</option>
@@ -451,7 +452,7 @@ export class Content extends SectionContent {
 							</label>
 						</td>
 						<td>
-							<label class="horizontal">
+							<label>
 								<small>{Lang.get("value")}</small>
 								<input class="small" type="text" {...BindObservable(condition.value)} />
 							</label>

@@ -316,9 +316,9 @@ export class Content extends SectionContent {
 			
 			<br/>
 			<br/>
-			<div class="smallText right">
+			<div class="smallText horizontal flexBlock">
+				<div class="fillFlexSpace"></div>
 				<span>{Lang.getWithColon("data_collected_since")}</span>
-				&nbsp;
 				<span>{(new Date(this.serverStatistics.created*1000).toLocaleDateString())}</span>
 			</div>
 		</div>

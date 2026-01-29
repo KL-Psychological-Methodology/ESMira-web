@@ -49,8 +49,8 @@ export class Content extends SectionContent {
 	public getView(): Vnode<any, any> {
 		const packageVersion = this.sectionData.siteData.packageVersion
 		
-		return <div class="spacingTop listParent">
-			<div class="listChild">
+		return <div class="spacingTop center">
+			<div class="vertical hAlignStart">
 				{this.pluginList.map(
 					entry => <div class="line">
 						<a href={entry.newest.website ?? entry.current.website} target="_blank">{entry.current.name} ({entry.current.version})</a>

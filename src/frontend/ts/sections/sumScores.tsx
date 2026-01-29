@@ -70,8 +70,8 @@ export class Content extends SectionContent {
 			<h2 class="center">
 				{Lang.getWithColon("sum_scores")}
 			</h2>
-			<div class="listParent">
-				<div class="lastChild">
+			<div class="center">
+				<div class="vertical hAlignStart">
 					{questionnaire.sumScores.get().map((SumScore, index) =>
 						<div class="verticalPadding">
 							{BtnTrash(this.removeSumScore.bind(this, questionnaire, index))}
@@ -94,8 +94,8 @@ export class Content extends SectionContent {
 			<h2 class="center">
 				{Lang.getWithColon("virtual_inputs")}
 			</h2>
-			<div class="listParent">
-				<div class="lastChild">
+			<div class="center">
+				<div class="vertical hAlignStart">
 					{questionnaire.virtualInputs.get().map((VirtualInput, index) =>
 						<div class="verticalPadding">
 							{BtnTrash(this.removeVirtualInput.bind(this, questionnaire, index))}

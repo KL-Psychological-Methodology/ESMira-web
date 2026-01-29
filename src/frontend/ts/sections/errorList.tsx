@@ -99,8 +99,8 @@ export class Content extends SectionContent {
 	}
 	
 	private getErrorReportList(reports: ErrorReportInfo[]): Vnode<any, any> {
-		return <div class="listParent">
-			<div class="listChild error_list">
+		return <div class="center">
+			<div class="vertical hAlignStart error_list">
 				{reports.map((report) =>
 					<div>
 						{BtnTrash(this.deleteReport.bind(this, report))}
