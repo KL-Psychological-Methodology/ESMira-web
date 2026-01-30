@@ -51,6 +51,7 @@ export class ObservableArray<
 		//cleanup dangling children from previous observable:
 		for(let i = values.length; i < this.sharedMemory.childrenCount; ++i) {
 			delete this.sharedMemory.children[i]
+			--this.sharedMemory.childrenCount
 		}
 	}
 	

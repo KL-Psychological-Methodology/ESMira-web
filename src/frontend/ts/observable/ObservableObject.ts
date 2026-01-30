@@ -136,6 +136,7 @@ export class ObservableObject<T extends BaseObservable<ObservableTypes> = BaseOb
 		delete this.getValueIndex()[key]
 		delete (this as any)[key]
 		delete this.sharedMemory.children[key]
+		--this.sharedMemory.childrenCount
 		
 		if(!silently) {
 			this.hasMutated()

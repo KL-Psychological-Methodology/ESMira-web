@@ -36,6 +36,7 @@ export class DataStructure extends TranslatableObject {
 			for(const key in this.sharedMemory.children) {
 				if(!valueIndex.hasOwnProperty(key)) {
 					delete this.sharedMemory.children[key]
+					--this.sharedMemory.childrenCount
 				}
 			}
 		})
