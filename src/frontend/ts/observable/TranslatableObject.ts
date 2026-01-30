@@ -18,7 +18,7 @@ export class TranslatableObject<T extends BaseObservable<ObservableTypes> = Base
 	
 	constructor(parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType, newLang?: string) {
 		super(parent, key)
-		this.currentLangCode = defineCurrentLangCode(parent, newLang)
+		this.currentLangCode = defineCurrentLangCode(this, newLang)
 	}
 	
 	public createJson(options?: TranslatableJsonCreatorOptions): Record<ObserverKeyType, JsonTypes> {

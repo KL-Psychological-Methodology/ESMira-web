@@ -34,7 +34,7 @@ export class DataStructure extends TranslatableObject {
 		setTimeout(() => { // properties are only defined after the constructor, so we have to defer until after initialisation has been finished
 			const valueIndex = this.getValueIndex()
 			for(const key in this.sharedMemory.children) {
-				if(!valueIndex.hasOwnProperty(key)) {
+				if(!valueIndex.hasOwnProperty(key) && !this.hasOwnProperty(key)) {
 					delete this.sharedMemory.children[key]
 					--this.sharedMemory.childrenCount
 				}

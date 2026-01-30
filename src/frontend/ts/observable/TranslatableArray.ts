@@ -25,14 +25,13 @@ export class TranslatableArray<
 		parent: BaseObservable<ObservableTypes> | null,
 		key: ObserverKeyType,
 		constructObservable: (data: InputT, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) => ObsT,
-		newLang?: string
 	) {
 		super(defaultFields,
 			parent,
 			key,
 			(data: InputT, _parent: BaseObservable<ObservableTypes> | null, childKey: ObserverKeyType) => constructObservable(data, this, childKey),
 		)
-		this.currentLangCode = defineCurrentLangCode(parent, newLang)
+		this.currentLangCode = defineCurrentLangCode(this)
 		super.fillArray(defaultFields)
 	}
 	protected fillArray() {

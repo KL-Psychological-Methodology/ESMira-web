@@ -1,6 +1,8 @@
 import {ObservablePrimitive} from "../ObservablePrimitive";
 import {BaseObservable, JsonCreatorOptions} from "../BaseObservable";
 import {ObservableTypes} from "../types/ObservableTypes";
+import {TranslatableRootInterface} from "./TranslatableRootInterface";
+import {LangCodeObservable} from "../LangCodeObservable";
 
 /**
  * An interface to ensure that an observable is translatable.
@@ -23,20 +25,20 @@ export function isTranslatable(value: BaseObservable<any>): value is Translatabl
 }
 
 /**
- * Either returns the currentLangCode of the parent TranslatableRootInterface
- * or, if newLang is provided, creates a new ObservablePrimitive with the provided language code.
- * or, if parentTranslatable does not exist or is not a translatable, creates a new ObservablePrimitive with the default value "en".
- * @param parent the parent observable that should be checked for a TranslatableRootInterface.
- * @param newLang the language code that should be used to create a new currentLangCode (is usually only provided by a TranslatableRootInterface).
+ * Either returns the currentLangCode of the parent {@link TranslatableRootInterface}
+ * or, if newLang is provided, creates a new {@link ObservablePrimitive} with the provided language code.
+ * or, if parentTranslatable does not exist or is not a translatable, creates a new {@link ObservablePrimitive} with the default value "en".
+ * @param obs the observable for which currentLangCode should be defined.
+ * @param newLang the language code that should be used to create a new currentLangCode (is usually only provided by a {@link TranslatableRootInterface}).
  */
-export function defineCurrentLangCode(parent: BaseObservable<ObservableTypes> | null, newLang?: string): ObservablePrimitive<string> {
-	const parentTranslatable = parent && isTranslatable(parent) ? parent : null
+export function defineCurrentLangCode(obs: Translatable<ObservableTypes>, newLang?: string): ObservablePrimitive<string> {
+	const parentTranslatable = obs.parent && isTranslatable(obs.parent) ? obs.parent : null
 	
 	if(newLang) {
-		return new ObservablePrimitive<string>(newLang, null, "currentLang")
+		return new LangCodeObservable(newLang ?? "en", obs, "currentLangCode")
 	}
 	else {
-		return parentTranslatable?.currentLangCode ?? new ObservablePrimitive<string>("en", null, "currentLang")
+		return parentTranslatable?.currentLangCode ?? new LangCodeObservable(newLang ?? "en", obs, "currentLangCode")
 	}
 }
 

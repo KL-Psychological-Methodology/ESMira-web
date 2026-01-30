@@ -16,9 +16,9 @@ type LanguageData<T> = Record<string, T>
 export class TranslatablePrimitive<T extends PrimitiveType> extends BaseObservable<T> implements Translatable<T> {
 	public readonly currentLangCode: ObservablePrimitive<string>
 	
-	constructor(value: T | LanguageData<T>, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType, newLang?: string) {
+	constructor(value: T | LanguageData<T>, parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) {
 		super(parent, key)
-		this.currentLangCode = defineCurrentLangCode(parent, newLang)
+		this.currentLangCode = defineCurrentLangCode(this)
 		
 		if(value != null && typeof value == "object") { // value will be null when it has the wrong type (source was faulty)
 			this.sharedMemory.data = value //we cannot use set() because it does not expect a LanguageData type
