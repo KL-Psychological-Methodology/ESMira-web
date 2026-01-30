@@ -2,17 +2,17 @@
 
 namespace backend\admin\features\readPermission;
 
-use backend\admin\features\readPermission\GetRewardCodeData;
+use backend\admin\features\rewardPermission\GetRewardCodeData;
 use backend\dataClasses\UserData;
 use backend\subStores\RewardCodeStore;
 use backend\subStores\StudyStore;
 use backend\subStores\UserDataStore;
 use PHPUnit\Framework\MockObject\Stub;
-use testConfigs\BaseReadPermissionTestSetup;
+use testConfigs\BaseRewardPermissionTestSetup;
 
 require_once __DIR__ . '/../../../../autoload.php';
 
-class GetRewardCodeDataTest extends BaseReadPermissionTestSetup {
+class GetRewardCodeDataTest extends BaseRewardPermissionTestSetup {
 	
 	protected function setUpDataStoreObserver(): Stub {
 		$observer = parent::setUpDataStoreObserver();
