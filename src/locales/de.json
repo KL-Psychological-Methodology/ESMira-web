@@ -706,5 +706,9 @@
     "pluginSettings": "Plugin-Einstellungen",
     "state_updating": "Aktualisieren (%d%)…",
     "state_restoring_data": "Wiederherstellung von Daten (%d%)…",
-    "info_snapshot_restore_complete": "Snapshot %s wurde erfolgreich wiederhergestellt.\n\nDie Seite wird nun neu geladen"
+    "info_snapshot_restore_complete": "Snapshot %s wurde erfolgreich wiederhergestellt.\n\nDie Seite wird nun neu geladen",
+    "snapshot_description": "Snapshots sind eine vollständige Sicherung der Dateien des ESMira-Servers und aller seiner Daten. Beim Wiederherstellen eines Snapshots werden alle aktuellen Daten gelöscht und durch die Daten aus dem Snapshot ersetzt. Dies kann verwendet werden, um den ESMira-Server in einen früheren Zustand zurückzusetzen.",
+    "create_snapshot": "Schnappschuss erstellen",
+    "no_snapshot": "Kein Snapshot auf dem Server gespeichert",
+    "update_to_version": "Aktualisierung auf Version %s"
 }
