@@ -701,5 +701,6 @@
     "error_plugin_not_compatible": "Plugin ist nicht kompatibel mit der aktuellen Version von ESMira",
     "error_plugin_id_contains_invalid_characters": "Die Plugin-ID enthält ungültige Zeichen.",
     "install_new": "Neu installieren",
-    "info_install_plugin_from_url": "Geben Sie eine URL für die Datei metadata.json des Plugins an."
+    "info_install_plugin_from_url": "Geben Sie eine URL für die Datei metadata.json des Plugins an.",
+    "plugins": "Plugins"
 }
