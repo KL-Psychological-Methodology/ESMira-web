@@ -699,5 +699,6 @@
     "install_plugin": "Plugin installieren",
     "error_not_a_valid_metadata_json": "Es konnte keine gültige metadata.json-Datei gefunden werden.",
     "error_plugin_not_compatible": "Plugin ist nicht kompatibel mit der aktuellen Version von ESMira",
-    "error_plugin_id_contains_invalid_characters": "Die Plugin-ID enthält ungültige Zeichen."
+    "error_plugin_id_contains_invalid_characters": "Die Plugin-ID enthält ungültige Zeichen.",
+    "install_new": "Neu installieren"
 }
