@@ -711,5 +711,12 @@
     "create_snapshot": "Schnappschuss erstellen",
     "no_snapshot": "Kein Snapshot auf dem Server gespeichert",
     "update_to_version": "Aktualisierung auf Version %s",
-    "creating_snapshot": "Erstelle Snapshot (%d%)"
+    "creating_snapshot": "Erstelle Snapshot (%d%)",
+    "restore_snapshot_confirm": "Sind Sie sicher, dass Sie diesen Snapshot wiederherstellen wollen?\n\nAlle aktuellen Daten gehen verloren und können nicht wiederhergestellt werden!",
+    "confirm_delete_inbound_fallback_token": "Wollen Sie das Fallback-Token für \"%s\" wirklich löschen?",
+    "run_version_migration_script": "Skript zur Versionsmigration ausführen",
+    "delete_snapshot": "Snapshot löschen",
+    "get_snapshot": "Snapshot herunterladen",
+    "upload_snapshot": "Snapshot hochladen",
+    "restore_snapshot": "Snapshot wiederherstellen"
 }
