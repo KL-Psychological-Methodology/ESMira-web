@@ -703,5 +703,6 @@
     "install_new": "Neu installieren",
     "info_install_plugin_from_url": "Geben Sie eine URL für die Datei metadata.json des Plugins an.",
     "plugins": "Plugins",
-    "pluginSettings": "Plugin-Einstellungen"
+    "pluginSettings": "Plugin-Einstellungen",
+    "state_updating": "Aktualisieren (%d%)…"
 }
