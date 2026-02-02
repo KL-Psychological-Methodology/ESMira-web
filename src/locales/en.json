@@ -652,7 +652,7 @@
     "show_pagination": "Show page numbering",
     "show_skip_toast": "Display a message when pages are skipped",
     "permissions_issue_fallback_tokens": "Privileges for creating fallback tokens",
-    "fallback_system": "Fallback System",
+    "fallback_system": "Fallback system",
     "fallback_token_list": "Fallback Tokens",
     "permission_fallback_tokens": "Fallback Tokens",
     "create_fallback_setup_token": "Create Fallback Setup Token",
