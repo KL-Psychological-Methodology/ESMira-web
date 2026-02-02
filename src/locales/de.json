@@ -705,5 +705,6 @@
     "plugins": "Plugins",
     "pluginSettings": "Plugin-Einstellungen",
     "state_updating": "Aktualisieren (%d%)…",
-    "state_restoring_data": "Wiederherstellung von Daten (%d%)…"
+    "state_restoring_data": "Wiederherstellung von Daten (%d%)…",
+    "info_snapshot_restore_complete": "Snapshot %s wurde erfolgreich wiederhergestellt.\n\nDie Seite wird nun neu geladen"
 }
