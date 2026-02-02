@@ -696,5 +696,6 @@
     "error_could_not_extract": "Das Plugin konnte nicht extrahiert werden.",
     "install_from_url": "Installation von einer Web-Url",
     "install_from_file": "Aus Datei installieren",
-    "install_plugin": "Plugin installieren"
+    "install_plugin": "Plugin installieren",
+    "error_not_a_valid_metadata_json": "Es konnte keine gültige metadata.json-Datei gefunden werden."
 }
