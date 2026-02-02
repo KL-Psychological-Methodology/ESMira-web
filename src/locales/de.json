@@ -702,5 +702,6 @@
     "error_plugin_id_contains_invalid_characters": "Die Plugin-ID enthält ungültige Zeichen.",
     "install_new": "Neu installieren",
     "info_install_plugin_from_url": "Geben Sie eine URL für die Datei metadata.json des Plugins an.",
-    "plugins": "Plugins"
+    "plugins": "Plugins",
+    "pluginSettings": "Plugin-Einstellungen"
 }
