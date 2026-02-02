@@ -76,7 +76,7 @@
     "end_date": "End date (exclusive)",
     "entry_count": "%d entries",
     "event": "Event",
-    "fitToShowLinearProgression_label": "Shor linear regression when r2 fit is bigger as",
+    "fitToShowLinearProgression_label": "Show linear regression when r2 fit is bigger as",
     "from": "From",
     "group": "Group",
     "install": "Install",
