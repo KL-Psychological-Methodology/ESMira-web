@@ -697,5 +697,6 @@
     "install_from_url": "Installation von einer Web-Url",
     "install_from_file": "Aus Datei installieren",
     "install_plugin": "Plugin installieren",
-    "error_not_a_valid_metadata_json": "Es konnte keine gültige metadata.json-Datei gefunden werden."
+    "error_not_a_valid_metadata_json": "Es konnte keine gültige metadata.json-Datei gefunden werden.",
+    "error_plugin_not_compatible": "Plugin ist nicht kompatibel mit der aktuellen Version von ESMira"
 }
