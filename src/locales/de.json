@@ -708,7 +708,7 @@
     "state_restoring_data": "Wiederherstellung von Daten (%d%)…",
     "info_snapshot_restore_complete": "Snapshot %s wurde erfolgreich wiederhergestellt.\n\nDie Seite wird nun neu geladen",
     "snapshot_description": "Snapshots sind eine vollständige Sicherung der Dateien des ESMira-Servers und aller seiner Daten. Beim Wiederherstellen eines Snapshots werden alle aktuellen Daten gelöscht und durch die Daten aus dem Snapshot ersetzt. Dies kann verwendet werden, um den ESMira-Server in einen früheren Zustand zurückzusetzen.",
-    "create_snapshot": "Schnappschuss erstellen",
+    "create_snapshot": "Snapshot erstellen",
     "no_snapshot": "Kein Snapshot auf dem Server gespeichert",
     "update_to_version": "Aktualisierung auf Version %s",
     "creating_snapshot": "Erstelle Snapshot (%d%)",
@@ -718,5 +718,8 @@
     "delete_snapshot": "Snapshot löschen",
     "get_snapshot": "Snapshot herunterladen",
     "upload_snapshot": "Snapshot hochladen",
-    "restore_snapshot": "Snapshot wiederherstellen"
+    "restore_snapshot": "Snapshot wiederherstellen",
+    "creating_snapshot_failed": "Erstellen des Snapshots fehlgeschlagen: %s",
+    "created_snapshot": "Erstellung des Snapshots abgeschlossen",
+    "uninstall": "Deinstallieren"
 }
