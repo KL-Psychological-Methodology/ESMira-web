@@ -692,5 +692,9 @@
     "use_custom_start": "Benutzerdefinierten Startwert verwenden",
     "custom_start_value": "Benutzerdefinierter Startwert",
     "confirm_delete_plugin": "Wollen Sie das Plugin '%s' wirklich aus ESMira entfernen?",
-    "install": "Installieren"
+    "install": "Installieren",
+    "error_could_not_extract": "Das Plugin konnte nicht extrahiert werden.",
+    "install_from_url": "Installation von einer Web-Url",
+    "install_from_file": "Aus Datei installieren",
+    "install_plugin": "Plugin installieren"
 }
