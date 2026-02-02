@@ -205,7 +205,7 @@
     "error_short_message": "The message needs to consist of at least 2 characters.",
     "error_short_username": "The username needs to consist of at least 3 characters.",
     "error_study_not_compatible": "This study does not seem to be compatible with the server. Please update the server.",
-    "error_study_not_found": "Requested study not found",
+    "error_study_not_found": "The requested study was not found",
     "error_study_was_changed": "The study \"%s\" was changed since it was last loaded. All local changes were overwritten with the newest version from the server.",
     "error_unknown": "Unexpected error!",
     "error_unknown_data": "Unexpected data.",
