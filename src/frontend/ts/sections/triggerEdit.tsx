@@ -1,24 +1,24 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {Lang} from "../singletons/Lang";
-import {ObservableLangChooser} from "../components/ObservableLangChooser";
-import {BindObservable, BooleanTransformer, ConstrainedNumberTransformer, TimeTransformer, Transformer} from "../components/BindObservable";
-import {ActionTrigger} from "../data/study/ActionTrigger";
-import {Schedule} from "../data/study/Schedule";
-import {EventTrigger} from "../data/study/EventTrigger";
-import {TitleRow} from "../components/TitleRow";
-import {PrimitiveType} from "../observable/types/PrimitiveType";
-import {ACTION_INVITATION} from "../constants/actions";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {SignalTime} from "../data/study/SignalTime";
-import {BaseObservable} from "../observable/BaseObservable";
-import {Action} from "../data/study/Action";
-import {Study} from "../data/study/Study";
-import {BtnAdd, BtnCopy, BtnTrash} from "../components/Buttons";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { Lang } from "../singletons/Lang";
+import { ObservableLangChooser } from "../components/ObservableLangChooser";
+import { BindObservable, BooleanTransformer, ConstrainedNumberTransformer, TimeTransformer, Transformer } from "../components/BindObservable";
+import { ActionTrigger } from "../data/study/ActionTrigger";
+import { Schedule } from "../data/study/Schedule";
+import { EventTrigger } from "../data/study/EventTrigger";
+import { TitleRow } from "../components/TitleRow";
+import { PrimitiveType } from "../observable/types/PrimitiveType";
+import { ACTION_INVITATION } from "../constants/actions";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { SignalTime } from "../data/study/SignalTime";
+import { BaseObservable } from "../observable/BaseObservable";
+import { Action } from "../data/study/Action";
+import { Study } from "../data/study/Study";
+import { BtnAdd, BtnCopy, BtnTrash } from "../components/Buttons";
 import warnSvg from "../../imgs/icons/warn.svg?raw";
-import {SectionData} from "../site/SectionData";
+import { SectionData } from "../site/SectionData";
 
 class SpecificQuestionnaireTransformer implements Transformer {
 	private readonly eventTrigger: EventTrigger
@@ -110,6 +110,18 @@ export class Content extends SectionContent {
 						</label>
 					</div>
 			}),
+			DashElement(null, {
+				content:
+					<div>
+						<label class="line">
+							<small>{Lang.get("timeout_after_last_reminder")}</small>
+							<input min="0" type="number" {...BindObservable(action.timeout, new ConstrainedNumberTransformer(0, undefined))} />
+							<span class="spacingRight">{Lang.get("minutes")}</span>
+							{NotCompatibleIcon("iOS", "Web")}
+							<small>{Lang.get("info_timeout_notifications")}</small>
+						</label>
+					</div>
+			}),
 			action.type.get() == ACTION_INVITATION && DashElement("vertical",
 				{
 					content:
@@ -131,18 +143,6 @@ export class Content extends SectionContent {
 							</label>
 						</div>
 				}),
-			DashElement(null, action.reminder_count.get() != 0 && {
-				content:
-					<div>
-						<label class="line">
-							<small>{Lang.get("timeout_after_last_reminder")}</small>
-							<input min="0" type="number" {...BindObservable(action.timeout, new ConstrainedNumberTransformer(0, undefined))} />
-							<span class="spacingRight">{Lang.get("minutes")}</span>
-							{NotCompatibleIcon("iOS", "Web")}
-							<small>{Lang.get("info_timeout_notifications")}</small>
-						</label>
-					</div>
-			}),
 			DashElement("stretched", {
 				content:
 					<div>
