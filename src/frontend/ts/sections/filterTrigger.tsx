@@ -353,7 +353,7 @@ export class Content extends SectionContent {
 			<h2 class="center">{Lang.getWithColon("filter")}</h2>
 			{filterEntries.map((entry) =>
 				entry.isActive() &&
-				<div class="line">
+				<div class="line horizontal vAlignCenter">
 					{BtnTrash(entry.disable.bind(this))}
 					{this.getFilterEntryView(entry, (dropdown) => <span class={`${dropdown ? "clickable" : ""} smallText`}>{entry.title}</span>)}
 				</div>
