@@ -238,7 +238,7 @@
     "info_study_unfrozen": "Studie ist entsperrt.",
     "info_successful": "Erfolgreich!",
     "info_timeout_notifications": "Entfernt die Benachrichtigung nach der angegebenen Zeit. Bei 0 wird sie nicht automatisch entfernt.",
-    "info_zero_disables_timeout": "\"0\"um Timeout zu deaktivieren.",
+    "info_zero_disables_timeout": "\"0\" um Timeout zu deaktivieren.",
     "inform_server_about_events": "Speichere event in event.csv",
     "informed_consent": "Einverständniserklärung",
     "init_esmira": "ESMira einrichten",
