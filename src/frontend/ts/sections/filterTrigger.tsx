@@ -1,23 +1,24 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Questionnaire} from "../data/study/Questionnaire";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Questionnaire } from "../data/study/Questionnaire";
 import calendarSvg from "../../imgs/icons/calendar.svg?raw"
 import schedulesSvg from "../../imgs/icons/schedules.svg?raw"
 import eventsSvg from "../../imgs/icons/events.svg?raw"
-import {ActionTrigger} from "../data/study/ActionTrigger";
-import {EventTrigger} from "../data/study/EventTrigger";
-import {Schedule} from "../data/study/Schedule";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {DropdownMenu} from "../components/DropdownMenu";
-import {BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer} from "../components/BindObservable";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {BtnCollection} from "../components/BtnCollection";
-import {TabBar} from "../components/TabBar";
-import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../components/Buttons";
-import {getMidnightMillis, timeStampToTimeString} from "../constants/methods";
-import {SectionData} from "../site/SectionData";
+import { ActionTrigger } from "../data/study/ActionTrigger";
+import { EventTrigger } from "../data/study/EventTrigger";
+import { Schedule } from "../data/study/Schedule";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { DropdownMenu } from "../components/DropdownMenu";
+import { BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer } from "../components/BindObservable";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { BtnCollection } from "../components/BtnCollection";
+import { TabBar } from "../components/TabBar";
+import { BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash } from "../components/Buttons";
+import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
+import { SectionData } from "../site/SectionData";
+import { CodeEditor } from "../components/CodeEditor";
 
 
 interface FilterEntry {
@@ -33,8 +34,28 @@ interface FilterEntry {
  * But since we suspect that this will not be used often, and it is easier to grasp for configuration, we removed that functionality in the admin panel
  */
 export class Content extends SectionContent {
+	private showCodeEditor: boolean = false;
+
+
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [sectionData.getStudyPromise()]
+	}
+
+	constructor(sectionData: SectionData) {
+		super(sectionData)
+		this.getDynamic("questionnaireIndex", 0).addObserver(() => {
+			const index = this.getDynamic("questionnaireIndex", 0).get()
+			this.updateShowCodeEditor(index)
+		})
+		this.updateShowCodeEditor(0)
+	}
+
+	private updateShowCodeEditor(index: number) {
+		const study = this.getStudyOrThrow()
+		if (index >= study.questionnaires.get().length) {
+			return false
+		}
+		this.showCodeEditor = study.questionnaires.get()[index].scriptFilter.get() != ""
 	}
 
 	public title(): string {
@@ -120,8 +141,6 @@ export class Content extends SectionContent {
 		}))
 	}
 
-
-
 	private getQuestionnaireView(questionnaire: Questionnaire): Vnode<any, any> {
 		const filterEntries = this.createFilterEntries(questionnaire)
 
@@ -148,6 +167,16 @@ export class Content extends SectionContent {
 					{ content: BtnCustom(m.trust(schedulesSvg), undefined, Lang.get("add_schedule")), onclick: this.addSchedule.bind(this, questionnaire) },
 					{ content: BtnCustom(m.trust(eventsSvg), undefined, Lang.get("add_event")), onclick: this.addEvent.bind(this, questionnaire) },
 				),
+			)}
+			{(questionnaire.scriptFilter.get() != "" || this.showCodeEditor) && DashRow(
+				DashElement("stretched", {
+					content: <div>
+						<div class="fakeLabel line">
+							<small>{Lang.get("script_filter")}{NotCompatibleIcon("Web")}</small>
+							{CodeEditor(questionnaire.scriptFilter)}
+						</div>
+					</div>
+				})
 			)}
 		</div>
 	}
@@ -289,6 +318,15 @@ export class Content extends SectionContent {
 					</div>,
 				enable: () => questionnaire.completableAtSpecificTime.set(true),
 				disable: () => questionnaire.completableAtSpecificTime.set(false)
+			},
+			{
+				title: Lang.get("script_filter"),
+				isActive: () => questionnaire.scriptFilter.get() != "" || this.showCodeEditor,
+				enable: () => this.showCodeEditor = true,
+				disable: () => {
+					questionnaire.scriptFilter.set("")
+					this.showCodeEditor = false
+				}
 			}
 		]
 		if (study.randomGroups.get() > 1) {
