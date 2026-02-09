@@ -14,3 +14,4 @@
 - Reworked and hardened the ESMira platform update routine.
 - Extracted reward code view to its own section, with separate permissions (the update will assign this permission to all users that already have read
 permissions for a study).
+- Moved notification timeout settings from reminder settings to general notification settings.
