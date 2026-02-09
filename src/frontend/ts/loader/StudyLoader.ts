@@ -261,7 +261,7 @@ export class StudyLoader {
 
 		const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
 		this.addPluginStructureToStudy(study)
-		this.studyCache.insert(id, study, undefined, true)
+		this.studyCache.insert(id, study)
 		PromiseCache.save(`study${id}`, Promise.resolve(study)) // studies are loaded through the PromiseCache
 		study.setIsDifferent(true)
 
@@ -298,7 +298,7 @@ export class StudyLoader {
 
 		//make sure the study is removed after the page got a chance to clear. If not, several getStudy() calls would cause exceptions!
 		window.setTimeout(() => {
-			this.studyCache.remove(id, true)
+			this.studyCache.remove(id)
 		}, 500)
 	}
 

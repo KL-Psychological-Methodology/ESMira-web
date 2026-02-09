@@ -75,7 +75,7 @@ export class Content extends StudiesContent {
 		const messagesObserverId = this.getTools().messagesLoader.studiesWithNewMessagesCount?.addObserver(() => {
 			m.redraw()
 		})
-		const studyObserverId = studiesObs.addObserver((_origin, bubbled) => {
+		const studyObserverId = studiesObs.addObserver((_origin, _turnedDifferent, bubbled) => {
 			if (!bubbled) {
 				this.updateSortedStudies(this.getStudiesFromObservable(studiesObs))
 				this.createAccessKeyTabLists()
