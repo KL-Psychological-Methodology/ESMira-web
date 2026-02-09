@@ -116,6 +116,24 @@ export class StudyLoader {
 		}
 	}
 
+	private addServerChangeObserver(study: Study, id: number) {
+		if(this.observerIds.hasOwnProperty(id)) {
+			return
+		}
+		this.observerIds[id] = study.addObserver(async (_obs, turnedDifferent) => {
+			const currentStudy = this.studyCache.get()[id]
+			if (currentStudy && turnedDifferent) {
+				const lastChangedServer = await Requests.loadJson(`${FILE_ADMIN}?type=CheckChanged&study_id=${id}`)
+				
+				if (lastChangedServer > currentStudy.lastChanged) {
+					this.removeStudyFromCache(id)
+					const newStudy = await this.loadFullStudy(id, lastChangedServer)
+					this.updateStudy(currentStudy, newStudy)
+					alert(Lang.get("error_study_was_changed", currentStudy.title.get()));
+				}
+			}
+		}, this.observerIds[id])
+	}
 	public loadStrippedStudyList(): Promise<StudiesDataType> {
 		return PromiseCache.get("strippedStudies", async () => {
 			PromiseCache.remove("availableStudies")
@@ -186,19 +204,7 @@ export class StudyLoader {
 
 			this.studyCache.insert(id, study, undefined, true)
 
-			this.observerIds[id] = study.addObserver(async (_obs, turnedDifferent) => {
-				const currentStudy = this.studyCache.get()[id]
-				if (currentStudy && turnedDifferent) {
-					const lastChangedServer = await Requests.loadJson(`${FILE_ADMIN}?type=CheckChanged&study_id=${id}`)
-
-					if (lastChangedServer > currentStudy.lastChanged) {
-						this.removeStudyFromCache(id)
-						const newStudy = await this.loadFullStudy(id, lastChangedServer)
-						this.updateStudy(currentStudy, newStudy)
-						alert(Lang.get("error_study_was_changed", currentStudy.title.get()));
-					}
-				}
-			}, this.observerIds[id])
+			this.addServerChangeObserver(study, id)
 
 			for (const questionnaire of study.questionnaires.get()) {
 				this.questionnaireRegister[questionnaire.internalId.get()] = id
@@ -254,6 +260,7 @@ export class StudyLoader {
 		this.updateMetadata(id, {} as StudyMetadata)
 
 		const study = new Study(studyData, this.studyCache, Date.now(), this.repair)
+		this.addPluginStructureToStudy(study)
 		this.studyCache.insert(id, study, undefined, true)
 		PromiseCache.save(`study${id}`, Promise.resolve(study)) // studies are loaded through the PromiseCache
 		study.setIsDifferent(true)
@@ -358,6 +365,8 @@ export class StudyLoader {
 				newStudy.addLanguage(langCode, response.json[langCode])
 		}
 		newStudy.currentLangCode.set(currentLang)
+		this.addServerChangeObserver(newStudy, newStudy.id.get()) // Is needed when study was created by addStudy
+		newStudy.setIsDifferent(false) // Is needed when study was freshly created by addStudy
 		newStudy.hasMutated()
 		m.redraw()
 	}
