@@ -19,6 +19,9 @@ export class ChartData extends DataStructure {
 	public hideUntilCompletion				= this.primitive<boolean>(		"hideUntilCompletion", false)
 	public fitToShowLinearProgression		= this.primitive<number>(		"fitToShowLinearProgression", 0)
 	public hideOnClient						= this.primitive<boolean>(		"hideOnClient", false)
+	public showOnlyGroup					= this.primitive<number>(		"showOnlyGroup", 0)
+	public showOnlyLang						= this.primitive<string>(		"showOnlyLang", "")
+
 	
 	public title							= this.translatable(			"title", "")
 	public chartDescription					= this.translatable(			"chartDescription", "")
