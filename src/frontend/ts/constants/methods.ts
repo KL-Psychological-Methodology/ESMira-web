@@ -16,11 +16,10 @@ export function getBaseUrl(protocol: string = "https"): string {
 	return (protocol || location.protocol) + '://' + getBaseDomain();
 }
 
-export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https", encodedFallbackUrl: string = ""): string {
-	const fallbackSuffix = encodedFallbackUrl ? "?fallback=" + encodedFallbackUrl : ""
+export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
 	return alwaysAddId && accessKey
-		? getBaseUrl(protocol) + "app-" + id + "-" + accessKey + fallbackSuffix
-		: getBaseUrl(protocol) + "app-" + (accessKey || id) + fallbackSuffix;
+		? getBaseUrl(protocol) + "app-" + id + "-" + accessKey
+		: getBaseUrl(protocol) + "app-" + (accessKey || id);
 }
 export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
 	return alwaysAddId && accessKey
