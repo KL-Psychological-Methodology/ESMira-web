@@ -1,14 +1,14 @@
-import {DataStructure, DataStructureInputType} from "../DataStructure";
+import { DataStructure, DataStructureInputType } from "../DataStructure";
 import { Statistics } from "./Statistics";
 import { Questionnaire } from "./Questionnaire";
 import { ObservableTypes } from "../../observable/types/ObservableTypes";
 import { EventUploadSettings } from "./EventUploadSettings";
 import { BaseObservable } from "../../observable/BaseObservable";
-import {TranslatableRootInterface} from "../../observable/interfaces/TranslatableRootInterface";
+import { TranslatableRootInterface } from "../../observable/interfaces/TranslatableRootInterface";
 import { Input, InputMediaTypes } from "./Input";
 import { RepairStudy } from "../../helpers/RepairStudy";
 import { Lang } from "../../singletons/Lang";
-import {PluginContainer} from "./PluginContainer";
+import { PluginContainer } from "./PluginContainer";
 
 export class Study extends DataStructure implements TranslatableRootInterface {
 	public lastChanged: number
@@ -67,7 +67,7 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 		super(data, parent, data["id"] as string ?? "-1", defaultLang)
 		this.lastChanged = lastChanged
 	}
-	
+
 	public updateKeyName() {
 		super.updateKeyName(this.id.get().toString())
 	}
@@ -124,5 +124,13 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 		});
 
 		return names;
+	}
+
+	public countScheduledAlarms(): number {
+		let alarms: number = 0
+		for (let questionnaire of this.questionnaires.get()) {
+			alarms += questionnaire.countScheduledAlarms()
+		}
+		return alarms
 	}
 }

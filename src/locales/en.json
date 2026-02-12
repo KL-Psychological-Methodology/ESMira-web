@@ -724,5 +724,6 @@
 	"custom_start_value": "Custom start value",
 	"script_filter": "Script filter",
 	"chart_show_only_in_group": "Show to participants in group",
-	"chart_show_only_in_lang": "Show to participants using language"
+	"chart_show_only_in_lang": "Show to participants using language",
+	"ios_too_many_scheduled_alarms": "Your study has a total of %d scheduled notifications (including reminders). Due to system limitations, the maximum the iOS app can handle is %d scheduled notifications. Going beyond this limit can cause problems like participants using iOS only receiving some notifications, or no notifications at all."
 }

@@ -5,6 +5,7 @@ import { Questionnaire } from "../data/study/Questionnaire";
 import calendarSvg from "../../imgs/icons/calendar.svg?raw"
 import schedulesSvg from "../../imgs/icons/schedules.svg?raw"
 import eventsSvg from "../../imgs/icons/events.svg?raw"
+import warnSvg from "../../imgs/icons/warn.svg?raw";
 import { ActionTrigger } from "../data/study/ActionTrigger";
 import { EventTrigger } from "../data/study/EventTrigger";
 import { Schedule } from "../data/study/Schedule";
@@ -34,6 +35,7 @@ interface FilterEntry {
  * But since we suspect that this will not be used often, and it is easier to grasp for configuration, we removed that functionality in the admin panel
  */
 export class Content extends SectionContent {
+	private readonly IOS_MAX_ALARM_COUNT = 55;
 	private showCodeEditor: boolean = false;
 
 
@@ -136,12 +138,12 @@ export class Content extends SectionContent {
 		return TabBar(this.getDynamic("questionnaireIndex", 0), study.questionnaires.get().map((questionnaire) => {
 			return {
 				title: questionnaire.getTitle(),
-				view: () => this.getQuestionnaireView(questionnaire)
+				view: () => this.getQuestionnaireView(questionnaire, study.countScheduledAlarms())
 			}
 		}))
 	}
 
-	private getQuestionnaireView(questionnaire: Questionnaire): Vnode<any, any> {
+	private getQuestionnaireView(questionnaire: Questionnaire, totalCountScheduledAlarms: number): Vnode<any, any> {
 		const filterEntries = this.createFilterEntries(questionnaire)
 
 		return <div class="spacingTop spacingBottom">
@@ -175,6 +177,13 @@ export class Content extends SectionContent {
 							<small>{Lang.get("script_filter")}{NotCompatibleIcon("Web")}</small>
 							{CodeEditor(questionnaire.scriptFilter)}
 						</div>
+					</div>
+				})
+			)}
+			{totalCountScheduledAlarms > this.IOS_MAX_ALARM_COUNT && DashRow(
+				DashElement("stretched", {
+					content: <div>
+						<small class="center"><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("ios_too_many_scheduled_alarms", totalCountScheduledAlarms, this.IOS_MAX_ALARM_COUNT)}</small>
 					</div>
 				})
 			)}

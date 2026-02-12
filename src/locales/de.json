@@ -724,5 +724,6 @@
 	"uninstall": "Deinstallieren",
 	"script_filter": "Script filter",
 	"chart_show_only_in_group": "Diagramm Teilnehmern in Gruppe anzeigen",
-	"chart_show_only_in_lang": "Diagramm Teilnehmern anzeigen, die Sprache verwenden"
+	"chart_show_only_in_lang": "Diagramm Teilnehmern anzeigen, die Sprache verwenden",
+	"ios_too_many_scheduled_alarms": "Ihre Studie hat insgesamt %d geplante Benachrichtigungen (inklusive Erinnerungen). Aufgrund von Systemlimits kann die iOS-App höchstens %d geplante Benachrichtigungen verarbeiten. Einstellungen die dieses Limit überschreiten können Probleme verursachen, sodass Versuchspersonen, die iOS verwenden, nur manche oder gar keine Benachrichtigungen erhalten."
 }
