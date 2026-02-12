@@ -102,7 +102,7 @@ export class Content extends SectionContent {
 		return <div class="center">
 			<div class="vertical hAlignStart error_list">
 				{reports.map((report) =>
-					<div>
+					<div class="horizontal hAlignStart vAlignStart">
 						{BtnTrash(this.deleteReport.bind(this, report))}
 						{!report.seen &&
 							BtnOk(this.markReportAsSeen.bind(this, report))
