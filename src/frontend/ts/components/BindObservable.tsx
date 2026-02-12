@@ -4,13 +4,13 @@ import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
 
 export interface Transformer {
 	toAttribute(value: PrimitiveType): PrimitiveType
-	toObs(value: string, obs: BaseObservable<PrimitiveType>): PrimitiveType
+	toValue(value: string): PrimitiveType
 }
 const OptimusPrimeTransformer: Transformer = {
 	toAttribute(value: PrimitiveType): PrimitiveType {
 		return value
 	},
-	toObs(value: string): PrimitiveType {
+	toValue(value: string): PrimitiveType {
 		return value
 	}
 }
@@ -18,7 +18,7 @@ const OptimusPrimeNumberTransformer: Transformer = {
 	toAttribute(value: PrimitiveType): PrimitiveType {
 		return value
 	},
-	toObs(value: string): PrimitiveType {
+	toValue(value: string): PrimitiveType {
 		return parseInt(value) || 0
 	}
 }
@@ -36,7 +36,7 @@ export class ConstrainedNumberTransformer implements Transformer {
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return value;
 	}
-	public toObs(value: string): PrimitiveType {
+	public toValue(value: string): PrimitiveType {
 		if (this.allowEmpty && value === "") {
 			return "";
 		}
@@ -50,21 +50,24 @@ export class ConstrainedNumberTransformer implements Transformer {
 
 export class OnBeforeChangeTransformer<T extends PrimitiveType> implements Transformer {
 	private readonly onBeforeChange: (before: T, after: T) => T
-	constructor(onBeforeChange: (before: T, after: T) => T) {
+	private readonly obs: BaseObservable<T>
+	
+	constructor(obs: BaseObservable<T>, onBeforeChange: (before: T, after: T) => T) {
+		this.obs = obs
 		this.onBeforeChange = onBeforeChange
 	}
 	public toAttribute(value: T): T {
 		return value
 	}
-	public toObs(value: string, obs: BaseObservable<T>): T {
-		return this.onBeforeChange(obs.get(), value as T) || value as T
+	public toValue(value: string): T {
+		return this.onBeforeChange(this.obs.get(), value as T) || value as T
 	}
 }
 export const BooleanTransformer: Transformer = {
 	toAttribute(value: PrimitiveType): PrimitiveType {
 		return value ? "1" : "0"
 	},
-	toObs(value: string): PrimitiveType {
+	toValue(value: string): PrimitiveType {
 		return value == "1"
 	}
 }
@@ -75,7 +78,7 @@ export const DateTransformer: Transformer = {
 			return ""
 		return (new Date(intValue)).toISOString().split("T")[0]
 	},
-	toObs(value: string): PrimitiveType {
+	toValue(value: string): PrimitiveType {
 		if (value === "")
 			return 0
 		else
@@ -93,7 +96,7 @@ export const TimeTransformer: Transformer = {
 			return timeStampToTimeString(midnight + intValue)
 		}
 	},
-	toObs(value: string): PrimitiveType {
+	toValue(value: string): PrimitiveType {
 		if (value == "")
 			return -1
 		else {
@@ -110,15 +113,40 @@ export const TimeTransformer: Transformer = {
 }
 
 /**
- * binds the value of a form element (e.g. input, select, ...) to an observable and automatically updates the observable when the value changes.
- * @param obs - the observable to bind to
- * @param transformer - an optional transformer to assure that the value adheres to a certain format (e.g. number, date, ...)
- * @param attr - the attribute of the form element to bind to (e.g. value, checked, ...). Usually the correct attribute can be inferred from the data type of the observable.
- * @param event - which event to listen to. Uses `onchange` by default.
- * @returns a Record with the attribute and event handler which is meant to be passed via spread operator (`...`) to the element attributes.
+ * Binds the value of a form element (e.g. input, select, ...) to an observable and automatically updates the observable when the value changes.
+ *  * Usage example:
+ * ```
+ * const value = new ObservablePrimitive("value", null, "test");
+ * <input type="text" {...BindObservable(value)}/>
+ * ```
+ * @see {@link BindValue}
+ *
+ * @param obs - The observable to bind to
+ * @param transformer - An optional transformer to assure that the value adheres to a certain format (e.g. number, date, ...)
+ * @param attr - The attribute of the form element to bind to (e.g. value, checked, ...). Usually the correct attribute can be inferred from the data type of the observable.
+ * @param event - Which event to listen to. Uses `onchange` by default.
+ * @returns A Record with the attribute and event handler which is meant to be passed via spread operator (`...`) to the element attributes.
  */
 export function BindObservable(obs: BaseObservable<PrimitiveType>, transformer?: Transformer, attr?: keyof HTMLInputElement, event: keyof HTMLInputElement = "onchange"): Record<string, any> {
-	const attrValue = obs.get()
+	return BindValue(obs.get(), value => obs.set(value), transformer, attr, event)
+}
+
+/**
+ * Binds a value to an input element and calls a provided setter when data changes.
+ * Usage example:
+ * ```
+ * const value = "changeMe";
+ * <input type="text" {...BindValue(value, (newValue) => value = newValue)}/>
+ * ```
+ *
+ * @param attrValue - The initial value to bind to the input element.
+ * @param set - A callback function that is expected to update the state with the new value.
+ * @param transformer - An optional transformer to assure that the value adheres to a certain format (e.g. number, date, ...)
+ * @param attr - The attribute of the form element to bind to (e.g. value, checked, ...). Usually the correct attribute can be inferred from the data type of the observable.
+ * @param event - Which event to listen to. Uses `onchange` by default.
+ * @returns A Record with the attribute and event handler which is meant to be passed via spread operator (`...`) to the element attributes.
+ */
+export function BindValue<T extends PrimitiveType>(attrValue: T, set: (value: T) => void, transformer?: Transformer, attr?: keyof HTMLInputElement, event: keyof HTMLInputElement = "onchange") {
 	if (!transformer) {
 		if (typeof attrValue == "number")
 			transformer = OptimusPrimeNumberTransformer
@@ -131,12 +159,12 @@ export function BindObservable(obs: BaseObservable<PrimitiveType>, transformer?:
 		else
 			attr = "value"
 	}
-
+	
 	return {
 		[attr]: transformer.toAttribute(attrValue),
 		[event]: (e: InputEvent) => {
 			const element = e.target as HTMLInputElement
-			obs.set(transformer!.toObs(element[attr!] as string, obs))
+			set(transformer!.toValue(element[attr!] as string) as T)
 		}
-	}
+	};
 }

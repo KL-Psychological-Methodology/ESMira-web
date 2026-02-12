@@ -117,7 +117,7 @@ export class Content extends SectionContent {
 				<div class="center">
 					<label>
 						<small>{Lang.get("variable_name")}</small>
-						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>((before, after) => {
+						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>(input.name, (before, after) => {
 							return createUniqueName(study, after) ?? before
 						}))} />
 					</label>

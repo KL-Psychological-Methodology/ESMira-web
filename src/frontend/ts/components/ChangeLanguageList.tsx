@@ -52,7 +52,7 @@ export class ChangeLanguageList {
 						
 						<label class="middle">
 							<small>{Lang.get("language")}</small>
-							<select {... BindObservable(langCode, new OnBeforeChangeTransformer<string>((before, after) => {
+							<select {... BindObservable(langCode, new OnBeforeChangeTransformer<string>(langCode, (before, after) => {
 								translationRoot.renameLanguage(before, after)
 								if(translationRoot.defaultLang.get() == before)
 									translationRoot.defaultLang.set(after)

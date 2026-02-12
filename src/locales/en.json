@@ -725,5 +725,9 @@
 	"script_filter": "Script filter",
 	"chart_show_only_in_group": "Show to participants in group",
 	"chart_show_only_in_lang": "Show to participants using language",
-	"ios_too_many_scheduled_alarms": "Your study has a total of %d scheduled notifications (including reminders). Due to system limitations, the maximum the iOS app can handle is %d scheduled notifications. Going beyond this limit can cause problems like participants using iOS only receiving some notifications, or no notifications at all."
+	"ios_too_many_scheduled_alarms": "Your study has a total of %d scheduled notifications (including reminders). Due to system limitations, the maximum the iOS app can handle is %d scheduled notifications. Going beyond this limit can cause problems like participants using iOS only receiving some notifications, or no notifications at all.",
+	"study_urls": "Study urls",
+	"urls_target_study_list": "Enable study list",
+	"desc_urls_target_study_list": "Have the url lead to a study list and not directly to this study (only if more than one study is using the same access key)",
+	"access_key_has_no_duplications": "This is the only study that uses the access key \"%s\". When only one study for an access key exists, the urls will still lead directly to this study."
 }

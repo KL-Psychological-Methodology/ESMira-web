@@ -28,7 +28,7 @@ class SpecificQuestionnaireTransformer implements Transformer {
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return value
 	}
-	public toObs(value: string): PrimitiveType {
+	public toValue(value: string): PrimitiveType {
 		if (!value)
 			this.eventTrigger.specificQuestionnaireInternalId.set(-1)
 		return value
@@ -37,17 +37,20 @@ class SpecificQuestionnaireTransformer implements Transformer {
 
 class CombinedValueTransformer implements Transformer {
 	private readonly index: number
-	constructor(index: number) {
+	private readonly obs: BaseObservable<number>
+	
+	constructor(index: number, obs: BaseObservable<number>) {
 		this.index = 1 << index
+		this.obs = obs
 	}
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return ((value as number) & this.index) == this.index
 	}
-	public toObs(value: string, obs: BaseObservable<number>): PrimitiveType {
+	public toValue(value: string): PrimitiveType {
 		if (value)
-			return obs.get() | this.index
+			return this.obs.get() | this.index
 		else
-			return obs.get() - this.index
+			return this.obs.get() - this.index
 	}
 }
 
@@ -370,13 +373,13 @@ export class Content extends SectionContent {
 											<td class="center">
 												<input type="checkbox" id="weekday_all" disabled="disabled" checked={schedule.weekdays.get() == 0} />
 											</td>
-											<td class="center"><input type="checkbox" id="weekday_sun" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(0), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_mo" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(1), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_di" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(2), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_mi" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(3), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_do" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(4), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_fr" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(5), "checked")} /></td>
-											<td class="center"><input type="checkbox" id="weekdays_sa" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(6), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekday_sun" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(0, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_mo" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(1, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_di" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(2, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_mi" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(3, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_do" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(4, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_fr" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(5, schedule.weekdays), "checked")} /></td>
+											<td class="center"><input type="checkbox" id="weekdays_sa" {...BindObservable(schedule.weekdays, new CombinedValueTransformer(6, schedule.weekdays), "checked")} /></td>
 										</tr>
 									</tbody></table>
 								</div>
