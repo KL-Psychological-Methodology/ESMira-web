@@ -1,16 +1,13 @@
 ### 🚀 Added
 
-- Added functionality to install and update third party plugins (see [wiki](https://github.com/KL-Psychological-Methodology/ESMira/wiki/ESMira-plugins)).
-- Added functionality to create full snapshots of ESMira installation and its data. 
-- Message filters to send a message to all participants using a certain language version or in a specific experimental group.
-- Admins can now more easily give full access to a study to a user.
-- Added a configurable scale minimum to appropriate items (Likert scale, VAS, single choice list).
+- Added several machine translated languages to the web interface: Danish, Dutch, Finnish, Hebrew, Japanese, Korean, and Swedish.
+- Added support for the new compound assignment operators in the Merlin scripting language to the code editor.
+- Added a warning in the _Filter and Trigger_ section if the total number of scheduled alarms exceeds the limit iOS can handle.
+- Added options to show charts only to certain study groups or participants using a certain language.
+- Added a script filter option to questionnaires allowing for more flexible filtering dependent on study state.
+
 
 ### ✏️ Changed
 
-- Fixed an issue with creating the data folder when ESMira is initialised.
-- Allow translations for some backend error messages.
-- Reworked the publish page to be more easy to use.
-- Reworked and hardened the ESMira platform update routine.
-- Extracted reward code view to its own section, with separate permissions (the update will assign this permission to all users that already have read
-permissions for a study).
+- Fixed several bugs related to values not updating correctly in the interface.
+- Changed URL generation in publish section.
