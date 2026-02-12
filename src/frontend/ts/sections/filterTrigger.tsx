@@ -20,6 +20,7 @@ import { BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash } from "../components/Butto
 import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
 import { SectionData } from "../site/SectionData";
 import { CodeEditor } from "../components/CodeEditor";
+import { Study } from "../data/study/Study";
 
 
 interface FilterEntry {
@@ -138,13 +139,14 @@ export class Content extends SectionContent {
 		return TabBar(this.getDynamic("questionnaireIndex", 0), study.questionnaires.get().map((questionnaire) => {
 			return {
 				title: questionnaire.getTitle(),
-				view: () => this.getQuestionnaireView(questionnaire, study.countScheduledAlarms())
+				view: () => this.getQuestionnaireView(questionnaire, study)
 			}
 		}))
 	}
 
-	private getQuestionnaireView(questionnaire: Questionnaire, totalCountScheduledAlarms: number): Vnode<any, any> {
+	private getQuestionnaireView(questionnaire: Questionnaire, study: Study): Vnode<any, any> {
 		const filterEntries = this.createFilterEntries(questionnaire)
+		const totalCountScheduledAlarms = study.countScheduledAlarms()
 
 		return <div class="spacingTop spacingBottom">
 			{DashRow(
@@ -180,7 +182,7 @@ export class Content extends SectionContent {
 					</div>
 				})
 			)}
-			{totalCountScheduledAlarms > this.IOS_MAX_ALARM_COUNT && DashRow(
+			{study.publishedIOS && totalCountScheduledAlarms > this.IOS_MAX_ALARM_COUNT && DashRow(
 				DashElement("stretched", {
 					content: <div>
 						<small class="center"><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("ios_too_many_scheduled_alarms", totalCountScheduledAlarms, this.IOS_MAX_ALARM_COUNT)}</small>
