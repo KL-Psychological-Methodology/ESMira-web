@@ -72,7 +72,7 @@ export class Content extends SectionContent {
 	private async toggleAdmin(): Promise<any> {
 		const account = this.getAccount()
 		if (this.isOwnAccount) {
-			account.admin.set(true)
+			account.admin.set(true, true)
 			return
 		}
 		await this.sectionData.loader.loadJson(
