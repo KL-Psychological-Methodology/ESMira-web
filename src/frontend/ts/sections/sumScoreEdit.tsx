@@ -42,7 +42,7 @@ export class Content extends SectionContent {
 				<label>
 					<small>{Lang.get("variable_name")}</small>
 					
-					<input type="text" {... BindObservable(sumScore.name, new OnBeforeChangeTransformer<string>((before, after) => {
+					<input type="text" {... BindObservable(sumScore.name, new OnBeforeChangeTransformer<string>(sumScore.name, (before, after) => {
 						return createUniqueName(study, after) ?? before
 					}))}/>
 				</label>

@@ -91,7 +91,7 @@ export class Content extends SectionContent {
 								<label class="spacingTop line">
 									<textarea {...BindObservable(
 										study.rewardEmailContent,
-										new OnBeforeChangeTransformer<string>((_, after) => {
+										new OnBeforeChangeTransformer<string>(study.rewardEmailContent, (_, after) => {
 											const newValue = after
 											this.faultyEmailContent = newValue.length > 0 && newValue.indexOf("[[CODE]]") === -1
 											return after
