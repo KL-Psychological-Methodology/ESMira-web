@@ -673,7 +673,7 @@
     "urls_access_key": "Links med adgangsnøgle",
     "faqs": "Ofte stillede spørgsmål",
     "duplicate_access_key": "Adgangsnøgle er ikke unik på serveren",
-    "duplicate_access_key_tooltip": "Denne adgangsnøgle bruges også af andre studier på denne server. Links baseret på denne adgangsnøgle vil ikke føre direkte til dette studie.",
+    "duplicate_access_key_tooltip": "Denne adgangsnøgle bruges også af andre studier på denne server.",
     "info_links_with_study_id": "Disse links vil altid føre direkte til dette studie.",
     "uninstall": "Afinstallér",
     "hide_on_client": "Vis ikke i appen",

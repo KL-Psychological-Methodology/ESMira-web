@@ -679,7 +679,7 @@
     "urls_id": "연구 ID 기반 링크",
     "faqs": "자주 묻는 질문",
     "duplicate_access_key": "액세스 키가 서버에서 고유하지 않습니다",
-    "duplicate_access_key_tooltip": "이 액세스 키는 서버의 다른 연구에서도 사용되고 있습니다. 이 키 기반 링크는 해당 연구로 직접 연결되지 않습니다.",
+    "duplicate_access_key_tooltip": "이 액세스 키는 서버의 다른 연구에서도 사용되고 있습니다.",
     "info_links_with_study_id": "이 링크는 항상 이 연구로 직접 연결됩니다.",
     "uninstall": "제거",
     "hide_on_client": "앱에서 숨기기",

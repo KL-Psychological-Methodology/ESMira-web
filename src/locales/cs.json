@@ -659,7 +659,7 @@
     "signal_time_faulty": "%d časových bodů oddělených alespoň %d minut nelze bezpečně naplánovat v zadaném časovém rámci.",
     "urls_access_key": "Odkazy s přístupovým klíčem",
     "confirm_delete_backups": "Chcete odstranit všechny zálohy z '%s'?\nNelze je obnovit!",
-    "duplicate_access_key_tooltip": "Tento přístupový klíč používají i další studie na tomto serveru. Odkazy založené na tomto přístupovém klíči nevedou přímo na tuto studii.",
+    "duplicate_access_key_tooltip": "Tento přístupový klíč používají i další studie na tomto serveru.",
     "hint_study_unpublished": "Studie není dostupná. Použijte ji ve fázi vývoje.",
     "hint_study_over": "Studie je u konce. Informační stránka je k dispozici online, ale pokyny pro zapojení do studie jsou odstraněny. Noví účastníci se již do studie nemohou zapojit.",
     "studyTut_participate_description_step_1": "Potřebujete pouze aplikaci ESMira, pomocí které se můžete k této studii připojit.",

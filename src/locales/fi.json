@@ -668,7 +668,7 @@
     "urls_id": "Linkit tutkimustunnuksella",
     "faqs": "Usein kysytyt kysymykset",
     "duplicate_access_key": "Pääsykoodi ei ole yksilöllinen palvelimella",
-    "duplicate_access_key_tooltip": "Tätä pääsykoodia käyttävät myös muut tutkimukset palvelimella. Linkit, jotka perustuvat tähän pääsykoodiin, eivät johda suoraan tähän tutkimukseen.",
+    "duplicate_access_key_tooltip": "Tätä pääsykoodia käyttävät myös muut tutkimukset palvelimella.",
     "info_links_with_study_id": "Nämä linkit johtavat aina suoraan tähän tutkimukseen.",
     "uninstall": "Poista asennus",
     "hide_on_client": "Älä näytä sovelluksessa",

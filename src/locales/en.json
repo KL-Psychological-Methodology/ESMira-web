@@ -702,7 +702,7 @@
 	"urls_id": "Links with study id",
 	"faqs": "Frequently Asked Questions",
 	"duplicate_access_key": "Access key not unique on server",
-	"duplicate_access_key_tooltip": "This access key is also used by other studies on this server. Links based on this access key will not lead directly to this study.",
+	"duplicate_access_key_tooltip": "This access key is also used by other studies on this server.",
 	"info_links_with_study_id": "These links will always lead directly to this study.",
 	"uninstall": "Uninstall",
 	"hide_on_client": "Do not show in app",

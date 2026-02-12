@@ -676,7 +676,7 @@
     "urls_id": "Links met studie-ID",
     "faqs": "Veelgestelde vragen",
     "duplicate_access_key": "Toegangscode is niet uniek op server",
-    "duplicate_access_key_tooltip": "Deze toegangscode wordt ook gebruikt door andere studies op deze server. Links gebaseerd op deze sleutel leiden niet direct naar deze studie.",
+    "duplicate_access_key_tooltip": "Deze toegangscode wordt ook gebruikt door andere studies op deze server.",
     "info_links_with_study_id": "Deze links leiden altijd direct naar deze studie.",
     "uninstall": "Deïnstalleren",
     "hide_on_client": "Niet tonen in app",

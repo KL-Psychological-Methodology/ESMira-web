@@ -679,7 +679,7 @@
     "urls_id": "Länkar med studie-id",
     "faqs": "Vanliga frågor",
     "duplicate_access_key": "Åtkomstnyckeln är inte unik på servern",
-    "duplicate_access_key_tooltip": "Denna åtkomstnyckel används också av andra studier på denna server. Länkar baserade på denna åtkomstnyckel leder inte direkt till denna studie.",
+    "duplicate_access_key_tooltip": "Denna åtkomstnyckel används också av andra studier på denna server.",
     "info_links_with_study_id": "Dessa länkar kommer alltid att leda direkt till denna studie.",
     "uninstall": "Avinstallera",
     "hide_on_client": "Visa inte i appen",
