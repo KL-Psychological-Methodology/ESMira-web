@@ -19,6 +19,9 @@ import {PluginListEntry} from "../plugin/PluginInterfaces";
 import {PromiseCache} from "../singletons/PromiseCache";
 import {DashRow} from "../components/DashRow";
 import {DashElement} from "../components/DashElement";
+import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
+import pluginsSvg from "../../imgs/dashIcons/plugins.svg?raw"
+import snapshotsSvg from "../../imgs/dashIcons/snapshots.svg?raw"
 
 type ReleaseType = {
 	version: string,
@@ -191,34 +194,50 @@ export class Content extends SectionContent {
 
 	private getGeneralView(): Vnode<any, any> {
 		const settings = this.settingsLoader.getSettings()
+		const tools = this.getTools()
 
 		return <div>
 
-			<div class="center">
+			<div class="center spacingTop">
 				<label>
 					<small>{Lang.get("server_name")}</small>
 					<input type="text" {...BindObservable(settings.siteTranslations.serverName)} />
 					{ObservableLangChooser(settings)}
 				</label>
 			</div>
-
-			{TitleRow(Lang.getWithColon("server_update", this.sectionData.siteData.packageVersion))}
 			
 			{DashRow(
 				DashElement(null, {
+					small: true,
 					template: {
 						title: Lang.get("snapshots"),
+						icon: m.trust(snapshotsSvg)
 					},
 					href: this.getUrl("snapshots")
 				}),
 				DashElement(null, {
+					small: true,
 					template: {
 						title: Lang.get("plugins"),
+						icon: m.trust(pluginsSvg)
 					},
 					highlight: this.pluginsNeedsAttention,
 					href: this.getUrl("plugins")
-				})
+				}),
+				(tools?.canIssueFallbackTokens) &&
+				DashElement(null, {
+					small: true,
+					template: {
+						title: Lang.get("fallback_system"),
+						icon: m.trust(fallbackSystemSvg)
+					},
+					href: this.getUrl("fallbackSystem")
+				}),
 			)}
+			
+			<br/>
+			{TitleRow(Lang.getWithColon("server_update", this.sectionData.siteData.packageVersion))}
+			
 			
 			<div class="horizontal flexBlock">
 				{this.hasUpdates
