@@ -207,11 +207,12 @@ export class Content extends SectionContent {
 												const permissionNames: (keyof AccountPermissions)[] = ["publish", "write", "read", "msg"]
 												for(const permissionName of permissionNames) {
 													for (const obs of account[permissionName].get()) {
-														if (obs.get() == id)
-															return false;
+														if (obs.get() == id) {
+															return false
+														}
 													}
 												}
-												return true;
+												return true
 											})
 											.map((study) =>
 												<li
