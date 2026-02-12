@@ -61,16 +61,23 @@ class Main {
         if ($limitLang) {
             switch ($lang) {
                 case 'cs':
+                case 'da':
                 case 'de':
                 case 'el':
                 case 'en':
                 case 'es':
+                case 'fi':
                 case 'fr':
+                case 'he':
                 case 'hi':
                 case 'it':
-				case 'nb_NO':
-				case 'pl':
-				case 'pt':
+                case 'ja':
+                case 'ko':
+                case 'nb_NO':
+                case 'nl':
+                case 'pl':
+                case 'pt':
+                case 'sv':
                 case 'tl':
                 case 'uk':
                 case 'zk':
