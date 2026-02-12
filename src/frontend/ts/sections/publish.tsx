@@ -1,7 +1,7 @@
 import { SectionContent } from "../site/SectionContent";
 import m, { Vnode } from "mithril";
 import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../components/BindObservable";
+import { BindObservable, BindValue } from "../components/BindObservable";
 import { Study } from "../data/study/Study";
 import { ObservablePrimitive } from "../observable/ObservablePrimitive";
 import { TabBar, TabContent } from "../components/TabBar";
@@ -22,8 +22,8 @@ import { SectionData } from "../site/SectionData";
 interface UrlCategory {
 	urls: UrlEntry[],
 	title?: string,
-	helpUrl?: string,
 	footer?: string
+	addContentAbove?: () => Vnode<any, any>
 }
 interface UrlEntry {
 	title: string,
@@ -37,6 +37,7 @@ export class Content extends SectionContent {
 	private currentRadioIndex: [number, number] = [0, 0]
 	private readonly fallbackUrl?: string
 	private duplicateAccessKeys: string[]
+	private enableUrlStudyList = false
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
@@ -57,6 +58,9 @@ export class Content extends SectionContent {
 	}
 	private checkAccessKeyFormat(s: string): boolean {
 		return !!s.match(/^([a-zA-Z][a-zA-Z0-9]+)$/);
+	}
+	private accessKeyHasDuplications(accessKey: string): boolean {
+		return this.duplicateAccessKeys.indexOf(accessKey) !== -1
 	}
 	private async addAccessKey(study: Study): Promise<void> {
 		const accessKey = prompt()
@@ -190,14 +194,14 @@ export class Content extends SectionContent {
 										{study.accessKeys.get().length == 0
 											? <div class="spacingTop spacingBottom highlight center">{Lang.get("info_study_is_public")}</div>
 											: study.accessKeys.get().map((accessKey, index) =>
-												<div>
+												<div class="horizontal vAlignCenter">
 													{BtnTrash(this.removeAccessKey.bind(this, study, index))}
 													<label>
 														<small>{Lang.get("accessKey")}</small>
 														<input type="text" {...BindObservable(accessKey)} />
 													</label>
-													{this.duplicateAccessKeys.indexOf(accessKey.get()) !== -1 &&
-														<small title={Lang.get("duplicate_access_key_tooltip")}><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("duplicate_access_key")}</small>
+													{this.accessKeyHasDuplications(accessKey.get()) &&
+														<small title={Lang.get("duplicate_access_key_tooltip")}>{Lang.get("duplicate_access_key")}</small>
 													}
 												</div>
 											)
@@ -264,6 +268,22 @@ export class Content extends SectionContent {
 		</div>
 	}
 
+	private getStudyListCheckboxView(accessKey: string) {
+		return <div>
+			<hr/>
+			
+			<label title={Lang.get("desc_urls_target_study_list")}>
+				<div class="flexBlock horizontal vAlignCenter">
+					<input type="checkbox" {... BindValue(this.enableUrlStudyList, value => this.enableUrlStudyList = value)}/>
+					<span>{Lang.get("urls_target_study_list")}</span>
+					<a class="selfAlignStart" href={URL_WIKI_DIFFERENCE_LINKS} target="_blank">{BtnCustom(m.trust(questionSvg))}</a>
+				</div>
+				{this.enableUrlStudyList && !this.accessKeyHasDuplications(accessKey) &&
+					<small><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("access_key_has_no_duplications", accessKey)}</small>
+				}
+			</label>
+		</div>
+	}
 
 	private getPublishView(study: Study, accessKey: string): TabContent {
 		const urlList = this.createUrlList(study, accessKey)
@@ -278,98 +298,75 @@ export class Content extends SectionContent {
 		
 		return {
 			title: accessKey,
-			view: () => DashRow(
-				DashElement("vertical", ...urlList.map((category, categoryIndex) => ({
-					content: <div>
-						<h2 class="horizontal">
-							{category.title}
-							{category.helpUrl && <a href={category.helpUrl} target="_blank">{BtnCustom(m.trust(questionSvg))}</a>}
-						</h2>
-						{category.urls.map((entry, entryIndex) =>
-							<div class="line">
-								{this.getUrlView(entry.title, entry.url, entry.allowSelection ? [categoryIndex, entryIndex] : undefined)}
-							</div>
-						)}
-						{category.footer &&
-							<div class="smallText">
-								{category.footer}
-							</div>
-						}
-					</div>
-				}))),
-				DashElement(null, {
-					content:
-						<div>
-							<div class="center">
-								<label>
-									<small>{Lang.get("size")}</small>
-									<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
-								</label>
-							</div>
-							<div class="center">
-								<a download href={imgUrl} title={qrCodeUrl}>
-									<img alt="QrCode" src={imgUrl} />
-								</a>
-							</div>
-							<p class="smallText">{Lang.get("desc_qrCode")}</p>
+			view: () => <div>
+				{DashRow(
+					DashElement("vertical", ...urlList.map((category, categoryIndex) => ({
+						content: <div>
+							{category.title &&
+								<h2 class="horizontal">
+									{category.title}
+								</h2>
+							}
+							{category.urls.map((entry, entryIndex) =>
+								<div class="line">
+									{this.getUrlView(entry.title, entry.url, entry.allowSelection ? [categoryIndex, entryIndex] : undefined)}
+								</div>
+							)}
+							{category.footer &&
+								<div class="smallText">
+									{category.footer}
+								</div>
+							}
+							{category.addContentAbove?.()}
 						</div>
-				})
-			)
+					}))),
+					DashElement(null, {
+						content:
+							<div>
+								<div class="center">
+									<label>
+										<small>{Lang.get("size")}</small>
+										<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
+									</label>
+								</div>
+								<div class="center">
+									<a download href={imgUrl} title={qrCodeUrl}>
+										<img alt="QrCode" src={imgUrl} />
+									</a>
+								</div>
+								<p class="smallText">{Lang.get("desc_qrCode")}</p>
+							</div>
+					})
+				)}
+			</div>
 		}
 	}
 
 	private createUrlList(study: Study, accessKey: string): UrlCategory[] {
 		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
-		const hasAccessKeys = !!accessKey
 		const usesFallback = study.useFallback.get() && !!this.fallbackUrl
 		const publishedWeb = study.publishedWeb.get()
 		const publishedSmartphone = study.publishedAndroid.get() || study.publishedIOS.get()
 		
 		const categoryList: UrlCategory[] = []
 		
-		if(hasAccessKeys) {
-			const entry: UrlCategory = {
-				title: Lang.getWithColon("urls_instruction_id"),
-				helpUrl: URL_WIKI_DIFFERENCE_LINKS,
-				urls: [],
-				footer: Lang.get("info_links_with_study_id")
-			}
-			
-			if(publishedWeb) {
-				entry.urls.push({
-					title: infoTitle,
-					url: createStudyUrl(accessKey, study.id.get(), true, "https"),
-					allowSelection: true
-				})
-			}
-			if(publishedSmartphone) {
-				entry.urls.push({
-					title: Lang.get("app_installation_instructions"),
-					url: createAppUrl(accessKey, study.id.get(), true, "https"),
-					allowSelection: true
-				})
-			}
-			categoryList.push(entry)
-		}
-		
-		
 		const entry: UrlCategory = {
-			title: Lang.getWithColon(hasAccessKeys ? "urls_instruction_access_key" : "urls_instruction_id"),
-			helpUrl: URL_WIKI_DIFFERENCE_LINKS,
+			title: Lang.get("study_urls"),
 			urls: [],
-			footer: accessKey.length > 0 ? Lang.get("info_urls_without_study_id") : ""
+			addContentAbove: accessKey ? this.getStudyListCheckboxView.bind(this, accessKey) : undefined
 		}
+		
 		if(publishedWeb) {
 			entry.urls.push({
 				title: infoTitle,
-				url: createStudyUrl(accessKey, study.id.get(), false, "https"),
+				url: createStudyUrl(accessKey, study.id.get(), !this.enableUrlStudyList, "https"),
 				allowSelection: true
 			})
 		}
 		if(publishedSmartphone) {
 			entry.urls.push({
 				title: Lang.get("app_installation_instructions"),
-				url: createAppUrl(accessKey, study.id.get(), false, "https"),
+				url: createAppUrl(accessKey, study.id.get(), !this.enableUrlStudyList, "https"),
 				allowSelection: true
 			})
 		}
@@ -391,7 +388,7 @@ export class Content extends SectionContent {
 					title: questionnaire.getTitle(),
 					url: createQuestionnaireUrl(accessKey, questionnaire.internalId.get()),
 					allowSelection: true
-				}))
+				})),
 			})
 		}
 		
