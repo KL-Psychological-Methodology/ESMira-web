@@ -301,15 +301,19 @@ export class StudyLoader {
 			this.studyCache.remove(id)
 		}, 500)
 	}
-
-	public async addQuestionnaire(study: Study, questionnaireData: DataStructureInputType): Promise<Questionnaire> {
+	
+	public async getNewQuestionnaireId(study: Study) {
 		const questionnaires = study.questionnaires.get()
 		const filtered = []
 		for (const questionnaire of questionnaires) {
 			filtered.push(questionnaire.internalId.get())
 		}
-
-		questionnaireData["internalId"] = await Requests.loadJson(FILE_ADMIN + "?type=GetNewId&for=questionnaire&study_id=" + study.id.get(), "post", JSON.stringify(filtered))
+		
+		return await Requests.loadJson(FILE_ADMIN + "?type=GetNewId&for=questionnaire&study_id=" + study.id.get(), "post", JSON.stringify(filtered))
+	}
+	
+	public async addQuestionnaire(study: Study, questionnaireData: DataStructureInputType): Promise<Questionnaire> {
+		questionnaireData["internalId"] = await this.getNewQuestionnaireId(study)
 		const newQuestionnaire = study.questionnaires.push(questionnaireData)
 		this.autoValidateQuestionnaire(study, newQuestionnaire)
 		return newQuestionnaire
