@@ -85,12 +85,14 @@ export class ObservableArray<
 	
 	public addCopy(original: ObsT, index: number = this.get().length): ObsT {
 		const jsonObj = original.createJson()
-		const newObs = this.constructObservable(jsonObj as InputT, this, index.toString())
+		const newObs = this.constructObservable(jsonObj as InputT, this, this.get().length.toString())
 		this.get().push(newObs)
-		if(index != this.get().length-1)
-			this.move( this.get().length-1, index)
-		else
+		if(index != this.get().length-1) {
+			this.move(this.get().length - 1, index)
+		}
+		else {
 			this.hasMutated(!this.isDifferent())
+		}
 		return newObs
 	}
 	public push(value: InputT): ObsT {
