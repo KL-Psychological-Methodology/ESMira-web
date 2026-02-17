@@ -8,3 +8,4 @@ services:
     volumes:
       - ./esmira/esmira_data:/var/www/html/esmira_data
       - ./esmira/config:/var/www/html/backend/config/
+      - ./esmira/sites-enabled:/etc/apache2/sites-enabled/

@@ -60,8 +60,14 @@ export class Content extends SectionContent {
 		const study = this.getStudyOrThrow()
 		return this.addDropdownMenus.addQuestionnaire(study, e.target as Element)
 	}
-	private copyQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
+	private async copyQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): Promise<void> {
+		const internalId = await this.sectionData.siteData.studyLoader.getNewQuestionnaireId(study)
+		const originalInternalId = questionnaire.internalId.get()
+		
+		questionnaire.internalId.set(internalId, true) // temporarily change the internalId
 		const newQuestionnaire = study.questionnaires.addCopy(questionnaire, index)
+		questionnaire.internalId.set(originalInternalId, true)
+		
 		this.sectionData.siteData.studyLoader.autoValidateQuestionnaire(study, newQuestionnaire)
 	}
 	private deleteQuestionnaire(study: Study, questionnaire: Questionnaire, index: number): void {
