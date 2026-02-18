@@ -254,6 +254,7 @@
 	"input_list_multiple": "Liste (Multiple Choice)",
 	"input_list_single": "Liste (Single Choice)",
 	"input_location": "Standort",
+	"input_noise_level": "Geräuschlautstärke",
 	"input_number": "Zahlen-Eingabe",
 	"input_photo": "Foto aufnehmen",
 	"input_record_audio": "Audio aufnehmen",
