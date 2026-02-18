@@ -265,6 +265,7 @@
 	"input_list_multiple": "List (multiple choice)",
 	"input_list_single": "List (single choice)",
 	"input_location": "Location",
+	"input_noise_level": "Noise level",
 	"input_number": "Number input",
 	"input_photo": "Take a picture",
 	"input_record_audio": "Record audio",

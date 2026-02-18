@@ -290,6 +290,16 @@ export class InputOptionDesigner {
 				</div>
 			]
 		},
+		"noise_level": {
+			title: Lang.get("input_noise_level"),
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			category: "sensor",
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>
+			]
+		},
 		"number": {
 			title: Lang.get("input_number"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Number-input",
