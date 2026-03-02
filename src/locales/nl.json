@@ -680,5 +680,7 @@
 	"desc_requested_reward_code": "Wanneer de deelnemer vroeg om het genereren van een beloningscode (ongeacht of dat succesvol was of niet).",
 	"state_restoring_data": "Gegevens herstellen (%d%)…",
 	"state_migrating": "Migreren…",
-	"creating_snapshot": "Snapshot maken (%d%)"
+	"creating_snapshot": "Snapshot maken (%d%)",
+	"created_snapshot": "Aanmaken snapshot voltooid",
+	"creating_snapshot_failed": "Aanmaken snapshot mislukt: %s"
 }
