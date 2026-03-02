@@ -22,5 +22,8 @@
 	"add_schedule": "Program ekle",
 	"admin_account": "Yönetici hesabı",
 	"after_x_seconds": "%d saniye sonra",
-	"after_x_days": "g gün sonra"
+	"after_x_days": "%d gün sonra",
+	"allow_back_button": "Sayfalar arasında geri butonunu kullanmaya izin ver",
+	"allow_decimal_input": "Ondalık sayılara izin ver",
+	"permissions_reward": "Ödül verilerine erişim"
 }
