@@ -10,5 +10,15 @@
 	"add_signalTime": "Saat ekleyin",
 	"additional_languages": "Diğer diller",
 	"admin": "Yönet",
-	"more_information": "Daha fazla bilgi"
+	"more_information": "Daha fazla bilgi",
+	"action_notification": "Basit bildirim",
+	"action_msg": "Katılımcıya mesaj",
+	"activation": "Aktivasyon",
+	"activation_after": "Aktivasyon sonrası",
+	"add_event": "Etkinlik ekle",
+	"add_image": "Resim ekle",
+	"add_link": "Bağlantı ekle",
+	"add_page": "Sayfa ekle",
+	"add_schedule": "Program ekle",
+	"admin_account": "Yönetici hesabı"
 }
