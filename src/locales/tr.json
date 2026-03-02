@@ -1,5 +1,6 @@
 {
 	"add": "ekle",
 	"about_esmira": "ESMira hakkında",
-	"about_study": "Çalışma hakkında"
+	"about_study": "Çalışma hakkında",
+	"about_text": "ESMira boylamsal çalışmalar (ESM, AA, EMA, ...) yürütmek için bir araçtır. Çalışmalar çevrimiçi bir arayüz üzerinden oluşturulabilir ve katılımcılar iOS, Android veya bir web tarayıcısı kullanabilir."
 }
