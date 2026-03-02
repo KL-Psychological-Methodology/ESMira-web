@@ -36,5 +36,7 @@
 	"permissions_msg": "Mesaj okuma / yazma",
 	"permissions_publish": "Çalışmayı yayınlayın",
 	"permissions_read": "Verileri okuyun",
-	"description": "Açıklama"
+	"description": "Açıklama",
+	"end_date": "Bitiş tarihi (hariç)",
+	"entry_count": "%d yanıt"
 }
