@@ -38,5 +38,6 @@
 	"permissions_read": "Verileri okuyun",
 	"description": "Açıklama",
 	"end_date": "Bitiş tarihi (hariç)",
-	"entry_count": "%d yanıt"
+	"entry_count": "%d yanıt",
+	"event": "Etkinlik"
 }
