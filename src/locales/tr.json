@@ -39,5 +39,15 @@
 	"description": "Açıklama",
 	"end_date": "Bitiş tarihi (hariç)",
 	"entry_count": "%d yanıt",
-	"event": "Etkinlik"
+	"event": "Olay",
+	"no": "Hayır",
+	"informed_consent": "Bilgilendirilmiş Onam",
+	"install_from_url": "Web adresinden yükle",
+	"last_used": "Son kullanım",
+	"not_compatible_with": "Bununla uyumlu değil: %s",
+	"questionnaire_availability": "Anketin durumu",
+	"study_availability": "Çalışmanın erişilebilirliği",
+	"time_delay": "Gecikme süresi",
+	"timeout_after_last_reminder": "Son hatırlatmadan sonra zaman aşımı",
+	"info_required": "Bu alanın doldurulması zorunludur"
 }
