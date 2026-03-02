@@ -20,5 +20,7 @@
 	"add_link": "Bağlantı ekle",
 	"add_page": "Sayfa ekle",
 	"add_schedule": "Program ekle",
-	"admin_account": "Yönetici hesabı"
+	"admin_account": "Yönetici hesabı",
+	"after_x_seconds": "%d saniye sonra",
+	"after_x_days": "g gün sonra"
 }
