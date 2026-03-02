@@ -25,5 +25,16 @@
 	"after_x_days": "%d gün sonra",
 	"allow_back_button": "Sayfalar arasında geri butonunu kullanmaya izin ver",
 	"allow_decimal_input": "Ondalık sayılara izin ver",
-	"permissions_reward": "Ödül verilerine erişim"
+	"permissions_reward": "Ödül verilerine erişim",
+	"app_installation_instructions": "Çalışma bilgileri ve uygulama yükleme talimatları",
+	"permissions_create": "Çalışma oluşturma ayrıcalıkları",
+	"after_joining_study": "çalışmaya katıldıktan sonra",
+	"all": "Tümü",
+	"active_studies": "Aktif çalışmalar",
+	"backups": "Yedeklemeler",
+	"permissions_admin": "Yönetici ayrıcalıkları",
+	"permissions_msg": "Mesaj okuma / yazma",
+	"permissions_publish": "Çalışmayı yayınlayın",
+	"permissions_read": "Verileri okuyun",
+	"description": "Açıklama"
 }
