@@ -49,5 +49,18 @@
 	"study_availability": "Çalışmanın erişilebilirliği",
 	"time_delay": "Gecikme süresi",
 	"timeout_after_last_reminder": "Son hatırlatmadan sonra zaman aşımı",
-	"info_required": "Bu alanın doldurulması zorunludur"
+	"info_required": "Bu alanın doldurulması zorunludur",
+	"fitToShowLinearProgression_label": "r2 uyumu daha büyük olduğunda doğrusal regresyonu gösterin",
+	"from": "Kimden",
+	"group": "Grup",
+	"install_from_file": "Dosyadan yükleyin",
+	"install_plugin": "Eklentiyi yükleyin",
+	"model": "Model",
+	"months": "Aylar",
+	"postInstallInstructions": "Katılım sonrası talimatlar (sadece uygulamada; boş bırakılabilir)",
+	"number_of_reminders": "Hatırlatma sayısı",
+	"recipient": "Alıcı",
+	"settings": "Ayarlar",
+	"start_date": "Başlangıç tarihi (dahil)",
+	"study_version": "Çalışma versiyonu"
 }
