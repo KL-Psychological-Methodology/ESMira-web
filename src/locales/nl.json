@@ -693,5 +693,11 @@
 	"get_snapshot": "Download snapshot",
 	"upload_snapshot": "Upload snapshot",
 	"restore_snapshot": "Snapshot herstellen",
-	"access_key_has_no_duplications": "Dit is de enige studie die de toegangssleutel \"%s\" gebruikt. Als er maar één studie voor een toegangssleutel bestaat, zullen de url's nog steeds direct naar deze studie leiden."
+	"access_key_has_no_duplications": "Dit is de enige studie die de toegangssleutel \"%s\" gebruikt. Als er maar één studie voor een toegangssleutel bestaat, zullen de url's nog steeds direct naar deze studie leiden.",
+	"script_filter": "Script filter",
+	"chart_show_only_in_group": "Tonen aan deelnemers in groep",
+	"urls_instruction_questionnaires": "Ik wil de webversies van de vragenlijsten gebruiken (niet aanbevolen)",
+	"use_custom_start": "Aangepaste start gebruiken",
+	"custom_start_value": "Aangepaste startwaarde",
+	"chart_show_only_in_lang": "Tonen aan deelnemers met behulp van taal"
 }
