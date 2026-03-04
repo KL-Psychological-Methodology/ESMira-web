@@ -22,16 +22,6 @@ class CodeEditorComponent implements Component<CodeEditorComponentOptions, any> 
 	private lastValue: string = ""
 	private editor?: EditorView
 	
-	private extensions = [
-		basicSetup,
-		keymap.of([indentWithTab]),
-		EditorView.updateListener.of((update: ViewUpdate) => {
-			this.obs?.set(update.state.doc.toString())
-		}),
-		lintGutter(),
-		merlinLinter
-	]
-	
 	public oncreate(vNode: VnodeDOM<CodeEditorComponentOptions, any>): void {
 		const obs = vNode.attrs.obs
 		this.obs = obs
@@ -56,13 +46,20 @@ class CodeEditorComponent implements Component<CodeEditorComponentOptions, any> 
 	public createEditor(parent: Element, obs: BaseObservable<string>): void {
 		const initialState = EditorState.create({
 			doc: obs.get(),
-			extensions: this.extensions
+			extensions: [
+				basicSetup,
+				keymap.of([indentWithTab]),
+				EditorView.updateListener.of((update: ViewUpdate) => {
+					obs.set(update.state.doc.toString())
+				}),
+				lintGutter(),
+				merlinLinter
+			]
 		})
-		const editor = new EditorView({
+		this.editor = new EditorView({
 			parent: parent,
 			state: initialState
 		})
-		this.editor = editor
 	}
 	
 	public view(): Vnode<any, any> {
