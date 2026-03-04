@@ -62,5 +62,19 @@
 	"recipient": "Alıcı",
 	"settings": "Ayarlar",
 	"start_date": "Başlangıç tarihi (dahil)",
-	"study_version": "Çalışma versiyonu"
+	"study_version": "Çalışma versiyonu",
+	"questionnaires": "Anketler",
+	"reload": "Yeniden Yükle",
+	"save": "Kaydet",
+	"today": "Bugün",
+	"user_id": "Kullanıcı kimliği",
+	"messages": "Mesajlar",
+	"statistics": "İstatistikler",
+	"delete_study": "Çalışmayı sil",
+	"study_description": "Çalışma açıklaması",
+	"please_select": "Lütfen seçiniz",
+	"send": "Gönder",
+	"yes": "Evet",
+	"yesterday": "Dün",
+	"i_agree": "Katılıyorum."
 }
