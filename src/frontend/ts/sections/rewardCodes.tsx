@@ -40,7 +40,7 @@ export class Content extends SectionContent {
 			Requests.loadJson(
 				`${FILE_ADMIN}?type=GetRewardCodeData`, "post", `study_id=${sectionData.getStaticInt("id") ?? 0}`
 			),
-			sectionData.getStrippedStudyListPromise()
+			sectionData.getStudyPromise()
 		]
 	}
 
