@@ -39,7 +39,7 @@
 	"description": "Açıklama",
 	"end_date": "Bitiş tarihi (hariç)",
 	"entry_count": "%d yanıt",
-	"event": "Olay",
+	"event": "Etkinlik",
 	"no": "Hayır",
 	"informed_consent": "Bilgilendirilmiş Onam",
 	"install_from_url": "Web adresinden yükle",
@@ -157,5 +157,7 @@
 	"delivered_x_times": "%d kez gönderildi",
 	"desc_schedule_planned": "Akıllı telefon bir programın eylemini belirli bir zamanda yürütmek üzere ayarlandığında.",
 	"desc_schedule_removed": "Önceden tanımlanmış bir program kaldırıldığında (genellikle yeni bir \"schedule_planned\" olayı tarafından takip edilir)",
-	"desc_invitation": "Bir ankete yönlendiren bir bildirim oluşturulduğunda (yalnızca Android'de ateşlenir)."
+	"desc_invitation": "Bir ankete yönlendiren bir bildirim oluşturulduğunda (yalnızca Android'de yürütülür).",
+	"desc_joined": "Çalışmaya katılındığı zaman",
+	"desc_freeze_study": "Daha fazla veri değişikliği (ve gelen mesajlar) engellenir. İstemciler (clients) daha sonra tekrar deneyecektir."
 }
