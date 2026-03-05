@@ -193,5 +193,8 @@
 	"empty_data": "Veriyi temizle",
 	"empty_questionnaire": "Anketi temizle",
 	"empty_study": "Çalışmayı temizle",
-	"empty_backups": "Yedeklemeyi sil"
+	"empty_backups": "Yedeklemeyi sil",
+	"embedded": "Gömülü",
+	"endTime": "Bitiş zamanı",
+	"error_accessKey_wrong_format": "Erişim anahtarlarının bir karakterle başlaması gerekir ve yalnızca karakter ve sayı içerebilir."
 }
