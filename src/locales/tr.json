@@ -385,5 +385,7 @@
 	"unread": "Okunmamış",
 	"url": "Url",
 	"used_app_version": "Kullanılan uygulama sürümü",
-	"used_libraries": "Kullanılmış kütüphaneler"
+	"used_libraries": "Kullanılan kütüphaneler",
+	"values_in_percent": "Yüzdelik hesapla",
+	"waiting": "bekleniyor"
 }
