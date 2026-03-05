@@ -370,5 +370,20 @@
 	"toggle_all": "Tümünü seç %d",
 	"type": "Tür",
 	"total_count_per_weekday": "Gün bazında toplam miktar",
-	"timeDistance_between_completion_of_questionnaire": "Anket tamamlamaları arasındaki zaman aralığı"
+	"timeDistance_between_completion_of_questionnaire": "Anket tamamlamaları arasındaki zaman aralığı",
+	"time": "Zaman",
+	"timeout": "Zaman Aşımı",
+	"title": "Başlık",
+	"to_all": "Herkese",
+	"total_pageViews": "Toplam sayfa görüntüleme",
+	"transfer": "Transfer",
+	"transfer_to_other_questionnaire": "Diğer ankete transfer",
+	"underline": "Altı çizili",
+	"undo": "Geri al",
+	"unknown": "Bilinmiyor",
+	"unorderedList": "Sırasız liste",
+	"unread": "Okunmamış",
+	"url": "Url",
+	"used_app_version": "Kullanılan uygulama sürümü",
+	"used_libraries": "Kullanılmış kütüphaneler"
 }
