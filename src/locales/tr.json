@@ -387,5 +387,12 @@
 	"used_app_version": "Kullanılan uygulama sürümü",
 	"used_libraries": "Kullanılan kütüphaneler",
 	"values_in_percent": "Yüzdelik hesapla",
-	"waiting": "bekleniyor"
+	"waiting": "bekleniyor",
+	"used_study_version": "Kullanılan çalışma versiyonu",
+	"userAgent_with_count": "Kullanıcı Aracısı (%d)",
+	"userEditable_desc": "Günün saatleri kullanıcı tarafından değiştirilebilir",
+	"value": "Değer",
+	"username": "Kullanıcı Adı",
+	"variable": "Değişken",
+	"variable_name": "Değişken adı"
 }
