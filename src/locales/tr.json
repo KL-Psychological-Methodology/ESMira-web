@@ -343,7 +343,7 @@
 	"studyTut_participate_open_this_website": "Bu web sitesini akıllı telefonunuzda açın.",
 	"studyTut_participate_opens_automatically": "ESMira otomatik olarak açılır.",
 	"studyTut_participate_scanQr": "Aşağıdaki QR kodunu akıllı telefonunuzla tarayın:",
-	"studyTut_participate_selectAccessKeyYes": "Sizden bir <b>erişim anahtarı istendiğinde</b> \"<b>Evet</b>\" seçeneğini seçin ve \"<b style='color:red'>%s</b> \" girin.",
+	"studyTut_participate_selectAccessKeyYes": "Sizden bir <b>erişim kodu istendiğinde</b> \"<b>Evet</b>\" seçeneğini seçin ve \"<b style='color:red'>%s</b> \" girin.",
 	"startTime": "Başlangıç zamanı",
 	"study_source": "Çalışma kaynağı",
 	"studyTut_participate_chooseYesForQR": "Sizden bir <b>QR kodu istendiğinde</b> \"<b style='color:red'>Evet</b>\" seçeneğini seçin.",
