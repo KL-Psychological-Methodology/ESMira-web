@@ -141,5 +141,13 @@
 	"confirm_delete_error": "'%s' hata raporunu gerçekten silmek istiyor musunuz?",
 	"confirm_delete_questionnaire": "'%s' anketini gerçekten silmek istiyor musunuz?",
 	"confirm_delete_input": "Bu yanıtı gerçekten silmek istiyor musunuz?",
-	"copy": "Kopyala"
+	"copy": "Kopyala",
+	"confirm_delete_inputPage": "Gerçekten tüm girdileriyle birlikte BÜTÜN sayfayı silmek istiyor musunuz?",
+	"confirm_leave_page_unsaved_changes": "Hala kaydedilmemiş değişiklikler var. Gerçekten bu siteden ayrılmak istiyor musun?",
+	"contactEmail": "İletişim e-postası",
+	"create_backup": "Yedek oluşturun",
+	"create_charts": "Grafikler oluşturun",
+	"data": "Veri",
+	"data_table": "Veri tablosu",
+	"days": "günler"
 }
