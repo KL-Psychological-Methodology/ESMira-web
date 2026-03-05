@@ -268,5 +268,8 @@
 	"questionnaires_can_only_be_completed_per_notification": "Anket, her bildirim için yalnızca bir kez doldurulabilir",
 	"quit_study": "Çalışmadan ayrıl",
 	"random": "Random",
-	"random_fixed_true": "Açık - Zamanlamalar bir defaya mahsus rastgele belirlenir ve çalışma süresince değişmez."
+	"random_fixed_true": "Açık - Zamanlamalar bir defaya mahsus rastgele belirlenir ve çalışma süresince değişmez.",
+	"randomize_page": "Öğe sırasını rastgele ayarlama",
+	"referer_with_count": "Yönlendiren (%d)",
+	"remember_me_token": "Beni hatırla jetonu"
 }
