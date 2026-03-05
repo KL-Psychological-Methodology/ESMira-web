@@ -262,5 +262,11 @@
 	"questionnaires_can_only_be_completed_once": "Anket sadece bir kez doldurulabilir",
 	"random_fixed": "Sabit",
 	"random_fixed_false": "Kapalı - Zaman içindeki noktalar her seferinde rastgele seçilecektir.",
-	"questionnaire_outdated": "Önizleme artık güncel değil. Çalışmayı kaydettikten sonra güncel sürüm görüntülenecektir."
+	"questionnaire_outdated": "Önizleme artık güncel değil. Çalışmayı kaydettikten sonra güncel sürüm görüntülenecektir.",
+	"public_statistics": "Genel İstatistikler",
+	"public_studies": "Genel çalışmalar",
+	"questionnaires_can_only_be_completed_per_notification": "Anket, her bildirim için yalnızca bir kez doldurulabilir",
+	"quit_study": "Çalışmadan ayrıl",
+	"random": "Random",
+	"random_fixed_true": "Açık - Zamanlamalar bir defaya mahsus rastgele belirlenir ve çalışma süresince değişmez."
 }
