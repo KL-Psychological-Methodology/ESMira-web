@@ -329,8 +329,10 @@
 	"statisticsDataType_daily": "Günlük",
 	"statisticsDataType_frequencyDistr": "Frekans dağılımı",
 	"statisticsDataType_xy": "x- ve y-ekseninde karşılaştırma",
-	"statisticsValueType": "Değer",
+	"statisticsValueType": "Veri Değeri",
 	"statisticsChart_line_filled": "Çizgi grafiği (dolu)",
 	"state_updating": "Güncelleniyor (%d%)…",
-	"state_applyingFilter": "Filtre uygulanıyor…"
+	"state_applyingFilter": "Filtre uygulanıyor…",
+	"statisticsValueType_count": "Hesapla",
+	"study_settings": "Çalışmanın ayarları"
 }
