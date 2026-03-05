@@ -4,7 +4,7 @@
 	"about_study": "Çalışma hakkında",
 	"about_text": "ESMira boylamsal çalışmalar (ESM, AA, EMA, ...) yürütmek için bir araçtır. Çalışmalar çevrimiçi bir arayüz üzerinden oluşturulabilir ve katılımcılar iOS, Android veya bir web tarayıcısı kullanabilir.",
 	"accessKey": "Giriş kodu",
-	"action_invitation": "Ankete katılmanız için bildirim",
+	"action_invitation": "Ankete davet için bildirim",
 	"add_access_key": "Erişim kodu ekle",
 	"add_item": "Öğe ekle",
 	"add_signalTime": "Saat ekleyin",
@@ -99,5 +99,10 @@
 	"check": "Kontrol et",
 	"create": "Oluştur",
 	"colon": "%s:",
-	"charts_public": "Tüm katılımcı verilerini kullanan grafik"
+	"charts_public": "Tüm katılımcı verilerini kullanan grafik",
+	"changed": "değiştirildi",
+	"change": "değiştir",
+	"calculate": "Hesaplama",
+	"action": "Eylem",
+	"permissions_write": "Çalışmayı düzenle"
 }
