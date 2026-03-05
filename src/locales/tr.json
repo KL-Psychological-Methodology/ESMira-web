@@ -261,7 +261,7 @@
 	"only_at_specific_time": "Sadece günün belirli bir saatinde",
 	"questionnaires_can_only_be_completed_once": "Anket sadece bir kez doldurulabilir",
 	"random_fixed": "Sabit",
-	"random_fixed_false": "Kapalı - Zaman içindeki noktalar her seferinde rastgele seçilecektir.",
+	"random_fixed_false": "Kapalı - Zamanlamalar her seferinde rastgele seçilecektir.",
 	"questionnaire_outdated": "Önizleme artık güncel değil. Çalışmayı kaydettikten sonra güncel sürüm görüntülenecektir.",
 	"public_statistics": "Genel İstatistikler",
 	"public_studies": "Genel çalışmalar",
@@ -271,5 +271,7 @@
 	"random_fixed_true": "Açık - Zamanlamalar bir defaya mahsus rastgele belirlenir ve çalışma süresince değişmez.",
 	"randomize_page": "Öğe sırasını rastgele ayarlama",
 	"referer_with_count": "Yönlendiren (%d)",
-	"remember_me_token": "Beni hatırla jetonu"
+	"remember_me_token": "Beni hatırla jetonu",
+	"redo": "Yinele",
+	"remember_me": "Beni hatırla"
 }
