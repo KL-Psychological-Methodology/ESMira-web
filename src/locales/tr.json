@@ -106,5 +106,15 @@
 	"action": "Eylem",
 	"permissions_write": "Çalışmayı düzenle",
 	"choices": "Maddeler",
-	"data_collected_since": "Veri toplama başlangıcı:"
+	"data_collected_since": "Veri toplama başlangıcı:",
+	"charts_personal": "Bireysel grafikler",
+	"chooseUsernameInstructions": "Kullanıcı adı seçme talimatları (Web sürümü)",
+	"confirmed": "Onaylandı",
+	"dayOfMonth": "Sadece ayın belirli bir gününde",
+	"date": "Tarih",
+	"delay": "Gecikme",
+	"install": "Kurulum",
+	"times_of_day": "Günün saatleri",
+	"timestamp": "Zaman Damgası",
+	"timezone": "Zaman Dilimi"
 }
