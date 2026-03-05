@@ -152,5 +152,10 @@
 	"days": "gün",
 	"desc_actions_executed": "Tetikleyici eylemleri çalıştırıldığında (Sadece iOS’ta geçerlidir).",
 	"default_webQuestionnaireCompletedInstructions": "Teşekkürler!",
-	"delete": "Sil"
+	"delete": "Sil",
+	"default_chooseUsernameInstructions": "Lütfen bir kullanıcı kimliği seçin",
+	"delivered_x_times": "%d kez gönderildi",
+	"desc_schedule_planned": "Akıllı telefon bir programın eylemini belirli bir zamanda yürütmek üzere ayarlandığında.",
+	"desc_schedule_removed": "Önceden tanımlanmış bir program kaldırıldığında (genellikle yeni bir \"schedule_planned\" olayı tarafından takip edilir)",
+	"desc_invitation": "Bir ankete yönlendiren bir bildirim oluşturulduğunda (yalnızca Android'de ateşlenir)."
 }
