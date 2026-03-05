@@ -254,5 +254,13 @@
 	"prompt_newUsername": "Lütfen yeni bir kullanıcı adı seçin",
 	"prompt_studyName": "Lütfen bir çalışma adı seçiniz:",
 	"info_study_frozen": "Çalışma şimdi kilitlendi.",
-	"info_study_unfrozen": "Çalışma kilidi açıldı."
+	"info_study_unfrozen": "Çalışma kilidi açıldı.",
+	"publish_study": "Yayın, Bağlantılar ve QR kodu",
+	"published": "Çalışma yayınlandı",
+	"published_not": "Çalışma yayınlanmadı",
+	"only_at_specific_time": "Sadece günün belirli bir saatinde",
+	"questionnaires_can_only_be_completed_once": "Anket sadece bir kez doldurulabilir",
+	"random_fixed": "Sabit",
+	"random_fixed_false": "Kapalı - Zaman içindeki noktalar her seferinde rastgele seçilecektir.",
+	"questionnaire_outdated": "Önizleme artık güncel değil. Çalışmayı kaydettikten sonra güncel sürüm görüntülenecektir."
 }
