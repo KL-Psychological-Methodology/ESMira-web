@@ -245,5 +245,9 @@
 	"host_own_study": "Kendi araştırmanı yönet",
 	"how_to_participate_step_1": "Nasıl katılabilirim? Adım 1/2",
 	"how_to_participate_step_2": "Nasıl katılabilirim? Adım 2/2",
-	"impressum": "Yasal Uyarı"
+	"impressum": "Yasal Uyarı",
+	"info_charts_loadingTime": "Çalışma veri dosyalarının boyutuna ve bilgisayarınızın performansına bağlı olarak, bazı istatistiklerin yüklenmesi biraz zaman alabilir.",
+	"info_no_password_forget": "\"Şifremi unuttum\" seçeneği olmadığını unutmayın.",
+	"info_no_questionnaires_created": "Henüz herhangi bir anket oluşturulmamıştır.",
+	"info_publish": "Bu, bu çalışmanın sürüm numarasını artıracaktır. Bu, tüm katılımcı uygulamalara bu çalışmanın güncellenmiş yeni bir sürümünün indirilmesi gerektiğini işaret edecektir."
 }
