@@ -249,5 +249,10 @@
 	"info_charts_loadingTime": "Çalışma veri dosyalarının boyutuna ve bilgisayarınızın performansına bağlı olarak, bazı istatistiklerin yüklenmesi biraz zaman alabilir.",
 	"info_no_password_forget": "\"Şifremi unuttum\" seçeneği olmadığını unutmayın.",
 	"info_no_questionnaires_created": "Henüz herhangi bir anket oluşturulmamıştır.",
-	"info_publish": "Bu, bu çalışmanın sürüm numarasını artıracaktır. Bu, tüm katılımcı uygulamalara bu çalışmanın güncellenmiş yeni bir sürümünün indirilmesi gerektiğini işaret edecektir."
+	"info_publish": "Bu, bu çalışmanın sürüm numarasını artıracaktır. Bu, tüm katılımcı uygulamalara bu çalışmanın güncellenmiş yeni bir sürümünün indirilmesi gerektiğini işaret edecektir.",
+	"prompt_url": "Lütfen bir URL sağlayın:",
+	"prompt_newUsername": "Lütfen yeni bir kullanıcı adı seçin",
+	"prompt_studyName": "Lütfen bir çalışma adı seçiniz:",
+	"info_study_frozen": "Çalışma şimdi kilitlendi.",
+	"info_study_unfrozen": "Çalışma kilidi açıldı."
 }
