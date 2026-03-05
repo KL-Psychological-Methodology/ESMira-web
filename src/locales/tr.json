@@ -203,5 +203,5 @@
 	"error_create_request_failed": "Tarayıcınız AJAX çağrılarını desteklemiyor gibi görünüyor. Bu sayfayı hatasız görüntülemek için javascript'i devre dışı bırakın.",
 	"error_from_server": "Sunucu yanıtı: %s",
 	"error_missing_requiredField": "Lütfen gerekli tüm alanları doldurunuz.",
-	"error_name_wrongFormat": "Adın en az 3 karakter içermesi ve -_(( hariç özel karakterler içermemesi gerekir: -_()."
+	"error_name_wrongFormat": "Adın en az 3 karakter içermesi ve şu karakterler hariç özel karakterler içermemesi gerekir: -_()."
 }
