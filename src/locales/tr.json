@@ -116,5 +116,14 @@
 	"install": "Kurulum",
 	"times_of_day": "Günün saatleri",
 	"timestamp": "Zaman Damgası",
-	"timezone": "Zaman Dilimi"
+	"timezone": "Zaman Dilimi",
+	"webInstallInstructions": "Ek uygulama yükleme talimatları (Web sürümü, boş bırakılabilir)",
+	"total_completed_questionnaires": "Tamamlanmış anketler",
+	"total_participants": "Toplam katılımcılar",
+	"variables": "Değişkenler",
+	"webQuestionnaireCompletedInstructions": "Anketi tamamladıktan sonra talimatlar (Web versiyonu)",
+	"weekdays_desc": "Sadece belirli hafta içi günlerde",
+	"xAxis_label": "X ekseninin etiketi",
+	"yAxis_label": "Y ekseninin etiketi",
+	"condition": "Durum"
 }
