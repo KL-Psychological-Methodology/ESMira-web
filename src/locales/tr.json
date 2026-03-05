@@ -159,5 +159,9 @@
 	"desc_schedule_removed": "Önceden tanımlanmış bir program kaldırıldığında (genellikle yeni bir \"schedule_planned\" olayı tarafından takip edilir)",
 	"desc_invitation": "Bir ankete yönlendiren bir bildirim oluşturulduğunda (yalnızca Android'de yürütülür).",
 	"desc_joined": "Çalışmaya katılındığı zaman",
-	"desc_freeze_study": "Daha fazla veri değişikliği (ve gelen mesajlar) engellenir. İstemciler (clients) daha sonra tekrar deneyecektir."
+	"desc_freeze_study": "Daha fazla veri değişikliği (ve gelen mesajlar) engellenir. İstemciler (clients) daha sonra tekrar deneyecektir.",
+	"desc_language_changed": "Çalışmanın dili değiştirildiğinde.",
+	"desc_message": "Ekrandaki bir mesaj bir Tetikleyici Eylem tarafından oluşturulduğunda.",
+	"desc_invitation_missed": "Bir anket daveti kaçırıldığında.",
+	"desc_notification": "Bir Tetikleyici Eylem tarafından bir bildirim oluşturulduğunda (yalnızca Android'de ateşlenir)."
 }
