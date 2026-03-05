@@ -133,5 +133,12 @@
 	"confirm_backup": "%s adresindeki çalışmadan tüm verileri geri almak istiyor musunuz?",
 	"confirm_delete_account": "'%s' kullanıcısını gerçekten silmek istiyor musunuz?",
 	"confirm_delete_data": "'%s' deki tüm verileri kaldırmak mı istiyorsunuz?\nGeri yüklenemezler!",
-	"confirm_delete_message": "Mesaj silinsin mi?"
+	"confirm_delete_message": "Mesaj silinsin mi?",
+	"confirm_delete_backups": "'%s'den tüm yedekleri kaldırmak istiyor musunuz?\nGeri yüklenemezler!",
+	"confirm_delete_plugin": "ESMira'dan '%s' eklentisini gerçekten kaldırmak istiyor musunuz?",
+	"confirm_delete_study": "'%s' çalışmasını gerçekten silmek istiyor musunuz?\n\nTÜM VERILERI DE SILINECEKTIR!",
+	"confirm_distribute_message": "Aşağıdaki mesaj gönderilecektir:\n\n%s",
+	"confirm_delete_error": "'%s' hata raporunu gerçekten silmek istiyor musunuz?",
+	"confirm_delete_questionnaire": "'%s' anketini gerçekten silmek istiyor musunuz?",
+	"confirm_delete_input": "Bu girişi gerçekten silmek istiyor musunuz?"
 }
