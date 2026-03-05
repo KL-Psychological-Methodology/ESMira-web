@@ -126,5 +126,11 @@
 	"xAxis_label": "X ekseninin etiketi",
 	"yAxis_label": "Y ekseninin etiketi",
 	"condition": "Koşullar",
-	"until": "bitiş"
+	"until": "bitiş",
+	"conditionTypeAnd": "Ve (Tüm koşullar karşılanmalıdır)",
+	"conditionTypeOr": "Veya (En az bir koşul karşılanmalıdır)",
+	"confirm_again": "Onaylamak için lütfen \"ok\" yazınız.",
+	"confirm_backup": "%s adresindeki çalışmadan tüm verileri geri almak istiyor musunuz?",
+	"confirm_delete_account": "'%s' kullanıcısını gerçekten silmek istiyor musunuz?",
+	"confirm_delete_data": "'%s' adresindeki tüm verileri kaldırmak mı istiyorsunuz?\nGeri yüklenemezler!"
 }
