@@ -360,7 +360,15 @@
 	"sum": "Toplam",
 	"text_with_count": "%s (%d)",
 	"text_with_questionnaireCount": "%s (%d anketler)",
-	"textAlign_left": "textalign sol",
+	"textAlign_left": "sol yasla",
 	"text_shown_to_participant": "Gösterilen metin",
-	"summary": "Özet"
+	"summary": "Özet",
+	"textAlign_center": "metni ortala",
+	"textAlign_right": "sağa yasla",
+	"this": "Bu",
+	"to": "-a kadar",
+	"toggle_all": "Tümünü seç %d",
+	"type": "Tür",
+	"total_count_per_weekday": "Gün bazında toplam miktar",
+	"timeDistance_between_completion_of_questionnaire": "Anket tamamlamaları arasındaki zaman aralığı"
 }
