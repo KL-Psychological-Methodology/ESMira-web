@@ -219,5 +219,7 @@
 	"error_short_username": "Kullanıcı adının en az 3 karakterden oluşması gerekir.",
 	"error_study_not_found": "Talep edilen çalışma bulunamadı",
 	"error_unknown": "Beklenmeyen hata!",
-	"error_unknown_data": "Beklenmeyen veriler."
+	"error_unknown_data": "Beklenmeyen veri",
+	"error_wrong_accessKey": "Yanlış erişim kodu.",
+	"freeze_study": "Çalışmayı dondur"
 }
