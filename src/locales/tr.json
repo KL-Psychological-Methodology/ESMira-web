@@ -238,5 +238,6 @@
 	"questionnaire_view": "Çalışma bilgileri",
 	"header": "Başlık",
 	"heading": "Başlık",
-	"hidden_studies": "Kısıtlanmış çalışmalar"
+	"hidden_studies": "Kısıtlanmış çalışmalar",
+	"hideUntilCompletion": "Sadece çalışmayı bitiren katılımcılar için görünür."
 }
