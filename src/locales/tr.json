@@ -196,5 +196,6 @@
 	"empty_backups": "Yedeklemeyi sil",
 	"embedded": "Gömülü",
 	"endTime": "Bitiş zamanı",
-	"error_accessKey_wrong_format": "Erişim anahtarlarının bir karakterle başlaması gerekir ve yalnızca karakter ve sayı içerebilir."
+	"error_accessKey_wrong_format": "Erişim kodunun bir karakterle başlaması gerekir ve yalnızca karakter ve sayı içerebilir.",
+	"error_could_not_extract": "Eklenti açılamadı."
 }
