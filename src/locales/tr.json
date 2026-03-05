@@ -184,10 +184,14 @@
 	"edit_schedule": "Programı düzenle",
 	"edit_sumScores": "Toplam puanlar oluşturun",
 	"edit_user_account": "Kullanıcı hesabını düzenle",
-	"edit_users": "Hesapları değiştirin",
+	"edit_users": "Hesap değiştirin",
 	"duplicate_questionnaire": "Anketi çoğalt",
 	"duplicate_study": "Çalışmayı çoğalt",
 	"disabled": "Devre dışı",
 	"edit_source": "Çalışma kaynak kodunu doğrudan düzenle",
-	"edit_studies": "Çalışmaları düzenle"
+	"edit_studies": "Çalışmaları düzenle",
+	"empty_data": "Veriyi temizle",
+	"empty_questionnaire": "Anketi temizle",
+	"empty_study": "Çalışmayı temizle",
+	"empty_backups": "Yedeklemeyi sil"
 }
