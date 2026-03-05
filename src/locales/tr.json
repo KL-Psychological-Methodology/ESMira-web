@@ -354,5 +354,13 @@
 	"studyTut_participate_method_onPhone": "Akıllı telefonunuzda <u>bu sayfayı açtınız</u>.",
 	"studyTut_participate_method_manual": "Telefonunuzda <u>kamera yok</u> ve <u>başka bir cihaz</u>.",
 	"studyTut_participate_method_notOnPhone": "Bu sayfayı <u>başka bir cihazda açtınız</u>.",
-	"studyTut_participate_selectAccessKeyNo": "Sizden bir <b>erişim anahtarı istendiğinde</b> \"<b style='color:red'>Hayır, genel bir çalışmaya katılın</b>\" seçeneğini seçin."
+	"studyTut_participate_selectAccessKeyNo": "Sizden bir <b>erişim anahtarı istendiğinde</b> \"<b style='color:red'>Hayır, genel bir çalışmaya katılın</b>\" seçeneğini seçin.",
+	"studyTut_participate_selectServer": "Size <b>sunucusu sorulduğunda</b>, \"<b style='color:red'>Manuel olarak girin</b>\" seçeneğini seçin. Ardından \"<b style='color:red'>%s</b> \" yazın.",
+	"studyTut_participate_startApp": "Akıllı telefonunuzda ESMira'yı başlatın ve talimatları izleyin.",
+	"sum": "Toplam",
+	"text_with_count": "%s (%d)",
+	"text_with_questionnaireCount": "%s (%d anketler)",
+	"textAlign_left": "textalign sol",
+	"text_shown_to_participant": "Gösterilen metin",
+	"summary": "Özet"
 }
