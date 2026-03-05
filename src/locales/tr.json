@@ -172,5 +172,7 @@
 	"desc_qrCode": "Bu QR kodu ESMira akıllı telefon uygulaması tarafından tarandığında (hangi QR kodu olduğu önemli değildir), bu çalışma açılacaktır. Diğer QR tarayıcı uygulamaları seçilen URL'ye yönlendirilecektir.",
 	"desc_reminder": "Bir davet için hatırlatma yapıldığında.",
 	"desc_requested_reward_code": "Katılımcı bir ödül kodu oluşturulmasını talep ettiğinde (bunun başarılı olup olmadığına bakılmaksızın).",
-	"desc_specific_questionnaire": "Sadece belirli bir anketin olayları tarafından tetiklenir."
+	"desc_specific_questionnaire": "Sadece belirli bir anketin olayları tarafından tetiklenir.",
+	"desc_statistic_viewed": "Katılımcı istatistikleri görüntülediğinde.",
+	"desc_study_message": "Bir çalışma mesajı (web arayüzü üzerinden katılımcılara gönderilebilen bir mesaj) görüntülendiğinde."
 }
