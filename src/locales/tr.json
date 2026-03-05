@@ -239,5 +239,8 @@
 	"header": "Başlık",
 	"heading": "Başlık",
 	"hidden_studies": "Kısıtlanmış çalışmalar",
-	"hideUntilCompletion": "Sadece çalışmayı bitiren katılımcılar için görünür."
+	"hideUntilCompletion": "Sadece çalışmayı bitiren katılımcılar için görünür.",
+	"highlighted": "Vurgula",
+	"home": "Anasayfa",
+	"host_own_study": "Kendi araştırmanı yönet"
 }
