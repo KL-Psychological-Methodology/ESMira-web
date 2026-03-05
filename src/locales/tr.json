@@ -163,5 +163,8 @@
 	"desc_language_changed": "Çalışmanın dili değiştirildiğinde.",
 	"desc_message": "Ekrandaki bir mesaj bir Tetikleyici Eylem tarafından oluşturulduğunda.",
 	"desc_invitation_missed": "Bir anket daveti kaçırıldığında.",
-	"desc_notification": "Bir Tetikleyici Eylem tarafından bir bildirim oluşturulduğunda (yalnızca Android'de ateşlenir)."
+	"desc_notification": "Bir Tetikleyici Eylem tarafından bir bildirim oluşturulduğunda (yalnızca Android'de yürütülür).",
+	"desc_rejoined": "Çalışmaya katılındığında ve bu çalışmaya ait eski istatistikler hâlâ uygulamada kayıtlı olduğunda.",
+	"desc_skip_this_questionnaire": "Sadece bu çalışmadaki diğer anketlerdeki olaylar tarafından tetiklenir",
+	"desc_schedule_changed": "Katılımcı çalışmanın programını (zamanlamasını) değiştirdiğinde."
 }
