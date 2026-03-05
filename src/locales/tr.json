@@ -197,5 +197,11 @@
 	"embedded": "Gömülü",
 	"endTime": "Bitiş zamanı",
 	"error_accessKey_wrong_format": "Erişim kodunun bir karakterle başlaması gerekir ve yalnızca karakter ve sayı içerebilir.",
-	"error_could_not_extract": "Eklenti açılamadı."
+	"error_could_not_extract": "Eklenti açılamadı.",
+	"error_bad_password": "Parolanız en az 12 karakter içermelidir.",
+	"error_connection_failed": "Sunucuya bağlanılamadı.",
+	"error_create_request_failed": "Tarayıcınız AJAX çağrılarını desteklemiyor gibi görünüyor. Bu sayfayı hatasız görüntülemek için javascript'i devre dışı bırakın.",
+	"error_from_server": "Sunucu yanıtı: %s",
+	"error_missing_requiredField": "Lütfen gerekli tüm alanları doldurunuz.",
+	"error_name_wrongFormat": "Adın en az 3 karakter içermesi ve -_(( hariç özel karakterler içermemesi gerekir: -_()."
 }
