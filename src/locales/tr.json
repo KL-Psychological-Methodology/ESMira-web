@@ -99,10 +99,12 @@
 	"check": "Kontrol et",
 	"create": "Oluştur",
 	"colon": "%s:",
-	"charts_public": "Tüm katılımcı verilerini kullanan grafik",
+	"charts_public": "Tüm katılımcı verilerinin grafiği",
 	"changed": "değiştirildi",
 	"change": "değiştir",
 	"calculate": "Hesaplama",
 	"action": "Eylem",
-	"permissions_write": "Çalışmayı düzenle"
+	"permissions_write": "Çalışmayı düzenle",
+	"choices": "Maddeler",
+	"data_collected_since": "Veri toplama başlangıcı:"
 }
