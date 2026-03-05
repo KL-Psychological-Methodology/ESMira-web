@@ -174,5 +174,15 @@
 	"desc_requested_reward_code": "Katılımcı bir ödül kodu oluşturulmasını talep ettiğinde (bunun başarılı olup olmadığına bakılmaksızın).",
 	"desc_specific_questionnaire": "Sadece belirli bir anketin olayları tarafından tetiklenir.",
 	"desc_statistic_viewed": "Katılımcı istatistikleri görüntülediğinde.",
-	"desc_study_message": "Bir çalışma mesajı (web arayüzü üzerinden katılımcılara gönderilebilen bir mesaj) görüntülendiğinde."
+	"desc_study_message": "Bir çalışma mesajı (web arayüzü üzerinden katılımcılara gönderilebilen bir mesaj) görüntülendiğinde.",
+	"download": "İndir",
+	"edit_chart": "Grafiği düzenle",
+	"edit_event": "Etkinliği düzenle",
+	"desc_study_updated": "Çalışma güncellendiğinde.",
+	"display_additional_publicVariable": "Genel değişkeni görüntüle",
+	"edit_questionnaires": "Anketleri düzenleyin",
+	"edit_schedule": "Programı düzenle",
+	"edit_sumScores": "Toplam puanlar oluşturun",
+	"edit_user_account": "Kullanıcı hesabını düzenle",
+	"edit_users": "Hesapları değiştirin"
 }
