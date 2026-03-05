@@ -132,5 +132,6 @@
 	"confirm_again": "Onaylamak için lütfen \"ok\" yazınız.",
 	"confirm_backup": "%s adresindeki çalışmadan tüm verileri geri almak istiyor musunuz?",
 	"confirm_delete_account": "'%s' kullanıcısını gerçekten silmek istiyor musunuz?",
-	"confirm_delete_data": "'%s' adresindeki tüm verileri kaldırmak mı istiyorsunuz?\nGeri yüklenemezler!"
+	"confirm_delete_data": "'%s' deki tüm verileri kaldırmak mı istiyorsunuz?\nGeri yüklenemezler!",
+	"confirm_delete_message": "Mesaj silinsin mi?"
 }
