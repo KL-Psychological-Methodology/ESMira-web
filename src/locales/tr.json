@@ -203,5 +203,21 @@
 	"error_create_request_failed": "Tarayıcınız AJAX çağrılarını desteklemiyor gibi görünüyor. Bu sayfayı hatasız görüntülemek için javascript'i devre dışı bırakın.",
 	"error_from_server": "Sunucu yanıtı: %s",
 	"error_missing_requiredField": "Lütfen gerekli tüm alanları doldurunuz.",
-	"error_name_wrongFormat": "Adın en az 3 karakter içermesi ve şu karakterler hariç özel karakterler içermemesi gerekir: -_()."
+	"error_name_wrongFormat": "Adın en az 3 karakter içermesi ve şu karakterler hariç özel karakterler içermemesi gerekir: -_().",
+	"error_plugin_id_contains_invalid_characters": "Eklenti kimliği geçersiz karakterler içeriyor.",
+	"error_study_was_changed": "\"%s\" çalışması son yüklendiğinden beri değiştirildi. Tüm yerel değişikliklerin üzerine sunucudan gelen en yeni sürüm yazıldı.",
+	"error_study_not_compatible": "Bu çalışma sunucu ile uyumlu görünmüyor. Lütfen sunucuyu güncelleyin.",
+	"error_no_permission": "İzin yok!",
+	"error_not_a_valid_metadata_json": "Geçerli bir metadata.json dosyası bulunamadı.",
+	"error_not_selected_recipient": "Bir alıcı seçmeniz gerekir.",
+	"error_no_webWorkers": "Bu tarayıcı web çalışanlarını desteklemiyor",
+	"error_pageNotFound": "Sayfa \"%s\" bulunamadı",
+	"error_plugin_not_compatible": "Eklenti ESMira'nın mevcut sürümüyle uyumlu değil",
+	"error_questionnaire_not_active": "Bu anket aktif değildir.",
+	"error_save_responses_failed": "Veri kaydedilemedi…",
+	"error_short_message": "Mesajın en az 2 karakterden oluşması gerekmektedir.",
+	"error_short_username": "Kullanıcı adının en az 3 karakterden oluşması gerekir.",
+	"error_study_not_found": "Talep edilen çalışma bulunamadı",
+	"error_unknown": "Beklenmeyen hata!",
+	"error_unknown_data": "Beklenmeyen veriler."
 }
