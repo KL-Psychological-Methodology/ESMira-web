@@ -307,5 +307,11 @@
 	"server_statistics": "Sunucu istatistikleri",
 	"server_settings": "Sunucu ayarları",
 	"skip_page_after_secs": "Sonraki sayfaya atla",
-	"skip_page_after_secs_info": "Belirtilen süre sonunda sayfayı otomatik olarak atlar (doldurulması gereken öğeler göz ardı edilir). Devre dışı bırakmak için 0."
+	"skip_page_after_secs_info": "Belirtilen süre sonunda sayfayı otomatik olarak atlanır (doldurulması gereken öğeler göz ardı edilir). Devre dışı bırakmak için 0.",
+	"state_creatingIndex": "Dizin Oluşturuluyor…",
+	"state_creatingIndex_entryNum": "%d yanıt dizine ekleniyor…",
+	"state_preparing": "Hazırlanıyor…",
+	"state_loading_entryNum": "%d yanıt yüklendi…",
+	"statisticsDataType_sum": "Genel toplam",
+	"state_creatingStatistics": "İstatistikler oluşturuluyor…"
 }
