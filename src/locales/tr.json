@@ -140,5 +140,6 @@
 	"confirm_distribute_message": "Aşağıdaki mesaj gönderilecektir:\n\n%s",
 	"confirm_delete_error": "'%s' hata raporunu gerçekten silmek istiyor musunuz?",
 	"confirm_delete_questionnaire": "'%s' anketini gerçekten silmek istiyor musunuz?",
-	"confirm_delete_input": "Bu girişi gerçekten silmek istiyor musunuz?"
+	"confirm_delete_input": "Bu yanıtı gerçekten silmek istiyor musunuz?",
+	"copy": "Kopyala"
 }
