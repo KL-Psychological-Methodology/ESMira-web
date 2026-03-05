@@ -166,5 +166,11 @@
 	"desc_notification": "Bir Tetikleyici Eylem tarafından bir bildirim oluşturulduğunda (yalnızca Android'de yürütülür).",
 	"desc_rejoined": "Çalışmaya katılındığında ve bu çalışmaya ait eski istatistikler hâlâ uygulamada kayıtlı olduğunda.",
 	"desc_skip_this_questionnaire": "Sadece bu çalışmadaki diğer anketlerdeki olaylar tarafından tetiklenir",
-	"desc_schedule_changed": "Katılımcı çalışmanın programını (zamanlamasını) değiştirdiğinde."
+	"desc_schedule_changed": "Katılımcı çalışmanın programını (zamanlamasını) değiştirdiğinde.",
+	"desc_questionnaire": "Bir anket doldurulduğunda.",
+	"desc_quit": "Çalışma bırakıldığında.",
+	"desc_qrCode": "Bu QR kodu ESMira akıllı telefon uygulaması tarafından tarandığında (hangi QR kodu olduğu önemli değildir), bu çalışma açılacaktır. Diğer QR tarayıcı uygulamaları seçilen URL'ye yönlendirilecektir.",
+	"desc_reminder": "Bir davet için hatırlatma yapıldığında.",
+	"desc_requested_reward_code": "Katılımcı bir ödül kodu oluşturulmasını talep ettiğinde (bunun başarılı olup olmadığına bakılmaksızın).",
+	"desc_specific_questionnaire": "Yalnızca belirli bir anketteki olaylar tarafından tetiklenecektir."
 }
