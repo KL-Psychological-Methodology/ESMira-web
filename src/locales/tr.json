@@ -125,5 +125,6 @@
 	"weekdays_desc": "Sadece belirli hafta içi günlerde",
 	"xAxis_label": "X ekseninin etiketi",
 	"yAxis_label": "Y ekseninin etiketi",
-	"condition": "Durum"
+	"condition": "Durum",
+	"until": "bitiş"
 }
