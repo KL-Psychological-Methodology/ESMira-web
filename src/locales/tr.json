@@ -149,5 +149,8 @@
 	"create_charts": "Grafikler oluşturun",
 	"data": "Veri",
 	"data_table": "Veri tablosu",
-	"days": "günler"
+	"days": "gün",
+	"desc_actions_executed": "Tetikleyici eylemleri çalıştırıldığında (Sadece iOS’ta geçerlidir).",
+	"default_webQuestionnaireCompletedInstructions": "Teşekkürler!",
+	"delete": "Sil"
 }
