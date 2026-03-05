@@ -221,5 +221,22 @@
 	"error_unknown": "Beklenmeyen hata!",
 	"error_unknown_data": "Beklenmeyen veri",
 	"error_wrong_accessKey": "Yanlış erişim kodu.",
-	"freeze_study": "Çalışmayı dondur"
+	"freeze_study": "Çalışmayı dondur",
+	"error_wrong_login": "Yanlış Giriş bilgileri",
+	"errorReports": "Hata raporları",
+	"events_csv_title": "Etkinlikler",
+	"expiration": "Son kullanma tarihi",
+	"expiration_after": "Son kullanma tarihi",
+	"external": "Harici",
+	"footer": "Altbilgi",
+	"for_AndroidSmartphones": "Android Akıllı Telefonlar için",
+	"for_iOSSmartphones": "iPhone'lar için",
+	"frequency": "Frekans",
+	"general": "Genel",
+	"questionnaire": "Anket",
+	"questionnaire_name": "Anket adı",
+	"questionnaire_view": "Çalışma bilgileri",
+	"header": "Başlık",
+	"heading": "Başlık",
+	"hidden_studies": "Kısıtlı çalışmalar"
 }
