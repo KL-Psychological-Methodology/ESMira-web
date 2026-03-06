@@ -9,5 +9,8 @@
 
 ### ✏️ Changed
 
+- Fixed a bug where copies of objects (like questionnaires), would remain linked.
+- Fixed a regression that caused the titles os questionnaires in the reward view to not load, showing "Unknown" instead.
+- Fixed a race condition that would occasionally cause the content of code editors to be overwritten with the content of other scripts.
 - Fixed several bugs related to values not updating correctly in the interface.
 - Changed URL generation in publish section.
