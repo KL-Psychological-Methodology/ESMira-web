@@ -396,5 +396,11 @@
 	"variable": "Değişken",
 	"variable_name": "Değişken adı",
 	"info_successful": "Başarılı!",
-	"info_timeout_notifications": "Ayarlanan süreden sonra bildirimi kaldırır. Eğer 0 girerseniz, bildirim hiçbir zaman kaldırılmaz."
+	"info_timeout_notifications": "Ayarlanan süreden sonra bildirimi kaldırır. Eğer 0 girerseniz, bildirim hiçbir zaman kaldırılmaz.",
+	"init_esmira": "ESMira'yı kurun",
+	"input_category_classic": "Klasik",
+	"input_category_media": "Medya verileri",
+	"input_category_sensor": "Sensör verileri",
+	"input_ambient_light": "Ortam ışığı",
+	"info_zero_disables_timeout": "Zaman aşımını devre dışı bırakmak için \"0\" ekleyin."
 }
