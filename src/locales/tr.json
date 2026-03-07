@@ -396,11 +396,15 @@
 	"variable": "Değişken",
 	"variable_name": "Değişken adı",
 	"info_successful": "Başarılı!",
-	"info_timeout_notifications": "Ayarlanan süreden sonra bildirimi kaldırır. Eğer 0 girerseniz, bildirim hiçbir zaman kaldırılmaz.",
+	"info_timeout_notifications": "Ayarlanan süreden sonra bildirim silinir. Eğer 0 girerseniz, bildirim hiçbir zaman silinmez.",
 	"init_esmira": "ESMira'yı kurun",
 	"input_category_classic": "Klasik",
 	"input_category_media": "Medya verileri",
 	"input_category_sensor": "Sensör verileri",
 	"input_ambient_light": "Ortam ışığı",
-	"info_zero_disables_timeout": "Zaman aşımını devre dışı bırakmak için \"0\" ekleyin."
+	"info_zero_disables_timeout": "Zaman aşımını devre dışı bırakmak için \"0\" ekleyin.",
+	"input_category_passive": "Girdi olmadan",
+	"input_category_special": "Özel girdiler",
+	"install_new": "Yeni olanı yükle",
+	"inform_server_about_events": "Olayı events.csv dosyasına kaydet"
 }
