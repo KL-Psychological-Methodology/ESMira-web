@@ -394,5 +394,7 @@
 	"value": "Değer",
 	"username": "Kullanıcı Adı",
 	"variable": "Değişken",
-	"variable_name": "Değişken adı"
+	"variable_name": "Değişken adı",
+	"info_successful": "Başarılı!",
+	"info_timeout_notifications": "Ayarlanan süreden sonra bildirimi kaldırır. Eğer 0 girerseniz, bildirim hiçbir zaman kaldırılmaz."
 }
