@@ -406,5 +406,10 @@
 	"input_category_passive": "Girdi olmadan",
 	"input_category_special": "Özel girdiler",
 	"install_new": "Yeni olanı yükle",
-	"inform_server_about_events": "Olayı events.csv dosyasına kaydet"
+	"inform_server_about_events": "Olayı events.csv dosyasına kaydet",
+	"input_app_usage": "Uygulama kullanım takibi",
+	"input_battery_level": "Pil seviyesi",
+	"input_binary": "İkili öğe",
+	"input_countdown": "Geri Sayım",
+	"input_bluetooth_devices": "Bluetooth cihazlarının listesi"
 }
