@@ -628,5 +628,9 @@
 	"show_skip_toast": "Sayfalar atlandığında bir mesaj görüntüle",
 	"permissions_issue_fallback_tokens": "Geri dönüş butonu oluşturma ayrıcalıkları",
 	"fallback_token_list": "yedek butonu",
-	"permission_fallback_tokens": "Yedek erişim belirteçleri"
+	"permission_fallback_tokens": "Yedek erişim belirteçleri",
+	"fallback_system": "Yedek sistem",
+	"create_fallback_setup_token": "Yedek Kurulum Belirteci Oluşturma",
+	"confirm_delete_inbound_fallback_token": "'%s' için geri dönüş belirtecini gerçekten silmek istiyor musunuz?",
+	"info_fallback_setup_token": "Aşağıda geri dönüş sistemini kurmak için yeni belirtecinizi ve bu sunucunun URL'sini bulacaksınız. Bir sonraki adımda her ikisini de diğer sunucudaki yönetici paneline girmeniz gerekecektir."
 }
