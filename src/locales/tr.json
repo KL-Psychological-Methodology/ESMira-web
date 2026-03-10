@@ -632,5 +632,10 @@
 	"fallback_system": "Yedek sistem",
 	"create_fallback_setup_token": "Yedek Kurulum Belirteci Oluşturma",
 	"confirm_delete_inbound_fallback_token": "'%s' için geri dönüş belirtecini gerçekten silmek istiyor musunuz?",
-	"info_fallback_setup_token": "Aşağıda geri dönüş sistemini kurmak için yeni belirtecinizi ve bu sunucunun URL'sini bulacaksınız. Bir sonraki adımda her ikisini de diğer sunucudaki yönetici paneline girmeniz gerekecektir."
+	"info_fallback_setup_token": "Aşağıda geri dönüş sistemini kurmak için yeni belirtecinizi ve bu sunucunun URL'sini bulacaksınız. Bir sonraki adımda her ikisini de diğer sunucudaki yönetici paneline girmeniz gerekecektir.",
+	"new_fallback_setup_token": "Yeni kurulum belirteci",
+	"outbound_fallback_token_url": "URL",
+	"fallback_server_title": "Yedek Sunucu: %s",
+	"url_https_error": "URL'nin 'https://' ile başlaması gerekiyor",
+	"fallback_url_parameter_error": "Geri dönüş belirteci için url alınamadı"
 }
