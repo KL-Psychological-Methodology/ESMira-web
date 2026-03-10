@@ -297,6 +297,13 @@ export class InputOptionDesigner {
 			view: () => [
 				<div>
 					{this.requiredOption()}
+				</div>,
+				<div class="vertical hAlignStart">
+					<label class="noDesc">
+						<small>{Lang.get("recording_duration")}</small>
+						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(1, undefined))} />
+						<small>{Lang.get("seconds")}</small>
+					</label>
 				</div>
 			]
 		},
