@@ -625,6 +625,6 @@
 	"text_script_explanation": "Mevcutsa, bu komutun sonucu bu öğede gösterilen metnin yerine geçecektir.",
 	"restore_snapshot_confirm": "Bu anlık görüntüyü geri yüklemek istediğinizden emin misiniz?\n\nMevcut tüm veriler kaybolacak ve kurtarılamayacaktır!",
 	"show_pagination": "Sayfa numaralandırmasını göster",
-	"show_skip_toast": "Sayfalar atlandığında bir mesaj görüntüleme",
+	"show_skip_toast": "Sayfalar atlandığında bir mesaj görüntüle",
 	"permissions_issue_fallback_tokens": "Geri dönüş belirteçleri oluşturma ayrıcalıkları"
 }
