@@ -626,5 +626,7 @@
 	"restore_snapshot_confirm": "Bu anlık görüntüyü geri yüklemek istediğinizden emin misiniz?\n\nMevcut tüm veriler kaybolacak ve kurtarılamayacaktır!",
 	"show_pagination": "Sayfa numaralandırmasını göster",
 	"show_skip_toast": "Sayfalar atlandığında bir mesaj görüntüle",
-	"permissions_issue_fallback_tokens": "Geri dönüş belirteçleri oluşturma ayrıcalıkları"
+	"permissions_issue_fallback_tokens": "Geri dönüş butonu oluşturma ayrıcalıkları",
+	"fallback_token_list": "yedek butonu",
+	"permission_fallback_tokens": "Yedek erişim belirteçleri"
 }
