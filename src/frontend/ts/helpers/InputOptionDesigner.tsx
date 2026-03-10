@@ -134,7 +134,7 @@ export class InputOptionDesigner {
 				<div class="vertical hAlignStart">
 					<label class="noDesc">
 						<small>{Lang.get("timeout")}</small>
-						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
+						<input type="number" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("seconds")}</small>
 					</label>
 					<label class="noDesc">
@@ -301,7 +301,7 @@ export class InputOptionDesigner {
 				<div class="vertical hAlignStart">
 					<label class="noDesc">
 						<small>{Lang.get("recording_duration")}</small>
-						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(1, undefined))} />
+						<input type="number" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(1, undefined))} />
 						<small>{Lang.get("seconds")}</small>
 					</label>
 				</div>
