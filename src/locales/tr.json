@@ -622,5 +622,8 @@
 	"news": "Duyurular",
 	"generating": "oluşturuluyor",
 	"show_in_disabled_list": "Anketi her zaman erişilir tut",
-	"text_script_explanation": "Mevcutsa, bu komutun sonucu bu öğede gösterilen metnin yerine geçecektir."
+	"text_script_explanation": "Mevcutsa, bu komutun sonucu bu öğede gösterilen metnin yerine geçecektir.",
+	"restore_snapshot_confirm": "Bu anlık görüntüyü geri yüklemek istediğinizden emin misiniz?\n\nMevcut tüm veriler kaybolacak ve kurtarılamayacaktır!",
+	"show_pagination": "Sayfa numaralandırmasını göster",
+	"show_skip_toast": "Sayfalar atlandığında bir mesaj görüntüleme"
 }
