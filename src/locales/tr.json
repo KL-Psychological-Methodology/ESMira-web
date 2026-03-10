@@ -472,5 +472,12 @@
 	"weekday_wed": "Çar",
 	"weekday_thu": "Per",
 	"weekday_fri": "Cum",
-	"weekday_sat": "Cts"
+	"weekday_sat": "Cts",
+	"what_is_esmira": "ESMira nedir?",
+	"wait_x_days_until_first": "İlk uygulamaya kadar %d gün bekleyin",
+	"Web": "Web",
+	"web_questionnaire": "Web anketi",
+	"web_access": "Web erişimi",
+	"web_access_csv_title": "Web erişimi",
+	"x_days_ago": "%d günler önce"
 }
