@@ -267,7 +267,7 @@
 	"public_studies": "Genel çalışmalar",
 	"questionnaires_can_only_be_completed_per_notification": "Anket, her bildirim için yalnızca bir kez doldurulabilir",
 	"quit_study": "Çalışmadan ayrıl",
-	"random": "Rastgele",
+	"random": "Random",
 	"random_fixed_true": "Açık - Zamanlamalar bir defaya mahsus rastgele belirlenir ve çalışma süresince değişmez.",
 	"randomize_page": "Öğe sırasını rastgele ayarlama",
 	"referer_with_count": "Yönlendiren (%d)",
@@ -465,5 +465,12 @@
 	"prompt_newQuestionnaire": "Lütfen bir anket başlığı seçin",
 	"prefilledValue": "Önceden doldurulmuş değer",
 	"prompt_image_fileSize": "\"%s\" çok büyük bir dosya. Bunu çalışma dosyasına eklemek istediğinizden emin misiniz? Çalışmanın indirme ve işleme süresini artırabilir.",
-	"prompt_input_name": "Lütfen bir değişken adı seçin (tüm anketlerde benzersiz olmalıdır):"
+	"prompt_input_name": "Lütfen bir değişken adı seçin (tüm anketlerde benzersiz olmalıdır):",
+	"weekday_sun": "Pzr",
+	"weekday_mon": "Pzt",
+	"weekday_tue": "Sal",
+	"weekday_wed": "Çar",
+	"weekday_thu": "Per",
+	"weekday_fri": "Cum",
+	"weekday_sat": "Cts"
 }
