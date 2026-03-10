@@ -451,7 +451,7 @@
 	"permission_read": "Veri",
 	"permission_reward": "Ödül",
 	"per_day": "Günlük",
-	"personal_charts_for_x": "Kişisel çizelgeler için %s",
+	"personal_charts_for_x": "%s için kişisel çizelgeler",
 	"packageId": "paket kimliği",
 	"packageId_desc": "örneğin \"at.jodlidev.esmira\"",
 	"password": "Şifre",
