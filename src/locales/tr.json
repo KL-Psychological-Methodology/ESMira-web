@@ -434,5 +434,7 @@
 	"likert_number_of_points": "Puan sayısı",
 	"logout_x": "Çıkış %s",
 	"max_value_vas_desc": "1'den küçükse varsayılan değer 100 olacaktır.",
-	"minimal_length": "Minimum uzunluk: %d"
+	"minimal_length": "Minimum uzunluk: %d",
+	"last_activities": "Son aktiviteler",
+	"login": "Giriş yap"
 }
