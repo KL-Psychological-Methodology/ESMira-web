@@ -570,5 +570,8 @@
 	"publications_using_esmira": "ESMira kullanılarak yapılan yayınlar",
 	"main_publication": "Ana yayın",
 	"disk_space": "Disk alanı",
-	"trigger": "Tetikleyici"
+	"trigger": "Tetikleyici",
+	"created_by": "Tarafından oluşturuldu",
+	"last_saved_by": "Son kaydeden",
+	"last_saved_at": "Son kaydedildiği adres"
 }
