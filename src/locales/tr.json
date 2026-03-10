@@ -440,5 +440,8 @@
 	"operator": "Operatör",
 	"orderedList": "Sıralı liste",
 	"part_visibleFor": "görünür",
-	"or": "veya"
+	"or": "veya",
+	"participants": "Katılımcılar",
+	"participants_with_count": "Katılımcılar (%d)",
+	"participate_in_study": "Bir çalışmaya katılmak"
 }
