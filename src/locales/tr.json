@@ -436,5 +436,9 @@
 	"max_value_vas_desc": "1'den küçükse varsayılan değer 100 olacaktır.",
 	"minimal_length": "Minimum uzunluk: %d",
 	"last_activities": "Son aktiviteler",
-	"login": "Giriş yap"
+	"login": "Giriş yap",
+	"operator": "Operatör",
+	"orderedList": "Sıralı liste",
+	"part_visibleFor": "Şunlar için görünür",
+	"or": "veya"
 }
