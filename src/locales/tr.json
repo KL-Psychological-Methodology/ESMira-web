@@ -694,5 +694,10 @@
 	"ai_translation": "Yapay zeka tarafından oluşturulan çeviri",
 	"chart_show_only_in_lang": "Katılımcılara dil kullanarak gösterin",
 	"chart_show_only_in_group": "Gruptaki katılımcılara gösterin",
-	"urls_instruction_questionnaires": "Soru formlarının Web versiyonlarını kullanmak istiyorum (önerilmez)"
+	"urls_instruction_questionnaires": "Soru formlarının Web versiyonlarını kullanmak istiyorum (önerilmez)",
+	"access_key_has_no_duplications": "%s’ erişim anahtarını kullanan tek çalışma budur. Bir erişim anahtarı için yalnızca bir çalışma varsa, URL’ler yine doğrudan bu çalışmaya yönlendirilir.",
+	"ios_too_many_scheduled_alarms": "Çalışmanızda toplam %d zamanlanmış bildirim bulunmaktadır (hatırlatıcılar dahil). Sistem sınırlamaları nedeniyle iOS uygulaması en fazla %d zamanlanmış bildirimi destekleyebilir. Bu sınırın aşılması, iOS kullanan katılımcıların yalnızca bazı bildirimleri almasına veya hiç bildirim alamamasına neden olabilir.",
+	"study_urls": "Çalışma url'si",
+	"desc_urls_target_study_list": "URL’nin doğrudan bu çalışmaya değil, çalışma listesine yönlendirilmesini sağlar (yalnızca aynı erişim anahtarını kullanan birden fazla çalışma varsa)",
+	"urls_target_study_list": "Çalışma listesini etkinleştir"
 }
