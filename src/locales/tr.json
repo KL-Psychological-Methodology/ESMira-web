@@ -639,5 +639,7 @@
 	"url_https_error": "URL'nin 'https://' ile başlaması gerekiyor",
 	"fallback_url_parameter_error": "Geri dönüş belirteci için url alınamadı",
 	"add_fallback_token": "Bağlantı ekle",
-	"outbound_fallback_token": "Buton"
+	"outbound_fallback_token": "Buton",
+	"fallback_ping_success": "s ile bağlantı başarılı! Uzak sunucu yanıt verdi ve geri dönüş belirtecini kabul etti.",
+	"fallback_ping": "Yedek sunucuya bağlantıyı test etme"
 }
