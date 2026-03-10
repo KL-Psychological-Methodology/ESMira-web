@@ -450,5 +450,6 @@
 	"permission_write": "Değişim",
 	"permission_read": "Veri",
 	"permission_reward": "Ödül",
-	"per_day": "Günlük"
+	"per_day": "Günlük",
+	"personal_charts_for_x": "Kişisel çizelgeler için %s"
 }
