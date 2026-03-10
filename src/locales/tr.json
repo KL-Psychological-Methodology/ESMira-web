@@ -546,7 +546,7 @@
 	"unstable": "Kararsız sürüm",
 	"validate_reward_code": "Ödül kodunu doğrulayın",
 	"creation_date": "Oluşturulma tarihi",
-	"entries_at_creation_time": "Oluşturma zamanındaki girişler",
+	"entries_at_creation_time": "Oluşturma zamanındaki yanıtlar",
 	"email_content": "E-posta içeriği",
 	"info_reward_email_content": "Gerçek ödül kodu ile değiştirilecek olan [[KOD]] içermelidir.",
 	"reward_code_instructions": "Ödül kodu talimatları",
@@ -569,5 +569,6 @@
 	"plead_to_cite_us": "Lütfen ESMira'nın yayınına atıfta bulunun",
 	"publications_using_esmira": "ESMira kullanılarak yapılan yayınlar",
 	"main_publication": "Ana yayın",
-	"disk_space": "Disk alanı"
+	"disk_space": "Disk alanı",
+	"trigger": "Tetikleyici"
 }
