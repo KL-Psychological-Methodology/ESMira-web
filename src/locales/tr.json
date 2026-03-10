@@ -444,5 +444,11 @@
 	"participants": "Katılımcılar",
 	"participants_with_count": "Katılımcılar (%d)",
 	"participate_in_study": "Bir çalışmaya katıl",
-	"permission_admin": "Yönet"
+	"permission_admin": "Yönet",
+	"permission_create": "Oluştur",
+	"permission_msg": "Mesajlar",
+	"permission_write": "Değişim",
+	"permission_read": "Veri",
+	"permission_reward": "Ödül",
+	"per_day": "Günlük"
 }
