@@ -543,5 +543,8 @@
 	"input_share": "öğe paylaşımı",
 	"group_availability": "Grup içinde kullanılabilir",
 	"stable": "Kararlı sürüm",
-	"unstable": "Kararsız sürüm"
+	"unstable": "Kararsız sürüm",
+	"validate_reward_code": "Ödül kodunu doğrulayın",
+	"creation_date": "Oluşturulma tarihi",
+	"entries_at_creation_time": "Oluşturma zamanındaki girişler"
 }
