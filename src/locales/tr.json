@@ -539,7 +539,7 @@
 	"generated_reward_codes": "Oluşturulan ödül kodları (%d)",
 	"enable_reward_system": "Ödül sistemini etkinleştirin",
 	"visible_after": "Sonra görülebilir",
-	"minimal_number_of_entries_required": "Gerekli minimum giriş sayısı",
+	"minimal_number_of_entries_required": "Gerekli minimum yanıt sayısı",
 	"input_share": "öğe paylaşımı",
 	"group_availability": "Grup içinde kullanılabilir",
 	"stable": "Kararlı sürüm",
