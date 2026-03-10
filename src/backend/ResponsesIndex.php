@@ -66,6 +66,10 @@ class ResponsesIndex {
                 $this->addName($name);
                 $this->types[$name] = 'audio';
                 break;
+			case 'noise_level':
+				$this->addName($name);
+				$this->addName("$name~min");
+				$this->addName("$name~max");
             default:
                 $this->addName($name);
                 break;
