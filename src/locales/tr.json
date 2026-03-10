@@ -573,5 +573,7 @@
 	"trigger": "Tetikleyici",
 	"created_by": "Tarafından oluşturuldu",
 	"last_saved_by": "Son kaydeden",
-	"last_saved_at": "Son kaydedildiği adres"
+	"last_saved_at": "Son kaydedildiği tarih",
+	"hint_to_best_practices": "Çalışmanıza başlamadan önce wiki’deki en iyi uygulamalara göz atmanızı öneririz.",
+	"questionnaire_end_script": "Kodun bitiş bloğu"
 }
