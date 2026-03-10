@@ -617,5 +617,10 @@
 	"restore_snapshot": "Anlık görüntüyü geri yükleme",
 	"creating_snapshot": "Anlık Görüntü Oluşturuluyor (%d%)",
 	"snapshot_description": "Anlık görüntüler, ESMira sunucu dosyalarının ve tüm verilerinin eksiksiz bir yedeğidir. Bir anlık görüntüyü geri yüklerken, mevcut tüm veriler silinecek ve anlık görüntüdeki verilerle değiştirilecektir. Bu, ESMira sunucusunu önceki bir duruma geri yüklemek için kullanılabilir.",
-	"create_snapshot": "Anlık Görüntü Oluştur"
+	"create_snapshot": "Anlık Görüntü Oluştur",
+	"text_script": "Metin komutu",
+	"news": "Duyurular",
+	"generating": "oluşturuluyor",
+	"show_in_disabled_list": "Anketi her zaman erişilir tut",
+	"text_script_explanation": "Mevcutsa, bu komutun sonucu bu öğede gösterilen metnin yerine geçecektir."
 }
