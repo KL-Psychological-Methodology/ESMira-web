@@ -217,6 +217,7 @@ class StudyStoreFS extends BaseStudyStoreFS implements StudyStore
 			$accountStore->removeStudyPermission($accountName, $studyId, 'read');
 			$accountStore->removeStudyPermission($accountName, $studyId, 'msg');
 			$accountStore->removeStudyPermission($accountName, $studyId, 'publish');
+			$accountStore->removeStudyPermission($accountName, $studyId, 'reward');
 		}
 	}
 
