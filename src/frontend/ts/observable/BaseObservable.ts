@@ -48,11 +48,14 @@ export abstract class BaseObservable<T extends ObservableTypes, DefaultT extends
 	protected constructor(parent: BaseObservable<ObservableTypes> | null, key: ObserverKeyType) {
 		if(parent) {
 			this.sharedMemory = parent.sharedMemory.getOrAddChild(key)
-			this.sharedMemory.isDifferent = false // New structures always overwrite their value. So isDifferent can never be true
+			
+			// New structures always overwrite their value. So, isDifferent can only be true if it was intentionally set to true by preventIsDifferentRecalculations
+			this.sharedMemory.isDifferent = this.sharedMemory.preventIsDifferentRecalculations
 		}
 		else {
 			this.sharedMemory = new SharedMemory()
 		}
+		
 		this.keyName = key
 		this.parent = parent
 	}

@@ -13,7 +13,6 @@ import logoutSvg from "../../imgs/dashIcons/logout.svg?raw"
 import messagesSvg from "../../imgs/icons/message.svg?raw"
 import serverStatisticsSvg from "../../imgs/dashIcons/serverStatistics.svg?raw"
 import serverSettingsSvg from "../../imgs/dashIcons/settings.svg?raw"
-import fallbackSystemSvg from "../../imgs/dashIcons/fallback.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import { TitleRow } from "../components/TitleRow";
 import { AddDropdownMenus } from "../helpers/AddDropdownMenus";
@@ -125,12 +124,6 @@ export class Content extends SectionContent {
 						template: { title: Lang.get("validate_reward_code"), icon: m.trust(rewardsSvg) },
 						href: this.getUrl("allStudies:reward")
 					}),
-
-					tools?.isAdmin &&
-					DashElement(null, {
-						template: { title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg) },
-						href: this.getUrl("serverStatisticsAdmin")
-					})
 				)
 			}
 			{
@@ -161,6 +154,10 @@ export class Content extends SectionContent {
 								href: this.getUrl("serverSettings")
 							}),
 							DashElement(null, {
+								template: { title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg) },
+								href: this.getUrl("serverStatisticsAdmin")
+							}),
+							DashElement(null, {
 								highlight: tools?.hasErrors,
 								template: { title: Lang.get("show_errorReports"), icon: m.trust(errorReportsSvg) },
 								href: this.getUrl("errorList")
@@ -168,27 +165,6 @@ export class Content extends SectionContent {
 						)
 					}
 				</div>
-			}
-			<br />
-			{
-				DashRow(
-					DashElement(null, {
-						small: true,
-						template: { title: Lang.get("edit_user_account"), icon: m.trust(editAccountSvg) },
-						href: this.getUrl("myAccount")
-					}),
-					(tools?.isAdmin || tools?.canIssueFallbackTokens) &&
-					DashElement(null, {
-						small: true,
-						template: { title: Lang.get("fallback_system"), icon: m.trust(fallbackSystemSvg) },
-						href: this.getUrl("fallbackSystem")
-					}),
-					DashElement(null, {
-						small: true,
-						template: { title: Lang.get("logout_x", tools?.accountName), icon: m.trust(logoutSvg) },
-						onclick: this.logout.bind(this)
-					})
-				)
 			}
 			<br />
 			{!!this.rssItems.length &&
@@ -204,6 +180,21 @@ export class Content extends SectionContent {
 						}
 					</div>
 				</div>
+			}
+			<br />
+			{
+				DashRow(
+					DashElement(null, {
+						small: true,
+						template: { title: Lang.get("edit_user_account"), icon: m.trust(editAccountSvg) },
+						href: this.getUrl("myAccount")
+					}),
+					DashElement(null, {
+						small: true,
+						template: { title: Lang.get("logout_x", tools?.accountName), icon: m.trust(logoutSvg) },
+						onclick: this.logout.bind(this)
+					})
+				)
 			}
 		</div>
 

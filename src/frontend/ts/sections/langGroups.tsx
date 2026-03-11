@@ -1,11 +1,11 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {BindObservable, ConstrainedNumberTransformer} from "../components/BindObservable";
-import {TitleRow} from "../components/TitleRow";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {ChangeLanguageList} from "../components/ChangeLanguageList";
-import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { BindObservable, ConstrainedNumberTransformer } from "../components/BindObservable";
+import { TitleRow } from "../components/TitleRow";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { ChangeLanguageList } from "../components/ChangeLanguageList";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	private changeLanguageList: ChangeLanguageList
@@ -26,7 +26,7 @@ export class Content extends SectionContent {
 	}
 
 	public title(): string {
-		return Lang.get("study_description")
+		return Lang.get("languages_and_randomGroups")
 	}
 
 	public getView(): Vnode<any, any> {

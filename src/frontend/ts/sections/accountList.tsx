@@ -57,8 +57,10 @@ export class Content extends SectionContent {
 					{this.accountsLoader.getAccounts().map((account, index) =>
 						<tr>
 							<td class="accountName">
-								{BtnTrash(this.deleteAccount.bind(this, account, index))}
-								<a href={this.getUrl(`accountView,accountI:${index}`)}>{account.accountName.get()}</a>
+								<div class="horizontal">
+									{BtnTrash(this.deleteAccount.bind(this, account, index))}
+									<a href={this.getUrl(`accountView,accountI:${index}`)}>{account.accountName.get()}</a>
+								</div>
 							</td>
 							<td>
 								{account.admin.get() &&

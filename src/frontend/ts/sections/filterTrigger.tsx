@@ -1,23 +1,26 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Questionnaire} from "../data/study/Questionnaire";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Questionnaire } from "../data/study/Questionnaire";
 import calendarSvg from "../../imgs/icons/calendar.svg?raw"
 import schedulesSvg from "../../imgs/icons/schedules.svg?raw"
 import eventsSvg from "../../imgs/icons/events.svg?raw"
-import {ActionTrigger} from "../data/study/ActionTrigger";
-import {EventTrigger} from "../data/study/EventTrigger";
-import {Schedule} from "../data/study/Schedule";
-import {DashRow} from "../components/DashRow";
-import {DashElement} from "../components/DashElement";
-import {DropdownMenu} from "../components/DropdownMenu";
-import {BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer} from "../components/BindObservable";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {BtnCollection} from "../components/BtnCollection";
-import {TabBar} from "../components/TabBar";
-import {BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash} from "../components/Buttons";
-import {getMidnightMillis, timeStampToTimeString} from "../constants/methods";
-import {SectionData} from "../site/SectionData";
+import warnSvg from "../../imgs/icons/warn.svg?raw";
+import { ActionTrigger } from "../data/study/ActionTrigger";
+import { EventTrigger } from "../data/study/EventTrigger";
+import { Schedule } from "../data/study/Schedule";
+import { DashRow } from "../components/DashRow";
+import { DashElement } from "../components/DashElement";
+import { DropdownMenu } from "../components/DropdownMenu";
+import { BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer } from "../components/BindObservable";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { BtnCollection } from "../components/BtnCollection";
+import { TabBar } from "../components/TabBar";
+import { BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash } from "../components/Buttons";
+import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
+import { SectionData } from "../site/SectionData";
+import { CodeEditor } from "../components/CodeEditor";
+import { Study } from "../data/study/Study";
 
 
 interface FilterEntry {
@@ -33,8 +36,29 @@ interface FilterEntry {
  * But since we suspect that this will not be used often, and it is easier to grasp for configuration, we removed that functionality in the admin panel
  */
 export class Content extends SectionContent {
+	private readonly IOS_MAX_ALARM_COUNT = 55;
+	private showCodeEditor: boolean = false;
+
+
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [sectionData.getStudyPromise()]
+	}
+
+	constructor(sectionData: SectionData) {
+		super(sectionData)
+		this.getDynamic("questionnaireIndex", 0).addObserver(() => {
+			const index = this.getDynamic("questionnaireIndex", 0).get()
+			this.updateShowCodeEditor(index)
+		})
+		this.updateShowCodeEditor(0)
+	}
+
+	private updateShowCodeEditor(index: number) {
+		const study = this.getStudyOrThrow()
+		if (index >= study.questionnaires.get().length) {
+			return false
+		}
+		this.showCodeEditor = study.questionnaires.get()[index].scriptFilter.get() != ""
 	}
 
 	public title(): string {
@@ -115,15 +139,14 @@ export class Content extends SectionContent {
 		return TabBar(this.getDynamic("questionnaireIndex", 0), study.questionnaires.get().map((questionnaire) => {
 			return {
 				title: questionnaire.getTitle(),
-				view: () => this.getQuestionnaireView(questionnaire)
+				view: () => this.getQuestionnaireView(questionnaire, study)
 			}
 		}))
 	}
 
-
-
-	private getQuestionnaireView(questionnaire: Questionnaire): Vnode<any, any> {
+	private getQuestionnaireView(questionnaire: Questionnaire, study: Study): Vnode<any, any> {
 		const filterEntries = this.createFilterEntries(questionnaire)
+		const totalCountScheduledAlarms = study.countScheduledAlarms()
 
 		return <div class="spacingTop spacingBottom">
 			{DashRow(
@@ -148,6 +171,23 @@ export class Content extends SectionContent {
 					{ content: BtnCustom(m.trust(schedulesSvg), undefined, Lang.get("add_schedule")), onclick: this.addSchedule.bind(this, questionnaire) },
 					{ content: BtnCustom(m.trust(eventsSvg), undefined, Lang.get("add_event")), onclick: this.addEvent.bind(this, questionnaire) },
 				),
+			)}
+			{(questionnaire.scriptFilter.get() != "" || this.showCodeEditor) && DashRow(
+				DashElement("stretched", {
+					content: <div>
+						<div class="fakeLabel line">
+							<small>{Lang.get("script_filter")}{NotCompatibleIcon("Web")}</small>
+							{CodeEditor(questionnaire.scriptFilter)}
+						</div>
+					</div>
+				})
+			)}
+			{study.publishedIOS && totalCountScheduledAlarms > this.IOS_MAX_ALARM_COUNT && DashRow(
+				DashElement("stretched", {
+					content: <div>
+						<small class="center"><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("ios_too_many_scheduled_alarms", totalCountScheduledAlarms, this.IOS_MAX_ALARM_COUNT)}</small>
+					</div>
+				})
 			)}
 		</div>
 	}
@@ -289,6 +329,15 @@ export class Content extends SectionContent {
 					</div>,
 				enable: () => questionnaire.completableAtSpecificTime.set(true),
 				disable: () => questionnaire.completableAtSpecificTime.set(false)
+			},
+			{
+				title: Lang.get("script_filter"),
+				isActive: () => questionnaire.scriptFilter.get() != "" || this.showCodeEditor,
+				enable: () => this.showCodeEditor = true,
+				disable: () => {
+					questionnaire.scriptFilter.set("")
+					this.showCodeEditor = false
+				}
 			}
 		]
 		if (study.randomGroups.get() > 1) {
@@ -315,7 +364,7 @@ export class Content extends SectionContent {
 			<h2 class="center">{Lang.getWithColon("filter")}</h2>
 			{filterEntries.map((entry) =>
 				entry.isActive() &&
-				<div class="line">
+				<div class="line horizontal vAlignCenter">
 					{BtnTrash(entry.disable.bind(this))}
 					{this.getFilterEntryView(entry, (dropdown) => <span class={`${dropdown ? "clickable" : ""} smallText`}>{entry.title}</span>)}
 				</div>

@@ -16,7 +16,7 @@ RUN install-php-extensions zip
 COPY --chown=www-data:www-data ./dist /var/www/html
 
 # Enable mod rewrite
-RUN a2enmod rewrite
+RUN a2enmod rewrite & a2enmod md & a2enmod ssl
 RUN service apache2 restart
 
 # Use the default production configuration for PHP runtime arguments, see
@@ -30,6 +30,7 @@ RUN chown -R www-data:www-data /var/www/html
 # Define volumes:
 VOLUME /var/www/html/backend/config/
 VOLUME /var/www/html/esmira_data/
+VOLUME /etc/apache2/sites-enabled/
 
 
 

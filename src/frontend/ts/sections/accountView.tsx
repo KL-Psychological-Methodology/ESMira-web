@@ -72,7 +72,7 @@ export class Content extends SectionContent {
 	private async toggleAdmin(): Promise<any> {
 		const account = this.getAccount()
 		if (this.isOwnAccount) {
-			account.admin.set(true)
+			account.admin.set(true, true)
 			return
 		}
 		await this.sectionData.loader.loadJson(
@@ -185,7 +185,7 @@ export class Content extends SectionContent {
 				</label>
 			
 				{!account.admin.get() &&
-					<div>
+					<div class="vertical">
 						<label class="noTitle noDesc">
 							<input type="checkbox" {...BindObservable(account.create)} />
 							<span>{Lang.get("permissions_create")}</span>
@@ -205,13 +205,14 @@ export class Content extends SectionContent {
 											.filter((study) => {
 												const id = study.id.get()
 												const permissionNames: (keyof AccountPermissions)[] = ["publish", "write", "read", "msg"]
-												permissionNames.forEach((permissionName): boolean => {
+												for(const permissionName of permissionNames) {
 													for (const obs of account[permissionName].get()) {
-														if (obs.get() == id)
+														if (obs.get() == id) {
 															return false
+														}
 													}
-													return true
-												})
+												}
+												return true
 											})
 											.map((study) =>
 												<li

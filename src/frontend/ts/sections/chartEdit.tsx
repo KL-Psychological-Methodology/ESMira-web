@@ -1,11 +1,11 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {ObservableLangChooser} from "../components/ObservableLangChooser";
-import {BindObservable} from "../components/BindObservable";
-import {RichText} from "../components/RichText";
-import {TitleRow} from "../components/TitleRow";
-import {ChartData} from "../data/study/ChartData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { ObservableLangChooser } from "../components/ObservableLangChooser";
+import { BindObservable } from "../components/BindObservable";
+import { RichText } from "../components/RichText";
+import { TitleRow } from "../components/TitleRow";
+import { ChartData } from "../data/study/ChartData";
 import {
 	CONDITION_TYPE_ALL,
 	CONDITION_TYPE_AND,
@@ -17,20 +17,20 @@ import {
 	STATISTICS_DATATYPES_SUM,
 	STATISTICS_DATATYPES_XY
 } from "../constants/statistics";
-import {DATA_MAIN_KEYS} from "../constants/data";
-import {DataStructureInputType} from "../data/DataStructure";
-import {AxisContainer} from "../data/study/AxisContainer";
-import {DragContainer} from "../components/DragContainer";
-import {Study} from "../data/study/Study";
-import {StudyDataValues} from "../helpers/StudyDataValues";
-import {AxisData} from "../data/study/AxisData";
-import {DashRow} from "../components/DashRow";
-import {DropdownMenu} from "../components/DropdownMenu";
-import {DashElement} from "../components/DashElement";
-import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
-import {BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash} from "../components/Buttons";
+import { DATA_MAIN_KEYS } from "../constants/data";
+import { DataStructureInputType } from "../data/DataStructure";
+import { AxisContainer } from "../data/study/AxisContainer";
+import { DragContainer } from "../components/DragContainer";
+import { Study } from "../data/study/Study";
+import { StudyDataValues } from "../helpers/StudyDataValues";
+import { AxisData } from "../data/study/AxisData";
+import { DashRow } from "../components/DashRow";
+import { DropdownMenu } from "../components/DropdownMenu";
+import { DashElement } from "../components/DashElement";
+import { ArrayInterface } from "../observable/interfaces/ArrayInterface";
+import { BtnAdd, BtnCopy, BtnCustom, BtnRemove, BtnTrash } from "../components/Buttons";
 import statisticsSvg from "../../imgs/icons/statistics.svg?raw"
-import {SectionData} from "../site/SectionData";
+import { SectionData } from "../site/SectionData";
 
 export interface ChartEditSectionCallback {
 	getChart(): ChartData
@@ -40,23 +40,25 @@ export interface ChartEditSectionCallback {
 export class Content extends SectionContent {
 	private calcChart: ChartData | null = null
 	private readonly isCalc: boolean
+	private readonly langCollection: Record<string, string>
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
-		return [sectionData.getStudyPromise()]
+		return [import(`../../langCodes/${Lang.code}.json`), sectionData.getStudyPromise()]
 	}
 
-	constructor(sectionData: SectionData) {
+	constructor(sectionData: SectionData, langCollection: Record<string, string>) {
 		super(sectionData)
 		this.isCalc = this.sectionData.sectionValue == "calc"
+		this.langCollection = langCollection
 	}
-	
+
 	getSectionCallback(): ChartEditSectionCallback {
 		return {
 			getChart: this.getChart.bind(this),
 			isCalc: this.isCalc
 		};
 	}
-	
+
 	public title(): string {
 		return Lang.get("edit_chart")
 	}
@@ -151,12 +153,31 @@ export class Content extends SectionContent {
 									{!chart.hideOnClient.get() && <div><label class="noTitle noDesc">
 										<input type="checkbox" {...BindObservable(chart.hideUntilCompletion)} />
 										<span class="smallText">{Lang.get("hideUntilCompletion")}</span>
-									</label><br/></div>
+									</label><br /></div>
 									}
 									<label class="noTitle noDesc" >
 										<input type="checkbox" {...BindObservable(chart.hideOnClient)} />
 										<span class="smallText">{Lang.get("hide_on_client")}</span>
 									</label>
+									<br />
+									{!chart.hideOnClient.get() && study.randomGroups.get() > 1 && <div><label class="noDesc">
+										<small>{Lang.getWithColon("chart_show_only_in_group")}</small>
+										<select {...BindObservable(chart.showOnlyGroup)}>
+											<option value="0">{Lang.get("all")}</option>
+											{Array.from({ length: study.randomGroups.get() }).map((_, index) => {
+												return <option>{index + 1}</option>
+											})}
+										</select>
+									</label><br /></div>
+									}
+									{!chart.hideOnClient.get() && study.langCodes.get().length > 1 && <div><label class="noDesc">
+										<small>{Lang.getWithColon("chart_show_only_in_lang")}</small>
+										<select {...BindObservable(chart.showOnlyLang)}>
+											<option value="">{Lang.get("all")}</option>
+											{study.langCodes.get().map((code) => <option value={code.get()}>{this.langCollection[code.get()]}</option>)}
+										</select>
+									</label><br /></div>
+									}
 								</div>
 						}),
 						DashElement("stretched", {
@@ -207,92 +228,95 @@ export class Content extends SectionContent {
 
 			{TitleRow(Lang.getWithColon("settings"))}
 
-			{DashRow(
-				DashElement(null, {
-					content:
-						<div>
-							<label>
-								<small>{Lang.get("statisticsChartType")}</small>
-								<select {...BindObservable(chart.chartType)}>
-									<option value="0">{Lang.get("statisticsChart_line")}</option>
-									<option value="1">{Lang.get("statisticsChart_line_filled")}</option>
-									<option value="2">{Lang.get("statisticsChart_bars")}</option>
-									<option value="3">{Lang.get("statisticsChart_scatter")}</option>
-									<option value="4">{Lang.get("statisticsChart_pie")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				DashElement(null, {
-					content:
-						<div>
-							<label>
-								<small>{Lang.get("statisticsDataType")}</small>
-								<select {...BindObservable(chart.dataType)}>
-									<option value="0">{Lang.get("statisticsDataType_daily")}</option>
-									<option value="1">{Lang.get("statisticsDataType_frequencyDistr")}</option>
-									<option value="2">{Lang.get("statisticsDataType_sum")}</option>
-									<option value="3">{Lang.get("statisticsDataType_xy")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
-					content:
-						<div>
-							<label>
-								<small>{Lang.get("statisticsValueType")}</small>
-								<select {...BindObservable(chart.valueType)}>
-									<option value="0">{Lang.get("statisticsValueType_mean")}</option>
-									<option value="1">{Lang.get("statisticsValueType_sum")}</option>
-									<option value="2">{Lang.get("statisticsValueType_count")}</option>
-								</select>
-							</label>
-						</div>
-				}),
-				chart.dataType.get() == STATISTICS_DATATYPES_FREQ_DISTR && DashElement(null, {
-					content:
-						<div>
-							<label class="vertical noTitle noDesc nowrap">
-								<input type="checkbox" {...BindObservable(chart.inPercent)} />
-								<span class="smallText">{Lang.get("values_in_percent")}</span>
-							</label>
-							<label class="vertical noTitle noDesc nowrap">
-								<input type="checkbox" {...BindObservable(chart.xAxisIsNumberRange)} />
-								<span class="smallText">{Lang.get("xAxisIsNumberRange_label")}</span>
-							</label>
-						</div>
-				}),
-				chart.chartType.get() == STATISTICS_CHARTTYPES_SCATTER && DashElement(null, {
-					content:
-						<div>
-							<label class="noDesc">
-								<span>{Lang.getWithColon("fitToShowLinearProgression_label")}</span>
-								<input type="number" {...BindObservable(chart.fitToShowLinearProgression)} />
-							</label>
-						</div>
-				}),
-				DashElement(null, {
-					content:
-						<div>
-							<label>
-								<small>{Lang.get("chart_max_yValue")}</small>
-								<input type="number" {...BindObservable(chart.maxYValue)} />
-								<small>{Lang.get("chart_max_yValue_explainZero")}</small>
-							</label>
-						</div>
-				}),
-				this.sectionData.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
-					content:
-						<div>
-							<label>
-								<input type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
-								<span class="smallText">{Lang.get("display_additional_publicVariable")}</span>
-							</label>
-						</div>
-				}),
-			)}
-			{chart.displayPublicVariable.get() &&
+			{
+				DashRow(
+					DashElement(null, {
+						content:
+							<div>
+								<label>
+									<small>{Lang.get("statisticsChartType")}</small>
+									<select {...BindObservable(chart.chartType)}>
+										<option value="0">{Lang.get("statisticsChart_line")}</option>
+										<option value="1">{Lang.get("statisticsChart_line_filled")}</option>
+										<option value="2">{Lang.get("statisticsChart_bars")}</option>
+										<option value="3">{Lang.get("statisticsChart_scatter")}</option>
+										<option value="4">{Lang.get("statisticsChart_pie")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					DashElement(null, {
+						content:
+							<div>
+								<label>
+									<small>{Lang.get("statisticsDataType")}</small>
+									<select {...BindObservable(chart.dataType)}>
+										<option value="0">{Lang.get("statisticsDataType_daily")}</option>
+										<option value="1">{Lang.get("statisticsDataType_frequencyDistr")}</option>
+										<option value="2">{Lang.get("statisticsDataType_sum")}</option>
+										<option value="3">{Lang.get("statisticsDataType_xy")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					(chart.dataType.get() == STATISTICS_DATATYPES_DAILY || chart.dataType.get() == STATISTICS_DATATYPES_SUM) && DashElement(null, {
+						content:
+							<div>
+								<label>
+									<small>{Lang.get("statisticsValueType")}</small>
+									<select {...BindObservable(chart.valueType)}>
+										<option value="0">{Lang.get("statisticsValueType_mean")}</option>
+										<option value="1">{Lang.get("statisticsValueType_sum")}</option>
+										<option value="2">{Lang.get("statisticsValueType_count")}</option>
+									</select>
+								</label>
+							</div>
+					}),
+					chart.dataType.get() == STATISTICS_DATATYPES_FREQ_DISTR && DashElement(null, {
+						content:
+							<div>
+								<label class="vertical noTitle noDesc nowrap">
+									<input type="checkbox" {...BindObservable(chart.inPercent)} />
+									<span class="smallText">{Lang.get("values_in_percent")}</span>
+								</label>
+								<label class="vertical noTitle noDesc nowrap">
+									<input type="checkbox" {...BindObservable(chart.xAxisIsNumberRange)} />
+									<span class="smallText">{Lang.get("xAxisIsNumberRange_label")}</span>
+								</label>
+							</div>
+					}),
+					chart.chartType.get() == STATISTICS_CHARTTYPES_SCATTER && DashElement(null, {
+						content:
+							<div>
+								<label class="noDesc">
+									<span>{Lang.getWithColon("fitToShowLinearProgression_label")}</span>
+									<input type="number" {...BindObservable(chart.fitToShowLinearProgression)} />
+								</label>
+							</div>
+					}),
+					DashElement(null, {
+						content:
+							<div>
+								<label>
+									<small>{Lang.get("chart_max_yValue")}</small>
+									<input type="number" {...BindObservable(chart.maxYValue)} />
+									<small>{Lang.get("chart_max_yValue_explainZero")}</small>
+								</label>
+							</div>
+					}),
+					this.sectionData.sectionValue == "personal" && chart.chartType.get() != STATISTICS_CHARTTYPES_PIE && DashElement(null, {
+						content:
+							<div>
+								<label>
+									<input type="checkbox" {...BindObservable(chart.displayPublicVariable)} />
+									<span class="smallText">{Lang.get("display_additional_publicVariable")}</span>
+								</label>
+							</div>
+					}),
+				)
+			}
+			{
+				chart.displayPublicVariable.get() &&
 				<div>
 					{TitleRow(Lang.getWithColon("public_variables"))}
 					{this.getVariablesView(study, chart, chart.publicVariables)}
@@ -308,7 +332,7 @@ export class Content extends SectionContent {
 			<div class="center">
 				{BtnAdd(this.addVariable.bind(this, chart.axisContainer, study), Lang.get('add'))}
 			</div>
-		</div>
+		</div >
 	}
 
 	private getVariablesView(study: Study, chart: ChartData, list: ArrayInterface<DataStructureInputType, AxisContainer>): Vnode<any, any> {
@@ -364,17 +388,17 @@ export class Content extends SectionContent {
 																<small>{Lang.get("axis_y_thershold_value")}</small>
 																<input type="number" {...BindObservable(container.threshold)} />
 															</label>
-	
+
 															<label>
 																<small>{Lang.get("axis_y_threshold_color")}</small>
 																<input type="color" {...BindObservable(container.thresholdColor)} />
 															</label>
-	
+
 															<label>
 																<input type="checkbox" {...BindObservable(container.useThresholdOnClient)} />
 																<span class="smallText">{Lang.get("axis_use_threshold_on_client")}</span>
 															</label>
-	
+
 														</div>}
 
 												</div>}
@@ -394,7 +418,7 @@ export class Content extends SectionContent {
 	private getAxisView(study: Study, title: string, axis: AxisData, studyVariables: string[]): Vnode<any, any> {
 		const conditionOptions = this.getConditionVariables(study, axis.variableName.get())
 
-		return <div class="vertical">
+		return <div class="vertical" >
 			<div class="horizontal">
 				<label class="spacingRight">
 					<small>{title}</small>

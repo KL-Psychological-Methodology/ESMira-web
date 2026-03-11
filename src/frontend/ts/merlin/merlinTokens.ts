@@ -6,7 +6,7 @@ export class MerlinToken {
 	type: MerlinTokenType
 	lexeme: string
 	line: number
-	
+
 	constructor(type: MerlinTokenType, lexeme: string, line: number) {
 		this.type = type
 		this.lexeme = lexeme
@@ -30,11 +30,12 @@ export enum MerlinTokenType {
 	COLON,
 	SEMICOLON,
 	DOT,
+	MODULO,
 	MINUS,
 	PLUS,
 	SLASH,
 	STAR,
-	
+
 	// One and two character tokens
 	DOT_DOT,
 	EXCLAMATION,
@@ -46,12 +47,18 @@ export enum MerlinTokenType {
 	LESS,
 	LESS_EQUAL,
 	GREATER_GREATER,
-	
+
+	PLUS_EQUAL,
+	MINUS_EQUAL,
+	SLASH_EQUAL,
+	STAR_EQUAL,
+	MODULO_EQUAL,
+
 	// Literals
 	IDENTIFIER,
 	STRING,
 	NUMBER,
-	
+
 	// Keywords
 	AND,
 	ELSE,
@@ -68,6 +75,6 @@ export enum MerlinTokenType {
 	RETURN,
 	TRUE,
 	WHILE,
-	
+
 	EOF
 }

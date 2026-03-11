@@ -1,10 +1,13 @@
 services:
   esmira:
     image: jodlidev/esmira:latest
-    platform: linux/amd64  # Can be changed to linux/arm64 for ARM64 systems
+    platform: linux/amd64 # Can be changed to linux/arm64 for ARM64 systems
     restart: "unless-stopped"
     ports:
-      - "80:80"
+      - "80:80" # If you are using a reverse proxy, you will have to change the left port to something else
+      - "443:443" # If you are using a reverse proxy, you can remove this line
     volumes:
       - ./esmira/esmira_data:/var/www/html/esmira_data
       - ./esmira/config:/var/www/html/backend/config/
+      - ./apache_logs:/var/log/apache2/
+      - ./esmira/sites-enabled:/etc/apache2/sites-enabled/

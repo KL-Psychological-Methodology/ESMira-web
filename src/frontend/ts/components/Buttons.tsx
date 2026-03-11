@@ -42,35 +42,34 @@ export function BtnTrash(onclick: () => void, title: string = "",): Vnode<any, a
 }
 
 
-export function BtnAdd(onclick?: (e: MouseEvent) => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnAdd(onclick?: (e: MouseEvent) => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(addSvg), onclick, title, hoverTitle ?? title ?? Lang.get("add"))
 }
 
-export function BtnCopy(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnCopy(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(copySvg), onclick, title, hoverTitle ?? title ?? Lang.get("copy"))
 }
 
-export function BtnChange(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnChange(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(changeSvg), onclick, title, hoverTitle ?? title ?? Lang.get("change"))
 }
 
-export function BtnDownload(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnDownload(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(downloadSvg), onclick, title, hoverTitle ?? title ?? Lang.get("download"))
 }
 
-export function BtnEdit(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnEdit(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(editSvg), onclick, title, hoverTitle ?? title ?? Lang.get("change"))
 }
 
-export function BtnOk(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnOk(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(okSvg), onclick, title, hoverTitle ?? title ?? Lang.get("save"))
 }
 
-export function BtnReload(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnReload(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(reloadSvg), onclick, title, hoverTitle ?? title ?? Lang.get("reload"))
 }
 
-export function BtnTransfer(onclick?: () => void, title: string = "", hoverTitle?: string): Vnode<any, any> {
+export function BtnTransfer(onclick?: () => void, title?: string, hoverTitle?: string): Vnode<any, any> {
 	return BtnCustom(m.trust(transferSvg), onclick, title, hoverTitle ?? title ?? Lang.get("transfer"))
-	
 }

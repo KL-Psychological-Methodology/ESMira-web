@@ -23,6 +23,7 @@ class DeleteStudyPermission extends HasAdminPermission {
             case 'msg':
             case 'read':
             case 'publish':
+            case 'reward':
                 $accountStore->removeStudyPermission($accountName, $this->studyId, $permCode);
                 break;
             default:

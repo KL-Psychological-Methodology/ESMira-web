@@ -1,12 +1,15 @@
-import {DataStructure, DataStructureInputType} from "../DataStructure";
-import {ActionTrigger} from "./ActionTrigger";
-import {Page} from "./Page";
-import {SumScore} from "./SumScore";
-import {BaseObservable} from "../../observable/BaseObservable";
-import {ObservableTypes} from "../../observable/types/ObservableTypes";
+import { DataStructure, DataStructureInputType } from "../DataStructure";
+import { ActionTrigger } from "./ActionTrigger";
+import { Page } from "./Page";
+import { SumScore } from "./SumScore";
+import { BaseObservable } from "../../observable/BaseObservable";
+import { ObservableTypes } from "../../observable/types/ObservableTypes";
 import "../../number.extensions"
-import {Lang} from "../../singletons/Lang";
-import {Scheduler} from "../../helpers/Scheduler";
+import { Lang } from "../../singletons/Lang";
+import { Scheduler } from "../../helpers/Scheduler";
+import { b0 } from "@fullcalendar/core/internal-common";
+import { Action } from "./Action";
+import { SignalTime } from "./SignalTime";
 
 const ONE_DAY_MS = 86400000
 
@@ -33,6 +36,7 @@ export class Questionnaire extends DataStructure {
 	public endScriptBlock = this.primitive<string>("endScriptBlock", "")
 	public showInDisabledList = this.primitive<boolean>("showInDisabledList", true)
 	public virtualInputs = this.primitiveArray<string>("virtualInputs", [])
+	public scriptFilter = this.primitive<string>("scriptFilter", "")
 	public showPagination = this.primitive<boolean>("showPagination", true)
 	public showSkipToast = this.primitive<boolean>("showSkipToast", true)
 
@@ -95,5 +99,22 @@ export class Questionnaire extends DataStructure {
 			value = durationValue.coerceAtLeast(startingAfterDaysValue)
 
 		return value.coerceAtLeast(0)
+	}
+
+	public countScheduledAlarms(): number {
+		let alarms: number = 0
+
+		for (let actionTrigger of this.actionTriggers.get()) {
+			if (actionTrigger.schedules.get().length > 0) {
+				const reminders = actionTrigger.actions.get().length > 0 ? actionTrigger.actions.get()[0].reminder_count.get() : 0
+
+				for (let signalTime of actionTrigger.schedules.get()[0].signalTimes.get()) {
+					let notifications = signalTime.random ? signalTime.frequency.get() : 1
+					alarms += (reminders + 1) * notifications
+				}
+			}
+		}
+
+		return alarms
 	}
 }

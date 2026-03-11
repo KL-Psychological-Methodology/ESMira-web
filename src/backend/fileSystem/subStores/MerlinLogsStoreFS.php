@@ -15,21 +15,23 @@ class MerlinLogsStoreFS implements MerlinLogsStore {
 		$r = false;
 		$path = PathsFS::folderMerlinLogs($studyId);
 		$errorInfo = MerlinLogInfoLoader::importFile($studyId);
-		$handle = opendir($path);
-		while($file = readdir($handle)) {
-			if($file[0] != '.') {
-				if(isset($errorInfo[(int)$file])) {
-					if(!$errorInfo[(int)$file]->seen) {
+		if(file_exists($path)) {
+			$handle = opendir($path);
+			while($file = readdir($handle)) {
+				if($file[0] != '.') {
+					if(isset($errorInfo[(int)$file])) {
+						if(!$errorInfo[(int)$file]->seen) {
+							$r = true;
+							break;
+						}
+					} else {
 						$r = true;
 						break;
 					}
-				} else {
-					$r = true;
-					break;
 				}
 			}
+			closedir($handle);
 		}
-		closedir($handle);
 		return $r;
 	}
 	
