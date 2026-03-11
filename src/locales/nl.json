@@ -609,7 +609,7 @@
 	"info_fallback_setup_token": "Hieronder vind je je nieuwe token om het fallback-systeem op te zetten, evenals de URL van deze server. In de volgende stap moet je beide invoeren in het adminpaneel van de andere server.",
 	"confirm_delete_inbound_fallback_token": "Wil je echt het fallback-token voor '%s' verwijderen?",
 	"new_fallback_setup_token": "Nieuw setup-token",
-	"add_fallback_token": "Een verbinding toevoegen",
+	"add_fallback_token": "Verbinding toevoegen",
 	"outbound_fallback_token_url": "URL",
 	"outbound_fallback_token": "Token",
 	"url_https_error": "URL moet beginnen met 'https://'",
