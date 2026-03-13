@@ -79,6 +79,7 @@ class Main {
                 case 'pt':
                 case 'sv':
                 case 'tl':
+                case 'tr':
                 case 'uk':
                 case 'zk':
                     return $lang;
