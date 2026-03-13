@@ -22,7 +22,8 @@ const KEYS_QUESTIONNAIRE_BASE_RESPONSES = [
 	'formDuration',
 	'pageDurations',
 	'lastInvitation',
-	'lastInvitation_formatted' //will be created by the server
+	'lastInvitation_formatted', //will be created by the server
+	'group' //appears only if random groups are used in the study
 ];
 
 //all event-related keys that are included in the event file:
