@@ -1,7 +1,7 @@
 import { SectionContent } from "../site/SectionContent";
 import m, { Vnode } from "mithril";
 import { Lang } from "../singletons/Lang";
-import { BindObservable } from "../components/BindObservable";
+import { BindObservable, ConstrainedNumberTransformer } from "../components/BindObservable";
 import { TitleRow } from "../components/TitleRow";
 import { Study } from "../data/study/Study";
 import { safeConfirm } from "../constants/methods";
@@ -114,6 +114,16 @@ export class Content extends SectionContent {
 							<label class="noTitle noDesc">
 								<input type="checkbox" {...BindObservable(study.sendMessagesAllowed)} />
 								<span>{Lang.get('allow_incoming_messages')}</span>
+							</label>
+						</div>
+				}),
+				DashElement("vertical", {
+					content:
+						<div class="vAlignCenter">
+							<label class="noTitle noDesc">
+								<input type="number" {...BindObservable(study.additionalDaysActive, new ConstrainedNumberTransformer(0, undefined))} />
+								<span>{Lang.get('additional_days_active')}</span>
+								<small>{Lang.get('additional_days_active_info')}</small>
 							</label>
 						</div>
 				}),

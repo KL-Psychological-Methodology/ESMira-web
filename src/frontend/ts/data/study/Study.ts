@@ -31,6 +31,7 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public rewardVisibleAfterDays = this.primitive<number>("rewardVisibleAfterDays", 0)
 	public defaultLang = this.primitive<string>("defaultLang", "en")
 	public useFallback = this.primitive<boolean>("useFallback", true)
+	public additionalDaysActive = this.primitive<number>("additionalDaysActive", 0)
 
 	public accessKeys = this.primitiveArray<string>("accessKeys")
 	public langCodes = this.primitiveArray<string>("langCodes", ["en"])
