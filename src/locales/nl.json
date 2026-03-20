@@ -699,5 +699,9 @@
 	"urls_instruction_questionnaires": "Ik wil de webversies van de vragenlijsten gebruiken (niet aanbevolen)",
 	"use_custom_start": "Aangepaste start gebruiken",
 	"custom_start_value": "Aangepaste startwaarde",
-	"chart_show_only_in_lang": "Tonen aan deelnemers met behulp van taal"
+	"chart_show_only_in_lang": "Tonen aan deelnemers met behulp van taal",
+	"recording_duration": "Opnameduur",
+	"additional_days_active": "Extra dagen actief",
+	"additional_days_active_info": "Het aantal extra dagen dat de studie actief moet blijven nadat er geen vragenlijsten meer actief zijn.",
+	"input_noise_level": "Geluidsniveau"
 }
