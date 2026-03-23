@@ -17,6 +17,7 @@ export type InputResponseType =
 	"list_multiple" |
 	"list_single" |
 	"location" |
+	"noise_level" |
 	"number" |
 	"photo" |
 	"record_audio" |

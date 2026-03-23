@@ -265,6 +265,7 @@
 	"input_list_multiple": "List (multiple choice)",
 	"input_list_single": "List (single choice)",
 	"input_location": "Location",
+	"input_noise_level": "Noise level",
 	"input_number": "Number input",
 	"input_photo": "Take a picture",
 	"input_record_audio": "Record audio",
@@ -699,5 +700,8 @@
 	"study_urls": "Study urls",
 	"urls_target_study_list": "Enable study list",
 	"desc_urls_target_study_list": "Have the url lead to a study list and not directly to this study (only if more than one study is using the same access key)",
-	"access_key_has_no_duplications": "This is the only study that uses the access key \"%s\". When only one study for an access key exists, the urls will still lead directly to this study."
+	"access_key_has_no_duplications": "This is the only study that uses the access key \"%s\". When only one study for an access key exists, the urls will still lead directly to this study.",
+	"recording_duration": "Recording duration",
+	"additional_days_active": "Additional days active",
+	"additional_days_active_info": "The amount of additional days the study should remain active after no more questionnaires are active."
 }

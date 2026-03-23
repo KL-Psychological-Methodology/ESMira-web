@@ -254,6 +254,7 @@
 	"input_list_multiple": "Liste (Multiple Choice)",
 	"input_list_single": "Liste (Single Choice)",
 	"input_location": "Standort",
+	"input_noise_level": "Geräuschlautstärke",
 	"input_number": "Zahlen-Eingabe",
 	"input_photo": "Foto aufnehmen",
 	"input_record_audio": "Audio aufnehmen",
@@ -693,5 +694,8 @@
 	"created_snapshot": "Erstellung des Snapshots abgeschlossen",
 	"uninstall": "Deinstallieren",
 	"script_filter": "Script filter",
-	"ios_too_many_scheduled_alarms": "Ihre Studie hat insgesamt %d geplante Benachrichtigungen (inklusive Erinnerungen). Aufgrund von Systemlimits kann die iOS-App höchstens %d geplante Benachrichtigungen verarbeiten. Einstellungen die dieses Limit überschreiten können Probleme verursachen, sodass Versuchspersonen, die iOS verwenden, nur manche oder gar keine Benachrichtigungen erhalten."
+	"ios_too_many_scheduled_alarms": "Ihre Studie hat insgesamt %d geplante Benachrichtigungen (inklusive Erinnerungen). Aufgrund von Systemlimits kann die iOS-App höchstens %d geplante Benachrichtigungen verarbeiten. Einstellungen die dieses Limit überschreiten können Probleme verursachen, sodass Versuchspersonen, die iOS verwenden, nur manche oder gar keine Benachrichtigungen erhalten.",
+	"recording_duration": "Aufnahmedauer",
+	"additional_days_active": "Zusätzliche Tage aktiv",
+	"additional_days_active": "Die Anzahl an Tagen die die Studie aktiv bleiben soll, nachdem keine Fragebögen mehr aktiv sind."
 }

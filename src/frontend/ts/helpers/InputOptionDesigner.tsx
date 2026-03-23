@@ -134,7 +134,7 @@ export class InputOptionDesigner {
 				<div class="vertical hAlignStart">
 					<label class="noDesc">
 						<small>{Lang.get("timeout")}</small>
-						<input type="text" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
+						<input type="number" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(0, undefined))} />
 						<small>{Lang.get("seconds")}</small>
 					</label>
 					<label class="noDesc">
@@ -286,6 +286,23 @@ export class InputOptionDesigner {
 						<small>{Lang.get("input_location_resolution")}</small>
 						<input type="number" {...BindObservable(this.input.resolution, new ConstrainedNumberTransformer(0, 15))} />
 						<small>{Lang.get("input_location_resolution_desc")}</small>
+					</label>
+				</div>
+			]
+		},
+		"noise_level": {
+			title: Lang.get("input_noise_level"),
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			category: "sensor",
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>,
+				<div class="vertical hAlignStart">
+					<label class="noDesc">
+						<small>{Lang.get("recording_duration")}</small>
+						<input type="number" {...BindObservable(this.input.timeoutSec, new ConstrainedNumberTransformer(1, undefined))} />
+						<small>{Lang.get("seconds")}</small>
 					</label>
 				</div>
 			]
