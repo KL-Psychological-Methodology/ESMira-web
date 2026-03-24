@@ -292,7 +292,7 @@ export class InputOptionDesigner {
 		},
 		"noise_level": {
 			title: Lang.get("input_noise_level"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#noise-level",
 			category: "sensor",
 			view: () => [
 				<div>
