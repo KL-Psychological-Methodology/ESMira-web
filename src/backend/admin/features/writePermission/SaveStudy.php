@@ -288,7 +288,7 @@ class SaveStudy extends HasWritePermission {
 			throw new PageFlowException("No special characters are allowed in variable names. \n'$name' detected in questionnaire: $questionnaireTitle");
 		else if(isset($this->uniqueInputNames[$name]))
 			throw new PageFlowException("Variable name exists more than once: '$name'. First detected in questionnaire: '" . $this->uniqueInputNames[$name] . "'. Detected again in questionnaire: '$questionnaireTitle'");
-		else if(in_array($name, KEYS_EVENT_RESPONSES) || in_array($name, KEYS_QUESTIONNAIRE_BASE_RESPONSES))
+		else if(in_array($name, KEYS_EVENT_RESPONSES) || in_array($name, KEYS_QUESTIONNAIRE_BASE_RESPONSES) || in_array($name, KEYS_RESERVED_EXTRA))
 			throw new PageFlowException("Protected variable name: $name \nPlease choose another variable name.\nDetected in questionnaire: $questionnaireTitle");
 	}
 	

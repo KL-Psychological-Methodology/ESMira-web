@@ -57,3 +57,7 @@ const KEYS_WEB_ACCESS = [
 	'referer',
 	'userAgent',
 ];
+
+const KEYS_RESERVED_EXTRA = [
+	'group'
+];
