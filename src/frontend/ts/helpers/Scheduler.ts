@@ -4,6 +4,7 @@ import { Schedule } from "../data/study/Schedule";
 import { Questionnaire } from "../data/study/Questionnaire";
 import "../number.extensions"
 import { getMidnightMillis } from "../constants/methods";
+import { OnBeforeChangeTransformer } from "../components/BindObservable";
 
 const ONE_DAY_MS = 1000 * 60 * 60 * 24
 const MIN_SCHEDULE_DISTANCE = 60000
@@ -38,6 +39,55 @@ class Alarm {
 	public canBeRescheduled(): boolean {
 		const signalTime = this.signalTime
 		return signalTime != null && (!signalTime.random.get() || this.indexNum == signalTime.frequency.get())
+	}
+}
+
+class Interval {
+	public readonly start: number
+	public readonly end: number
+	public readonly includesMidnight: boolean
+	public readonly period: number
+
+	constructor(start: number, end: number) {
+		this.start = start
+		this.end = end
+		this.includesMidnight = start > end
+		this.period = this.includesMidnight ? start - end + ONE_DAY_MS : end - start
+
+	}
+
+	public getOverlaps(other: Interval): Interval[] {
+		const first = this.splitIfIncludesMidnight()
+		const second = other.splitIfIncludesMidnight()
+
+		let overlaps = []
+
+		for (const i of first) {
+			for (const j of second) {
+				const overlap = i.getOverlap(j)
+				if (overlap !== null) {
+					overlaps.push(overlap)
+				}
+			}
+		}
+
+		return overlaps
+	}
+
+	public getOverlap(other: Interval): Interval | null {
+		if (this.includesMidnight || other.includesMidnight || this.start > other.end || other.start > this.end) {
+			return null
+		} else {
+			return new Interval(Math.max(this.start, other.start), Math.min(this.end, other.end))
+		}
+	}
+
+	private splitIfIncludesMidnight(): Interval[] {
+		if (this.includesMidnight) {
+			return [new Interval(0, this.end), new Interval(this.start, ONE_DAY_MS)]
+		} else {
+			return [this]
+		}
 	}
 }
 
@@ -112,44 +162,41 @@ export class Scheduler {
 			this.scheduleSignalTime(joined, questionnaire, schedule, signalTime, actionTrigger, timestampAnchor)
 	}
 
-	private calculateRandomPeriod(questionnaire: Questionnaire, signalTime: SignalTime): number {
+	private calculateRandomInterval(questionnaire: Questionnaire, signalTime: SignalTime): Interval | null {
 		if (questionnaire.completableAtSpecificTime.get()) {
-			if (questionnaire.completableAtSpecificTimeStart.get() != -1 && questionnaire.completableAtSpecificTimeEnd.get() != -1) {
-				if (questionnaire.completableAtSpecificTimeStart.get() > questionnaire.completableAtSpecificTimeEnd.get()) { //start and end include midnight
-					let period = 0
-					if (questionnaire.completableAtSpecificTimeStart.get() < signalTime.endTimeOfDay.get())
-						period += signalTime.endTimeOfDay.get() - questionnaire.completableAtSpecificTimeStart.get()
-					if (questionnaire.completableAtSpecificTimeEnd.get() > signalTime.startTimeOfDay.get())
-						period += questionnaire.completableAtSpecificTimeEnd.get() - signalTime.startTimeOfDay.get()
-					return period
-				}
-				else {
-					let period = 0
-					if (questionnaire.completableAtSpecificTimeEnd.get() < signalTime.endTimeOfDay.get())
-						period += signalTime.endTimeOfDay.get() - questionnaire.completableAtSpecificTimeEnd.get()
-					if (questionnaire.completableAtSpecificTimeStart.get() > signalTime.startTimeOfDay.get())
-						period += questionnaire.completableAtSpecificTimeStart.get() - signalTime.startTimeOfDay.get()
-					return period
-				}
+			const signalInterval = new Interval(signalTime.startTimeOfDay.get(), signalTime.endTimeOfDay.get())
+			const filterStart = questionnaire.completableAtSpecificTimeStart.get() != 1 ? questionnaire.completableAtSpecificTimeStart.get() : 0
+			const filterEnd = questionnaire.completableAtSpecificTimeEnd.get() != 1 ? questionnaire.completableAtSpecificTimeEnd.get() : ONE_DAY_MS
+			const filterInterval = new Interval(filterStart, filterEnd)
+
+			const overlaps = signalInterval.getOverlaps(filterInterval)
+			const bothIncludeMidnight = signalInterval.includesMidnight && filterInterval.includesMidnight
+
+			if (overlaps.length == 1) {
+				return overlaps[0]
+			} else if (overlaps.length == 2 && bothIncludeMidnight) {
+				const times = [overlaps[0].start, overlaps[0].end, overlaps[1].start, overlaps[1].end]
+				times.sort()
+				return new Interval(times[2], times[1])
+			} else {
+				throw new Error(`SignalTime: Configuration of completableAtSpecificTime filter (${questionnaire.completableAtSpecificTimeStart.get()}, ${questionnaire.completableAtSpecificTimeEnd.get()}) and signalTime (${signalTime.startTimeOfDay.get()}, ${signalTime.endTimeOfDay.get()}) results in more than one interval overlaps.`)
+				return null
 			}
-			else if (questionnaire.completableAtSpecificTimeStart.get() != -1)
-				return questionnaire.completableAtSpecificTimeStart.get() - signalTime.startTimeOfDay.get()
-			else if (questionnaire.completableAtSpecificTimeEnd.get() != -1)
-				return signalTime.endTimeOfDay.get() - questionnaire.completableAtSpecificTimeEnd.get()
-			else
-				return signalTime.endTimeOfDay.get() - signalTime.startTimeOfDay.get()
+		} else {
+			return new Interval(signalTime.startTimeOfDay.get(), signalTime.endTimeOfDay.get())
 		}
-		else
-			return signalTime.endTimeOfDay.get() - signalTime.startTimeOfDay.get()
 	}
 
 	public scheduleSignalTime(joined: number, questionnaire: Questionnaire, schedule: Schedule, signalTime: SignalTime, actionTrigger: ActionTrigger, anchorTimestamp: number, manualDelayDays: number = -1): void {
 		const frequency = signalTime.frequency.get()
 		const msBetween = signalTime.minutesBetween.get() * 60000
-		const period = (signalTime.random.get()) ? this.calculateRandomPeriod(questionnaire, signalTime) : 0
-		const block = period / frequency
+		const interval = (signalTime.random.get()) ? this.calculateRandomInterval(questionnaire, signalTime) : new Interval(signalTime.startTimeOfDay.get(), signalTime.startTimeOfDay.get())
+		if (interval == null) {
+			return
+		}
+		const block = interval.period / frequency
 		if (signalTime.random.get() && frequency > 1 && block < msBetween)
-			throw new Error(`${frequency} blocks with ${msBetween} ms do not fit into ${period} ms for ${questionnaire.title.get()}.`)
+			throw new Error(`${frequency} blocks with ${msBetween} ms do not fit into ${interval.period} ms for ${questionnaire.title.get()}.`)
 
 		//
 		//correct timestamp:
@@ -191,8 +238,8 @@ export class Scheduler {
 			if (signalTime.random) {
 				const randomBlock = (nextBlock * this.getRandom())
 
-				workTimestamp = this.considerHourOptions(baseTimestamp + randomBlock, questionnaire) //set the actual timing of the notification
-				baseTimestamp = this.considerHourOptions(baseTimestamp + nextBlock, questionnaire) //prepare timestamp for the next loop
+				workTimestamp = this.considerHourOptions(baseTimestamp + randomBlock, interval) //set the actual timing of the notification
+				baseTimestamp = this.considerHourOptions(baseTimestamp + nextBlock, interval) //prepare timestamp for the next loop
 
 				if (baseTimestamp - workTimestamp < msBetween) { //if random is very late in this block, make sure that the next time gets shortened to account for minutesBetween
 					const shorten = msBetween - (baseTimestamp - workTimestamp)
@@ -210,30 +257,22 @@ export class Scheduler {
 		}
 	}
 
-	private considerHourOptions(timestamp: number, questionnaire: Questionnaire): number {
+	private considerHourOptions(timestamp: number, relevantInterval: Interval): number {
 		const midnight = getMidnightMillis(timestamp)
 		const fromMidnight = timestamp - midnight
-		if (!questionnaire.completableAtSpecificTime.get())
-			return timestamp
-		else if (questionnaire.completableAtSpecificTimeStart.get() != -1 && questionnaire.completableAtSpecificTimeEnd.get() != -1) {
-			if (questionnaire.completableAtSpecificTimeStart.get() > questionnaire.completableAtSpecificTimeEnd.get()) { //start and end include midnight
-				if (fromMidnight < questionnaire.completableAtSpecificTimeStart.get())
-					return midnight + questionnaire.completableAtSpecificTimeStart.get()
-				else if (fromMidnight > questionnaire.completableAtSpecificTimeEnd.get()) //this should never happen
-					return fromMidnight + questionnaire.completableAtSpecificTimeEnd.get()
+		const intervalStart = relevantInterval.start
+		const intervalEnd = relevantInterval.end
+
+		if (relevantInterval.includesMidnight) {
+			if (fromMidnight > intervalEnd && fromMidnight < intervalStart) {
+				return midnight + ((fromMidnight - intervalEnd < intervalStart - fromMidnight) ? intervalEnd : intervalStart)
 			}
-			else {
-				if (fromMidnight > questionnaire.completableAtSpecificTimeStart.get() && fromMidnight < questionnaire.completableAtSpecificTimeEnd.get())
-					return midnight + questionnaire.completableAtSpecificTimeEnd.get()
+		} else {
+			if (fromMidnight < intervalStart) {
+				return midnight + intervalStart
+			} else if (fromMidnight > intervalEnd) {
+				return midnight + intervalEnd
 			}
-		}
-		else if (questionnaire.completableAtSpecificTimeStart.get() != -1) {
-			if (fromMidnight < questionnaire.completableAtSpecificTimeStart.get())
-				return midnight + questionnaire.completableAtSpecificTimeStart.get()
-		}
-		else if (questionnaire.completableAtSpecificTimeEnd.get() != -1) {
-			if (fromMidnight > questionnaire.completableAtSpecificTimeEnd.get()) //this should never happen
-				return midnight + questionnaire.completableAtSpecificTimeEnd.get()
 		}
 
 		return timestamp
