@@ -703,5 +703,11 @@
 	"access_key_has_no_duplications": "This is the only study that uses the access key \"%s\". When only one study for an access key exists, the urls will still lead directly to this study.",
 	"recording_duration": "Recording duration",
 	"additional_days_active": "Additional days active",
-	"additional_days_active_info": "The amount of additional days the study should remain active after no more questionnaires are active."
+	"additional_days_active_info": "The amount of additional days the study should remain active after no more questionnaires are active.",
+	"schedule_start_day_one": "Wait until first full study day (the day after joining the study)",
+	"schedule_info_start_same_day": "This schedule will start on the same day the study is joined.",
+	"schedule_info_start_day_one": "This schedule will start on the day after the day the study was joined.",
+	"schedule_info_start_day_x": "Counting the day the study was joined as day 0, this schedule will start on day %d.",
+	"use_legacy_scheduling": "Use legacy scheduling",
+	"use_legacy_scheduling_info": "Use an older scheduling logic to determine day offsets. This logic is not dependent full days, but on 24-hour periods since the study was joined (dependent on time of day)."
 }

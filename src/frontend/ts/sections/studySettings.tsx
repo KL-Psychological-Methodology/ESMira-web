@@ -127,6 +127,16 @@ export class Content extends SectionContent {
 							</label>
 						</div>
 				}),
+				DashElement("vertical", {
+					content:
+						<div class="vAlignCenter">
+							<label class="noTitle noDesc">
+								<input type="checkbox" {...BindObservable(study.legacyScheduling)} />
+								<span>{Lang.get('use_legacy_scheduling')}</span>
+								<small>{Lang.get('use_legacy_scheduling_info')}</small>
+							</label>
+						</div>
+				}),
 				this.hasFallbackUrls && DashElement(null, {
 					content:
 						<div>

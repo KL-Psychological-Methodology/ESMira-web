@@ -38,7 +38,7 @@ class SpecificQuestionnaireTransformer implements Transformer {
 class CombinedValueTransformer implements Transformer {
 	private readonly index: number
 	private readonly obs: BaseObservable<number>
-	
+
 	constructor(index: number, obs: BaseObservable<number>) {
 		this.index = 1 << index
 		this.obs = obs
@@ -314,29 +314,47 @@ export class Content extends SectionContent {
 		const study = this.getStudyOrThrow()
 		const schedule = actionTrigger.schedules.get()[0]
 		const action = actionTrigger.actions.get()[0]
+		const delayDays = (schedule.startDayOne.get() ? 1 : 0) + (schedule.skipFirstInLoop.get() ? schedule.dailyRepeatRate.get() : 0)
+		let scheduleInfoText = "";
+		if (!study.legacyScheduling.get()) {
+			if (delayDays == 0) {
+				scheduleInfoText = Lang.get("schedule_info_start_same_day")
+			} else if (delayDays == 1) {
+				scheduleInfoText = Lang.get("schedule_info_start_day_one")
+			} else {
+				scheduleInfoText = Lang.get("schedule_info_start_day_x", delayDays)
+			}
+		}
 
 		return <div>
 			{DashRow(
 				DashElement("stretched",
 					{
 						content:
-							<div class="center">
-								<label class="spacingLeft">
-									<small>{Lang.get("repeat_every")}</small>
-									<input type="number" min="1" {...BindObservable(schedule.dailyRepeatRate, new ConstrainedNumberTransformer(1, undefined))} />
-									<span>{Lang.get("days")}</span>
-								</label>
-								<br />
-								<label class="spacingLeft">
-									<input type="checkbox" {...BindObservable(schedule.skipFirstInLoop)} />
-									<span>{Lang.get("wait_x_days_until_first", schedule.dailyRepeatRate.get())}</span>
-								</label>
+							<div>
+								<div class="center">
+									<label class="spacingLeft">
+										<small>{Lang.get("repeat_every")}</small>
+										<input type="number" min="1" {...BindObservable(schedule.dailyRepeatRate, new ConstrainedNumberTransformer(1, undefined))} />
+										<span>{Lang.get("days")}</span>
+									</label>
+									<br />
+									<label class="spacingLeft">
+										<input type="checkbox" {...BindObservable(schedule.startDayOne)} />
+										<span>{Lang.get("schedule_start_day_one")}</span>
+									</label>
+									<label class="spacingLeft">
+										<input type="checkbox" {...BindObservable(schedule.skipFirstInLoop)} />
+										<span>{Lang.get("wait_x_days_until_first", schedule.dailyRepeatRate.get())}</span>
+									</label>
+								</div>
+								{!study.legacyScheduling.get() && <div>{scheduleInfoText}</div>}
 							</div>
 					}),
 				DashElement(null,
 					{
 						content:
-							<div class="center">
+							<div class="center" >
 								<label class="vertical">
 									<small>{Lang.get("dayOfMonth")}</small>
 									<select {...BindObservable(schedule.dayOfMonth)}>
@@ -386,15 +404,17 @@ export class Content extends SectionContent {
 							</div>
 					})
 			)}
-			{TitleRow(
-				<div class="horizontal">
-					<span class="fillFlexSpace selfAlignCenter">{Lang.getWithColon("times_of_day")}</span>
-					<label class="noTitle noDesc">
-						<input type="checkbox" {...BindObservable(schedule.userEditable)} />
-						<span>{Lang.get("userEditable_desc")}</span>
-					</label>
-				</div>
-			)}
+			{
+				TitleRow(
+					<div class="horizontal">
+						<span class="fillFlexSpace selfAlignCenter">{Lang.getWithColon("times_of_day")}</span>
+						<label class="noTitle noDesc">
+							<input type="checkbox" {...BindObservable(schedule.userEditable)} />
+							<span>{Lang.get("userEditable_desc")}</span>
+						</label>
+					</div>
+				)
+			}
 
 			<div>
 				<div class="center">
@@ -411,7 +431,7 @@ export class Content extends SectionContent {
 
 			{TitleRow(Lang.getWithColon("action"))}
 			{DashRow(... this.getActionView(study, action))}
-		</div>
+		</div >
 	}
 
 
