@@ -698,7 +698,7 @@
 	"recording_duration": "Aufnahmedauer",
 	"additional_days_active": "Zusätzliche Tage aktiv",
 	"additional_days_active_info": "Die Anzahl an Tagen die die Studie aktiv bleiben soll, nachdem keine Fragebögen mehr aktiv sind.",
-	"schedule_strat_day_one": "Warte bis zum ersten ganzen Studientag (Tag nach Studienbeitritt)",
+	"schedule_start_day_one": "Warte bis zum ersten ganzen Studientag (Tag nach Studienbeitritt)",
 	"schedule_info_start_same_day": "Dieser Zeitplan beginnt an dem Tag an dem die Versuchsperson der Studie beigetreten ist.",
 	"schedule_info_start_day_one": "Dieser Zeitplan beginnt an dem Tag nach dem Tag an dem die Versuchsperson der Studie beigetreten ist.",
 	"schedule_info_start_day_x": "Mit dem Tag an dem die Versuchsperson beigetreten ist als Tag 0 gerechnet, beginnt dieser Zeitplan an Tag %d.",

@@ -15,6 +15,6 @@ export class Schedule extends DataStructure {
 	 * Copied from sharedCode.Schedule in kotlin
 	 */
 	public getInitialDelayDays(): number {
-		return this.skipFirstInLoop.get() ? this.dailyRepeatRate.get() : 0
+		return (this.skipFirstInLoop.get() ? this.dailyRepeatRate.get() : 0) + (this.startDayOne.get() ? 1 : 0)
 	}
 }
