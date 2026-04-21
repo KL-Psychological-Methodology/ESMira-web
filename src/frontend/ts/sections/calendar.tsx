@@ -42,6 +42,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 	private visibleCalendars: Record<number, Questionnaire> = {}
 	private colors: Record<number, string> = {}
 	private isLoading: boolean = false
+	private useLegacyScheduling: boolean = false
 	private onError: (msg: string) => void = (msg) => console.error(msg)
 
 	private getJoinTimestamp(): number {
@@ -124,6 +125,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 		this.isLoading = true
 		m.redraw()
 		this.scheduler = new Scheduler()
+		this.scheduler.setLegacyScheduling(this.useLegacyScheduling)
 		const events: EventInput[] = []
 
 		try {
@@ -186,6 +188,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 		this.onError = vNode.attrs.onError
 		const study = vNode.attrs.study
 		const joinTimestamp = vNode.attrs.joinTimestamp
+		this.useLegacyScheduling = study.legacyScheduling.get()
 		this.joinDate.set(joinTimestamp.get())
 		this.joinTime.set(joinTimestamp.get() - getMidnightMillis(joinTimestamp.get()))
 
@@ -232,7 +235,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 								<input type="time" {...BindObservable(this.joinTime, TimeTransformer)} />
 							</label>
 							<div>
-								{ BtnReload(() => {
+								{BtnReload(() => {
 									this.initCalendar()
 								})}
 							</div>
