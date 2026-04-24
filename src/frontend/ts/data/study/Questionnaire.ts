@@ -70,9 +70,14 @@ export class Questionnaire extends DataStructure {
 	/**
 	 * Needs to stay in sync with sharedCode.Questionnaire in kotlin
 	 */
-	public isActive(joinedTimestamp: number, now: number) {
-		const durationCheck = (this.durationPeriodDays.get() == 0 || now <= joinedTimestamp + this.durationPeriodDays.get() * ONE_DAY_MS)
+	public isActive(joinedTimestamp: number, now: number, useLegacyScheduling: boolean = false) {
+		const durationCheck = useLegacyScheduling ? (
+			(this.durationPeriodDays.get() == 0 || now <= joinedTimestamp + this.durationPeriodDays.get() * ONE_DAY_MS)
 			&& (this.durationStartingAfterDays.get() == 0 || now >= joinedTimestamp + this.durationStartingAfterDays.get() * ONE_DAY_MS)
+		) : (
+			(this.durationPeriodDays.get() == 0 || Scheduler.getDatesDiff(now, joinedTimestamp) <= this.durationPeriodDays.get())
+			&& (this.durationStartingAfterDays.get() == 0 || Scheduler.getDatesDiff(now, joinedTimestamp) >= this.durationStartingAfterDays.get())
+		)
 
 		return durationCheck
 			// && (this.limitToGroup.get() == 0 || this.limitToGroup.get() == group)

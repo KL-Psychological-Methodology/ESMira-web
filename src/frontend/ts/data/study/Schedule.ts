@@ -5,6 +5,7 @@ export class Schedule extends DataStructure {
 	public userEditable					= this.primitive<boolean>(		"userEditable",		true)
 	public dailyRepeatRate				= this.primitive<number>(		"dailyRepeatRate",		1)
 	public skipFirstInLoop				= this.primitive<boolean>(		"skipFirstInLoop",		false)
+	public startDayOne					= this.primitive<boolean>(		"startDayOne",			true)
 	public weekdays						= this.primitive<number>(		"weekdays",			0)
 	public dayOfMonth					= this.primitive<number>(		"dayOfMonth",			0)
 	
@@ -14,6 +15,6 @@ export class Schedule extends DataStructure {
 	 * Copied from sharedCode.Schedule in kotlin
 	 */
 	public getInitialDelayDays(): number {
-		return this.skipFirstInLoop.get() ? this.dailyRepeatRate.get() : 0
+		return (this.skipFirstInLoop.get() ? this.dailyRepeatRate.get() : 0) + (this.startDayOne.get() ? 1 : 0)
 	}
 }

@@ -98,7 +98,11 @@ class Interval {
 export class Scheduler {
 	public readonly alarms: Alarm[] = []
 	private readonly lastAlarmsPerSignalTime: Record<number, Alarm> = {}
+	private useLegacyScheduling: boolean = false
 
+	public setLegacyScheduling(use: boolean) {
+		this.useLegacyScheduling = use
+	}
 
 	public scheduleAheadJavascript(joined: number) {
 		for (let i = 50; i >= 0; --i) { //limit the amount of loops to not crash the browser
@@ -110,7 +114,7 @@ export class Scheduler {
 
 	private createAlarm(joined: number, questionnaire: Questionnaire, schedule: Schedule, signalTime: SignalTime, actionTrigger: ActionTrigger, timestamp: number, indexNum: number = 1) {
 		const alarm = new Alarm(questionnaire, schedule, signalTime, actionTrigger, timestamp, indexNum)
-		if (!questionnaire.isActive(joined, timestamp)) {
+		if (!questionnaire.isActive(joined, timestamp, this.useLegacyScheduling)) {
 			if (questionnaire.willBeActiveIn(joined, timestamp) > 0) {
 				this.rescheduleFromAlarm(joined, alarm)
 				return
@@ -127,7 +131,15 @@ export class Scheduler {
 	}
 
 
+	static getDatesDiff(ms1: number, ms2: number): number {
+		const date1 = new Date(ms1)
+		const date2 = new Date(ms2)
 
+		const utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate())
+		const utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate())
+
+		return Math.abs(Math.floor((utc1 - utc2) / ONE_DAY_MS))
+	}
 
 
 	private getRandom(): number {
@@ -207,16 +219,21 @@ export class Scheduler {
 		let baseTimestamp = midnight + signalTime.startTimeOfDay.get()
 		let minDate: number
 		if (manualDelayDays != -1) { //is only set when schedules are freshly created
-			baseTimestamp += ONE_DAY_MS * manualDelayDays
 			minDate = anchorTimestamp + (ONE_DAY_MS * manualDelayDays).coerceAtLeast(MIN_SCHEDULE_DISTANCE)
 
-			// Assuming that anchorTimestamp = 23:58, startTimeOfDay = 00:00 and dailyRepeatRate = 5 (anything greater than 1).
-			// When we used getMidnightMillis(), we calculated backwards a whole day, so baseTimestamp is one day short.
-			// That means, when we just added ONE_DAY_MS * dailyRepeatRate, we effectively only added 4 days instead of 5.
-			// This would not be true if startTimeOfDay = 23:59, so we cant just blindly add a day.
-			// This loop fixes it:
-			while (baseTimestamp < minDate) {
-				baseTimestamp += ONE_DAY_MS
+			if (this.useLegacyScheduling) {
+				// Assuming that anchorTimestamp = 23:58, startTimeOfDay = 00:00 and dailyRepeatRate = 5 (anything greater than 1).
+				// When we used getMidnightMillis(), we calculated backwards a whole day, so baseTimestamp is one day short.
+				// That means, when we just added ONE_DAY_MS * dailyRepeatRate, we effectively only added 4 days instead of 5.
+				// This would not be true if startTimeOfDay = 23:59, so we cant just blindly add a day.
+				// This loop fixes it:
+				while (baseTimestamp < minDate) {
+					baseTimestamp += ONE_DAY_MS
+				}
+			} else {
+				while (Scheduler.getDatesDiff(baseTimestamp, minDate) < manualDelayDays) {
+					baseTimestamp += ONE_DAY_MS
+				}
 			}
 		}
 		else
