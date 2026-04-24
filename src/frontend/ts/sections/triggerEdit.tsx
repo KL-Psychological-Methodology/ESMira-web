@@ -38,7 +38,7 @@ class SpecificQuestionnaireTransformer implements Transformer {
 class CombinedValueTransformer implements Transformer {
 	private readonly index: number
 	private readonly obs: BaseObservable<number>
-	
+
 	constructor(index: number, obs: BaseObservable<number>) {
 		this.index = 1 << index
 		this.obs = obs
@@ -285,7 +285,7 @@ export class Content extends SectionContent {
 					</label>
 				}
 
-				{signalTime.random.get() && signalTime.frequency.get() > 1 &&
+				{signalTime.random.get() &&
 					<label class="spacingLeft">
 						<small>{Lang.get("minutes_between")}</small>
 						<input type="number" min="0" {...BindObservable(signalTime.minutesBetween)} />
