@@ -47,13 +47,13 @@ $studies = $studyStore->getStudyIdList();
 
 foreach($studies as $studyId) {
 	try{
-		$mainStudy = json_decode($studyStore->getStudyConfigAsJson($studyId), true);
-		$mainStudy = array_merge($mainStudy, array("legacyScheduling" => true));
+		$mainStudy = json_decode($studyStore->getStudyConfigAsJson($studyId));
+		$mainStudy->legacyScheduling = true;
 		$study = array("_" => $mainStudy);
 
-		$studyLangs = json_decode($studyStore->getAllLangConfigsAsJson($studyId), true);
+		$studyLangs = json_decode($studyStore->getAllLangConfigsAsJson($studyId));
 		foreach($studyLangs as $langCode=>$langConfig) {
-			$langConfig = array_merge($langConfig, array("legacyScheduling" => true));
+			$langConfig->legacyScheduling = true;
 			$study[$langCode] = $langConfig;
 		}
 
