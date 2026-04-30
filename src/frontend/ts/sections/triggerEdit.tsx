@@ -285,7 +285,7 @@ export class Content extends SectionContent {
 					</label>
 				}
 
-				{signalTime.random.get() && signalTime.frequency.get() > 1 &&
+				{signalTime.random.get() &&
 					<label class="spacingLeft">
 						<small>{Lang.get("minutes_between")}</small>
 						<input type="number" min="0" {...BindObservable(signalTime.minutesBetween)} />
