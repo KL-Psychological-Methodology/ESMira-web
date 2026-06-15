@@ -51,7 +51,7 @@ export class ConstrainedNumberTransformer implements Transformer {
 export class OnBeforeChangeTransformer<T extends PrimitiveType> implements Transformer {
 	private readonly onBeforeChange: (before: T, after: T) => T
 	private readonly obs: BaseObservable<T>
-	
+
 	constructor(obs: BaseObservable<T>, onBeforeChange: (before: T, after: T) => T) {
 		this.obs = obs
 		this.onBeforeChange = onBeforeChange
@@ -106,6 +106,8 @@ export const TimeTransformer: Transformer = {
 			const date = new Date()
 			date.setHours(parseInt(parts[0]) || 0)
 			date.setMinutes(parseInt(parts[1]) || 0)
+			date.setSeconds(0)
+			date.setMilliseconds(0)
 
 			return date.getTime() - midnight
 		}
@@ -159,7 +161,7 @@ export function BindValue<T extends PrimitiveType>(attrValue: T, set: (value: T)
 		else
 			attr = "value"
 	}
-	
+
 	return {
 		[attr]: transformer.toAttribute(attrValue),
 		[event]: (e: InputEvent) => {
