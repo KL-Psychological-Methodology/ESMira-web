@@ -1,6 +1,6 @@
 import { PrimitiveType } from "../observable/types/PrimitiveType";
 import { BaseObservable } from "../observable/BaseObservable";
-import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
+import { getMidnightMillis, timeStampTo24HTimeString, timeStampToTimeString } from "../constants/methods";
 
 export interface Transformer {
 	toAttribute(value: PrimitiveType): PrimitiveType
@@ -85,18 +85,28 @@ export const DateTransformer: Transformer = {
 			return (new Date(value)).getTime()
 	}
 }
-export const TimeTransformer: Transformer = {
-	toAttribute(value: PrimitiveType): string {
+export class TimeTransformer implements Transformer {
+	private readonly use24hFormat: boolean
+
+	constructor(use24hFormat: boolean = true) {
+		this.use24hFormat = use24hFormat
+	}
+	public toAttribute(value: PrimitiveType): PrimitiveType {
 		const intValue = typeof value == "number" ? value : (parseInt(value.toString()) || 0)
 		if (intValue == -1)
 			return ""
 		else {
 			const midnight = getMidnightMillis()
 
-			return timeStampToTimeString(midnight + intValue)
+			if (this.use24hFormat) {
+				return timeStampTo24HTimeString(midnight + intValue)
+			} else {
+				return timeStampToTimeString(midnight + intValue)
+			}
 		}
-	},
-	toValue(value: string): PrimitiveType {
+
+	}
+	public toValue(value: string): PrimitiveType {
 		if (value == "")
 			return -1
 		else {

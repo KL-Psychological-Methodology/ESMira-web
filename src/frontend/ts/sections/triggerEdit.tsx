@@ -268,13 +268,13 @@ export class Content extends SectionContent {
 
 				<label class="spacingLeft">
 					<small>{signalTime.random.get() ? Lang.get("startTime") : Lang.get("time")}</small>
-					<input type="time" {...BindObservable(signalTime.startTimeOfDay, TimeTransformer)} />
+					<input type="time" {...BindObservable(signalTime.startTimeOfDay, new TimeTransformer())} />
 				</label>
 
 				{signalTime.random.get() &&
 					<label class="spacingLeft">
 						<small>{Lang.get("endTime")}</small>
-						<input type="time" {...BindObservable(signalTime.endTimeOfDay, TimeTransformer)} />
+						<input type="time" {...BindObservable(signalTime.endTimeOfDay, new TimeTransformer())} />
 					</label>
 				}
 

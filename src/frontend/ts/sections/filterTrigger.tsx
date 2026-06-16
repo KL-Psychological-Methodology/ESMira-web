@@ -313,18 +313,18 @@ export class Content extends SectionContent {
 			},
 			{
 				title: questionnaire.completableAtSpecificTime.get()
-					? `${Lang.getWithColon("only_at_specific_time")} ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeStart.get())} - ${TimeTransformer.toAttribute(questionnaire.completableAtSpecificTimeEnd.get())}`
+					? `${Lang.getWithColon("only_at_specific_time")} ${(new TimeTransformer(false)).toAttribute(questionnaire.completableAtSpecificTimeStart.get())} - ${(new TimeTransformer()).toAttribute(questionnaire.completableAtSpecificTimeEnd.get())}`
 					: Lang.get("only_at_specific_time"),
 				isActive: () => questionnaire.completableAtSpecificTime.get(),
 				dropdownView:
 					<div class="center">
 						<label>
 							<small>{Lang.getWithColon("from")}</small>
-							<input type="time" {...BindObservable(questionnaire.completableAtSpecificTimeStart, TimeTransformer)} />
+							<input type="time" {...BindObservable(questionnaire.completableAtSpecificTimeStart, new TimeTransformer())} />
 						</label>
 						<label>
 							<small>{Lang.getWithColon("until")}</small>
-							<input type="time" {...BindObservable(questionnaire.completableAtSpecificTimeEnd, TimeTransformer)} />
+							<input type="time" {...BindObservable(questionnaire.completableAtSpecificTimeEnd, new TimeTransformer())} />
 						</label>
 					</div>,
 				enable: () => questionnaire.completableAtSpecificTime.set(true),
