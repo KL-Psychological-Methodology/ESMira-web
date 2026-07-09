@@ -27,11 +27,13 @@ export class ConstrainedNumberTransformer implements Transformer {
 	private readonly min?: number;
 	private readonly max?: number;
 	private readonly allowEmpty: boolean;
+	private readonly integer: boolean;
 
-	constructor(min?: number, max?: number, allowEmpty: boolean = false) {
+	constructor(min?: number, max?: number, allowEmpty: boolean = false, integer: boolean = true) {
 		this.min = min;
 		this.max = max;
 		this.allowEmpty = allowEmpty
+		this.integer = integer;
 	}
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return value;
@@ -40,7 +42,7 @@ export class ConstrainedNumberTransformer implements Transformer {
 		if (this.allowEmpty && value === "") {
 			return "";
 		}
-		let num = parseInt(value) || 0;
+		let num = (this.integer ? parseInt(value) : parseFloat(value)) || 0;
 		if (typeof this.min === "number") num = Math.max(this.min, num);
 		if (typeof this.max === "number") num = Math.min(this.max, num);
 		return num;
