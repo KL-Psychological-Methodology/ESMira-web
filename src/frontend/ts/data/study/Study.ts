@@ -28,7 +28,7 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public sendMessagesAllowed = this.primitive<boolean>("sendMessagesAllowed", true)
 	public randomGroups = this.primitive<number>("randomGroups", 1)
 	public enableRewardSystem = this.primitive<boolean>("enableRewardSystem", false)
-	public enableRewardCalculation = this.primitive<boolean>("enableRewardCalculatin", false)
+	public enableRewardCalculation = this.primitive<boolean>("enableRewardCalculation", false)
 	public rewardCalculationBase = this.primitive<number>("rewardCalculationBase", 0)
 	public rewardCalculationMax = this.primitive<number>("rewardCalculationMax", 0)
 	public rewardVisibleAfterDays = this.primitive<number>("rewardVisibleAfterDays", 0)
