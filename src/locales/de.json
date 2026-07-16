@@ -712,5 +712,6 @@
 	"reward_calculation_max_explanation": "(0 für kein Limit)",
 	"reward_calculation_questionnaire_rate": "Rate pro Datensatz",
 	"reward_calculation_questionnaire_max": "Maximaler Betrag des Fragebogens",
-	"reward_amount": "Belohnungsbetrag"
+	"reward_amount": "Belohnungsbetrag",
+	"reward_calculation_description": "Erklärung Belohnungsberechnung"
 }

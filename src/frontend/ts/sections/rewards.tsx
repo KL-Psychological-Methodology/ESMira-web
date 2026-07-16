@@ -131,7 +131,17 @@ export class Content extends SectionContent {
 								}
 							</div>
 					}),
-
+					study.enableRewardCalculation.get() &&
+					DashElement("stretched", {
+						content:
+							<div>
+								<h2 class="center">{Lang.get("reward_calculation_description")}</h2>
+								<div class="fakelabel spacingTop line">
+									{RichText(study.rewardCalculationInfo)}
+									{ObservableLangChooser(study)}
+								</div>
+							</div>
+					}),
 					DashElement("stretched", {
 						content:
 							<div>

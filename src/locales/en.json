@@ -718,5 +718,6 @@
 	"reward_calculation_max_explanation": "(0 disables the limit)",
 	"reward_calculation_questionnaire_rate": "Rate per dataset",
 	"reward_calculation_questionnaire_max": "Maximum contribution from questionnaire",
-	"reward_amount": "Reward amount"
+	"reward_amount": "Reward amount",
+	"reward_calculation_description": "Reward calculation description"
 }
