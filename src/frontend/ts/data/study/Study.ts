@@ -52,6 +52,7 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public rewardEmailContent = this.translatable("rewardEmailContent", "")
 	public rewardInstructions = this.translatable("rewardInstructions", "")
 	public rewardCalculationInfo = this.translatable("rewardCalculationInfo", "")
+	public rewardCalculationCurrency = this.translatable("rewardCalculationCurrency", "")
 	public postStudyNote = this.translatable("postStudyNote", "")
 	public faq = this.translatable("faq", "")
 

@@ -35,6 +35,7 @@ export class Content extends SectionContent {
 	private readonly rewardCodeData: RewardCodeData
 	private codeResponse: CodeResponse | null = null
 	private readonly currentCode = new ObservablePrimitive<string>("", null, "currentRewardCode")
+	private currency = ""
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
@@ -92,6 +93,7 @@ export class Content extends SectionContent {
 		//create index for internalId:
 		let questionnaireIndex: Record<number, string> = {}
 		let study = this.getStudyOrThrow()
+		this.currency = study.rewardCalculationCurrency.get()
 		study.questionnaires.get().forEach((questionnaire) => {
 			questionnaireIndex[questionnaire.internalId.get()] = questionnaire.getTitle();
 		})
@@ -176,7 +178,7 @@ export class Content extends SectionContent {
 								{this.codeResponse.rewardAmount !== undefined &&
 									<div>
 										<h2 class="spacingLeft">{Lang.get("reward_amount")}</h2>
-										<div class="spacingLeft horizontalPadding spacingBottom">{this.codeResponse.rewardAmount}</div>
+										<div class="spacingLeft horizontalPadding spacingBottom">{this.codeResponse.rewardAmount + " " + this.currency}</div>
 									</div>}
 							</div>
 					})

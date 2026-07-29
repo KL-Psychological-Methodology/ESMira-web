@@ -92,11 +92,16 @@ export class Content extends SectionContent {
 								<div class="center">
 									<label class="noTitle noDesc">
 										<input type="checkbox"{...BindObservable(study.enableRewardCalculation)} />
-										<span>{Lang.get("raward_calculation_enable")}</span>
+										<span>{Lang.get("reward_calculation_enable")}</span>
 									</label>
 								</div>
 								{study.enableRewardCalculation.get() &&
 									<div class="center">
+										<label class="noTitle">
+											<input {...BindObservable(study.rewardCalculationCurrency)} />
+											<span>{Lang.get("reward_calculation_currency")}</span>
+											{ObservableLangChooser(study)}
+										</label>
 										<label class="noTitle">
 											<span>{Lang.get("reward_calculation_base")}</span>
 											<input type="number" min="0" {...BindObservable(study.rewardCalculationBase, new ConstrainedNumberTransformer(0, undefined, false, false))} />
@@ -131,6 +136,7 @@ export class Content extends SectionContent {
 								}
 							</div>
 					}),
+
 					study.enableRewardCalculation.get() &&
 					DashElement("stretched", {
 						content:
@@ -141,7 +147,9 @@ export class Content extends SectionContent {
 									{ObservableLangChooser(study)}
 								</div>
 							</div>
-					}),
+					})
+					,
+
 					DashElement("stretched", {
 						content:
 							<div>

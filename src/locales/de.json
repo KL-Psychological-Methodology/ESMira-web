@@ -713,5 +713,6 @@
 	"reward_calculation_questionnaire_rate": "Rate pro Datensatz",
 	"reward_calculation_questionnaire_max": "Maximaler Betrag des Fragebogens",
 	"reward_amount": "Belohnungsbetrag",
-	"reward_calculation_description": "Erklärung Belohnungsberechnung"
+	"reward_calculation_description": "Erklärung Belohnungsberechnung",
+	"reward_calculation_currency": "Währung"
 }
