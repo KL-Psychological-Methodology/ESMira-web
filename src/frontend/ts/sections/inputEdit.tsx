@@ -1,21 +1,22 @@
-import {SectionAlternative, SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {Lang} from "../singletons/Lang";
-import {Study} from "../data/study/Study";
-import {BindObservable, OnBeforeChangeTransformer} from "../components/BindObservable";
-import {TitleRow} from "../components/TitleRow";
-import {Input} from "../data/study/Input";
-import {createUniqueName} from "../helpers/UniqueName";
-import {DashRow} from "../components/DashRow";
-import {InputOptionDesigner} from "../helpers/InputOptionDesigner";
-import {DashElement} from "../components/DashElement";
-import {SearchWidget} from "../components/SearchWidget";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {BtnCustom} from "../components/Buttons";
+import { SectionAlternative, SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { Lang } from "../singletons/Lang";
+import { Study } from "../data/study/Study";
+import { BindObservable, OnBeforeChangeTransformer } from "../components/BindObservable";
+import { TitleRow } from "../components/TitleRow";
+import { Input } from "../data/study/Input";
+import { createUniqueName } from "../helpers/UniqueName";
+import { DashRow } from "../components/DashRow";
+import { InputOptionDesigner } from "../helpers/InputOptionDesigner";
+import { DashElement } from "../components/DashElement";
+import { SearchWidget } from "../components/SearchWidget";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { BtnCustom } from "../components/Buttons";
 import questionSvg from "../../imgs/icons/question.svg?raw"
-import {getFromUrlFriendly} from "../constants/methods";
-import {SectionData} from "../site/SectionData";
-import {ChartData} from "../data/study/ChartData";
+import { getFromUrlFriendly } from "../constants/methods";
+import { SectionData } from "../site/SectionData";
+import { ChartData } from "../data/study/ChartData";
+import { AxisData } from "../data/study/AxisData";
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 
@@ -105,18 +106,32 @@ export class Content extends SectionContent {
 		const personalCharts = study.personalStatistics.charts.get();
 		const publicCharts = study.publicStatistics.charts.get();
 
-		function searchAndChangeName(chart : ChartData) {
+		function searchAndChangeName(chart: ChartData) {
 			const axisContainers = chart.axisContainer.get();
 			for (const container of axisContainers) {
 				const xAxis = container.xAxis;
 				const yAxis = container.yAxis;
 
-				if (xAxis != null && xAxis.variableName.get() === before) {
-					xAxis.variableName.set(newName);
+				if (xAxis != null) {
+					if (xAxis.variableName.get() === before) {
+						xAxis.variableName.set(newName);
+					}
+					for (const condition of xAxis.conditions.get()) {
+						if (condition.key.get() === before) {
+							condition.key.set(newName)
+						}
+					}
 				}
 
-				if (yAxis != null && yAxis.variableName.get() === before) {
-					yAxis.variableName.set(newName);
+				if (yAxis != null) {
+					if (yAxis.variableName.get() === before) {
+						yAxis.variableName.set(newName);
+					}
+					for (const condition of yAxis.conditions.get()) {
+						if (condition.key.get() === before) {
+							condition.key.set(newName)
+						}
+					}
 				}
 			}
 		}
@@ -151,9 +166,9 @@ export class Content extends SectionContent {
 						<small>{Lang.get("variable_name")}</small>
 						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>(input.name, (before, after) => {
 							let newName = createUniqueName(study, after) ?? before
-							 if(newName != before) {
-								 this.updateChartVariableName(before, newName)
-							 }
+							if (newName != before) {
+								this.updateChartVariableName(before, newName)
+							}
 							return newName
 						}))} />
 					</label>
