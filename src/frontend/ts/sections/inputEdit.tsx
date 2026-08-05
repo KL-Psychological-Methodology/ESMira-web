@@ -15,6 +15,7 @@ import {BtnCustom} from "../components/Buttons";
 import questionSvg from "../../imgs/icons/question.svg?raw"
 import {getFromUrlFriendly} from "../constants/methods";
 import {SectionData} from "../site/SectionData";
+import {ChartData} from "../data/study/ChartData";
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 
@@ -98,6 +99,37 @@ export class Content extends SectionContent {
 		return this.getInputFromIndices(study)
 	}
 
+	private updateChartVariableName(before: string, newName: string) {
+		const study = this.getStudyOrThrow()
+
+		const personalCharts = study.personalStatistics.charts.get();
+		const publicCharts = study.publicStatistics.charts.get();
+
+		function searchAndChangeName(chart : ChartData) {
+			const axisContainers = chart.axisContainer.get();
+			for (const container of axisContainers) {
+				const xAxis = container.xAxis;
+				const yAxis = container.yAxis;
+
+				if (xAxis != null && xAxis.variableName.get() === before) {
+					xAxis.variableName.set(newName);
+				}
+
+				if (yAxis != null && yAxis.variableName.get() === before) {
+					yAxis.variableName.set(newName);
+				}
+			}
+		}
+
+		for (const chart of personalCharts) {
+			searchAndChangeName(chart);
+		}
+
+		for (const chart of publicCharts) {
+			searchAndChangeName(chart);
+		}
+	}
+
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
 		let input = this.getInput(study, getFromUrlFriendly(this.getStaticString("input") ?? ""))
@@ -118,7 +150,11 @@ export class Content extends SectionContent {
 					<label>
 						<small>{Lang.get("variable_name")}</small>
 						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>(input.name, (before, after) => {
-							return createUniqueName(study, after) ?? before
+							let newName = createUniqueName(study, after) ?? before
+							 if(newName != before) {
+								 this.updateChartVariableName(before, newName)
+							 }
+							return newName
 						}))} />
 					</label>
 				</div>
