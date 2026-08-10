@@ -1,5 +1,5 @@
-import {Lang} from "../singletons/Lang";
-import {lt} from "semver";
+import { Lang } from "../singletons/Lang";
+import { lt } from "semver";
 
 export function safeConfirm(msg: string): boolean {
 	return confirm(msg) && (prompt(Lang.get("confirm_again")) || "").toLowerCase() === "ok"
@@ -48,6 +48,11 @@ export function timeStampToTimeString(timestamp: number) {
 	return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 }
 
+export function timeStampTo24HTimeString(timestamp: number) {
+	const d = new Date(timestamp)
+	return d.getHours().toString().padStart(2, "0") + ":" + d.getMinutes().toString().padStart(2, "0")
+}
+
 export function getFromUrlFriendly(s: string): string {
 	return atob(s.replace(/\-/g, '+').replace(/\_/g, '/'))
 }
@@ -57,20 +62,20 @@ export function makeUrlFriendly(s: string): string {
 }
 
 export function compareSemVersion(smaller: string, bigger: string) {
-	if(smaller.startsWith("pre.")) {
+	if (smaller.startsWith("pre.")) {
 		smaller = smaller.substring(4);
 	}
-	if(bigger.startsWith("pre.")) {
+	if (bigger.startsWith("pre.")) {
 		bigger = bigger.substring(4);
 	}
-	
+
 	return lt(smaller, bigger)
 }
 
 export function getReadableByteSize(bytes: number): string {
-	if(bytes > 1000000000)
+	if (bytes > 1000000000)
 		return `${Math.round(bytes / 10000000) / 100} Gb`
-	else if(bytes > 1000000)
+	else if (bytes > 1000000)
 		return `${Math.round(bytes / 10000) / 100} Mb`
 	else
 		return `${Math.round(bytes / 1000)} Kb`

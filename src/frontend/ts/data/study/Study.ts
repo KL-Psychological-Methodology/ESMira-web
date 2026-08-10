@@ -28,6 +28,9 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public sendMessagesAllowed = this.primitive<boolean>("sendMessagesAllowed", true)
 	public randomGroups = this.primitive<number>("randomGroups", 1)
 	public enableRewardSystem = this.primitive<boolean>("enableRewardSystem", false)
+	public enableRewardCalculation = this.primitive<boolean>("enableRewardCalculation", false)
+	public rewardCalculationBase = this.primitive<number>("rewardCalculationBase", 0)
+	public rewardCalculationMax = this.primitive<number>("rewardCalculationMax", 0)
 	public rewardVisibleAfterDays = this.primitive<number>("rewardVisibleAfterDays", 0)
 	public defaultLang = this.primitive<string>("defaultLang", "en")
 	public useFallback = this.primitive<boolean>("useFallback", true)
@@ -48,6 +51,8 @@ export class Study extends DataStructure implements TranslatableRootInterface {
 	public contactEmail = this.translatable("contactEmail", "")
 	public rewardEmailContent = this.translatable("rewardEmailContent", "")
 	public rewardInstructions = this.translatable("rewardInstructions", "")
+	public rewardCalculationInfo = this.translatable("rewardCalculationInfo", "")
+	public rewardCalculationCurrency = this.translatable("rewardCalculationCurrency", "")
 	public postStudyNote = this.translatable("postStudyNote", "")
 	public faq = this.translatable("faq", "")
 

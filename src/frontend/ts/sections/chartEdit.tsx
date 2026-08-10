@@ -298,6 +298,10 @@ export class Content extends SectionContent {
 						content:
 							<div>
 								<label>
+									<small>{Lang.get("chart_min_yValue")}</small>
+									<input type="number" {...BindObservable(chart.minYValue)} />
+								</label>
+								<label>
 									<small>{Lang.get("chart_max_yValue")}</small>
 									<input type="number" {...BindObservable(chart.maxYValue)} />
 									<small>{Lang.get("chart_max_yValue_explainZero")}</small>

@@ -232,7 +232,7 @@ class FullcalendarComponent implements Component<FullcalendarComponentOptions, a
 							</label>
 							<label class="noDesc">
 								<small>{Lang.get("join_time")}</small>
-								<input type="time" {...BindObservable(this.joinTime, TimeTransformer)} />
+								<input type="time" {...BindObservable(this.joinTime, new TimeTransformer())} />
 							</label>
 							<div>
 								{BtnReload(() => {

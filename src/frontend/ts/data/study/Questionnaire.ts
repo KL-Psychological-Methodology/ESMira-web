@@ -33,6 +33,8 @@ export class Questionnaire extends DataStructure {
 	public completableAtSpecificTimeEnd = this.primitive<number>("completableAtSpecificTimeEnd", -1)
 	public limitToGroup = this.primitive<number>("limitToGroup", 0)
 	public minDataSetsForReward = this.primitive<number>("minDataSetsForReward", 0)
+	public rewardRate = this.primitive<number>("rewardRate", 0)
+	public rewardMax = this.primitive<number>("rewardMax", 0)
 	public isBackEnabled = this.primitive<boolean>("isBackEnabled", true)
 	public endScriptBlock = this.primitive<string>("endScriptBlock", "")
 	public showInDisabledList = this.primitive<boolean>("showInDisabledList", true)

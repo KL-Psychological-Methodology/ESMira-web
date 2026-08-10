@@ -709,5 +709,14 @@
 	"use_legacy_scheduling": "Gebruik de oude vorm van de planningsfunctie",
 	"schedule_start_day_one": "Wacht tot de eerste volledige dag van de studie (de dag nadat deelname aan de studie is gestart)",
 	"schedule_info_start_day_one": "Dit schema zal beginnen op de dag nadat deelname aan de studie is gestart.",
-	"use_legacy_scheduling_info": "Gebruik een oudere planningslogica om dagafwijkingen te bepalen. Deze logica werkt niet met volledige dagen, maar met perioden van 24 uur sinds de start van het onderzoek (afhankelijk van het tijdstip)."
+	"use_legacy_scheduling_info": "Gebruik een oudere planningslogica om dagafwijkingen te bepalen. Deze logica werkt niet met volledige dagen, maar met perioden van 24 uur sinds de start van het onderzoek (afhankelijk van het tijdstip).",
+	"reward_calculation_base": "Basisbeloning",
+	"reward_calculation_max": "Maximum te behalen beloning",
+	"reward_calculation_max_explanation": "(0 schakelt de limiet uit)",
+	"reward_calculation_questionnaire_rate": "Tarief per dataset",
+	"reward_amount": "Bedrag van de beloning",
+	"reward_calculation_currency": "Valuta",
+	"reward_calculation_enable": "Beloningsberekening inschakelen",
+	"reward_calculation_questionnaire_max": "Maximale bijdrage vanuit vragenlijst",
+	"reward_calculation_description": "Beschrijving van de berekening van de beloning"
 }

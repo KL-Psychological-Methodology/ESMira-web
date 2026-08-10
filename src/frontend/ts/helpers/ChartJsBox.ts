@@ -201,7 +201,7 @@ export class ChartJsBox {
 				labels: dataSetCreator.labels,
 				datasets: datasets
 			},
-			options: this.getChartOptions(chartType, datasets, chart.inPercent.get(), chart.maxYValue.get()),
+			options: this.getChartOptions(chartType, datasets, chart.inPercent.get(), chart.minYValue.get(), chart.maxYValue.get()),
 			plugins: this.getChartPlugins(legendView)
 		})
 	}
@@ -276,7 +276,7 @@ export class ChartJsBox {
 		}]
 	}
 
-	private getChartOptions(chartType: number, dataSets: ChartDataset[], inPercent: boolean, maxY: number): ChartOptions {
+	private getChartOptions(chartType: number, dataSets: ChartDataset[], inPercent: boolean, minY: number, maxY: number): ChartOptions {
 		let verticalPadding = chartType === STATISTICS_CHARTTYPES_PIE ? 40 : 0;
 		return {
 			layout: {
@@ -291,7 +291,7 @@ export class ChartJsBox {
 			scales: {
 				y: {
 					display: chartType === STATISTICS_CHARTTYPES_SCATTER,
-					suggestedMin: 0,
+					suggestedMin: minY,
 					suggestedMax: maxY
 				}
 			},

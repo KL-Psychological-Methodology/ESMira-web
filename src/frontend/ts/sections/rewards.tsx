@@ -10,6 +10,7 @@ import warnSvg from "../../imgs/icons/warn.svg?raw"
 import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import { BtnCustom } from "../components/Buttons";
 import { SectionData } from "../site/SectionData";
+import { Questionnaire } from "../data/study/Questionnaire";
 
 export class Content extends SectionContent {
 	private faultyEmailContent = false
@@ -83,6 +84,71 @@ export class Content extends SectionContent {
 								</table>
 							</div>
 					}),
+
+					DashElement("stretched", {
+						content:
+							<div class="center">
+								<h2 class="center"></h2>
+								<div class="center">
+									<label class="noTitle noDesc">
+										<input type="checkbox"{...BindObservable(study.enableRewardCalculation)} />
+										<span>{Lang.get("reward_calculation_enable")}</span>
+									</label>
+								</div>
+								{study.enableRewardCalculation.get() &&
+									<div class="center">
+										<label class="noTitle">
+											<input {...BindObservable(study.rewardCalculationCurrency)} />
+											<span>{Lang.get("reward_calculation_currency")}</span>
+											{ObservableLangChooser(study)}
+										</label>
+										<label class="noTitle">
+											<span>{Lang.get("reward_calculation_base")}</span>
+											<input type="number" min="0" {...BindObservable(study.rewardCalculationBase, new ConstrainedNumberTransformer(0, undefined, false, false))} />
+										</label>
+										<br />
+										<label class="noTitle">
+											<span>{Lang.get("reward_calculation_max")}</span>
+											<input type="number" min="0" {...BindObservable(study.rewardCalculationMax, new ConstrainedNumberTransformer(0, undefined, false, false))} />
+											<small>{Lang.get("reward_calculation_max_explanation")}</small>
+										</label>
+										<table style="width: 100%;">
+											<tr>
+												<th>{Lang.get("questionnaire")}</th>
+												<th>{Lang.get("reward_calculation_questionnaire_rate")}</th>
+												<th>{Lang.get("reward_calculation_questionnaire_max")}</th>
+											</tr>
+											{study.questionnaires.get().map((questionnaire) =>
+												<tr>
+													<td>
+														<span>{questionnaire.getTitle()}</span>
+													</td>
+													<td>
+														<input type="number" min="0" {...BindObservable(questionnaire.rewardRate, new ConstrainedNumberTransformer(0, undefined, false, false))} />
+													</td>
+													<td>
+														<input type="number" min="0" {...BindObservable(questionnaire.rewardMax, new ConstrainedNumberTransformer(0, undefined, false, false))} />
+													</td>
+												</tr>
+											)}
+										</table>
+									</div>
+								}
+							</div>
+					}),
+
+					study.enableRewardCalculation.get() &&
+					DashElement("stretched", {
+						content:
+							<div>
+								<h2 class="center">{Lang.get("reward_calculation_description")}</h2>
+								<div class="fakelabel spacingTop line">
+									{RichText(study.rewardCalculationInfo)}
+									{ObservableLangChooser(study)}
+								</div>
+							</div>
+					})
+					,
 
 					DashElement("stretched", {
 						content:

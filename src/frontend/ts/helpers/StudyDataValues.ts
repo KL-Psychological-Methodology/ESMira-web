@@ -16,6 +16,9 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 			variables.push(name + "~usageProtocolToday")
 			variables.push(name);
 			return
+		case "battery_level":
+			variables.push(name)
+			variables.push(name + "~charging")
 		case "bluetooth_devices":
 			variables.push(name + "~devices")
 			variables.push(name)
@@ -30,7 +33,19 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 			for (let i = 1; i <= input.listChoices.get().length; i++) {
 				variables.push(name + "~" + i.toString())
 			}
+			if (input.other) {
+				variables.push(name + "~other")
+			}
 			return
+		case "list_single":
+			variables.push(name)
+			if (input.other) {
+				variables.push(name + "~other")
+			}
+		case "noise_level":
+			variables.push(name)
+			variables.push(name + "~min")
+			variables.push(name + "~max")
 		default:
 			variables.push(name)
 			return

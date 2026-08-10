@@ -14,6 +14,7 @@ export class ChartData extends DataStructure {
 	public chartType						= this.primitive<number>(		"chartType", STATISTICS_CHARTTYPES_LINE)
 	public inPercent						= this.primitive<boolean>(		"inPercent", false)
 	public xAxisIsNumberRange				= this.primitive<boolean>(		"xAxisIsNumberRange", false)
+	public minYValue						= this.primitive<number>(		"minYValue", 0)
 	public maxYValue						= this.primitive<number>(		"maxYValue", 0)
 	public displayPublicVariable			= this.primitive<boolean>(		"displayPublicVariable", false)
 	public hideUntilCompletion				= this.primitive<boolean>(		"hideUntilCompletion", false)

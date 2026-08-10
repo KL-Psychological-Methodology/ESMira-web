@@ -46,6 +46,7 @@
 	"change": "Change",
 	"change_username": "Change username",
 	"change_password": "Change password",
+	"chart_min_yValue": "Minimum value on y-axis",
 	"chart_max_yValue": "Highest value on y-axis",
 	"chart_max_yValue_explainZero": "Provide 0 to disable the limit",
 	"check": "Check",
@@ -709,5 +710,15 @@
 	"schedule_info_start_day_one": "This schedule will start on the day after the day the study was joined.",
 	"schedule_info_start_day_x": "Counting the day the study was joined as day 0, this schedule will start on day %d.",
 	"use_legacy_scheduling": "Use legacy scheduling",
-	"use_legacy_scheduling_info": "Use an older scheduling logic to determine day offsets. This logic is not dependent full days, but on 24-hour periods since the study was joined (dependent on time of day)."
+	"use_legacy_scheduling_info": "Use an older scheduling logic to determine day offsets. This logic is not dependent full days, but on 24-hour periods since the study was joined (dependent on time of day).",
+	"reward_calculation": "Reward calculation",
+	"reward_calculation_enable": "Enable reward calculation",
+	"reward_calculation_base": "Base reward",
+	"reward_calculation_max": "Maximum achievable reward",
+	"reward_calculation_max_explanation": "(0 disables the limit)",
+	"reward_calculation_questionnaire_rate": "Rate per dataset",
+	"reward_calculation_questionnaire_max": "Maximum contribution from questionnaire",
+	"reward_amount": "Reward amount",
+	"reward_calculation_description": "Reward calculation description",
+	"reward_calculation_currency": "Currency"
 }

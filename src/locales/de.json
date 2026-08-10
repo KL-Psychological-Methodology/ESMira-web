@@ -46,6 +46,7 @@
 	"change": "Ändern",
 	"change_username": "Username ändern",
 	"change_password": "Passwort ändern",
+	"chart_min_yValue": "Niedrigster dargestellter Wert auf Y-Achse",
 	"chart_max_yValue": "Höchster dargestellter Wert auf Y-Achse",
 	"chart_max_yValue_explainZero": "Wenn 0 angegeben ist, gibt es kein Limit",
 	"check": "Überprüfe",
@@ -703,5 +704,15 @@
 	"schedule_info_start_day_one": "Dieser Zeitplan beginnt an dem Tag nach dem Tag an dem die Versuchsperson der Studie beigetreten ist.",
 	"schedule_info_start_day_x": "Mit dem Tag an dem die Versuchsperson beigetreten ist als Tag 0 gerechnet, beginnt dieser Zeitplan an Tag %d.",
 	"use_legacy_scheduling": "Verwende Legacy-Scheduling",
-	"use_legacy_scheduling_info": "Verwende eine ältere Logik zum Planen von Studienzeitpunken. Diese Logik rechnet nicht in ganzen Studientagen, sondern in 24-Stunden-Intervallen seit dem Beitrittszeitpunkt (Uhrzeitabhängig)."
+	"use_legacy_scheduling_info": "Verwende eine ältere Logik zum Planen von Studienzeitpunken. Diese Logik rechnet nicht in ganzen Studientagen, sondern in 24-Stunden-Intervallen seit dem Beitrittszeitpunkt (Uhrzeitabhängig).",
+	"reward_calculation": "Belohnungsberechnung",
+	"reward_calculation_enable": "Aktiviere Belohnungsberechnung",
+	"reward_calculation_base": "Basisbelohnung",
+	"reward_calculation_max": "Maximal erreichbare Belohnung",
+	"reward_calculation_max_explanation": "(0 für kein Limit)",
+	"reward_calculation_questionnaire_rate": "Rate pro Datensatz",
+	"reward_calculation_questionnaire_max": "Maximaler Betrag des Fragebogens",
+	"reward_amount": "Belohnungsbetrag",
+	"reward_calculation_description": "Erklärung Belohnungsberechnung",
+	"reward_calculation_currency": "Währung"
 }

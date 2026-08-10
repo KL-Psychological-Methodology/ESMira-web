@@ -1,6 +1,6 @@
 import { PrimitiveType } from "../observable/types/PrimitiveType";
 import { BaseObservable } from "../observable/BaseObservable";
-import { getMidnightMillis, timeStampToTimeString } from "../constants/methods";
+import { getMidnightMillis, timeStampTo24HTimeString, timeStampToTimeString } from "../constants/methods";
 
 export interface Transformer {
 	toAttribute(value: PrimitiveType): PrimitiveType
@@ -27,11 +27,13 @@ export class ConstrainedNumberTransformer implements Transformer {
 	private readonly min?: number;
 	private readonly max?: number;
 	private readonly allowEmpty: boolean;
+	private readonly integer: boolean;
 
-	constructor(min?: number, max?: number, allowEmpty: boolean = false) {
+	constructor(min?: number, max?: number, allowEmpty: boolean = false, integer: boolean = true) {
 		this.min = min;
 		this.max = max;
 		this.allowEmpty = allowEmpty
+		this.integer = integer;
 	}
 	public toAttribute(value: PrimitiveType): PrimitiveType {
 		return value;
@@ -40,7 +42,7 @@ export class ConstrainedNumberTransformer implements Transformer {
 		if (this.allowEmpty && value === "") {
 			return "";
 		}
-		let num = parseInt(value) || 0;
+		let num = (this.integer ? parseInt(value) : parseFloat(value)) || 0;
 		if (typeof this.min === "number") num = Math.max(this.min, num);
 		if (typeof this.max === "number") num = Math.min(this.max, num);
 		return num;
@@ -51,7 +53,7 @@ export class ConstrainedNumberTransformer implements Transformer {
 export class OnBeforeChangeTransformer<T extends PrimitiveType> implements Transformer {
 	private readonly onBeforeChange: (before: T, after: T) => T
 	private readonly obs: BaseObservable<T>
-	
+
 	constructor(obs: BaseObservable<T>, onBeforeChange: (before: T, after: T) => T) {
 		this.obs = obs
 		this.onBeforeChange = onBeforeChange
@@ -85,18 +87,28 @@ export const DateTransformer: Transformer = {
 			return (new Date(value)).getTime()
 	}
 }
-export const TimeTransformer: Transformer = {
-	toAttribute(value: PrimitiveType): string {
+export class TimeTransformer implements Transformer {
+	private readonly use24hFormat: boolean
+
+	constructor(use24hFormat: boolean = true) {
+		this.use24hFormat = use24hFormat
+	}
+	public toAttribute(value: PrimitiveType): PrimitiveType {
 		const intValue = typeof value == "number" ? value : (parseInt(value.toString()) || 0)
 		if (intValue == -1)
 			return ""
 		else {
 			const midnight = getMidnightMillis()
 
-			return timeStampToTimeString(midnight + intValue)
+			if (this.use24hFormat) {
+				return timeStampTo24HTimeString(midnight + intValue)
+			} else {
+				return timeStampToTimeString(midnight + intValue)
+			}
 		}
-	},
-	toValue(value: string): PrimitiveType {
+
+	}
+	public toValue(value: string): PrimitiveType {
 		if (value == "")
 			return -1
 		else {
@@ -106,6 +118,8 @@ export const TimeTransformer: Transformer = {
 			const date = new Date()
 			date.setHours(parseInt(parts[0]) || 0)
 			date.setMinutes(parseInt(parts[1]) || 0)
+			date.setSeconds(0)
+			date.setMilliseconds(0)
 
 			return date.getTime() - midnight
 		}
@@ -159,7 +173,7 @@ export function BindValue<T extends PrimitiveType>(attrValue: T, set: (value: T)
 		else
 			attr = "value"
 	}
-	
+
 	return {
 		[attr]: transformer.toAttribute(attrValue),
 		[event]: (e: InputEvent) => {

@@ -22,6 +22,7 @@ interface CodeResponse {
 	timestamp: number
 	questionnaireDataSetCount: Record<number, number>
 	namedQuestionnaireDataSetCount: EntriesPerQuestionnaire[]
+	rewardAmount: number | undefined
 }
 
 interface RewardCodeData {
@@ -34,6 +35,7 @@ export class Content extends SectionContent {
 	private readonly rewardCodeData: RewardCodeData
 	private codeResponse: CodeResponse | null = null
 	private readonly currentCode = new ObservablePrimitive<string>("", null, "currentRewardCode")
+	private currency = ""
 
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
 		return [
@@ -91,6 +93,7 @@ export class Content extends SectionContent {
 		//create index for internalId:
 		let questionnaireIndex: Record<number, string> = {}
 		let study = this.getStudyOrThrow()
+		this.currency = study.rewardCalculationCurrency.get()
 		study.questionnaires.get().forEach((questionnaire) => {
 			questionnaireIndex[questionnaire.internalId.get()] = questionnaire.getTitle();
 		})
@@ -102,6 +105,28 @@ export class Content extends SectionContent {
 				continue;
 			namedQuestionnaireEntryCount.push({ title: questionnaireIndex[internalId], count: codeResponse.questionnaireDataSetCount[internalId] });
 		}
+
+		//calculate reward:
+		codeResponse.rewardAmount = undefined
+		if (study.enableRewardCalculation.get()) {
+			let rewardAmount = study.rewardCalculationBase.get()
+			study.questionnaires.get().forEach((questinnaire) => {
+				const internalId = questinnaire.internalId.get()
+				if (codeResponse.questionnaireDataSetCount.hasOwnProperty(internalId)) {
+					let questionnaireReward = codeResponse.questionnaireDataSetCount[internalId] * questinnaire.rewardRate.get()
+
+					if (questinnaire.rewardMax.get() > 0) {
+						questionnaireReward = Math.min(questionnaireReward, questinnaire.rewardMax.get())
+					}
+					rewardAmount += questionnaireReward
+				}
+			})
+			if (study.rewardCalculationMax.get() > 0) {
+				rewardAmount = Math.min(rewardAmount, study.rewardCalculationMax.get())
+			}
+			codeResponse.rewardAmount = rewardAmount
+		}
+
 		codeResponse.namedQuestionnaireDataSetCount = namedQuestionnaireEntryCount
 	}
 
@@ -110,66 +135,75 @@ export class Content extends SectionContent {
 	}
 
 	public getView(): Vnode<any, any> {
-		return <div class="rewardCodes">
+		return <div class="rewardCodes" >
 			{TitleRow(Lang.getWithColon("reward_codes"))}
-			{DashRow(
-				DashElement(null, {
-					content:
-						SearchBox(Lang.get("generated_reward_codes", this.rewardCodeData.rewardCodes.length), this.rewardCodeData.rewardCodes.map((code) => {
-							return { key: code, view: <span class={`line clickable verticalPadding smallText ${this.currentCode.get() == code ? "highlight" : ""}`} onclick={this.selectRewardCode.bind(this, code)}>{code}</span> }
-						}))
-				}),
+			{
+				DashRow(
+					DashElement(null, {
+						content:
+							SearchBox(Lang.get("generated_reward_codes", this.rewardCodeData.rewardCodes.length), this.rewardCodeData.rewardCodes.map((code) => {
+								return { key: code, view: <span class={`line clickable verticalPadding smallText ${this.currentCode.get() == code ? "highlight" : ""}`} onclick={this.selectRewardCode.bind(this, code)}>{code}</span> }
+							}))
+					}),
 
-				DashElement("vertical", {
-					content:
-						<div class="horizontalPadding verticalPadding center">
-							<label>
-								<small>{Lang.get("reward_code")}</small>
-								<input type="text" class={`small ${this.codeResponse != null ? (!this.codeResponse?.faultyCode ? "success" : "failed") : "nothing"}`} {...BindObservable(this.currentCode)} />
-								&nbsp;
-								<input class="small" type="button" onclick={this.checkCode.bind(this)} value={Lang.get("check")} />
-							</label>
-						</div>
-				}, this.codeResponse != null && !this.codeResponse.faultyCode && {
-					content:
-						<div class="fadeIn">
-							<h2 class="spacingLeft">{Lang.getWithColon("creation_date")}</h2>
-							<div class="spacingLeft horizontalPadding spacingBottom">{(new Date(this.codeResponse.timestamp)).toLocaleString()}</div>
-						</div>
-				}, this.codeResponse != null && !this.codeResponse.faultyCode && {
-					content:
-						<div class="fadeIn">
-							<h2 class="spacingLeft">{Lang.getWithColon('entries_at_creation_time')}</h2>
-							<table class="spacingLeft spacingBottom">
-								{this.codeResponse.namedQuestionnaireDataSetCount.map((entry) =>
-									<tr>
-										<td class="horizontalPadding">{Lang.get("colon", entry.title ?? Lang.get("unknown"))}</td>
-										<td class="horizontalPadding">{entry.count}</td>
-									</tr>
-								)}
+					DashElement("vertical", {
+						content:
+							<div class="horizontalPadding verticalPadding center">
+								<label>
+									<small>{Lang.get("reward_code")}</small>
+									<input type="text" class={`small ${this.codeResponse != null ? (!this.codeResponse?.faultyCode ? "success" : "failed") : "nothing"}`} {...BindObservable(this.currentCode)} />
+									&nbsp;
+									<input class="small" type="button" onclick={this.checkCode.bind(this)} value={Lang.get("check")} />
+								</label>
+							</div>
+					}, this.codeResponse != null && !this.codeResponse.faultyCode && {
+						content:
+							<div class="fadeIn">
+								<h2 class="spacingLeft">{Lang.getWithColon("creation_date")}</h2>
+								<div class="spacingLeft horizontalPadding spacingBottom">{(new Date(this.codeResponse.timestamp)).toLocaleString()}</div>
+							</div>
+					}, this.codeResponse != null && !this.codeResponse.faultyCode && {
+						content:
+							<div class="fadeIn">
+								<h2 class="spacingLeft">{Lang.getWithColon('entries_at_creation_time')}</h2>
+								<table class="spacingLeft spacingBottom">
+									{this.codeResponse.namedQuestionnaireDataSetCount.map((entry) =>
+										<tr>
+											<td class="horizontalPadding">{Lang.get("colon", entry.title ?? Lang.get("unknown"))}</td>
+											<td class="horizontalPadding">{entry.count}</td>
+										</tr>
+									)}
 
-							</table>
-						</div>
-				})
-			)}
+								</table>
+								{this.codeResponse.rewardAmount !== undefined &&
+									<div>
+										<h2 class="spacingLeft">{Lang.get("reward_amount")}</h2>
+										<div class="spacingLeft horizontalPadding spacingBottom">{this.codeResponse.rewardAmount + " " + this.currency}</div>
+									</div>}
+							</div>
+					})
+				)
+			}
 
 			{TitleRow(Lang.getWithColon("participants"))}
-			{DashRow(
-				DashElement(null, {
-					content:
-						SearchBox(Lang.get("without_reward_code", this.rewardCodeData.userIdsWithoutRewardCode.length), this.rewardCodeData.userIdsWithoutRewardCode.map((userId) => {
-							return { key: userId, view: <span class="line verticalPadding smallText">{userId}</span> }
-						}))
-				}),
+			{
+				DashRow(
+					DashElement(null, {
+						content:
+							SearchBox(Lang.get("without_reward_code", this.rewardCodeData.userIdsWithoutRewardCode.length), this.rewardCodeData.userIdsWithoutRewardCode.map((userId) => {
+								return { key: userId, view: <span class="line verticalPadding smallText">{userId}</span> }
+							}))
+					}),
 
-				DashElement(null, {
-					content:
-						SearchBox(Lang.get("with_reward_code", this.rewardCodeData.userIdsWithRewardCode.length), this.rewardCodeData.userIdsWithRewardCode.map((userId) => {
-							return { key: userId, view: <span class="line verticalPadding smallText">{userId}</span> }
-						}))
-				})
-			)}
-		</div>
+					DashElement(null, {
+						content:
+							SearchBox(Lang.get("with_reward_code", this.rewardCodeData.userIdsWithRewardCode.length), this.rewardCodeData.userIdsWithRewardCode.map((userId) => {
+								return { key: userId, view: <span class="line verticalPadding smallText">{userId}</span> }
+							}))
+					})
+				)
+			}
+		</div >
 	}
 
 	public destroy(): void {
