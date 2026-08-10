@@ -1,5 +1,4 @@
 ### 🚀 Added
-
 - Settings to automatically calculate reward amount from number of datasets
 
 ### ✏️ Changed
