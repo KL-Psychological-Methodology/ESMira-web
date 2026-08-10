@@ -181,7 +181,6 @@ export class Content extends SectionContent {
 	private searchAndDeleteInChartsAndConditions(chart: ChartData, inputName: string) {
 		const axisContainers = chart.axisContainer.get();
 		let toDelete: number[] = [];
-		let condToDelete: number[];
 
 		for (let i=  axisContainers.length -1; i >= 0; i--) {	//reverse loop to prevent shifting indices
 
