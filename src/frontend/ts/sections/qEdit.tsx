@@ -30,6 +30,7 @@ import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../com
 import {CodeEditor} from "../components/CodeEditor";
 import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
 import {SectionData} from "../site/SectionData";
+import {ChartData} from "../data/study/ChartData";
 
 export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
@@ -156,14 +157,62 @@ export class Content extends SectionContent {
 		newInput.name.set(newName)
 		this.newSection(`inputEdit,input:${makeUrlFriendly(newName)}`)
 	}
+
 	private deleteInput(page: Page, index: number): void {
 		if (!safeConfirm(Lang.get("confirm_delete_input")))
 			return
+
+		const study = this.getStudyOrThrow()
+		const personalCharts = study.personalStatistics.charts.get();
+		const publicCharts = study.publicStatistics.charts.get();
+		const inputName: string = page.inputs.get()[index].name.get();
+
+		for (const chart of personalCharts){
+			this.searchAndDeleteInChartsAndConditions(chart, inputName);
+		}
+		for (const chart of publicCharts){
+			this.searchAndDeleteInChartsAndConditions(chart, inputName);
+		}
 
 		page.inputs.remove(index)
 		window.location.hash = `${this.sectionData.getHash(this.sectionData.depth)}`
 	}
 
+	private searchAndDeleteInChartsAndConditions(chart: ChartData, inputName: string) {
+		const axisContainers = chart.axisContainer.get();
+		let toDelete: number[] = [];
+		let condToDelete: number[];
+
+		for (let i=  axisContainers.length -1; i >= 0; i--) {	//reverse loop to prevent shifting indices
+
+			const xAxis = axisContainers[i].xAxis;
+			const yAxis = axisContainers[i].yAxis;
+			const xAxisHasName = xAxis != null && xAxis.variableName.get() == inputName;
+			const yAxisHasName = yAxis != null && yAxis.variableName.get() == inputName;
+			const xAxisConditions = xAxis.conditions;
+			const yAxisConditions = yAxis.conditions;
+
+			if (xAxisHasName || yAxisHasName) {
+				toDelete.push(i);
+			}
+
+			for (let i = xAxisConditions.get().length -1; i >= 0; i--) {	//reverse loop to prevent shifting indices
+				if (xAxisConditions.get()[i].key.get() === inputName) {
+					xAxisConditions.remove(i);
+				}
+			}
+
+			for (let i = yAxisConditions.get().length -1; i >= 0; i--) {	//reverse loop to prevent shifting indices
+				if (yAxisConditions.get()[i].key.get() === inputName) {
+					yAxisConditions.remove(i);
+				}
+			}
+		}
+
+		for (const index of toDelete) {
+			chart.axisContainer.remove(index);
+		}
+	}
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
