@@ -96,7 +96,7 @@ class AppInstall implements Page {
             . '</li></ul>';
 
 
-        $scriptName = preg_match("/^(.+\/)[^\/]+$/", $_SERVER['SCRIPT_NAME'], $matches) ? $matches[1] : 'Error';
+        $scriptName = preg_match("/^(.*\/)[^\/]+$/", $_SERVER['SCRIPT_NAME'], $matches) ? $matches[1] : 'Error';
         if (substr_compare($scriptName, 'api/', -4) == 0) //is false if it was called by fallback
             $scriptName = substr($scriptName, 0, -4);
 
