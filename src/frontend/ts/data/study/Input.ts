@@ -26,7 +26,8 @@ export type InputResponseType =
 	"text_input" |
 	"time" |
 	"va_scale" |
-	"video"
+	"video" |
+	"wifi"
 
 export type InputMediaTypes = "image" | "audio"
 

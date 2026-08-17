@@ -714,5 +714,6 @@
 	"reward_calculation_questionnaire_max": "Maximaler Betrag des Fragebogens",
 	"reward_amount": "Belohnungsbetrag",
 	"reward_calculation_description": "Erklärung Belohnungsberechnung",
-	"reward_calculation_currency": "Währung"
+	"reward_calculation_currency": "Währung",
+	"input_wifi": "WLAN Scan"
 }

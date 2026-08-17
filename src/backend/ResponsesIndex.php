@@ -73,6 +73,10 @@ class ResponsesIndex {
                 $this->addName("$name~min");
                 $this->addName("$name~max");
                 break;
+			case 'wifi':
+				$this->addName($name);
+				$this->addName("$name~devices");
+				break;
             default:
                 $this->addName($name);
                 break;
