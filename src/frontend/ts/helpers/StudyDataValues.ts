@@ -19,6 +19,7 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 		case "battery_level":
 			variables.push(name)
 			variables.push(name + "~charging")
+			return
 		case "bluetooth_devices":
 			variables.push(name + "~devices")
 			variables.push(name)
@@ -42,10 +43,12 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 			if (input.other) {
 				variables.push(name + "~other")
 			}
+			return
 		case "noise_level":
 			variables.push(name)
 			variables.push(name + "~min")
 			variables.push(name + "~max")
+			return
 		default:
 			variables.push(name)
 			return
