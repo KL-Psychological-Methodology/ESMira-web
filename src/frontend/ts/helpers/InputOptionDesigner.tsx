@@ -406,13 +406,6 @@ export class InputOptionDesigner {
 				this.requiredOption(),
 				this.urlOption()
 			]
-		},
-		"wifi": {
-			title: Lang.get("input_wifi"),
-			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items",
-			category: "sensor",
-			notCompatible: ["Web"],
-			view: () => [<div>{this.requiredOption()}</div>]
 		}
 	}
 	private readonly sortedInputTypeKeys: InputResponseType[]
