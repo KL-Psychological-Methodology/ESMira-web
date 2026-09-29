@@ -1,0 +1,56 @@
+.pageHeader, .pageFooter {
+	padding: 10px;
+}
+.previewInput {
+	padding: 10px;
+	
+	.header {
+		text-align: left;
+		margin-bottom: 10px;
+	}
+	.content {
+		text-align: center;
+	}
+	
+	&.countdown svg {
+		fill: green;
+	}
+	&.app_usage table th, &.app_usage table td {
+		text-align: left;
+	}
+	&.compass {
+		.item {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			width: 100%;
+			height: 200px;
+			
+			.circle {
+				position:absolute;
+				width: 200px;
+				height: 200px;
+				border-radius: 50%;
+				border: 2px dashed #2b98ca;
+				transition: transform 0.5s;
+				
+				
+				.arrow {
+					font-size: larger;
+				}
+			}
+			
+			.result {
+				position: relative;
+				z-index: 1;
+				margin: 0 auto;
+			}
+		}
+	}
+	
+	&.image img, &.file_upload img {
+		max-width: 300px;
+		max-height: 300px;
+	}
+}

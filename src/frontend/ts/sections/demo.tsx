@@ -1,42 +1,29 @@
 import m, {Vnode} from "mithril";
-import {Content as AttendContent} from ".././sections/attend";
-import {FILE_GET_QUESTIONNAIRE} from "../constants/urls";
-import {Lang} from "../singletons/Lang";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
-import {ObserverId} from "../observable/BaseObservable";
 import {Questionnaire} from "../data/study/Questionnaire";
 import {Study} from "../data/study/Study";
 import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import { Lang } from "../singletons/Lang";
+import { previewPage } from "../components/Preview";
 
-export class Content extends AttendContent {
+export class Content extends SectionContent {
 	private readonly questionnaireIndex: ObservablePrimitive<number>
-	private readonly indexObserverId: ObserverId
-	private langObserverId: ObserverId
+	private currentPage: number
+	
+	public static preLoad(sectionData: SectionData): Promise<any>[] {
+		return [sectionData.getStudyPromise()]
+	}
 	
 	constructor(sectionData: SectionData, study: Study) {
 		super(sectionData)
 		this.questionnaireIndex = this.getDynamic("questionnaireIndex", 0)
-		this.indexObserverId = this.questionnaireIndex.addObserver(() => {
-			this.loadQuestionnaire()
-		})
-		this.langObserverId = study.currentLangCode.addObserver(() => {
-			this.loadQuestionnaire()
-		})
+		this.currentPage = this.getStaticInt("pageI") ?? 0
 	}
 	
-	protected createUrl(): string {
-		const studyId = this.getStaticInt("id") ?? -1
-		const questionnaire = this.getAttendQuestionnaire()
-		const accessKey = this.getDynamic("accessKey", "").get()
-
-		return FILE_GET_QUESTIONNAIRE
-			.replace("%d1", studyId.toString())
-			.replace("%d2", questionnaire.internalId.get().toString())
-			.replace("%s1", accessKey)
-			.replace("%s2", Lang.code)
-			.replace("%s3", `demo=1&${this.noCookieSID}`)
+	public title(): string {
+		return Lang.get("preview")
 	}
-	
 	protected getAttendQuestionnaire(): Questionnaire {
 		if(this.sectionData.sectionValue == "static") {
 			return this.getQuestionnaireOrThrow()
@@ -49,22 +36,22 @@ export class Content extends AttendContent {
 	}
 	
 	public getView(): Vnode<any, any> {
-		
 		const questionnaire = this.getAttendQuestionnaire()
+		const pages = questionnaire.pages.get()
+		const page = pages[this.currentPage]
+		
+		const prevDisabled = this.currentPage <= 0
+		const nextDisabled = this.currentPage >= pages.length - 1
 		
 		return <div>
-			{questionnaire.isDifferent() &&
-				<div class="highlight center">
-					{Lang.get("questionnaire_outdated")}
-				</div>
-			}
-			{this.getQuestionnaireView(questionnaire)}
+			<small class="previewInfo line center">{Lang.get("preview_info")}</small>
+			<hr/>
+			{previewPage(page)}
+			<div class="line horizontal hAlignSpaced spacingTop">
+				<input type="button" disabled={prevDisabled} onclick={() => --this.currentPage} value={Lang.get("previous")}/>
+				<div>{this.currentPage + 1} / {pages.length}</div>
+				<input type="button" disabled={nextDisabled} onclick={() => ++this.currentPage} value={Lang.get("continue")}/>
+			</div>
 		</div>
-	}
-	
-	destroy(): void {
-		super.destroy()
-		this.indexObserverId.removeObserver()
-		this.langObserverId.removeObserver()
 	}
 }

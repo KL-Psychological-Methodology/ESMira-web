@@ -15,6 +15,7 @@ import { BtnCustom } from "../components/Buttons";
 import questionSvg from "../../imgs/icons/question.svg?raw"
 import { getFromUrlFriendly } from "../constants/methods";
 import { SectionData } from "../site/SectionData";
+import { previewInput } from "../components/Preview";
 import { ChartData } from "../data/study/ChartData";
 import "./inputEdit.css";
 
@@ -160,19 +161,33 @@ export class Content extends SectionContent {
 		const inputDesigner = new InputOptionDesigner(study, input, this.getUrl.bind(this), this.newSection.bind(this))
 
 		return <div>
-			{subItemI == null &&
-				<div class="center">
-					<label>
-						<small>{Lang.get("variable_name")}</small>
-						<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>(input.name, (before, after) => {
-							let newName = createUniqueName(study, after) ?? before
-							if (newName != before) {
-								this.updateChartVariableName(before, newName)
-							}
-							return newName
-						}))} />
-					</label>
-				</div>
+			{
+				DashRow(
+					subItemI == null &&
+						DashElement("horizontal", {
+							content: <div class="horizontal hAlignCenter vAlignCenter">
+								<label>
+									<small>{Lang.get("variable_name")}</small>
+									<input type="text" {...BindObservable(input.name, new OnBeforeChangeTransformer<string>(input.name, (before: string, after: string) => {
+										const newName = createUniqueName(study, after) ?? before
+										if (newName != before) {
+											this.updateChartVariableName(before, newName)
+										}
+										return newName
+									}))} />
+								</label>
+							</div>
+						}),
+					DashElement("horizontal", {
+						content: <div class="fakeLabel preview">
+							<small>{Lang.get("preview")}</small>
+							<div class="line horizontal hAlignCenter">
+								{previewInput(input)}
+							</div>
+							<small>{Lang.get("preview_info")}</small>
+						</div>
+					})
+				)
 			}
 
 

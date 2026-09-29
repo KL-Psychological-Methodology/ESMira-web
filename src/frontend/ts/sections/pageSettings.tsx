@@ -8,6 +8,8 @@ import {ObservableLangChooser} from "../components/ObservableLangChooser";
 import {DashElement} from "../components/DashElement";
 import {CodeEditor} from "../components/CodeEditor";
 import {SectionData} from "../site/SectionData";
+import { BtnCustom } from "../components/Buttons";
+import dataTableSvg from "../../imgs/icons/table.svg?raw";
 
 export class Content extends SectionContent {
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
@@ -17,6 +19,12 @@ export class Content extends SectionContent {
 	public title(): string {
 		const pageI = this.getStaticInt("pageI") ?? 0
 		return Lang.get("edit_page_x", pageI + 1)
+	}
+	
+	public titleExtra(): Vnode<any, any> | null {
+		return <a href={this.getUrl("demo")}>
+			{BtnCustom(m.trust(dataTableSvg), undefined, Lang.get("preview"))}
+		</a>
 	}
 
 	public getView(): Vnode<any, any> {
