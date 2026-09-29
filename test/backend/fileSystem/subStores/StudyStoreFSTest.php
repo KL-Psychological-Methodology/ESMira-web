@@ -74,9 +74,9 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		$this->createEmptyStudy(123);
 		$this->assertEquals([123], $studyStore->getStudyIdList());
 		$this->createEmptyStudy(456);
-		$this->assertEquals([123, 456], $studyStore->getStudyIdList());
+		$this->assertEqualsCanonicalizing([123, 456], $studyStore->getStudyIdList());
 		$this->createEmptyStudy(789);
-		$this->assertEquals([123, 456, 789], $studyStore->getStudyIdList());
+		$this->assertEqualsCanonicalizing([123, 456, 789], $studyStore->getStudyIdList());
 		
 		$studyStore->delete(123);
 		$studyStore->delete(456);

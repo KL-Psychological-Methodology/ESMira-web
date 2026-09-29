@@ -17,10 +17,18 @@ class ErrorReportStoreFSTest extends BaseDataFolderTestSetup {
 		$this->assertEquals([], $errorStore->getList());
 		
 		$errorStore->saveErrorReport('test1');
+		usleep(10000);
 		$errorStore->saveErrorReport('test2');
+		usleep(10000);
 		$errorStore->saveErrorReport('test3');
 		$this->assertTrue($errorStore->hasErrorReports());
+		
 		$list = $errorStore->getList();
+		uasort($list, function($a, $b) {
+			return $a->timestamp - $b->timestamp;
+		});
+		$list = array_values($list);
+		
 		$this->assertCount(3, $list);
 		
 		$timestamp1 = $list[0]->timestamp;

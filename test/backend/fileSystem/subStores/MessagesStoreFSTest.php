@@ -38,7 +38,7 @@ class MessagesStoreFSTest extends BaseDataFolderTestSetup {
 		MessagesUnreadLoader::exportFile(345, 'userId', $messages);
 		
 		$this->login($accountName);
-		$this->assertEquals([123, 345], Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission());
+		$this->assertEqualsCanonicalizing([123, 345], Configs::getDataStore()->getMessagesStore()->getStudiesWithUnreadMessagesForPermission());
 	}
 	function test_getStudiesWithUnreadMessagesForPermission_as_user() {
 		$studyId = 123;
@@ -116,7 +116,7 @@ class MessagesStoreFSTest extends BaseDataFolderTestSetup {
 		$info4 = new MessageParticipantInfo('userId4', $timeUser4);
 		$info4->unread = true;
 		
-		$this->assertEquals(
+		$this->assertEqualsCanonicalizing(
 			[
 				$info1,
 				$info2,

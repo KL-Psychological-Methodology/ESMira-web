@@ -285,7 +285,6 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		$timeStudy2 = filemtime(PathsFS::fileResponses($studyId2, PathsFS::FILENAME_EVENTS));
 		$timeStudy3 = filemtime(PathsFS::fileResponses($studyId3, PathsFS::FILENAME_EVENTS));
 		
-		$time = time();
 		$responsesStore = Configs::getDataStore()->getResponsesStore();
 		
 		$this->assertEquals(
@@ -299,12 +298,13 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 		$cache->addToEventCache($studyId1, 111, []);
 		$this->saveDataSetCache($cache);
 		
-		$timeStudy1 = filemtime(PathsFS::fileResponses($studyId1, PathsFS::FILENAME_EVENTS));
-		
 		$responsesStore = Configs::getDataStore()->getResponsesStore();
+		// We call getLastResponseTimestampOfStudies() before we get the updated filemtime because filemtime() seems to get cached on some OS
+		$list = $responsesStore->getLastResponseTimestampOfStudies();
+		
 		$this->assertEquals(
-			[$studyId1 => $timeStudy1, $studyId2 => $timeStudy2, $studyId3 => $timeStudy3],
-			$responsesStore->getLastResponseTimestampOfStudies()
+			[$studyId1 => filemtime(PathsFS::fileResponses($studyId1, PathsFS::FILENAME_EVENTS)), $studyId2 => $timeStudy2, $studyId3 => $timeStudy3],
+			$list
 		);
 	}
 	

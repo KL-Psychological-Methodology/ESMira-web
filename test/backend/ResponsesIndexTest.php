@@ -41,6 +41,8 @@ class ResponsesIndexTest extends BaseTestSetup {
 			'appName~usageCountToday',
 			'appName~usageTimeYesterday',
 			'appName~usageTimeToday',
+			'appName~usageProtocolYesterday',
+			'appName~usageProtocolToday',
 			'photoName',
 			'elseName'
 		], $index->keys);
@@ -58,6 +60,8 @@ class ResponsesIndexTest extends BaseTestSetup {
 			'appName~usageCountToday',
 			'appName~usageTimeYesterday',
 			'appName~usageTimeToday',
+			'appName~usageProtocolYesterday',
+			'appName~usageProtocolToday',
 			'photoName',
 			'elseName',
 			'added'

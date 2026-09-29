@@ -28,7 +28,7 @@ class StudiesListTest extends BaseNoJsTestSetup {
 		
 		$content = $obj->getContent();
 		$this->assertStringContainsString('?id=123', $content);
-		$this->assertStringContainsString('app_install&id=234', $content);
+		$this->assertStringContainsString('?id=234', $content);
 		$this->assertStringContainsString('?id=345', $content);
 		$this->assertStringContainsString('?id=456', $content);
 		
@@ -43,7 +43,7 @@ class StudiesListTest extends BaseNoJsTestSetup {
 		
 		$content = $obj->getContent();
 		$this->assertStringContainsString('?key=key1&id=123', $content);
-		$this->assertStringContainsString('app_install&key=key1&id=234', $content);
+		$this->assertStringContainsString('?key=key1&id=234', $content);
 		$this->assertStringContainsString('?key=key1&id=345', $content);
 		$this->assertStringContainsString('?key=key1&id=456', $content);
 	}

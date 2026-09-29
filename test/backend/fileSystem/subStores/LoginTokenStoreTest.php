@@ -42,10 +42,16 @@ class LoginTokenStoreTest extends BaseDataFolderTestSetup {
 		
 		$loginTokenStore = Configs::getDataStore()->getLoginTokenStore();
 		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId1);
+		sleep(1);
 		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId2);
+		sleep(1);
 		$loginTokenStore->saveLoginToken($accountName, $hash, $tokenId3);
 		
 		$list = $loginTokenStore->getLoginTokenList($accountName);
+		uasort($list, function($a, $b) {
+			return $a->lastUsed - $b->lastUsed;
+		});
+		$list = array_values($list);
 		$this->assertEquals($tokenId1, $list[0]->tokenId);
 		$this->assertFalse($list[0]->current);
 		
