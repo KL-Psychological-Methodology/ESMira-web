@@ -17,6 +17,7 @@ import participantsSvg from "../../imgs/icons/participants.svg?raw"
 import dataSvg from "../../imgs/icons/data.svg?raw"
 import {BtnCustom, BtnOk, BtnReload, BtnTrash} from "../components/Buttons";
 import {SectionData} from "../site/SectionData";
+import "./chat.css";
 
 export class Content extends SectionContent {
 	private readonly userIdList: string[]

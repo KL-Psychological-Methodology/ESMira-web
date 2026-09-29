@@ -1,6 +1,7 @@
 import m, {Vnode} from "mithril"
 import {RssItem} from "../singletons/RssFetcher"
 import {Lang} from "../singletons/Lang"
+import "./NewsItem.css"
 
 const DAYS_FRESH = 7
 

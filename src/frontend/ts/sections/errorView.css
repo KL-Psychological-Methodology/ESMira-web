@@ -1,0 +1,42 @@
+.errorReportInfo {
+	position: sticky;
+	display: block;
+	float: right;
+	z-index: 2;
+	top: 0;
+	text-align: end;
+	background-color: #ffffffcc;
+	border: 1px solid #eee;
+	padding: 5px;
+}
+.errorReportInfo .clickable {
+	padding: 3px 0;
+}
+.errorReportHeader {
+	font-family: monospace;
+	padding-bottom: 15px;
+}
+
+.errorReportList .line {
+	position: relative;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: white;
+}
+.errorReportList .line pre {
+	margin: 0;
+}
+.errorReportList .divider {
+	border: 2px solid #dc4e9d;
+}
+.errorReportList .line.sticky {
+	position: sticky;
+	z-index: 1;
+	top: 10px;
+	bottom: 0;
+	background-color: #9FE0F7;
+}
+.errorReportList .line:hover pre {
+	background-color: #00000011;
+	cursor: pointer;
+}

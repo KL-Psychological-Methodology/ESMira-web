@@ -19,6 +19,7 @@ import { Study } from "../data/study/Study";
 import { BtnAdd, BtnCopy, BtnTrash } from "../components/Buttons";
 import warnSvg from "../../imgs/icons/warn.svg?raw";
 import { SectionData } from "../site/SectionData";
+import "./triggerEdit.css";
 
 class SpecificQuestionnaireTransformer implements Transformer {
 	private readonly eventTrigger: EventTrigger

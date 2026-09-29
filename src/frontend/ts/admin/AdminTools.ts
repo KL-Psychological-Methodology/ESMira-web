@@ -1,7 +1,6 @@
 import { AdminToolsInterface } from "./AdminToolsInterface";
 import { LoginDataInterface } from "./LoginDataInterface";
 import { AccountPermissions } from "./AccountPermissions";
-import "../../css/styleAdmin.css";
 import { ServerSettingsLoader } from "../loader/ServerSettingsLoader";
 import { AccountsLoader } from "../loader/AccountsLoader";
 import { MessagesLoader } from "../loader/MessagesLoader";

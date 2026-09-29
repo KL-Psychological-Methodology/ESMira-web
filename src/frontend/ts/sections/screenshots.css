@@ -1,0 +1,69 @@
+.screenshots .multipleChildren {
+	padding: 5px;
+}
+.screenshots .dashRow > * {
+	text-align: center;
+}
+.screenshots .dashRow .dashEl {
+	display: flex;
+	justify-content: space-around;
+	min-height: 200px;
+}
+.screenshots .dashRow img {
+	max-height: 200px;
+	max-width: 100%;
+	vertical-align: middle;
+}
+
+.screenshots .imageBox {
+	display: inline-flex;
+	position: relative;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 0 3px;
+}
+.screenshots .imageBox .desc {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 1px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	background-color: #e6f9ffee;
+	color: #2b98ca;
+}
+
+.dropdown.screenshot {
+	background-color: #00000055;
+}
+
+
+/**********
+screenshotWindow
+**********/
+
+.screenshotWindow {
+	z-index: 102;
+	width: 100%;
+	height: 100%;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.screenshotWindow img {
+	max-width: 90%;
+	max-height: 90%;
+}
+.screenshotWindow .desc {
+	margin-top: 10px;
+}
+.screenshotWindow .desc, .screenshotWindow img {
+	background-color: #e6f9ff;
+	border: 1px solid #9FE0F7;
+	padding: 5px;
+	box-shadow: 3px 3px 5px #0002;
+}

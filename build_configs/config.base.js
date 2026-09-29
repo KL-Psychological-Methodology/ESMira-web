@@ -18,11 +18,7 @@ module.exports = {
 			path.resolve(SRC, 'frontend', 'css', 'style.css'),
 			path.resolve(SRC, 'frontend', 'css', 'site.css'),
 			path.resolve(SRC, 'frontend', 'css', 'animations.css'),
-			path.resolve(SRC, 'frontend', 'css', 'btnWidgets.css'),
-			path.resolve(SRC, 'frontend', 'css', 'dash.css'),
-			path.resolve(SRC, 'frontend', 'css', 'navigationRow.css'),
 			path.resolve(SRC, 'frontend', 'css', 'inputDesign.css'),
-			path.resolve(SRC, 'frontend', 'css', 'components.css'),
 			path.resolve(SRC, 'frontend', 'ts', 'index.ts'),
 		],
 		nojs: [

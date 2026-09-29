@@ -3,6 +3,7 @@ import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {DragContainer} from "./DragContainer";
 import {BaseObservable} from "../observable/BaseObservable";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
+import "./TabBar.css";
 
 export interface TabContent {
 	title: string | Vnode<any, any>

@@ -1,0 +1,77 @@
+.dataContainer {
+	position: relative;
+	height: 100%;
+	overflow: auto;
+}
+
+.dataContainer .heightViewForScrollbar {
+	position: absolute;
+	width: 1px;
+}
+.dataTable {
+	position: sticky;
+	top: 0;
+	border-collapse: collapse;
+}
+.dataTable th {
+	background-color: #e6f9ff;
+	color: #2b98ca;
+	font-weight: bold;
+}
+
+.dataTable th .highlight::after {
+	content: "*"
+}
+.dataTable td, .dataTable th {
+	border: 1px solid #9FE0F7;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-align: center;
+	white-space: nowrap;
+}
+.dataTable tr:hover {
+	background-color: #e6f9ff;
+}
+.dataTable > tbody > tr.marked {
+	background-color: #2DBFF3;
+	color: white;
+}
+
+.dataTable > tbody > tr .prettyValue {
+	display: inline-block;
+}
+.dataTable > tbody > tr .realValue {
+	display: none;
+}
+.dataTable > tbody > tr:hover .prettyValue {
+	display: none;
+}
+.dataTable > tbody > tr:hover .realValue {
+	display: inline-block;
+}
+
+.dataTable > thead {
+	background-color: #e6f9ff;
+}
+
+.dataTable > thead > tr > th > span {
+	cursor: pointer;
+	transition: color 0.3s;
+}
+.dataTable > tbody > tr > td.index_column:hover, .dataTable > thead > tr > th > span:hover {
+	color: #2DBFF3;
+}
+
+.markedRowsInfoView {
+	position: fixed;
+}
+
+.dropdown.dataImage {
+	text-align: center;
+}
+.dropdown.dataImage img {
+	max-width: 500px;
+	max-height: 500px;
+	object-fit: contain;
+	vertical-align: middle;
+}

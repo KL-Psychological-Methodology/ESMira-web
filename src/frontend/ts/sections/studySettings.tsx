@@ -12,6 +12,7 @@ import { DashRow } from "../components/DashRow";
 import { DashElement } from "../components/DashElement";
 import { StudyMetadata } from "../loader/StudyLoader";
 import { SectionData } from "../site/SectionData";
+import "./studySettings.css";
 
 export class Content extends SectionContent {
 	private isFrozen: boolean = false

@@ -361,6 +361,11 @@ flex designs
 design elements
 **********/
 
+
+/*
+extraNote
+*/
+
 .extraNote {
 	font-size: 10pt;
 	margin-left: 5px;
@@ -377,6 +382,11 @@ design elements
 	content: ")";
 }
 
+
+/*
+scrollBox
+*/
+
 .scrollBox {
 	min-height: 100px;
 	max-height: 200px;
@@ -392,6 +402,10 @@ design elements
 	max-height: 400px;
 }
 
+
+/*
+infoSticker
+*/
 
 .infoSticker {
 	float:right;
@@ -416,78 +430,31 @@ design elements
 }
 
 
-/**********
-dropdown
-**********/
+/*
+inlineIcon
+*/
 
-.dropdown {
-	z-index: 1;
-	position: absolute;
-	min-width: 150px;
-	min-height: 20px;
-	margin: auto;
-	padding: 5px;
-	background-color: #e6f9ff;
-	border: 1px solid #9FE0F7;
-	text-align: left;
-	box-shadow: 3px 3px 5px #0002;
-	overflow: auto;
-}
-.dropdown label small, .dropdown .fakeLabel small {
-	background-color: #e6f9ff;
-}
-
-.dropdown.valueList {
-	overflow-y: scroll;
-	overflow-x: auto;
-	max-width: 150%;
-	max-height: 300px;
-	min-width: 150px;
-}
-.dropdown.valueList label {
-	display: block;
-	text-align: left;
-	padding-left: 0;
-	padding-top: 0;
-	padding-bottom: 0;
-	cursor: pointer;
-	transition: color 0.3s;
-	white-space: nowrap;
-	margin: 0;
-}
-.dropdown.valueList label:hover, .dataTable tr span:hover {
-	color: #2b98ca;
-}
-.dropdown.valueList input {
+.inlineIcon{
+	display: inline;
+	position: relative;
+	margin: 0 3px;
 	vertical-align: middle;
 }
-.dropdown.valueList input[type="checkbox"] {
-	cursor: pointer;
-}
-.dropdown.valueList span {
-	font-weight: normal;
-	font-size: 9pt;
+
+.inlineIcon > span {
 	line-height: unset;
+	font-size: 9pt;
+}
+
+.inlineIcon svg {
+	width: 15px !important;
+	height: 15px !important;
 }
 
 
-/**********
-accessKeyBox
-**********/
-
-.accessKeyBox {
-	padding-bottom:15px;
-	font-size:10pt;
-	text-align: right;
-}
-.accessKeyBox input {
-	font-size:10pt;
-}
-
-
-/**********
+/*
 stickerList
-**********/
+*/
 
 .stickerList .line {
 	display: flex;
@@ -511,165 +478,67 @@ stickerList
 
 
 /**********
-questionnaire
+Components also used in PHP
 **********/
 
-.questionnaireBox .line {
-	margin-top: 10px;
-	outline-color: rgba(255, 0, 0, 0);
-	transition: outline-color 1s;
-}
 
-.questionnaireBox input[type="submit"] {
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
+/*
+titleRow
+*/
 
-
-.questionnaireBox .missing {
-	outline: 2px solid red;
-}
-.questionnaireBox input[type=range] {
-	width: 100%;
-	max-width: 500px;
-}
-
-.questionnaireBox .required > div {
-	display: inline;
-	margin-right: 5px;
-}
-.questionnaireBox .required::after {
-	content: "*";
-}
-
-
-/**********
-charts
-**********/
-
-.chartWindow {
-	position: relative;
-}
-.chartWindow .scrollEl {
-	overflow-x: auto;
-}
-.chartWindow .scrollEl.pie {
-	max-width: 200px;
-	margin: auto;
-}
-.chartWindow .chartEl {
-	min-width: 100%;
-}
-.chartWindow .legend {
-	text-align: center;
-}
-.chartWindow .legend .line {
-	display: inline-block;
-	margin-right: 20px;
-}
-.chartWindow .legend .colorRect {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	margin-right: 5px;
-}
-.chartWindow .yAxis {
-	position: absolute;
-	left: 0;
-	top: 30px;
-	bottom: 54px;
-	width: 20px;
-	background-color: white;
-	border-bottom: 11px solid white;
-}
-.chartWindow .yAxis .axisValue{
-	position: absolute;
-	right: 2px;
-	margin-bottom: -30%;
-	color: #666;
-	font-size: 12px;
-}
-
-
-/**********
-screenshots
-**********/
-
-.screenshots .multipleChildren {
-	padding: 5px;
-}
-.screenshots .dashRow > * {
-	text-align: center;
-}
-.screenshots .dashRow .dashEl {
+.titleRow {
 	display: flex;
-	justify-content: space-around;
-	min-height: 200px;
-}
-.screenshots .dashRow img {
-	max-height: 200px;
-	max-width: 100%;
-	vertical-align: middle;
-}
-
-.screenshots .imageBox {
-	display: inline-flex;
-	position: relative;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	margin: 0 3px;
-}
-.screenshots .imageBox .desc {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 1px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	background-color: #e6f9ffee;
+	flex-direction: row;
+	margin: 5px -1% 10px -1%;
+	padding-left: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	
+	background: #e6f9ff;
+	border-top: 1px solid #9FE0F7;
+	border-bottom: 1px solid #9FE0F7;
+	box-shadow: 0 3px 3px #dfdfdf;
+	-webkit-box-shadow: 0 1px 3px #dfdfdf;
+	-moz-box-shadow: 0 1px 3px #dfdfdf;
 	color: #2b98ca;
 }
 
-.dropdown.screenshot {
-	background-color: #00000055;
+
+/*
+screenshotBox
+*/
+
+.screenshotBox {
+	display: inline-block;
+	border: 1px solid black;
+	text-align: center;
+	margin: 5px 0 15px 0;
+	padding:1px;
+}
+.screenshotBox img {
+	max-width: 100%;
+	max-height: 200px;
+	margin: 1px;
 }
 
 
-/**********
-screenshotWindow
-**********/
+/*
+accessKeyBox
+*/
 
-.screenshotWindow {
-	z-index: 102;
-	width: 100%;
-	height: 100%;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+.accessKeyBox {
+	padding-bottom:15px;
+	font-size:10pt;
+	text-align: right;
 }
-.screenshotWindow img {
-	max-width: 90%;
-	max-height: 90%;
-}
-.screenshotWindow .desc {
-	margin-top: 10px;
-}
-.screenshotWindow .desc, .screenshotWindow img {
-	background-color: #e6f9ff;
-	border: 1px solid #9FE0F7;
-	padding: 5px;
-	box-shadow: 3px 3px 5px #0002;
+.accessKeyBox input {
+	font-size:10pt;
 }
 
 
-
-/**********
-appInstall
-**********/
+/*
+appInstallAlternative
+*/
 
 .appInstallAlternative.clickable {
 	background-color: #e6f9ff;
@@ -678,63 +547,4 @@ appInstall
 }
 .appInstallAlternative.clickable:hover {
 	background-color: #9fe0f7
-}
-
-
-/**********
-legal
-**********/
-
-.legal a {
-	display: block;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 100%;
-	font-size: 9pt;
-}
-.legal .dashEl {
-	position: relative;
-}
-.legal .open_plugins {
-	position: absolute;
-	top: 0;
-	right: 0;
-
-	min-width: 20px;
-	text-align: right;
-	font-size: 9pt;
-}
-.legal .dropdown {
-	width: 100%;
-	margin-top: 15px;
-}
-.legal .dropdown ul {
-	margin-top: 0;
-}
-.legal .open_plugins:after {
-	content: "\25BE";
-}
-
-
-/**********
-login
-**********/
-
-.login {
-	height: 80%;
-}
-
-.login form {
-	position: sticky;
-	top: 0;
-}
-
-
-/**********
-questionnaireInputImage
-**********/
-
-.questionnaireInputImage {
-	max-width: 100%;
 }

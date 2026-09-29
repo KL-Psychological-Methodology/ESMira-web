@@ -16,7 +16,7 @@ import questionSvg from "../../imgs/icons/question.svg?raw"
 import { getFromUrlFriendly } from "../constants/methods";
 import { SectionData } from "../site/SectionData";
 import { ChartData } from "../data/study/ChartData";
-import { AxisData } from "../data/study/AxisData";
+import "./inputEdit.css";
 
 type IndexContainer = { qIndex: number, pIndex: number, iIndex: number } | null
 

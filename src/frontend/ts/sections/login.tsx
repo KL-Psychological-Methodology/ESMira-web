@@ -1,6 +1,7 @@
 import {SectionContent} from "../site/SectionContent";
 import m, {Vnode} from "mithril";
 import {Lang} from "../singletons/Lang";
+import "./login.css";
 
 export class Content extends SectionContent {
 	public title(): string {

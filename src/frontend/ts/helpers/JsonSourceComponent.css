@@ -1,0 +1,39 @@
+.source {
+	height: 100%;
+}
+
+.source .applyBtn {
+	animation: move-in-from-top 0.5s;
+	position: absolute;
+	right: 15px;
+	top: 0;
+	padding: 5px;
+	border: 1px solid #9FE0F7;
+	border-top-width: 0;
+	border-left-width: 0;
+	background-color: #e6f9ff;
+	box-shadow: 0 3px 3px #0002;
+	color: #dc4e9d;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.source .applyBtn:hover {
+	color: #ff8fce;
+}
+label.jse-hidden-input-label {
+	padding: unset;
+	min-height: unset;
+}
+
+/*
+Workarounds for version 0.18.12
+jsoneditor messes with the body tag when opening dialogs (like filter or transform) which breaks the ESMira site
+*/
+
+.jse-modal-bg {
+	position: absolute !important;
+}
+body {
+	position: unset !important;
+}

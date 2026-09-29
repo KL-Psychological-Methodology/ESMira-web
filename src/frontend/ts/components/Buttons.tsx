@@ -10,6 +10,7 @@ import reloadSvg from "../../imgs/icons/reload.svg?raw";
 import removeSvg from "../../imgs/icons/remove.svg?raw";
 import transferSvg from "../../imgs/icons/transfer.svg?raw";
 import trashSvg from "../../imgs/icons/trash.svg?raw";
+import "./Buttons.css";
 
 export function BtnCustom(
 	icon: Vnode<any, any>,

@@ -1,0 +1,21 @@
+.observableLangChooser {
+	text-align: end;
+}
+.observableLangChooser {
+	line-height: 100%; /* to make sure its vertically centered in .extra of title-line */
+}
+.observableLangChooser .element {
+	padding: 0 2px;
+	margin: 0 3px 0 3px;
+	line-height: 9pt !important;
+	font-size: 9pt !important;
+	border: 1px solid #9fe0f7;
+	transition: background-color 0.5s, color 0.5s !important;
+	background-color: white;
+}
+.observableLangChooser .element:hover {
+	background-color: #cdf0fc;
+}
+.observableLangChooser .element.selected {
+	background-color: #9fe0f7;
+}

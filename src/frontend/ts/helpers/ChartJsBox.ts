@@ -46,6 +46,8 @@ import { StatisticsEntryPerData, StatisticsEntryPerValue, StatisticsEntryTimed }
 import { Lang } from "../singletons/Lang";
 import { StatisticsDataEntry } from "../data/statistics/StatisticsDataEntry";
 import { Point } from "chart.js/dist/types/geometric";
+import "./ChartJsBox.css";
+
 
 const ONE_DAY = 86400 //in seconds: 60*60*24
 const BACKGROUND_ALPHA = 0.7

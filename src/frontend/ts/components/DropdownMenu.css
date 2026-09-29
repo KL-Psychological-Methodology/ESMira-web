@@ -1,0 +1,49 @@
+.dropdown {
+	z-index: 1;
+	position: absolute;
+	min-width: 150px;
+	min-height: 20px;
+	margin: auto;
+	padding: 5px;
+	background-color: #e6f9ff;
+	border: 1px solid #9FE0F7;
+	text-align: left;
+	box-shadow: 3px 3px 5px #0002;
+	overflow: auto;
+}
+.dropdown label small, .dropdown .fakeLabel small {
+	background-color: #e6f9ff;
+}
+
+.dropdown.valueList {
+	overflow-y: scroll;
+	overflow-x: auto;
+	max-width: 150%;
+	max-height: 300px;
+	min-width: 150px;
+}
+.dropdown.valueList label {
+	display: block;
+	text-align: left;
+	padding-left: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	cursor: pointer;
+	transition: color 0.3s;
+	white-space: nowrap;
+	margin: 0;
+}
+.dropdown.valueList label:hover, .dataTable tr span:hover {
+	color: #2b98ca;
+}
+.dropdown.valueList input {
+	vertical-align: middle;
+}
+.dropdown.valueList input[type="checkbox"] {
+	cursor: pointer;
+}
+.dropdown.valueList span {
+	font-weight: normal;
+	font-size: 9pt;
+	line-height: unset;
+}

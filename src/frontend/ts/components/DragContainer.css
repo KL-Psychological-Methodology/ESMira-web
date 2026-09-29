@@ -1,0 +1,27 @@
+.dragStarter {
+	cursor: move;
+}
+
+.is_dragging .dragStarted {
+	display: none;
+}
+
+.is_dragging .drag_spacer  {
+	opacity: 0.5;
+}
+.dragHidden {
+	transition: opacity 0.3s;
+}
+.is_dragging .dragHidden {
+	opacity: 0;
+	/*height: 0;*/
+}
+
+.dragTarget {
+	transition: background-color 0.5s;
+	min-height: 20px;
+	min-width: 20px;
+}
+.is_dragging .dragTarget {
+	background-color: #9fe0f7 !important;
+}

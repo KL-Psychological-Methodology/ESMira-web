@@ -1,0 +1,33 @@
+.notCompatibleIcon {
+	display: inline-block;
+	position: relative;
+	margin: 0 3px;
+	vertical-align: middle;
+	font-size: 12px; /* Changes the position of .deviceIcon::before*/
+}
+.notCompatibleIcon > span {
+	line-height: unset;
+	font-size: 9pt;
+}
+.notCompatibleIcon .deviceIcon {
+	display: inline;
+	position: relative;
+}
+.notCompatibleIcon .deviceIcon svg {
+	width: 15px !important; /* we need important to override .dashRow .dashEl .dashIcon svg*/
+	height: 15px !important;
+	fill: #ff8fce !important; /* to counteract svg:hover*/
+}
+.dashEl .icon > .notCompatibleIcon {
+	position: absolute;
+}
+.notCompatibleIcon .deviceIcon::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 3px;
+	left: -2px;
+	right: -2px;
+	border-top: 1px solid #dc4e9d;
+	rotate: 45deg;
+}

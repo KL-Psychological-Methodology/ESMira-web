@@ -1,0 +1,42 @@
+.chartWindow {
+	position: relative;
+}
+.chartWindow .scrollEl {
+	overflow-x: auto;
+}
+.chartWindow .scrollEl.pie {
+	max-width: 200px;
+	margin: auto;
+}
+.chartWindow .chartEl {
+	min-width: 100%;
+}
+.chartWindow .legend {
+	text-align: center;
+}
+.chartWindow .legend .line {
+	display: inline-block;
+	margin-right: 20px;
+}
+.chartWindow .legend .colorRect {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 5px;
+}
+.chartWindow .yAxis {
+	position: absolute;
+	left: 0;
+	top: 30px;
+	bottom: 54px;
+	width: 20px;
+	background-color: white;
+	border-bottom: 11px solid white;
+}
+.chartWindow .yAxis .axisValue{
+	position: absolute;
+	right: 2px;
+	margin-bottom: -30%;
+	color: #666;
+	font-size: 12px;
+}
