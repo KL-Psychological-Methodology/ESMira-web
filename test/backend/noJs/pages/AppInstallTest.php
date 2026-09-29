@@ -14,7 +14,6 @@ class AppInstallTest extends BaseNoJsTestSetup {
 		123 => [
 			'id' => 123,
 			'title' => 'title1',
-			'webInstallInstructions' => 'webInstallInstructions1',
 			'studyDescription' => 'studyDescription1',
 			'contactEmail' => 'contactEmail1',
 			'publishedAndroid' => true,
@@ -24,7 +23,6 @@ class AppInstallTest extends BaseNoJsTestSetup {
 		234 => [
 			'id' => 234,
 			'title' => 'title1',
-			'webInstallInstructions' => 'webInstallInstructions1',
 			'studyDescription' => 'studyDescription1',
 			'contactEmail' => 'contactEmail1',
 			'publishedAndroid' => false,
@@ -48,7 +46,6 @@ class AppInstallTest extends BaseNoJsTestSetup {
 		
 		$this->assertEquals($study['title'], $obj->getTitle());
 		$content = $obj->getContent();
-		$this->assertStringContainsString($study['webInstallInstructions'], $content);
 		$this->assertStringContainsString($study['studyDescription'], $content);
 		$this->assertStringContainsString($study['contactEmail'], $content);
 		$this->assertStringContainsString('play.google.com', $content);
@@ -66,7 +63,6 @@ class AppInstallTest extends BaseNoJsTestSetup {
 		
 		$this->assertEquals($study['title'], $obj->getTitle());
 		$content = $obj->getContent();
-		$this->assertStringContainsString($study['webInstallInstructions'], $content);
 		$this->assertStringContainsString($study['studyDescription'], $content);
 		$this->assertStringContainsString($study['contactEmail'], $content);
 		$this->assertStringNotContainsString('play.google.com', $content);

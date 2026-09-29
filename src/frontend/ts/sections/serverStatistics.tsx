@@ -67,8 +67,7 @@ export class Content extends SectionContent {
 			storageType: STATISTICS_STORAGE_TYPE_FREQ_DISTR,
 			data: {
 				[Lang.get("Android")]: serverStatistics.total.android,
-				[Lang.get("iOS")]: serverStatistics.total.ios,
-				[Lang.get("Web")]: serverStatistics.total.web
+				[Lang.get("iOS")]: serverStatistics.total.ios
 			},
 			entryCount: 3,
 			timeInterval: SMALLEST_TIMED_DISTANCE

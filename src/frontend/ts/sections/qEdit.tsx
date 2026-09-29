@@ -28,7 +28,6 @@ import {DropdownMenu} from "../components/DropdownMenu";
 import {AddDropdownMenus} from "../helpers/AddDropdownMenus";
 import {BtnAdd, BtnCopy, BtnCustom, BtnEdit, BtnTransfer, BtnTrash} from "../components/Buttons";
 import {CodeEditor} from "../components/CodeEditor";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
 import {SectionData} from "../site/SectionData";
 import {ChartData} from "../data/study/ChartData";
 
@@ -275,7 +274,7 @@ export class Content extends SectionContent {
 					content:
 						<div>
 							<div class="fakeLabel line">
-								<small>{Lang.get("questionnaire_end_script")}{NotCompatibleIcon("Web")}</small>
+								<small>{Lang.get("questionnaire_end_script")}</small>
 								{CodeEditor(questionnaire.endScriptBlock)}
 							</div>
 						</div >

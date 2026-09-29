@@ -121,7 +121,7 @@ export class Content extends SectionContent {
 							<small>{Lang.get("timeout_after_last_reminder")}</small>
 							<input min="0" type="number" {...BindObservable(action.timeout, new ConstrainedNumberTransformer(0, undefined))} />
 							<span class="spacingRight">{Lang.get("minutes")}</span>
-							{NotCompatibleIcon("iOS", "Web")}
+							{NotCompatibleIcon("iOS")}
 							<small>{Lang.get("info_timeout_notifications")}</small>
 						</label>
 					</div>

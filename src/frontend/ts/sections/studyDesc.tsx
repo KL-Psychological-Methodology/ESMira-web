@@ -63,12 +63,6 @@ export class Content extends SectionContent {
 			</div>
 
 			<div class="fakeLabel spacingTop line">
-				<small>{Lang.getWithColon("webInstallInstructions")}</small>
-				{RichText(study.webInstallInstructions)}
-				{ObservableLangChooser(this.getStudyOrThrow())}
-			</div>
-
-			<div class="fakeLabel spacingTop line">
 				<small>{Lang.getWithColon("chooseUsernameInstructions")}</small>
 				{RichText(study.chooseUsernameInstructions)}
 				{ObservableLangChooser(this.getStudyOrThrow())}

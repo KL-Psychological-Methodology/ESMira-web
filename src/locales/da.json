@@ -51,7 +51,6 @@
     "publish_info_text_based": "Hvis du rekrutterer tekstbaseret (f.eks. e-mail, sociale medier), skal du inkludere linket til din informationsside. De tilhørende QR-koder er også tilgængelige på den side. ",
     "publish_info_fallback_link": "Derudover kan du inkludere linket til informationssiden på din fallback-server og instruere deltagerne i at bruge det, hvis det første link ikke virker. ",
     "publish_info_flyer_based": "Hvis du vil rekruttere via flyers, plakater osv., skal du bruge QR-koden. ",
-    "publish_info_difference_links": "Brug linket til informationssiden om studiet til deltagere, der bruger webversionen af studiet. Brug linket til installationsvejledningen for appen til deltagere, der bruger deres smartphone. ",
     "publish_info_explanation_qr": "Hvis nogen scanner QR-koden uden at have ESMira installeret på deres smartphone, vil smartphonen åbne informationssiden i browseren. Hvis de allerede har ESMira installeret, åbner smartphonen i stedet ESMira og sender dem direkte videre til tilmeldingsprocessen for studiet.",
     "accessKey": "adgangsnøgle",
     "action_invitation": "Invitation til spørgeskema via en notifikation",
@@ -100,7 +99,6 @@
     "check": "Kontrollér",
     "colon": "%s:",
     "action": "Handling",
-    "app_installation_instructions": "Instruktioner til installation af appen",
     "active_studies": "Aktive studier",
     "backups": "Sikkerhedskopier",
     "permissions_admin": "Admin-rettigheder",
@@ -151,7 +149,6 @@
     "total_participants": "Samlet antal deltagere",
     "until": "Indtil",
     "variables": "Variabler",
-    "webInstallInstructions": "Yderligere installationsinstruktioner til appen (webversion, kan udelades)",
     "webQuestionnaireCompletedInstructions": "Instruktioner efter gennemført spørgeskema (webversion)",
     "weekdays_desc": "Kun på bestemte ugedage",
     "xAxis_label": "Etiket for x-akse",
@@ -249,7 +246,6 @@
     "general": "Generelt",
     "questionnaire": "Spørgeskema",
     "questionnaire_name": "Spørgeskemanavn",
-    "questionnaire_view": "Studieinformation",
     "header": "Sidehoved",
     "heading": "Overskrift",
     "hidden_studies": "Begrænsede studier",
@@ -477,7 +473,6 @@
     "username": "Brugernavn",
     "value": "Værdi",
     "values_in_percent": "Antal i procent",
-    "web_questionnaire": "Web-spørgeskema",
     "web_access": "Webadgang",
     "web_access_csv_title": "Webadgang",
     "weekday_sun": "Søn",
@@ -665,6 +660,5 @@
     "hint_study_unpublished": "Studiet er ikke tilgængeligt. Brug dette i udviklingsfasen.",
     "hint_study_published": "Studiet er live. Informationssiden er tilgængelig online, og deltagere kan tilmelde sig studiet.",
     "hint_study_over": "Studiet er slut. Informationssiden er tilgængelig online, men vejledningen til, hvordan man deltager, er fjernet. Nye deltagere kan ikke længere tilmelde sig studiet.",
-    "warning_all_platforms_disabled": "Aktivér mindst én platform i studieindstillingerne, for at studiet kan være tilgængeligt.",
-    "publish_info_title": "Hvilket link skal jeg bruge?"
+    "warning_all_platforms_disabled": "Aktivér mindst én platform i studieindstillingerne, for at studiet kan være tilgængeligt."
 }

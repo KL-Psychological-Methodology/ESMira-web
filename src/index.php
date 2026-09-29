@@ -13,27 +13,25 @@ $dataStore = Configs::getDataStore();
 if($dataStore->isInit()) {
 	if(isset($_GET['qid'])) {
 		$questionnaireId = (int)$_GET['qid'];
-		$jsKey = "attend,qId:$questionnaireId";
+		$jsKey = "appInstall,qId:$questionnaireId";
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 	}
 	else if(isset($_GET['id'])) {
 		$studyId = (int)$_GET['id'];
-		if(isset($_GET['app_install'])) {
-			$jsKey = "appInstall,id:$studyId";
-		} else if(isset($_GET['from_url'])) {
+		if(isset($_GET['from_url'])) {
 			$fromUrl = $_GET['from_url'];
 			$jsKey = "fallbackAppInstall,id:$studyId,fromUrl:$fromUrl";
 		} else {
-			$jsKey = "studyOverview,id:$studyId";
+			$jsKey = "appInstall,id:$studyId";
 		}
 		
 		if(!isset($_GET['key']))
 			$_GET['key'] = ''; //a saved cookie would override a study without access-key. Because of get_accessKey() this will overwrite the cookie as well
 	}
 	else if(isset($_GET['key']))
-		$jsKey = isset($_GET['app_install']) ? 'appInstall' : 'studyOverview';
+		$jsKey = 'appInstall';
 	else if(isset($_GET['impressum']))
 		$jsKey = 'legal,impressum';
 	else if(isset($_GET['privacyPolicy']))
@@ -41,7 +39,7 @@ if($dataStore->isInit()) {
 	else if(isset($_GET['about']))
 		$jsKey = 'about';
 	else if(isset($_GET['studies']))
-		$jsKey = 'studies,attend';
+		$jsKey = 'studies,appInstall';
 	else if(isset($_GET['admin']))
 		$jsKey = 'admin';
 	else

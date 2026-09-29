@@ -3,14 +3,11 @@ import m, { Vnode } from "mithril";
 import { Lang } from "../singletons/Lang";
 import { BindObservable, BindValue } from "../components/BindObservable";
 import { Study } from "../data/study/Study";
-import { ObservablePrimitive } from "../observable/ObservablePrimitive";
-import { TabBar, TabContent } from "../components/TabBar";
-import { createAppUrl, createFallbackAppUrl, createQuestionnaireUrl, createStudyUrl, safeConfirm } from "../constants/methods";
+import { createFallbackAppUrl, createStudyUrl, safeConfirm } from "../constants/methods";
 import qrcode from "qrcode-generator"
 import { BtnAdd, BtnCopy, BtnCustom, BtnTrash } from "../components/Buttons";
 import { DashRow } from "../components/DashRow";
 import { DashElement } from "../components/DashElement";
-import { closeDropdown, openDropdown } from "../components/DropdownMenu";
 import downloadSvg from "../../imgs/icons/download.svg?raw"
 import studyDesc from "../../imgs/dashIcons/studyDesc.svg?raw"
 import questionSvg from "../../imgs/icons/question.svg?raw"
@@ -32,10 +29,10 @@ interface UrlEntry {
 }
 
 export class Content extends SectionContent {
-	private readonly selectedIndex: ObservablePrimitive<number> = new ObservablePrimitive<number>(0, null, "accessKeyIndex")
 	private qrSize: number = 5
-	private currentRadioIndex: [number, number] = [0, 0]
 	private readonly fallbackUrl?: string
+	private fallbackEnabled: boolean
+	private selectedAccessKey: string = ""
 	private duplicateAccessKeys: string[]
 	private enableUrlStudyList = false
 
@@ -47,10 +44,12 @@ export class Content extends SectionContent {
 		]
 	}
 
-	constructor(sectionData: SectionData, fallbackUrls: string[], duplicateAccessKeys: string[]) {
+	constructor(sectionData: SectionData, fallbackUrls: string[], duplicateAccessKeys: string[], study: Study) {
 		super(sectionData)
 		this.fallbackUrl = fallbackUrls.length ? fallbackUrls[0] : undefined
 		this.duplicateAccessKeys = duplicateAccessKeys
+		
+		this.fallbackEnabled = study.useFallback.get() && !!this.fallbackUrl
 	}
 
 	public title(): string {
@@ -102,31 +101,7 @@ export class Content extends SectionContent {
 			this.qrSize = 1
 		}
 	}
-
-	private onPointerEnterUrl(url: string, e: MouseEvent) {
-		openDropdown("url", e.target as HTMLElement,
-			() => <div class="smallText center nowrap">{url}</div>
-		)
-	}
-	private onPointerLeaveUrl() {
-		closeDropdown("url")
-	}
 	
-	private getUrlView(title: string, url: string, radioIndex?: [number, number]): Vnode<any, any> {
-		return <label
-			onpointerenter={this.onPointerEnterUrl.bind(null, url)}
-			onpointerleave={this.onPointerLeaveUrl.bind(null)}
-			class="noTitle noDesc horizontal"
-		>
-			{ radioIndex &&
-				<input type="radio" name="selected_url" checked={this.currentRadioIndex[0] == radioIndex[0] && this.currentRadioIndex[1] == radioIndex[1]} onchange={() => {
-					this.currentRadioIndex = radioIndex
-				}}/>
-			}
-			{title}
-			{BtnCopy(() => navigator.clipboard.writeText(url))}
-		</label>
-	}
 	
 	private getPublishedStateView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
@@ -171,7 +146,7 @@ export class Content extends SectionContent {
 
 	public getView(): Vnode<any, any> {
 		const study = this.getStudyOrThrow()
-		const anyPlatformEnabled = study.publishedAndroid.get() || study.publishedIOS.get() || study.publishedWeb.get()
+		const anyPlatformEnabled = study.publishedAndroid.get() || study.publishedIOS.get()
 		return <div>
 			{DashRow(
 				DashElement("stretched", {
@@ -213,15 +188,9 @@ export class Content extends SectionContent {
 						})
 					)}
 					<br />
-					{study.published.get() && (anyPlatformEnabled &&
-						<div>{
-							study.accessKeys.get().length >= 2
-								? TabBar(this.selectedIndex,
-									study.accessKeys.get().map((accessKey) => this.getPublishView(study, accessKey.get()))
-								)
-								: this.getPublishView(study, study.accessKeys.get()[0]?.get() ?? "").view()
-						}</div>
-						|| <div>
+					{study.published.get() && (anyPlatformEnabled
+						? this.getPublishView(study)
+						: <div>
 							{DashRow(
 								DashElement("stretched", {
 									highlight: true,
@@ -232,8 +201,7 @@ export class Content extends SectionContent {
 								})
 							)}
 						</div>
-					)
-					}
+					)}
 				</div>
 			}
 			{this.getPublishInfoView(study)}
@@ -284,120 +252,88 @@ export class Content extends SectionContent {
 			</label>
 		</div>
 	}
-
-	private getPublishView(study: Study, accessKey: string): TabContent {
-		const urlList = this.createUrlList(study, accessKey)
-		
+	
+	private getPublishView(study: Study): Vnode<any, any> {
 		const usesFallback = study.useFallback.get() && !!this.fallbackUrl
-		const currentUrl = urlList[this.currentRadioIndex[0]]?.urls[this.currentRadioIndex[1]]?.url ?? urlList[0].urls[0].url
-		const qrCodeUrl = usesFallback ? `${currentUrl}?fallback=${this.fallbackUrl}` : currentUrl
+		const usesAccessKeys = !!study.accessKeys.get().length
+		const accessKey = this.selectedAccessKey || (usesAccessKeys ? study.accessKeys.get()[0].get() : "")
+		const url = this.fallbackEnabled
+			? createFallbackAppUrl(accessKey, study.id.get(), this.fallbackUrl!)
+			: createStudyUrl(accessKey, study.id.get(), !this.enableUrlStudyList)
+		const qrCodeUrl = this.fallbackEnabled ? `${url}?fallback=${this.fallbackUrl}` : url
 		const qr = qrcode(0, 'L')
 		qr.addData(qrCodeUrl)
 		qr.make()
 		const imgUrl = qr.createDataURL(this.qrSize)
 		
-		return {
-			title: accessKey,
-			view: () => <div>
-				{DashRow(
-					DashElement("vertical", ...urlList.map((category, categoryIndex) => ({
-						content: <div>
-							{category.title &&
-								<h2 class="horizontal">
-									{category.title}
-								</h2>
-							}
-							{category.urls.map((entry, entryIndex) =>
-								<div class="line">
-									{this.getUrlView(entry.title, entry.url, entry.allowSelection ? [categoryIndex, entryIndex] : undefined)}
-								</div>
-							)}
-							{category.footer &&
-								<div class="smallText">
-									{category.footer}
-								</div>
-							}
-							{category.addContentAbove?.()}
+		return DashRow(
+			DashElement("vertical", {
+				content:
+					<div class="vertical">
+						<h2>{Lang.getWithColon("url")}</h2>
+						<div class="horizontal flexBlock vAlignCenter">
+							<small>{url}</small>
+							{BtnCopy(() => navigator.clipboard.writeText(url))}
 						</div>
-					}))),
-					DashElement(null, {
-						content:
-							<div>
-								<div class="center">
-									<label>
-										<small>{Lang.get("size")}</small>
-										<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
+						<div><hr/></div>
+						{usesAccessKeys &&
+							<label title={Lang.get("desc_urls_target_study_list")} class="noTitle noDesc">
+								<div class="flexBlock horizontal vAlignCenter">
+									<input type="checkbox" {... BindValue(this.enableUrlStudyList, value => this.enableUrlStudyList = value)}/>
+									<span>{Lang.get("urls_target_study_list")}</span>
+									<a class="selfAlignStart" href={URL_WIKI_DIFFERENCE_LINKS} target="_blank">{BtnCustom(m.trust(questionSvg))}</a>
+								</div>
+								{this.enableUrlStudyList && !this.accessKeyHasDuplications(accessKey) &&
+									<small><div class="inlineIcon">{m.trust(warnSvg)}</div>{Lang.get("access_key_has_no_duplications", accessKey)}</small>
+								}
+							</label>
+						}
+						{usesFallback &&
+							<label class="noTitle noDesc">
+								<input type="checkbox" {... BindValue(this.fallbackEnabled, value => this.fallbackEnabled = value)}/>
+								<span>{Lang.get("fallback_app_installation_instructions")}</span>
+							</label>
+						}
+						{
+							usesAccessKeys &&
+							<>
+								<h3>{Lang.getWithColon("accessKey")}</h3>
+								{study.accessKeys.get().map((key) =>
+									<label class="noTitle noDesc">
+										<input type="radio" name="selected_url" checked={key.get() == accessKey} onchange={() => {
+											this.selectedAccessKey = key.get()
+										}}/>
+										<span>{key.get()}</span>
 									</label>
-								</div>
-								<div class="center">
-									<a download href={imgUrl} title={qrCodeUrl}>
-										<img alt="QrCode" src={imgUrl} />
-									</a>
-								</div>
-								<p class="smallText">{Lang.get("desc_qrCode")}</p>
-							</div>
-					})
-				)}
-			</div>
-		}
-	}
-
-	private createUrlList(study: Study, accessKey: string): UrlCategory[] {
-		const infoTitle = study.questionnaires.get().length >= 1 ? Lang.get("questionnaire_view") : Lang.get("study")
-		const usesFallback = study.useFallback.get() && !!this.fallbackUrl
-		const publishedWeb = study.publishedWeb.get()
-		const publishedSmartphone = study.publishedAndroid.get() || study.publishedIOS.get()
-		
-		const categoryList: UrlCategory[] = []
-		
-		const entry: UrlCategory = {
-			title: Lang.get("study_urls"),
-			urls: [],
-			addContentAbove: accessKey ? this.getStudyListCheckboxView.bind(this, accessKey) : undefined
-		}
-		
-		if(publishedWeb) {
-			entry.urls.push({
-				title: infoTitle,
-				url: createStudyUrl(accessKey, study.id.get(), !this.enableUrlStudyList, "https"),
-				allowSelection: true
+								)}
+							</>
+						}
+						
+					</div>
+			}),
+			DashElement(null, {
+				content:
+					<div>
+						<h2>{Lang.getWithColon("qr_code")}</h2>
+						<div class="center">
+							<label>
+								<small>{Lang.get("size")}</small>
+								<input type="number" min="1" value={this.qrSize} onchange={this.changeQrSize.bind(this)} />
+							</label>
+						</div>
+						<div class="center">
+							<a download href={imgUrl} title={qrCodeUrl}>
+								<img alt="QrCode" src={imgUrl} />
+							</a>
+						</div>
+						<p class="smallText">{Lang.get("desc_qrCode")}</p>
+					</div>
 			})
-		}
-		if(publishedSmartphone) {
-			entry.urls.push({
-				title: Lang.get("app_installation_instructions"),
-				url: createAppUrl(accessKey, study.id.get(), !this.enableUrlStudyList, "https"),
-				allowSelection: true
-			})
-		}
-		categoryList.push(entry)
-		
-		if(usesFallback) {
-			categoryList.push({
-				urls: [{
-					title: Lang.get("fallback_app_installation_instructions"),
-					url: createFallbackAppUrl(accessKey, study.id.get(), this.fallbackUrl!)
-				}]
-			});
-		}
-		
-		if(publishedWeb && study.questionnaires.get().length > 0) {
-			categoryList.push({
-				title: Lang.getWithColon("urls_instruction_questionnaires"),
-				urls: study.questionnaires.get().map((questionnaire) => ({
-					title: questionnaire.getTitle(),
-					url: createQuestionnaireUrl(accessKey, questionnaire.internalId.get()),
-					allowSelection: true
-				})),
-			})
-		}
-		
-		return categoryList;
+		)
 	}
 
 	private getPublishInfoView(study: Study): Vnode<any, any> {
 		const usesFallback = study.useFallback.get() && !!this.fallbackUrl
-		const smartphoneAndWeb = (study.publishedAndroid.get() || study.publishedIOS.get()) && study.publishedWeb.get()
 
 		return <div>
 			{
@@ -405,11 +341,9 @@ export class Content extends SectionContent {
 					DashElement("stretched", {
 						content:
 							<div>
-								<h2>{Lang.get("publish_info_title")}</h2>
 								<p>{Lang.get("publish_info_text_based")}
 									{usesFallback && Lang.get("publish_info_fallback_link")}
 									{Lang.get("publish_info_flyer_based")}</p>
-								{smartphoneAndWeb && <p>{Lang.get("publish_info_difference_links")}</p>}
 								<p>{Lang.get("publish_info_explanation_qr")}</p>
 							</div>
 					})

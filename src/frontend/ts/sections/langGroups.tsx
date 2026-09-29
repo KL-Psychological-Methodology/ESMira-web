@@ -3,7 +3,6 @@ import m, { Vnode } from "mithril";
 import { Lang } from "../singletons/Lang";
 import { BindObservable, ConstrainedNumberTransformer } from "../components/BindObservable";
 import { TitleRow } from "../components/TitleRow";
-import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
 import { ChangeLanguageList } from "../components/ChangeLanguageList";
 import { SectionData } from "../site/SectionData";
 
@@ -35,7 +34,6 @@ export class Content extends SectionContent {
 			{TitleRow(
 				<div>
 					<span class="spacingRight">{Lang.get("randomGroups")}</span>
-					{NotCompatibleIcon("Web")}
 				</div>
 			)}
 			<div class="smallText">{Lang.get("info_randomGroups")}</div>

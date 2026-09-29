@@ -15,7 +15,6 @@ class StudiesList implements Page {
 		
 		return "<div class=\"verticalPadding\">
 					<a href=\"?"
-			.(isset($study->publishedWeb) && !$study->publishedWeb ? 'app_install&' : '')
 			.($accessKey ? "key=$accessKey&" : '')
 			."id=$study_id\">".htmlspecialchars($study->title).'</a>
 				</div>';

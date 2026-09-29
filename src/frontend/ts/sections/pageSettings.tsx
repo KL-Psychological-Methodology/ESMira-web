@@ -7,7 +7,6 @@ import {RichText} from "../components/RichText";
 import {ObservableLangChooser} from "../components/ObservableLangChooser";
 import {DashElement} from "../components/DashElement";
 import {CodeEditor} from "../components/CodeEditor";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
 import {SectionData} from "../site/SectionData";
 
 export class Content extends SectionContent {
@@ -70,7 +69,7 @@ export class Content extends SectionContent {
 				content:
 					<div>
 						<div class="fakeLabel line noDesc">
-							<small>{Lang.get("page_relevance")}{NotCompatibleIcon("Web")}</small>
+							<small>{Lang.get("page_relevance")}</small>
 							{CodeEditor(page.relevance)}
 						</div>
 					</div>

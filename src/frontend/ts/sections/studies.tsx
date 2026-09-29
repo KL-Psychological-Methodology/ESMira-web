@@ -17,17 +17,13 @@ export class Content extends SectionContent {
 		this.accessKey = this.getDynamic("accessKey", "")
 		
 		switch(section.sectionValue) {
-			case "appInstall":
-				this.targetPage = "appInstall"
-				this.titleString = Lang.get("select_a_study")
-				break
 			case "statistics":
 				this.targetPage = "publicStatistics"
 				this.titleString = Lang.get("statistics")
 				break
-			case "attend":
+			case "appInstall":
 			default:
-				this.targetPage = "studyOverview"
+				this.targetPage = "appInstall"
 				this.titleString = Lang.get("select_a_study")
 				break
 		}
@@ -53,12 +49,9 @@ export class Content extends SectionContent {
 			case "statistics":
 				this.studies = studies.filter((study) => study.publicStatistics.charts.get().length != 0)
 				break
-			case "attend":
-				this.studies = studies.filter((study) => study.version.get() != 0 && study.published.get())
-				break
 			case "appInstall":
 			default:
-				this.studies = studies
+				this.studies = studies.filter((study) => study.version.get() != 0 && study.published.get())
 				break
 		}
 	}

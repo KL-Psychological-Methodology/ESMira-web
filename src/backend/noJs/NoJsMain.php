@@ -15,14 +15,6 @@ use stdClass;
 
 class NoJsMain
 {
-	static function questionnaireIsActive(stdClass $questionnaire): bool
-	{
-		return (!isset($questionnaire->publishedWeb) || $questionnaire->publishedWeb)
-			&& (!isset($questionnaire->durationStart) || !$questionnaire->durationStart || time() >= $questionnaire->durationStart)
-			&& (!isset($questionnaire->durationEnd) || !$questionnaire->durationEnd || time() <= $questionnaire->durationEnd)
-			&& isset($questionnaire->pages) && sizeof($questionnaire->pages);
-	}
-
 	static function getQuestionnaire(stdClass $study, int $qId)
 	{
 		foreach ($study->questionnaires as $questionnaire) {

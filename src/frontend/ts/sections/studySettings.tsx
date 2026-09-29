@@ -102,11 +102,6 @@ export class Content extends SectionContent {
 								<small>{Lang.get('iOS')}</small>
 								<input type="checkbox" {...BindObservable(study.publishedIOS)} />
 							</label>
-							&nbsp;
-							<label class="middle noDesc">
-								<small>{Lang.get('Web')}</small>
-								<input type="checkbox" {...BindObservable(study.publishedWeb)} />
-							</label>
 						</div>
 				}),
 				DashElement("vertical", {

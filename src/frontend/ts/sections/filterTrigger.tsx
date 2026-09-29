@@ -13,7 +13,6 @@ import { DashRow } from "../components/DashRow";
 import { DashElement } from "../components/DashElement";
 import { DropdownMenu } from "../components/DropdownMenu";
 import { BindObservable, ConstrainedNumberTransformer, DateTransformer, TimeTransformer } from "../components/BindObservable";
-import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
 import { BtnCollection } from "../components/BtnCollection";
 import { TabBar } from "../components/TabBar";
 import { BtnAdd, BtnCopy, BtnCustom, BtnOk, BtnTrash } from "../components/Buttons";
@@ -176,7 +175,7 @@ export class Content extends SectionContent {
 				DashElement("stretched", {
 					content: <div>
 						<div class="fakeLabel line">
-							<small>{Lang.get("script_filter")}{NotCompatibleIcon("Web")}</small>
+							<small>{Lang.get("script_filter")}</small>
 							{CodeEditor(questionnaire.scriptFilter)}
 						</div>
 					</div>
@@ -196,7 +195,6 @@ export class Content extends SectionContent {
 		return <div>
 			<h2 class="center">
 				{Lang.getWithColon("trigger")}
-				{NotCompatibleIcon("Web")}
 			</h2>
 			{questionnaire.actionTriggers.get().map((actionTrigger, index) => {
 				const schedule = this.getSchedule(actionTrigger)

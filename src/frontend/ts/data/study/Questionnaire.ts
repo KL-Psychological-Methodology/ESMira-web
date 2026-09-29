@@ -7,9 +7,6 @@ import { ObservableTypes } from "../../observable/types/ObservableTypes";
 import "../../number.extensions"
 import { Lang } from "../../singletons/Lang";
 import { Scheduler } from "../../helpers/Scheduler";
-import { b0 } from "@fullcalendar/core/internal-common";
-import { Action } from "./Action";
-import { SignalTime } from "./SignalTime";
 import { getMidnightMillis } from "../../constants/methods";
 
 const ONE_DAY_MS = 86400000
@@ -18,7 +15,6 @@ export class Questionnaire extends DataStructure {
 	public internalId = this.primitive<number>("internalId", -1)
 	public publishedAndroid = this.primitive<boolean>("publishedAndroid", true)
 	public publishedIOS = this.primitive<boolean>("publishedIOS", true)
-	public publishedWeb = this.primitive<boolean>("publishedWeb", true)
 	public durationStart = this.primitive<number>("durationStart", 0)
 	public durationEnd = this.primitive<number>("durationEnd", 0)
 	public durationPeriodDays = this.primitive<number>("durationPeriodDays", 0)

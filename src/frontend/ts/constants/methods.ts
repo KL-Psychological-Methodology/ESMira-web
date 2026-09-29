@@ -16,11 +16,6 @@ export function getBaseUrl(protocol: string = "https"): string {
 	return (protocol || location.protocol) + '://' + getBaseDomain();
 }
 
-export function createAppUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
-	return alwaysAddId && accessKey
-		? getBaseUrl(protocol) + "app-" + id + "-" + accessKey
-		: getBaseUrl(protocol) + "app-" + (accessKey || id);
-}
 export function createStudyUrl(accessKey: string, id: number, alwaysAddId: boolean = false, protocol: string = "https"): string {
 	return alwaysAddId && accessKey
 		? getBaseUrl(protocol) + id + "-" + accessKey

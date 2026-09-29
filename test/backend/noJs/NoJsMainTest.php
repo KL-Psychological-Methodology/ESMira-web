@@ -95,18 +95,6 @@ class NoJsMainTest extends BaseMockedTestSetup {
 		return json_decode(json_encode($this->studyConfig[$studyId]));
 	}
 	
-	public function test_questionnaireIsActive() {
-		$this->assertTrue(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'publishedWeb' => true]));
-		$this->assertFalse(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'publishedWeb' => false]));
-		$this->assertTrue(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'durationStart' => time()]));
-		$this->assertFalse(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'durationStart' => time()+1]));
-		$this->assertTrue(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'durationEnd' => time()]));
-		$this->assertFalse(NoJsMain::questionnaireIsActive((object) ['pages' => [[]], 'durationEnd' => time()-1]));
-		
-		$this->assertFalse(NoJsMain::questionnaireIsActive((object) ['pages' => [], 'publishedWeb' => true]));
-		$this->assertFalse(NoJsMain::questionnaireIsActive((object) ['publishedWeb' => true]));
-	}
-	
 	public function test_getQuestionnaire() {
 		$study = (object)[
 			'questionnaires' => [

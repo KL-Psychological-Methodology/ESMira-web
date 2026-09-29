@@ -12,7 +12,7 @@ class StudiesListTest extends BaseNoJsTestSetup {
 	
 	protected $configs = [
 		123 => ['id' => 123, 'title' => 'study1'],
-		234 => ['id' => 234, 'title' => 'study2', 'publishedWeb' => false],
+		234 => ['id' => 234, 'title' => 'study2'],
 		345 => ['id' => 345, 'title' => 'study3'],
 		456 => ['id' => 456, 'title' => 'study4'],
 	];

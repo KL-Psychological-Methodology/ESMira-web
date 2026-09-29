@@ -10,7 +10,7 @@ import { RichText } from "../components/RichText";
 import { PrimitiveType } from "../observable/types/PrimitiveType";
 import { DashElement } from "../components/DashElement";
 import { BaseObservable } from "../observable/BaseObservable";
-import { NotCompatibleIcon, PossibleDevices } from "../components/NotCompatibleIcon";
+import { PossibleDevices } from "../components/NotCompatibleIcon";
 import { BtnAdd, BtnTrash } from "../components/Buttons";
 import { CodeEditor } from "../components/CodeEditor";
 import { RegexTextInput } from "../components/RegexTextInput";
@@ -47,7 +47,7 @@ export class InputOptionDesigner {
 			title: Lang.get("input_ambient_light"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#ambient-light",
 			category: "sensor",
-			notCompatible: ["Web", "iOS"],
+			notCompatible: ["iOS"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -59,7 +59,7 @@ export class InputOptionDesigner {
 			title: Lang.get("input_app_usage"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#App-usage-tracking",
 			category: "sensor",
-			notCompatible: ["Web", "iOS"],
+			notCompatible: ["iOS"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -82,7 +82,6 @@ export class InputOptionDesigner {
 			title: Lang.get("input_battery_level"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#battery-level",
 			category: "sensor",
-			notCompatible: ["Web"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -105,14 +104,12 @@ export class InputOptionDesigner {
 			title: Lang.get("input_bluetooth_devices"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#List-of-bluetooth-devices",
 			category: "sensor",
-			notCompatible: ["Web"],
 			view: () => [<div>{this.requiredOption()}</div>]
 		},
 		"compass": {
 			title: Lang.get("input_compass"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Compass-item",
 			category: "sensor",
-			notCompatible: ["Web"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -125,7 +122,6 @@ export class InputOptionDesigner {
 			title: Lang.get("input_countdown"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Countdown-item",
 			category: "special",
-			notCompatible: ["Web"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -276,7 +272,6 @@ export class InputOptionDesigner {
 			title: Lang.get("input_location"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#location-item",
 			category: "sensor",
-			notCompatible: ["Web"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -294,7 +289,6 @@ export class InputOptionDesigner {
 			title: Lang.get("input_noise_level"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#noise-level",
 			category: "sensor",
-			notCompatible: ["Web"],
 			view: () => [
 				<div>
 					{this.requiredOption()}
@@ -341,7 +335,6 @@ export class InputOptionDesigner {
 			title: Lang.get("input_record_audio"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#Record-audio",
 			category: "media",
-			notCompatible: ["Web"],
 			view: () => [<div>{this.requiredOption()}</div>]
 		},
 		"share": {
@@ -585,12 +578,12 @@ export class InputOptionDesigner {
 					content:
 						<div>
 							<div class="fakeLabel line">
-								<small>{Lang.get("text_script")}{NotCompatibleIcon("Web")}</small>
+								<small>{Lang.get("text_script")}</small>
 								{CodeEditor(this.input.textScript)}
 								<small>{Lang.get("text_script_explanation")}</small>
 							</div>
 							<div class="fakeLabel line">
-								<small>{Lang.get("input_relevance")}{NotCompatibleIcon("Web")}</small>
+								<small>{Lang.get("input_relevance")}</small>
 								{CodeEditor(this.input.relevance)}
 							</div>
 						</div>

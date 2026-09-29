@@ -31,7 +31,7 @@ export class Content extends SectionContent {
 	}
 	public getView(): Vnode<any, any> {
 		return DashRow(
-			DashElement(null, {template: {title: Lang.get("participate_in_study"), icon: m.trust(participateSvg)}, href: this.getUrl("studies:attend")}),
+			DashElement(null, {template: {title: Lang.get("participate_in_study"), icon: m.trust(participateSvg)}, href: this.getUrl("studies:appInstall")}),
 			DashElement(null, {template: {title: Lang.get("what_is_esmira"), icon: m.trust(questionSvg)}, href: this.getUrl("about")}),
 			DashElement(null, {template: {title: Lang.get("show_study_statistics"), icon: m.trust(statisticsSvg)}, href: this.getUrl("studies:statistics")}),
 			DashElement(null, {template: {title: Lang.get("show_server_statistics"), icon: m.trust(serverStatisticsSvg)}, href: this.getUrl("serverStatistics")}),

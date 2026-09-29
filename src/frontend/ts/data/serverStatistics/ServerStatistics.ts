@@ -13,7 +13,6 @@ export interface ServerStatistics {
 		users: number
 		android: number
 		ios: number
-		web: number
 		questionnaire: number
 		joined: number
 		quit: number

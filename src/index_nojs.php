@@ -13,7 +13,6 @@ use backend\noJs\pages\AppInstall;
 use backend\noJs\pages\ChangeLang;
 use backend\noJs\pages\Home;
 use backend\noJs\pages\Legal;
-use backend\noJs\pages\QuestionnaireAttend;
 use backend\noJs\pages\StudiesList;
 use backend\exceptions\PageFlowException;
 
@@ -34,7 +33,7 @@ if(!isset($_GET['key']))
  * @throws CriticalException
  */
 function getPageObj(): Page {
-	if(isset($_GET['app_install']))
+	if(isset($_GET['app_install']) || isset($_GET['id']) || isset($_GET['qid']))
 		return new AppInstall();
 	else if(isset($_GET['studies']))
 		return new StudiesList();
@@ -44,9 +43,6 @@ function getPageObj(): Page {
 		return new Legal();
 	else if(isset($_GET['change_lang']))
 		return new ChangeLang();
-	else if(isset($_GET['id']) || isset($_GET['qid']) || (isset($_GET['key']) && $_GET['key']))
-		//we check in questionnaire_attend if we need to go to another page (informed_consent, get_participant, study_overview, ...)
-		return new QuestionnaireAttend();
 	else
 		return new Home();
 }
