@@ -9,7 +9,6 @@ import summarySvg from "../../imgs/dashIcons/summary.svg?raw"
 import participantsSvg from "../../imgs/icons/participants.svg?raw"
 import webAccessSvg from "../../imgs/devices/web.svg?raw"
 import publicStatisticsSvg from "../../imgs/dashIcons/publicStatistics.svg?raw"
-import rewardsSvg from "../../imgs/dashIcons/rewards.svg?raw"
 import merlinLogsSvg from "../../imgs/dashIcons/merlinLogs.svg?raw"
 import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
 import { SectionData } from "../site/SectionData";

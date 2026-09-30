@@ -7,6 +7,7 @@ import { TitleRow } from "../components/TitleRow";
 import { AccountsLoader } from "../loader/AccountsLoader";
 import { BtnEdit, BtnTrash } from "../components/Buttons";
 import { SectionData } from "../site/SectionData";
+import "./accountList.css";
 
 export class Content extends SectionContent {
 	private accountsLoader: AccountsLoader

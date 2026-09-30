@@ -1,0 +1,16 @@
+#accountList {
+	width: 100%;
+	overflow-x: auto;
+}
+
+#accountList th {
+	text-align: center;
+	padding-right: 10px;
+}
+#accountList td {
+	vertical-align: top;
+	text-align: center;
+}
+#accountList .accountName {
+	text-align: left;
+}

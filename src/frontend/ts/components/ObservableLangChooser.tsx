@@ -1,6 +1,7 @@
 import m, {Vnode} from "mithril"
 import {Lang} from "../singletons/Lang";
 import {TranslatableRootInterface} from "../observable/interfaces/TranslatableRootInterface";
+import "./ObservableLangChooser.css";
 
 
 let langNames: Record<string, string> | null = null

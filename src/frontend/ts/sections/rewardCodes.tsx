@@ -11,6 +11,7 @@ import { FILE_ADMIN } from "../constants/urls";
 import { ObservablePrimitive } from "../observable/ObservablePrimitive";
 import { SectionData } from "../site/SectionData";
 import { SharedUrlAlternatives } from "../helpers/SharedUrlAlternatives";
+import "./rewardCodes.css";
 
 interface EntriesPerQuestionnaire {
 	title: string

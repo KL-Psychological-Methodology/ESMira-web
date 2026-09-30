@@ -5,6 +5,7 @@ import {Requests} from "../singletons/Requests";
 import {FILE_ADMIN} from "../constants/urls";
 import transferSvg from "../../imgs/icons/transfer.svg?raw"
 import {SectionData} from "../site/SectionData";
+import "./errorView.css";
 
 interface ErrorReportComponentOptions {
 	report: string

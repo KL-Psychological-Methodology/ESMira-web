@@ -19,6 +19,7 @@ import {TabBar} from "../components/TabBar";
 import {TitleRow} from "../components/TitleRow";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {SectionData} from "../site/SectionData";
+import "./legal.css";
 
 export class Content extends SectionContent {
 	private tabIndex = new ObservablePrimitive(0, null, "legal")

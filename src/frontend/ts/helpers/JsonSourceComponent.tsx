@@ -4,6 +4,7 @@ import m, {Component, Vnode, VnodeDOM} from "mithril";
 import {JSONContent, JSONEditor, MenuButton, MenuItem, Mode, TextContent} from "vanilla-jsoneditor";
 import {ObserverId} from "../observable/BaseObservable";
 import {Lang} from "../singletons/Lang";
+import "./JsonSourceComponent.css";
 
 interface JsonSourceComponentOptions {
 	getStudy?: () => Study

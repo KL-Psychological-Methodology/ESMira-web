@@ -1,0 +1,99 @@
+.recipientBox {
+	z-index: 2;
+	position: relative;
+}
+.recipientBox .recipientChooser {
+	display: inline;
+	position: relative;
+}
+.recipientBox .recipientList {
+	width: 100%;
+	margin-top: -10px;
+	max-height: 300px;
+	overflow-y: auto;
+}
+.recipientBox .recipientList > a {
+	display: block;
+	margin-bottom:5px;
+	font-size: 9pt;
+}
+
+.chatBubble {
+	margin: 10px 0;
+}
+
+.chatBubble .btnDelete {
+	vertical-align: top;
+}
+
+.chatBubble.fromClient.unread .msg {
+	background-color: #dc4e9d;
+}
+.chatBubble.pending .msg {
+	opacity: 0.5;
+}
+.chatBubble .msg {
+	display: inline-block;
+	position: relative;
+	max-width: 80%;
+	min-width: 150px;
+	height: auto;
+	border-radius: 10px;
+	color: white;
+	text-align: left;
+}
+.chatBubble .msg::after {
+	position: absolute;
+	top: 0;
+	width: 0;
+	height: 0;
+	border: 12px solid;
+	content: ' ';
+}
+.chatBubble .headline {
+	font-size: 9pt;
+	margin-bottom: 2px;
+}
+.chatBubble .header {
+	float: left;
+}
+.chatBubble .footer {
+	float: right;
+}
+.chatBubble .header, .chatBubble .footer {
+	font-size: 9pt;
+	margin: 3px 5px;
+}
+.chatBubble .content {
+	margin: 25px 20px 10px 20px;
+	white-space: pre-wrap;
+}
+
+.chatBubble.fromServer {
+	text-align: right;
+}
+.chatBubble.fromServer .msg {
+	background-color: #2b98ca;
+	margin-right: 20px;
+}
+.chatBubble.fromServer .msg::after {
+	right: -10px;
+	left: auto;
+	border-color: #2b98ca transparent transparent transparent;
+}
+
+.chatBubble.fromClient {
+	text-align: left;
+}
+.chatBubble.fromClient .msg {
+	background-color: #2DBFF3;
+	margin-left: 20px;
+}
+.chatBubble.fromClient div::after {
+	left: -10px;
+	right: auto;
+	border-color: #2DBFF3 transparent transparent transparent;
+}
+.chatBubble.fromClient.unread div::after {
+	border-color: #dc4e9d transparent transparent transparent;
+}

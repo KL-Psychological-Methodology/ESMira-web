@@ -1,0 +1,57 @@
+.tabBar {
+	z-index: 1;
+	position: relative;
+	display: flex;
+	/*box-sizing: border-box;*/
+	/*height: 40px;*/
+	flex-direction: row;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+	margin: 0 -1% 0 -1%;
+}
+.tabBar.smallBar > .tab {
+	font-size: 9pt;
+	padding: 2px 5px;
+}
+.tabBar.smallBar > .selected {
+	margin-top: -3px;
+	padding-bottom: 5px; /*prevent below content from moving in case there are only 2 (or one) entries in a row*/
+}
+
+.tabBar > .tab {
+	flex: 1 1 auto;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	border-top: 2px solid white;
+	
+	padding: 5px;
+	margin-top: 0;
+	background-color: #e6f9ff;
+	font-weight: bold;
+	color: #2b98ca;
+	text-align: center;
+	transition: background-color 0.5s, margin-top 0.1s, padding-bottom 0.1s, color 0.5s;
+}
+.tabBar > .tab svg {
+	fill: #2b98ca;
+	max-height: 20px;
+}
+.tabBar > .addBtn {
+	max-width: 30px;
+}
+.tabBar > .highlight {
+	color: #dc4e9d;
+}
+.tabBar > .selected {
+	z-index: 1;
+	background-color: #9fe0f7;
+	
+	margin-top: -5px;
+	padding-bottom: 10px; /*prevent below content from moving in case there are only 2 (or one) entries in a row*/
+}
+
+.tabBar > .tab:not(.selected):hover {
+	background-color: #9fe0f7;
+	color: #2DBFF3;
+	cursor: pointer;
+}

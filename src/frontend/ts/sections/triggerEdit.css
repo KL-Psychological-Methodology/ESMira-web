@@ -1,0 +1,17 @@
+#signalTimes input[type="time"] {
+	width: 70px;
+	min-width: 70px;
+}
+#signalTimes input[type="number"] {
+	width: 40px;
+	min-width: 40px;
+}
+#signalTimes select {
+	width: 50px;
+	min-width: 50px;
+}
+#signalTimes .btnDelete {
+	margin-left: 0;
+	margin-right: 5px;
+	line-height: 400%;
+}

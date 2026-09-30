@@ -1,0 +1,15 @@
+.newDialog {
+	background-color: white;
+}
+.newDialog .content {
+	min-width: 500px;
+}
+
+.studyList .content {
+	min-width: 300px;
+}
+
+.newSource .content {
+	min-width: 500px;
+	height: 400px;
+}

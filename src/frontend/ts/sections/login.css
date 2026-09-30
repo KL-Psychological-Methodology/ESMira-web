@@ -1,0 +1,8 @@
+.login {
+	height: 80%;
+}
+
+.login form {
+	position: sticky;
+	top: 0;
+}

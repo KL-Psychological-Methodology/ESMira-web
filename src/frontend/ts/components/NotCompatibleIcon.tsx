@@ -4,6 +4,7 @@ import androidSvg from "../../imgs/devices/android.svg?raw"
 import iosSvg from "../../imgs/devices/ios.svg?raw"
 import webSvg from "../../imgs/devices/web.svg?raw"
 import {closeDropdown, openDropdown} from "./DropdownMenu";
+import "./NotCompatibleIcon.css";
 
 
 export type PossibleDevices = "Android" | "iOS" | "Web"

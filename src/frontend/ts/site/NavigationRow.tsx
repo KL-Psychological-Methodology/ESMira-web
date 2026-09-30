@@ -5,8 +5,8 @@ import publishSvg from "../../imgs/icons/increaseVersion.svg?raw";
 import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionAlternative} from "./SectionContent";
 import {LoadingSpinner} from "../components/LoadingSpinner";
-
 import {SectionData} from "./SectionData";
+import "./NavigationRow.css";
 
 interface DropDownOptions {
 	alternatives: SectionAlternative[] | Promise<SectionAlternative[]>

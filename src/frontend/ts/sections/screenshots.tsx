@@ -8,6 +8,7 @@ import {AboutESMiraInterface, AboutESMiraLoader} from "../loader/AboutESMiraLoad
 import {URL_ABOUT_ESMIRA_SOURCE} from "../constants/urls";
 import {DropdownMenu} from "../components/DropdownMenu";
 import {SectionData} from "../site/SectionData";
+import "./screenshots.css";
 
 export class Content extends SectionContent {
 	private about: AboutESMiraInterface

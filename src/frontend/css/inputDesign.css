@@ -247,6 +247,16 @@ label input[type="checkbox"], label input[type="radio"] {
 	vertical-align: unset;
 	margin: 5px;
 }
+label .warn, .fakeLabel .warn {
+	display: block;
+	position: relative;
+	top: -5px;
+	width: 15px;
+	margin-left: auto;
+	margin-right: 10px;
+	margin-top: -15px;
+	line-height: 0;
+}
 
 select.ownerSelector {
 	width: unset;

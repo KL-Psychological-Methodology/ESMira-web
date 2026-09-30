@@ -1,0 +1,61 @@
+label .richText {
+	margin-top: 5px;
+}
+.richText {
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-top: 5px;
+}
+
+.richText .toolbar {
+	display: flex;
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	justify-content: space-between;
+	background: white;
+	
+	border-top: 1px solid #f9f9f9;
+	box-shadow: 0 2px 5px #0002;
+	margin: 0 2px;
+}
+.richText .toolbar .group {
+	display: flex;
+	justify-content: center;
+}
+.richText .toolbar .toolbarBtn {
+	width: 24px;
+	height: 24px;
+	transition: background 0.3s;
+	padding: 2px 3px;
+}
+.richText .toolbar .toolbarBtn svg {
+	fill: #777;
+	transition: fill 0.3s;
+}
+.richText .toolbar .toolbarBtn.active {
+	background: #e6f9ff;
+}
+.richText .toolbar .toolbarBtn.disabled {
+	opacity: 0.5;
+}
+.richText .toolbar .toolbarBtn.active svg {
+	fill: #2b98ca;
+}
+.richText .toolbar .toolbarBtn:hover {
+	background: #e6f9ff;
+	cursor: pointer;
+}
+.richText .editor .ProseMirror {
+	padding: 10px 3px;
+	border-bottom: 1px solid #dc4e9d;
+}
+.richText .editor .ProseMirror-focused {
+	background-color: #2b98ca06;
+}
+.richText .editor img.ProseMirror-selectednode {
+	outline: 3px solid #9FE0F7;
+}
+.richText .editor img {
+	max-width: 100%;
+}

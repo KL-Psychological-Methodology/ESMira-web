@@ -74,13 +74,13 @@ export class Content extends SectionContent {
 								}
 								
 								<div>
-									{BtnTrash(() => this.deletePlugin.bind(this, entry.current), Lang.get("uninstall"))}
+									{BtnTrash(() => this.deletePlugin(entry.current), Lang.get("uninstall"))}
 								</div>
 							</div>
 						)}
 						
 						{entry.current.version != (entry.newest.version ?? entry.current.version) && entry.current.metadataUrl &&
-							BtnDownload(() => this.updatePlugin.bind(this, entry.current.metadataUrl!), Lang.get("update_to_version", entry.newest.version ?? "0.0.0"))
+							BtnDownload(() => this.updatePlugin(entry.current.metadataUrl!), Lang.get("update_to_version", entry.newest.version ?? "0.0.0"))
 						}
 					
 					</div>

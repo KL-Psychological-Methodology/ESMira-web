@@ -5,6 +5,7 @@ import {ObserverId} from "../observable/BaseObservable";
 import {ChartData} from "../data/study/ChartData";
 import {LoadingSpinner} from "./LoadingSpinner";
 import {ObservablePromise} from "../observable/ObservablePromise";
+import "./ChartView.css";
 
 interface ChartComponentOptions {
 	promise: ObservablePromise<LoadedStatistics>

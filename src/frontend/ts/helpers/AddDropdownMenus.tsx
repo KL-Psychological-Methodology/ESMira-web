@@ -10,6 +10,7 @@ import {SectionContent} from "../site/SectionContent";
 import {Study} from "../data/study/Study";
 import {JsonSourceComponent} from "./JsonSourceComponent";
 import {Mode} from "vanilla-jsoneditor";
+import "./AddDropdownMenus.css";
 
 export class AddDropdownMenus {
 	private sectionContent: SectionContent

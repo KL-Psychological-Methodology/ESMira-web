@@ -1,4 +1,5 @@
 import m, {Component, Vnode, VnodeDOM} from "mithril";
+import "./DropdownMenu.css";
 
 const MIN_WIDTH = 150
 const MIN_HEIGHT = 20

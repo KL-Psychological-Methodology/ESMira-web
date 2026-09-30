@@ -40,6 +40,7 @@ import m, {Component, Vnode, VnodeDOM} from 'mithril'
 import {Lang} from "../singletons/Lang";
 import {closeDropdown, DropdownMenu} from "./DropdownMenu";
 import {BaseObservable} from "../observable/BaseObservable";
+import "./RichText.css";
 
 
 const extensions = [

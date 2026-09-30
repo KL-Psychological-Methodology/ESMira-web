@@ -14,6 +14,7 @@ import {StaticValues} from "../site/StaticValues";
 import {BtnReload} from "../components/Buttons";
 import {ObservablePrimitive} from "../observable/ObservablePrimitive";
 import {SectionData} from "../site/SectionData";
+import "./dataView.css";
 
 const ROW_HEIGHT = 25;
 

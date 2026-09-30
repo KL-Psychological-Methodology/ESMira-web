@@ -2,6 +2,7 @@ import m, {Component, Vnode, VnodeDOM} from "mithril"
 import addSvg from "../../imgs/icons/dragHandle.svg?raw"
 import {BaseObservable} from "../observable/BaseObservable";
 import {ArrayInterface} from "../observable/interfaces/ArrayInterface";
+import "./DragContainer.css";
 
 export interface DragTools {
 	getDragTarget(index: number, targetList: ArrayType, content?: Vnode<any, any>): Vnode<any, any>
