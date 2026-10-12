@@ -720,5 +720,7 @@
 	"reward_calculation_questionnaire_max": "Maximum contribution from questionnaire",
 	"reward_amount": "Reward amount",
 	"reward_calculation_description": "Reward calculation description",
-	"reward_calculation_currency": "Currency"
+	"reward_calculation_currency": "Currency",
+	"show_completion_indicator": "Show completion indicator",
+	"counted_desc": "Counts towards page progress"
 }
