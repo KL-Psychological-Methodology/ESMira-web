@@ -4,6 +4,7 @@ import {Input} from "./Input";
 export class Page extends DataStructure {
 	public randomized					= this.primitive<boolean>(		"randomized",					false)
 	public skipAfterSecs				= this.primitive<number>(		"skipAfterSecs",				0)
+	public showCompletionProgress		= this.primitive<boolean>(		"showCompletionProgress",		true)
 	
 	public header							= this.translatable(		"header",						"")
 	public footer							= this.translatable(		"footer",						"")

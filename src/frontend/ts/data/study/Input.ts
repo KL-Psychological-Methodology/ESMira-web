@@ -34,7 +34,7 @@ export class Input extends DataStructure {
 	public responseType = this.primitive<InputResponseType>("responseType", "text_input")
 	public name = this.primitive<string>("name", "input")
 	public required = this.primitive<boolean>("required", false)
-	public optional = this.primitive<boolean>("optional", false)
+	public counted = this.primitive<boolean>("counted", true)
 	public random = this.primitive<boolean>("random", false)
 	public likertSteps = this.primitive<number>("likertSteps", 5)
 	public numberHasDecimal = this.primitive<boolean>("numberHasDecimal", false)
