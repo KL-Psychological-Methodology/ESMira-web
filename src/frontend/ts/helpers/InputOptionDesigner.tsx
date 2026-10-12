@@ -471,7 +471,7 @@ export class InputOptionDesigner {
 	private requiredOption(): Vnode<any, any> {
 		return <div>
 			{this.checkedOptionElement(this.input.required, Lang.get("required_desc"))}
-			{this.checkedOptionElement(this.input.optional, Lang.get("optional_desc"))}
+			{this.checkedOptionElement(this.input.counted, Lang.get("counted_desc"))}
 		</div>
 	}
 	private showValueOption(): Vnode<any, any> {

@@ -1,14 +1,14 @@
-import {SectionContent} from "../site/SectionContent";
-import m, {Vnode} from "mithril";
-import {DashRow} from "../components/DashRow";
-import {Lang} from "../singletons/Lang";
-import {BindObservable, ConstrainedNumberTransformer} from "../components/BindObservable";
-import {RichText} from "../components/RichText";
-import {ObservableLangChooser} from "../components/ObservableLangChooser";
-import {DashElement} from "../components/DashElement";
-import {CodeEditor} from "../components/CodeEditor";
-import {NotCompatibleIcon} from "../components/NotCompatibleIcon";
-import {SectionData} from "../site/SectionData";
+import { SectionContent } from "../site/SectionContent";
+import m, { Vnode } from "mithril";
+import { DashRow } from "../components/DashRow";
+import { Lang } from "../singletons/Lang";
+import { BindObservable, ConstrainedNumberTransformer } from "../components/BindObservable";
+import { RichText } from "../components/RichText";
+import { ObservableLangChooser } from "../components/ObservableLangChooser";
+import { DashElement } from "../components/DashElement";
+import { CodeEditor } from "../components/CodeEditor";
+import { NotCompatibleIcon } from "../components/NotCompatibleIcon";
+import { SectionData } from "../site/SectionData";
 
 export class Content extends SectionContent {
 	public static preLoad(sectionData: SectionData): Promise<any>[] {
@@ -27,11 +27,17 @@ export class Content extends SectionContent {
 			DashElement(null, {
 				content:
 					<div class="horizontal hAlignCenter vAlignCenter">
-						<label class="noTitle noDesc">
-							<input type="checkbox" {...BindObservable(page.randomized)} />
-							<span>{Lang.get("randomize_page")}</span>
-						</label>
-					</div>
+						<div>
+							<label class="noTitle noDesc">
+								<input type="checkbox" {...BindObservable(page.randomized)} />
+								<span>{Lang.get("randomize_page")}</span>
+							</label>
+							<label class="noTitle noDesc">
+								<input type="checkbox" {...BindObservable(page.showCompletionProgress)} />
+								<span>{Lang.get("show_completion_indicator")}</span>
+							</label>
+						</div>
+					</div >
 			}),
 			DashElement(null, {
 				content:
@@ -44,7 +50,7 @@ export class Content extends SectionContent {
 								<span>{Lang.get("seconds")}</span>
 							</label>
 						</div>
-					</div>
+					</div >
 			}),
 			DashElement("stretched", {
 				content:
