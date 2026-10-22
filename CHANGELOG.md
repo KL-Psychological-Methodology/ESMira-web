@@ -1,4 +1,3 @@
 ### ✏️ Changed
 
-- Ensured variables are correctly erased from Charts and Conditions upon deleting inputs.
-- Fixed some typos in German translations.
+- Increased the PHP version in the Docker image to 8.5.12
