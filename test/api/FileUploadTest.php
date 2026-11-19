@@ -98,6 +98,22 @@ class FileUploadTest extends BaseApiTestSetup {
 		require DIR_BASE .'/api/file_uploads.php';
 		$this->expectOutputString(JsonOutput::error('Not an image'));
 	}
+
+	function test_with_data_file() {
+		$this->doPreparations();
+		$_POST['dataType'] = 'Data';
+		file_put_contents($this->path, "day,start,end\ntoday,1795079140,1795079141\n");
+		require DIR_BASE .'/api/file_uploads.php';
+		$this->expectOutputString(JsonOutput::successObj());
+	}
+
+	function test_with_wrong_data_file() {
+		$this->doPreparations();
+		$_POST['dataType'] = 'Data';
+		file_put_contents($this->path, '<?php echo 1; ?>');
+		require DIR_BASE .'/api/file_uploads.php';
+		$this->expectOutputString(JsonOutput::error('Wrong format'));
+	}
 	
 	function test_with_unknown_data_type() {
 		$this->doPreparations();

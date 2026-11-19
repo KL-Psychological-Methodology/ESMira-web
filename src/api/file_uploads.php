@@ -82,6 +82,13 @@ switch($dataType) {
 			return;
 		}
 		break;
+	case 'Data':
+		$allowedTypes = ['text/plain', 'text/csv'];
+		if(!in_array(mime_content_type($fileData['tmp_name']), $allowedTypes)) {
+			echo JsonOutput::error('Wrong format');
+			return;
+		}
+		break;
 	default:
 		echo JsonOutput::error('Unknown type');
 		return;
