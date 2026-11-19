@@ -65,4 +65,20 @@ class ResponsesIndexTest extends BaseTestSetup {
 		
 		$this->assertEquals(['key1' => 'type', 'photoName' => 'image'], $index->types);
 	}
+
+	function test_app_usage_detailed() {
+		$index = new ResponsesIndex();
+
+        $index->addInput((object) ['name' => 'detailedName', 'responseType' => 'app_usage_detailed']);
+
+        $this->assertEquals([
+        	'detailedName',
+			'detailedName~usageCountYesterday',
+			'detailedName~usageCountToday',
+			'detailedName~usageTimeYesterday',
+			'detailedName~usageTimeToday'
+        ], $index->keys);
+
+		$this->assertEquals(['detailedName' => 'data'], $index->types);
+	}
 }

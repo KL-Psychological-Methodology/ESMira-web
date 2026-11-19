@@ -29,6 +29,14 @@ class ResponsesIndex {
                 $this->addName("$name~usageProtocolYesterday");
                 $this->addName("$name~usageProtocolToday");
                 break;
+            case 'app_usage_detailed':
+                $this->addName($name);
+                $this->types[$name] = 'data';
+                $this->addName("$name~usageCountYesterday");
+                $this->addName("$name~usageCountToday");
+                $this->addName("$name~usageTimeYesterday");
+                $this->addName("$name~usageTimeToday");
+                break;
             case 'battery_level':
                 $this->addName($name);
                 $this->addName("$name~charging");
