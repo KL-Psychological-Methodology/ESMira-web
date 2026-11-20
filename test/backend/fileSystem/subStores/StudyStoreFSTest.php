@@ -390,6 +390,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		
 		$pathZip = Paths::fileMediaZip($this->studyId);
 		$pathImage = Paths::fileImageFromData($this->studyId, 'userId', 1, 'key');
+		$pathData = Paths::fileDataFromData($this->studyId, 'userId', 1, 'key');
 		$pathStatisticsNewData = PathsFS::fileStatisticsNewData($this->studyId);
 		$pathStatisticsJson = PathsFS::fileStatisticsJson($this->studyId);
 		
@@ -403,6 +404,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		
 		file_put_contents($pathZip, 'zip content');
 		file_put_contents($pathImage, 'image content');
+		file_put_contents($pathData, 'data content');
 		file_put_contents($pathStatisticsJson, '{"key": "value"}');
 		$responsesStore->saveWebAccessDataSet($this->studyId, 0, 'pageName', 'referer', 'userAgent');
 		$cache = new DataSetCache();
@@ -416,6 +418,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		//check that filling was successful:
 		
 		$this->assertFileExists($pathImage);
+		$this->assertFileExists($pathData);
 		$this->assertFileExists($pathZip);
 		$this->assertFileExists($pathStatisticsJson);
 		$this->assertFileExists($pathStatisticsNewData);
@@ -444,6 +447,7 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		//check if emptied:
 		
 		$this->assertFileDoesNotExist($pathImage);
+		$this->assertFileDoesNotExist($pathData);
 		$this->assertFileDoesNotExist($pathZip);
 		$this->assertFileDoesNotExist($pathStatisticsJson);
 		$this->assertFileDoesNotExist($pathStatisticsNewData);
@@ -462,6 +466,35 @@ class StudyStoreFSTest extends BaseDataFolderTestSetup {
 		);
 		
 		$this->assertCount($expectedResponseFileCount, $responsesStore->getResponseFilesList($this->studyId));
+	}
+
+	function test_emptyStudy_without_data_folder() {
+		$studyStore = Configs::getDataStore()->getStudyStore();
+
+		$csvDelimiter = Configs::get('csv_delimiter');
+		$questionnaireId = 11111;
+		$questionnaireKeys = ['key1', 'key2', 'key3'];
+		$config =  (object)[
+			'id' => $this->studyId,
+			'questionnaires' => [
+				(object) ['internalId' => $questionnaireId]
+			]
+		];
+		$this->createStudy($config, [$questionnaireId => new ResponsesIndex($questionnaireKeys)]);
+
+		//delete folderData so it simulates a study without data folder
+		rmdir(Paths::folderData($this->studyId));
+
+		//empty
+		$studyStore->emptyStudy($this->studyId, [$questionnaireId => new ResponsesIndex($questionnaireKeys)]);
+
+		//check if emptyStudy was completed
+		$expectedEvents = Main::arrayToCSV(KEYS_EVENT_RESPONSES, $csvDelimiter);
+
+		$this->assertEquals(
+        			$expectedEvents,
+        			file_get_contents(PathsFS::fileResponses($this->studyId, PathsFS::FILENAME_EVENTS))
+        		);
 	}
 	
 	function test_markStudyAsUpdated() {
