@@ -61,7 +61,22 @@ class Paths {
     public static function fileImageFromData(int $studyId, string $userId, int $entryId, string $key): string {
         return self::folderImages($studyId) . Paths::makeUrlFriendly(Paths::publicFileMedia($userId, $entryId, $key));
     }
-    
+
+	public static function folderData(int $studyId): string {
+        return self::folderMedia($studyId) . 'data/';
+    }
+    public static function publicFileDataFromFileName(string $fileName): string {
+        return 'data/' . $fileName . '.csv';
+    }
+	public static function publicFileDataFromData(string $userId, int $entryId, string $key): string {
+		return self::publicFileDataFromFileName(self::publicFileMedia($userId, $entryId, $key));
+	}
+	public static function publicFileDataFromMediaFilename(string $fileName): string {
+		return self::publicFileDataFromFileName(self::getFromUrlFriendly($fileName));
+	}
+	public static function fileDataFromData(int $studyId, string $userId, int $entryId, string $key): string {
+		return self::folderData($studyId) . Paths::makeUrlFriendly(Paths::publicFileMedia($userId, $entryId, $key));
+	}
     
 	/**
 	 * Decodes a URL-friendly formatted string by reversing the Base64 encoding process

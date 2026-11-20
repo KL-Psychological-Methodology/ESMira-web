@@ -546,6 +546,55 @@ class CreateDataSetTest extends BaseTestSetup {
 		
 		$this->assertNoErrors($dataset);
 	}
+
+	function test_with_data_item() {
+		$itemKey = 'dataKey';
+		$source = $this->getSourceData([
+			'eventType' => 'questionnaire',
+			'model' => 'Unit tester',
+			'manufacturer' => 'JodliDev',
+			'osVersion' => '1',
+			$itemKey => '987'
+		]);
+
+		$this->createObserverForQuestionnaireEvent($source, [
+			$itemKey => 'data'
+		]);
+		$responsesStore = $this->createMock(ResponsesStore::class);
+		$responsesStore->expects($this->once())
+			->method('saveDataSetCache')
+			->willReturnCallback(function(
+				string       $userId,
+				DataSetCache $cache,
+				callable     $successCallback,
+				callable     $errorCallback
+			) use ($source, $itemKey) {
+				$cacheArray = $this->getCacheFromQuestionnaireData($cache);
+
+				$data = $cacheArray->data[0];
+
+				$this->assertEquals(
+					Paths::publicFileDataFromData($this->userId, 0, $itemKey),
+					$data[$itemKey]
+				);
+
+				$this->checkIds($cacheArray, $successCallback);
+			});
+		$this->dataStoreObserver->method('getResponsesStore')->willReturn($responsesStore);
+
+		$dataset = $this->createDataSetObj([
+			'questionnaireInternalId' => $this->questionnaireId,
+			'eventType' => $source['eventType'],
+			'responses' => (object)[
+				'model' => $source['model'],
+				'manufacturer' => $source['manufacturer'],
+				'osVersion' => $source['osVersion'],
+				$itemKey => $source[$itemKey]
+			]
+		]);
+
+		$this->assertNoErrors($dataset);
+	}
 	
 	function test_with_wrong_accessKey() {
 		$accessKey = 'wrong accessKey';
