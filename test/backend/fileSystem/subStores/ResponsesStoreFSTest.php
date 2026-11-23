@@ -331,6 +331,56 @@ class ResponsesStoreFSTest extends BaseDataFolderTestSetup {
 
 		$zip->close();
 	}
+
+	function test_createMediaZip_with_data_file() {
+		$studyId = 123;
+		$responsesStore = Configs::getDataStore()->getResponsesStore();
+
+		$this->createEmptyStudy($studyId);
+
+		$pathZip = Paths::fileMediaZip($studyId);
+		$this->assertFalse(file_exists($pathZip));
+
+		$pathData = Paths::fileDataFromData($studyId, 'user', 111, 'key');
+		file_put_contents($pathData, 'data');
+
+		$responsesStore->createMediaZip($studyId, function() {});
+
+		$this->assertTrue(file_exists($pathZip));
+
+		$zip = new ZipArchive();
+		$zip->open($pathZip);
+		$this->assertEquals(1, $zip->numFiles);
+		$this->assertEquals(Paths::publicFileDataFromData('user', 111, 'key'), $zip->getNameIndex(0));
+
+		$zip->close();
+	}
+
+	function test_createMediaZip_without_data_folder() {
+		$studyId = 123;
+		$responsesStore = Configs::getDataStore()->getResponsesStore();
+
+		$this->createEmptyStudy($studyId);
+
+		$pathZip = Paths::fileMediaZip($studyId);
+		$this->assertFalse(file_exists($pathZip));
+
+		//delete folderData so it simulates a study without data folder
+		rmdir(Paths::folderData($studyId));
+
+		$pathImages = Paths::fileImageFromData($studyId, 'user', 111, 'key');
+        file_put_contents($pathImages, 'image');
+
+		$responsesStore->createMediaZip($studyId, function() {});
+
+		$this->assertTrue(file_exists($pathZip));
+
+		$zip = new ZipArchive();
+		$zip->open($pathZip);
+		$this->assertEquals(1, $zip->numFiles);
+
+		$zip->close();
+	}
 	
 	function test_progress_updates() {
 		$studyId = 123;

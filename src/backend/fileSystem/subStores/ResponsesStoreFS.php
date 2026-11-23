@@ -152,9 +152,11 @@ class ResponsesStoreFS implements ResponsesStore {
 		$zip->open($pathZip, ZIPARCHIVE::CREATE);
 		$folderImages = Paths::folderImages($studyId);
 		$folderAudio = Paths::folderAudio($studyId);
+		$folderData = Paths::folderData($studyId);
 		$countImages = count(scandir($folderImages)) - 2;
 		$countAudio = count(scandir($folderAudio)) - 2;
-		$countTotal = $countImages + $countAudio;
+		$countData = file_exists($folderData) ? count(scandir($folderData)) - 2 : 0;
+		$countTotal = $countImages + $countAudio + $countData;
 		$currentCount = 0;
 
 		$onProgressCallback = function () use ($countTotal, $flushProgress, &$currentCount): void {
@@ -178,7 +180,17 @@ class ResponsesStoreFS implements ResponsesStore {
 				return Paths::publicFileAudioFromMediaFilename($fileName);
 			}
 		);
-		
+		if(file_exists($folderData)) {
+			$this->fillMediaFolder(
+				$zip,
+				$folderData,
+				function ($fileName) use ($onProgressCallback) {
+					$onProgressCallback();
+					return Paths::publicFileDataFromMediaFilename($fileName);
+				}
+			);
+        }
+
 		$zip->close();
 	}
 	public function outputResponsesFile(int $studyId, string $identifier) {
