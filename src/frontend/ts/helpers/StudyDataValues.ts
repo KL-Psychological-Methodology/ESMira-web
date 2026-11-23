@@ -16,6 +16,13 @@ function setResponseTypeValues(input: Input, variables: string[]): void {
 			variables.push(name + "~usageProtocolToday")
 			variables.push(name);
 			return
+		case "app_usage_detailed":
+			variables.push(name)
+			variables.push(name + "~usageCountYesterday")
+			variables.push(name + "~usageCountToday")
+			variables.push(name + "~usageTimeYesterday")
+			variables.push(name + "~usageTimeToday")
+			return
 		case "battery_level":
 			variables.push(name)
 			variables.push(name + "~charging")

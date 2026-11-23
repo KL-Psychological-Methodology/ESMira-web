@@ -3,6 +3,7 @@ import { DataStructure } from "../DataStructure";
 export type InputResponseType =
 	"ambient_light" |
 	"app_usage" |
+	"app_usage_detailed" |
 	"battery_level" |
 	"binary" |
 	"bluetooth_devices" |

@@ -78,6 +78,29 @@ export class InputOptionDesigner {
 			]
 
 		},
+		"app_usage_detailed": {
+			title: Lang.get("input_app_usage_detailed"),
+			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#App-usage-tracking",
+			category: "sensor",
+			notCompatible: ["Web", "iOS"],
+			view: () => [
+				<div>
+					{this.requiredOption()}
+				</div>,
+				<div>
+					{
+						RegexTextInput(
+							Lang.get("packageId"),
+							this.input.packageId,
+							/^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+$/,
+							Lang.get("validator_warning_package_id"),
+							Lang.get("packageId_desc")
+						)
+					}
+				</div>
+			]
+
+		},
 		"battery_level": {
 			title: Lang.get("input_battery_level"),
 			helpUrl: "https://github.com/KL-Psychological-Methodology/ESMira/wiki/Questionnaire-Items#battery-level",

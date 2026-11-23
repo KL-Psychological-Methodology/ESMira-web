@@ -252,6 +252,7 @@
 	"input_category_special": "Special inputs",
 	"input_ambient_light": "Ambient light",
 	"input_app_usage": "App usage tracking",
+	"input_app_usage_detailed": "App usage tracking (sessions as CSV)",
 	"input_battery_level": "Battery level",
 	"input_bluetooth_devices": "List of bluetooth devices",
 	"input_binary": "Binary item",
