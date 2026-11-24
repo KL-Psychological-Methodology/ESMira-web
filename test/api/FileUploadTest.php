@@ -102,7 +102,7 @@ class FileUploadTest extends BaseApiTestSetup {
 	function test_with_data_file() {
 		$this->doPreparations();
 		$_POST['dataType'] = 'Data';
-		file_put_contents($this->path, "day,start,end\ntoday,1795079140,1795079141\n");
+		file_put_contents($this->path, "day;start;end\ntoday;1795079140;1795079141\n");
 		require DIR_BASE .'/api/file_uploads.php';
 		$this->expectOutputString(JsonOutput::successObj());
 	}
