@@ -29,7 +29,7 @@ export type InputResponseType =
 	"va_scale" |
 	"video"
 
-export type InputMediaTypes = "image" | "audio"
+export type InputMediaTypes = "image" | "audio" | "data"
 
 export class Input extends DataStructure {
 	public responseType = this.primitive<InputResponseType>("responseType", "text_input")
@@ -72,6 +72,8 @@ export class Input extends DataStructure {
 				return "image";
 			case "record_audio":
 				return "audio";
+			case "app_usage_detailed":
+				return "data";
 			default:
 				return null;
 		}
